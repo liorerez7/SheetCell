@@ -1,4 +1,4 @@
-package CoreParts.impl;
+package CoreParts.interfaces;
 
 public interface SheetCell {
 

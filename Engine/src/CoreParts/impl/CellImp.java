@@ -1,5 +1,6 @@
 package CoreParts.impl;
 
+import CoreParts.interfaces.Cell;
 import expressions.Expression;
 
 public class CellImp implements Cell

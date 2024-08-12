@@ -1,6 +1,7 @@
 package CoreParts.impl;
 
 import CoreParts.Utility.CellUtils;
+import CoreParts.interfaces.Engine;
 import Operation.impl.Str;
 
 public class EngineImpl implements Engine {
@@ -21,7 +22,7 @@ public class EngineImpl implements Engine {
         return null;
     }
 
-    public CellImp getCell(char row, char col) {
+    private CellImp getCell(char row, char col) {
         return null;
     }
 
@@ -55,7 +56,6 @@ public class EngineImpl implements Engine {
         if (CellUtils.trySetNumericValue(cellToBeUpdated, newValue)) {
             return;  // Exit early if the value is a valid number
         }
-
         if (CellUtils.isPotentialOperation(newValue)) {
             CellUtils.processFunction(cellToBeUpdated, newValue);
         } else {

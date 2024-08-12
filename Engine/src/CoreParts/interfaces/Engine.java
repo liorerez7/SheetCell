@@ -1,4 +1,7 @@
-package CoreParts.impl;
+package CoreParts.interfaces;
+
+import CoreParts.impl.CellImp;
+import CoreParts.impl.SheetCellImp;
 
 public interface Engine {
 

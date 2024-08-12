@@ -1,5 +1,7 @@
 package CoreParts.impl;
 
+import CoreParts.interfaces.SheetCell;
+
 import java.util.ArrayList;
 import java.util.List;
 
