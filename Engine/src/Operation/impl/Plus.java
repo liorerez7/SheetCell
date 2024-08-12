@@ -1,10 +1,11 @@
-package expressions.impl;
+package Operation.impl;
 
 import expressions.Expression;
+import expressions.impl.BinaryExpression;
 
-public class Sum extends BinaryExpression {
+public class Plus extends BinaryExpression {
 
-    public Sum(Expression expression1, Expression expression2) {
+    public Plus(Expression expression1, Expression expression2) {
         super(expression1, expression2);
     }
 
