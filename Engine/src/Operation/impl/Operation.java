@@ -4,25 +4,28 @@ import expressions.Expression;
 
 import java.util.List;
 
-/*
-   TODO : 1.extract the Cells from listofCells and pass them to the operations
-          2. add all the new operations to the enum
+//    TODO : add all the new operations to the enum
 
- */
 public enum Operation {
 
     PLUS {
         @Override
         public Expression calculate(List<CellImp> listOfCells) {
-            return new Plus(cell1.getEffectiveValue(), cell2.getEffectiveValue());
+            return new Plus(listOfCells.get(0).getEffectiveValue(), listOfCells.get(1).getEffectiveValue());
         }
     },
 
     MINUS {
         @Override
         public Expression calculate(List<CellImp> listOfCells) {
+            return new Minus(listOfCells.get(0).getEffectiveValue(), listOfCells.get(1).getEffectiveValue());
+        }
+    },
 
-            return new Minus(cell1.getEffectiveValue(), cell2.getEffectiveValue());
+    ABS{
+        @Override
+        public Expression calculate(List<CellImp> listOfCells) {
+            return new Abs(listOfCells.get(0).getEffectiveValue());
         }
     };
 
