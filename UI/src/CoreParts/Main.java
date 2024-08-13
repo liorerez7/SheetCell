@@ -14,8 +14,10 @@ public class Main {
        engine.updateCell("{PLUS, {REF, A1}, {REF, A2}}", 'A', '3');
 
 
+
+
        engine.updateCell("3", 'A', '1');
-       engine.updateCell("{PLUS, 5, Moshe}", 'A', '2');
+       //engine.updateCell("{PLUS, 5, Moshe}", 'A', '2');
        System.out.print(engine.getCell(CellLocation.fromCellId('A', '3')).getEffectiveValue().evaluate());
 //
 //        CellImp cellImp = new CellImp(new Num(5), "5");

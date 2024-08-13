@@ -1,8 +1,9 @@
 package expressions.impl;
 
 import expressions.Expression;
+import expressions.IsBinary;
 
-public abstract class BinaryExpression implements Expression {
+public abstract class BinaryExpression implements Expression{
 
     private Expression expression1;
     private Expression expression2;
@@ -20,6 +21,22 @@ public abstract class BinaryExpression implements Expression {
     @Override
     public String toString() {
         return "(" + expression1 + getOperationSign() + expression2 + ")";
+    }
+
+     public Expression getExpressionLeft() {
+        return expression1;
+    }
+
+    public Expression getExpressionRight() {
+        return expression2;
+    }
+
+    public void setExpressionLeft(Expression newExpression) {
+        expression1 = newExpression;
+    }
+
+    public void setExpressionRight(Expression newExpression) {
+        expression2 = newExpression;
     }
 
     abstract protected Object evaluate(Object evaluate, Object evaluate2);
