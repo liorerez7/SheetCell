@@ -7,7 +7,7 @@ public interface Expression {
      *
      * @return the results of the expression
      */
-    Object evaluate();
+    Object evaluate() throws IllegalArgumentException;
 
     String getOperationSign();
 }

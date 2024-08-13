@@ -1,4 +1,4 @@
-package Operation.impl;
+package expressions.impl.stringFunction;
 
 import expressions.Expression;
 import expressions.impl.BinaryExpression;
@@ -11,12 +11,15 @@ public class Concat extends BinaryExpression {
     }
 
     @Override
-    protected Object evaluate(Object evaluate, Object evaluate2) {
-        return (String)evaluate + " " + (String)evaluate2;
-    }
-
-    @Override
     public String getOperationSign() {
         return "";
     }
+
+    @Override
+    protected Object evaluate(Object evaluate1, Object evaluate2) {
+
+        return (String)evaluate1 + " " + (String)evaluate2;
+    }
+
+
 }

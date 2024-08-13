@@ -1,12 +1,12 @@
-package Operation.impl;
+package expressions.impl.numFunction;
 
 import expressions.Expression;
 
-public class Number implements Expression {
+public class Num implements Expression {
 
     private double num;
 
-    public Number(double num) {
+    public Num(double num) {
         this.num = num;
     }
 

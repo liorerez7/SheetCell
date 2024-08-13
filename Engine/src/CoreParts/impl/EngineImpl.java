@@ -1,20 +1,19 @@
 package CoreParts.impl;
 
-import CoreParts.Utility.CellUtils;
+import Utility.CellUtils;
 import CoreParts.interfaces.Engine;
-import Operation.impl.*;
+import CoreParts.smallParts.CellLocation;
+import expressions.Expression;
+import expressions.Operation;
+import expressions.impl.numFunction.Num;
+import expressions.impl.stringFunction.Str;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static CoreParts.Utility.CellUtils.checkIfCellsAreOfSameType;
-
 public class EngineImpl implements Engine {
 
-    private static final Object CONCAT = 1;
-    private static final Object SUM = 2;
-
-    SheetCellImp sheetCellImp = new SheetCellImp(4, 5);
+    private SheetCellImp sheetCellImp = new SheetCellImp(4, 3);
 
 
     @Override
@@ -28,9 +27,9 @@ public class EngineImpl implements Engine {
         return null;
     }
 
-    private CellImp getCell(char row, char col) {
 
-        return null;
+    public CellImp getCell(CellLocation location) {
+        return sheetCellImp.getCell(location);
     }
 
     @Override
@@ -59,39 +58,60 @@ public class EngineImpl implements Engine {
     //TODO :maybe change the implementaion of the function: checkIfCellsAreOfSameType,
     // explanation why is inside the function.
 
-    public void updateCell(String newValue, char row, char col) {
+    public void updateCell(String newValue, char col, char row) {
 
-        CellImp cellToBeUpdated = getCell(row, col);
-        cellToBeUpdated.setOriginalValue(newValue);
+        Expression expression = processExpression(newValue);
 
-        if (CellUtils.trySetNumericValue(cellToBeUpdated, newValue)) {
-            return;  // Exit early if the value is a valid number
+        try {
+            expression.evaluate();
+            CellImp cellToBeUpdated = getCell(CellLocation.fromCellId(col, row));
+            cellToBeUpdated.setOriginalValue(newValue);
+            cellToBeUpdated.setEffectiveValue(expression);
         }
-        if (CellUtils.isPotentialOperation(newValue)) {
-
-            String functionName = CellUtils.extractFunctionName(newValue);
-            Operation operation = Operation.fromString(functionName); // if not a valid operation, it will throw an exception
-
-            List<String> list = CellUtils.processFunction(newValue);
-            List<CellImp> cells = getCellsFromArguments(list);
-
-            CellUtils.checkIfCellsAreOfSameType(cells); // if not of the same type, it will throw an exception
-            cellToBeUpdated.setEffectiveValue(operation.calculate(cells));
-
-        } else {
-            cellToBeUpdated.setEffectiveValue(new Str(newValue));
+        catch(Exception illegalArgumentException){
+            throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
         }
     }
-    public List<CellImp> getCellsFromArguments (List<String> cellList){
 
-        List<CellImp> cells = new ArrayList<>();
 
-            for (String s : cellList) {
-                cells.add(getCell(s.charAt(0), s.charAt(1)));
-            }
+    public Expression processExpression(String value) {
 
-        return cells;
+        if (CellUtils.trySetNumericValue(value)){  // base case: value is : "<number>" for example : "5"
+            return new Num(Double.parseDouble(value));
+        }
+        if(!(CellUtils.isPotentialOperation(value))){  // base case: value is : "<string>" for example : "Hello"
+            return new Str(value);
+        }
+
+        String functionName = CellUtils.extractFunctionName(value);
+        Operation operation = Operation.fromString(functionName);
+
+
+        if(operation == Operation.REF){ // base case: value is : "{REF, A5}" for example : "{REF, A5}"
+
+            String cellId = CellUtils.removeParantecesFromString(value);
+            cellId = CellUtils.splitArguments(cellId).get(1); // the List will be : [REF, A5] and we get the "A5"
+            CellImp cell = getCell(CellLocation.fromCellId(cellId));
+            return cell.getEffectiveValue();
+        }
+
+        // Remove the outermost parentheses and the function name
+        String content = CellUtils.removeParantecesFromString(value);
+        content = content.substring(functionName.length() +1).trim();
+
+        // Split by top-level commas (ignoring commas within nested braces)
+        List<String> arguments = CellUtils.splitArguments(content);
+
+        // Recursively process each argument
+        List<Expression> expressions = new ArrayList<>();
+        for (String arg : arguments) {
+            expressions.add(processExpression(arg.trim()));
+        }
+
+        // Create and return the appropriate operation with its arguments
+        return operation.calculate(expressions);
     }
-
 
 }
+
+
