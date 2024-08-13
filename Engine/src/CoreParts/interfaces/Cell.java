@@ -14,6 +14,7 @@ public interface Cell {
     void addCellToAffectingOn(Cell cell);
     void addCellToAffectedBy(Cell cell);
     boolean isCellAffectingOn(Cell cell);
+    boolean isCellAffectedBy(Cell cell) ;
     Set<Cell> getAffectingOn();
     Set<Cell> getAffectedBy();
 }

@@ -6,7 +6,7 @@ import CoreParts.smallParts.CellLocation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+//TODO: Implement the SheetCell interface
 public class SheetCellImp implements SheetCell
 {
     private List<List<CellImp>> sheetCell= new ArrayList<>();
@@ -31,7 +31,6 @@ public class SheetCellImp implements SheetCell
         currentRowLength = row;
         currentColLength = col;
     }
-
 
     @Override
     public SheetCell restoreSheetCell(int versionNumber) {
