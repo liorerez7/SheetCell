@@ -5,7 +5,6 @@ import CoreParts.impl.SheetCellImp;
 
 public interface Engine {
 
-    void updateGivenCell();
     CellImp getRequestedCell(char row, char col);
     SheetCellImp getSheetCell();
     SheetCellImp getSheetCell(int versionNumber);

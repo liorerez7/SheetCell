@@ -18,18 +18,11 @@ public class EngineImpl implements Engine {
 
     private SheetCellImp sheetCellImp = new SheetCellImp(4, 3);
 
-
-    @Override
-    public void updateGivenCell() {
-
-    }
-
     @Override
     public CellImp getRequestedCell(char row, char col) {
 
         return null;
     }
-
 
     public CellImp getCell(CellLocation location) {
         return sheetCellImp.getCell(location);
