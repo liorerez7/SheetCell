@@ -80,72 +80,90 @@ public class EngineImpl implements Engine {
         }
     }
 
-
     public Expression processExpression(String value, Cell targetCell) {
-
-        if (CellUtils.trySetNumericValue(value)){  // base case: value is : "<number>" for example : "5"
+        if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
             return new Num(Double.parseDouble(value));
         }
-        if(!(CellUtils.isPotentialOperation(value))){  // base case: value is : "<string>" for example : "Hello"
+
+        if (!CellUtils.isPotentialOperation(value)) {  // base case: value is a string
             return new Str(value);
         }
 
-        String functionName = CellUtils.extractFunctionName(value);
-        Operation operation = Operation.fromString(functionName);
-        String cellId = CellUtils.removeParantecesFromString(value);
+        List<String> arguments = parseArguments(value);
+        Operation operation = Operation.fromString(arguments.get(0));
 
-        if(operation == Operation.REF){ // base case: value is : "{REF, A5}" for example : "{REF, A5}"
-            cellId = CellUtils.splitArguments(cellId).get(1); // the List will be : [REF, A5] and we get the "A5"
-            CellImp cell = getCell(CellLocation.fromCellId(cellId));
-
-            if((cell.isCellAffectedBy(targetCell) == false))
-            {
-                targetCell.addCellToAffectedBy(cell);
-                cell.addCellToAffectingOn(targetCell);
-            }
-
-            if(cell.getEffectiveValue() == null){
-                throw new IllegalArgumentException("Invalid expression: cell referenced before being set");
-            }
-
-            return cell.getEffectiveValue();
+        if (operation == Operation.REF) {
+            return handleReferenceOperation(arguments.get(1), targetCell);
         }
 
-        // Remove the outermost parentheses and the function name
-        cellId = cellId.substring(functionName.length() +1).trim();
+        return operation.calculate(processArguments(arguments.subList(1, arguments.size()), targetCell));
+    }
 
-        // Split by top-level commas (ignoring commas within nested braces)
-        List<String> arguments = CellUtils.splitArguments(content);
+    private List<String> parseArguments(String value) {
+        String cellId = CellUtils.removeParantecesFromString(value);
+        return CellUtils.splitArguments(cellId);//for example Plus 5 6
+    }
 
-        // Recursively process each argument
+    private Expression handleReferenceOperation(String cellId, Cell targetCell) {
+        CellImp cell = getCell(CellLocation.fromCellId(cellId));
+
+        validateCircularDependency(cell, targetCell);
+
+        if (cell.getEffectiveValue() == null) {
+            throw new IllegalArgumentException("Invalid expression: cell referenced before being set");
+        }
+
+        return cell.getEffectiveValue();
+    }
+
+    private void validateCircularDependency(CellImp cell, Cell targetCell) {
+        if (cell.isCellAffectedBy(targetCell)==false) {
+            targetCell.addCellToAffectedBy(cell);
+            cell.addCellToAffectingOn(targetCell);
+        } else {
+            throw new IllegalArgumentException("Invalid expression: circular dependency");
+        }
+    }
+
+    private List<Expression> processArguments(List<String> arguments, Cell targetCell) {
         List<Expression> expressions = new ArrayList<>();
         for (String arg : arguments) {
             expressions.add(processExpression(arg.trim(), targetCell));
         }
-
-        // Create and return the appropriate operation with its arguments
-        return operation.calculate(expressions);
+        return expressions;
     }
 
+     private void recalculateCellsHelper(Expression expTree, Expression toFind, Expression newValue) {
+         if (expTree instanceof Num || expTree instanceof Str) {  // base case: value is a number
+             return;
+         }
+
+         if (expTree instanceof BinaryExpression) {
+             BinaryExpression expTree1 = (BinaryExpression) expTree;
+
+             if (expTree1.getExpressionLeft() == toFind) {
+                 expTree1.setExpressionLeft(newValue);
+             } else if (expTree1.getExpressionRight() == toFind) {
+                    expTree1.setExpressionRight(newValue);
+             } else {
+
+                 recalculateCellsHelper(expTree1.getExpressionLeft(), toFind, newValue);
+                 recalculateCellsHelper(expTree1.getExpressionRight(), toFind, newValue);
+             }
+         } else if (expTree instanceof UnaryExpression) {
+             UnaryExpression expTree1 = (UnaryExpression) expTree;
+             if (expTree1.getExpression() == toFind)
+                    expTree1.setExpression(newValue);
+             else
+                 recalculateCellsHelper(expTree1.getExpression(), toFind, newValue);
+         }
+         //TODO: ADD TRINARY EXPRESSION
+     }
     private void recalculateCells(Cell targetCell, Expression oldExpression) {
+        for (Cell cell : targetCell.getAffectingOn()) {
 
-        for(Cell cell : targetCell.getAffectingOn()){
-
-            if(cell.getEffectiveValue() instanceof BinaryExpression){
-
-                if(((BinaryExpression)cell.getEffectiveValue()).getExpressionLeft() == oldExpression){
-
-                    ((BinaryExpression)cell.getEffectiveValue()).setExpressionLeft(targetCell.getEffectiveValue());
-                }
-                else if (((BinaryExpression)cell.getEffectiveValue()).getExpressionRight() == oldExpression){
-
-                    ((BinaryExpression)cell.getEffectiveValue()).setExpressionRight(targetCell.getEffectiveValue());
-
-                }
-            }
-            else{
-                ((UnaryExpression)cell.getEffectiveValue()).setExpression(targetCell.getEffectiveValue());
-            }
+            Expression effectiveValue = cell.getEffectiveValue();
+            recalculateCellsHelper(effectiveValue, oldExpression, targetCell.getEffectiveValue());
         }
     }
 

@@ -1,42 +1,63 @@
 package expressions.impl;
 
 import expressions.Expression;
-import expressions.IsBinary;
 
 public abstract class BinaryExpression implements Expression{
 
-    private Expression expression1;
-    private Expression expression2;
+    private Expression leftExpression;
+    private Expression rightExpression;
 
-    public BinaryExpression(Expression expression1, Expression expression2) {
-        this.expression1 = expression1;
-        this.expression2 = expression2;
+    public BinaryExpression(Expression leftExpression, Expression rightExpression) {
+        this.leftExpression = leftExpression;
+        this.rightExpression = rightExpression;
     }
 
     @Override
     public Object evaluate() {
-        return evaluate(expression1.evaluate(), expression2.evaluate());
+        return evaluate(leftExpression.evaluate(), rightExpression.evaluate());
     }
 
     @Override
     public String toString() {
-        return "(" + expression1 + getOperationSign() + expression2 + ")";
+        return "(" + leftExpression + getOperationSign() + rightExpression + ")";
     }
 
      public Expression getExpressionLeft() {
-        return expression1;
+        return leftExpression;
     }
 
     public Expression getExpressionRight() {
-        return expression2;
+        return rightExpression;
     }
 
+//    public Expression findBinaryExpInTree(Expression toFind) {
+//
+//
+//
+//
+//
+//        if (leftExpression == toFind) {
+//            return leftExpression;
+//        }
+//        if (rightExpression == toFind) {
+//
+//            return rightExpression;
+//        }
+//
+//        // Traverse left and right subtrees
+//        Expression found = findBinaryExpInTree(((BinaryExpression)leftExpression).findBinaryExpInTree(toFind));
+//        if (found != null) {
+//            return found;
+//        }
+//        return traverseBinaryExpTree(rightExpression, toFind);
+//    }
+
     public void setExpressionLeft(Expression newExpression) {
-        expression1 = newExpression;
+        leftExpression = newExpression;
     }
 
     public void setExpressionRight(Expression newExpression) {
-        expression2 = newExpression;
+        rightExpression = newExpression;
     }
 
     abstract protected Object evaluate(Object evaluate, Object evaluate2);
