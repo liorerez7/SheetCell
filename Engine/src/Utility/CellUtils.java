@@ -2,21 +2,18 @@ package Utility;
 
 import CoreParts.impl.CellImp;
 import CoreParts.impl.SheetCellImp;
-import CoreParts.interfaces.Cell;
-import CoreParts.interfaces.SheetCell;
+import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
-import expressions.Expression;
-import expressions.Operation;
-import expressions.impl.BinaryExpression;
-import expressions.impl.UnaryExpression;
-import expressions.impl.numFunction.Num;
-import expressions.impl.stringFunction.Str;
+import expression.api.Expression;
+import expression.Operation;
+import expression.variantImpl.BinaryExpression;
+import expression.variantImpl.UnaryExpression;
+import expression.impl.numFunction.Num;
+import expression.impl.stringFunction.Str;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-
+//TODO: divide utilis to parser and expression calculations
 public class CellUtils {
 
     public static boolean trySetNumericValue(String value) {
@@ -41,7 +38,6 @@ public class CellUtils {
             return false;
         }
     }
-
 
     public static String extractFunctionName(String input) {
         String content = input.substring(1, input.length() - 1).trim();
@@ -155,7 +151,7 @@ public class CellUtils {
         }
         return expressions;
     }
-
+    //TODO: Implement visitor pattern for this function https://www.youtube.com/watch?v=UQP5XqMqtqQ
     public static void recalculateCellsHelper(Expression expTree, Expression toFind, Expression newValue) {
         if (expTree instanceof Num || expTree instanceof Str) {  // base case: value is a number
             return;
@@ -182,14 +178,12 @@ public class CellUtils {
         }
         //TODO: ADD TRINARY EXPRESSION
     }
+
     public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
         for (Cell cell : targetCell.getAffectingOn()) {
-
             Expression effectiveValue = cell.getEffectiveValue();
             recalculateCellsHelper(effectiveValue, oldExpression, targetCell.getEffectiveValue());
         }
     }
-
-
 }
 

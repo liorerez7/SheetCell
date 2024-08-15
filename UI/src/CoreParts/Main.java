@@ -22,6 +22,5 @@ public class Main {
         engine.updateCell("10", 'A', '4');
         //engine.updateCell("{PLUS, {REF, A1}, {REF, A2}}", 'A', '3');
         System.out.print(engine.getCell(CellLocation.fromCellId('B', '1')).getEffectiveValue().evaluate());
-
     }
 }

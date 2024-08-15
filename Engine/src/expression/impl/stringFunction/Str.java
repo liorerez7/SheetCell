@@ -1,6 +1,6 @@
-package expressions.impl.stringFunction;
+package expression.impl.stringFunction;
 
-import expressions.Expression;
+import expression.api.Expression;
 
 public class Str implements Expression {
 

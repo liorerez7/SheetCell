@@ -1,6 +1,6 @@
-package expressions.impl;
+package expression.variantImpl;
 
-import expressions.Expression;
+import expression.api.Expression;
 
 public abstract class UnaryExpression implements Expression {
 

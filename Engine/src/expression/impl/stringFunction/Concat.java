@@ -1,7 +1,7 @@
-package expressions.impl.stringFunction;
+package expression.impl.stringFunction;
 
-import expressions.Expression;
-import expressions.impl.BinaryExpression;
+import expression.api.Expression;
+import expression.variantImpl.BinaryExpression;
 
 public class Concat extends BinaryExpression {
 

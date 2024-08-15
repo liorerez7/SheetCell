@@ -1,6 +1,6 @@
-package expressions.impl;
+package expression.variantImpl;
 
-import expressions.Expression;
+import expression.api.Expression;
 
 public abstract class BinaryExpression implements Expression{
 
@@ -29,28 +29,6 @@ public abstract class BinaryExpression implements Expression{
     public Expression getExpressionRight() {
         return rightExpression;
     }
-
-//    public Expression findBinaryExpInTree(Expression toFind) {
-//
-//
-//
-//
-//
-//        if (leftExpression == toFind) {
-//            return leftExpression;
-//        }
-//        if (rightExpression == toFind) {
-//
-//            return rightExpression;
-//        }
-//
-//        // Traverse left and right subtrees
-//        Expression found = findBinaryExpInTree(((BinaryExpression)leftExpression).findBinaryExpInTree(toFind));
-//        if (found != null) {
-//            return found;
-//        }
-//        return traverseBinaryExpTree(rightExpression, toFind);
-//    }
 
     public void setExpressionLeft(Expression newExpression) {
         leftExpression = newExpression;

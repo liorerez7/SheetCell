@@ -1,7 +1,7 @@
-package expressions.impl.numFunction;
+package expression.impl.numFunction;
 
-import expressions.Expression;
-import expressions.impl.BinaryExpression;
+import expression.api.Expression;
+import expression.variantImpl.BinaryExpression;
 
 public class Exponent extends BinaryExpression {
 

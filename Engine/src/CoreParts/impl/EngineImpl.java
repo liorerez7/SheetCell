@@ -1,18 +1,10 @@
 package CoreParts.impl;
 
-import CoreParts.interfaces.Cell;
+import CoreParts.api.Cell;
 import Utility.CellUtils;
-import CoreParts.interfaces.Engine;
+import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
-import expressions.Expression;
-import expressions.Operation;
-import expressions.impl.BinaryExpression;
-import expressions.impl.UnaryExpression;
-import expressions.impl.numFunction.Num;
-import expressions.impl.stringFunction.Str;
-
-import java.util.ArrayList;
-import java.util.List;
+import expression.api.Expression;
 
 public class EngineImpl implements Engine {
 
@@ -56,7 +48,8 @@ public class EngineImpl implements Engine {
     public void updateCell(String newValue, char col, char row) {
 
         Cell targetCell = getCell(CellLocation.fromCellId(col, row));
-        Expression expression = CellUtils.processExpressionRec(newValue, targetCell,getSheetCell());
+        //TODO : CHECK OF WE REALLY NEED TO SEND THE SHEETCELL IN LINE 60
+        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell());
         try {
             expression.evaluate();
             targetCell.setOriginalValue(newValue);
@@ -69,7 +62,6 @@ public class EngineImpl implements Engine {
             throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
         }
     }
-
 }
 
 

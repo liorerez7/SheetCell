@@ -1,15 +1,15 @@
 package CoreParts.impl;
 
-import CoreParts.interfaces.SheetCell;
+import CoreParts.api.SheetCell;
 import CoreParts.smallParts.CellLocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
 //TODO: Implement the SheetCell interface
 public class SheetCellImp implements SheetCell
 {
-    private List<List<CellImp>> sheetCell= new ArrayList<>();
+    private List<List<CellImp>> sheetCell= new ArrayList<>();// TODO: change to map of id to cell
     int version;
     private static final int maxRows = 50;
     private static final int maxCols = 100;

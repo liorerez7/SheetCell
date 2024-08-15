@@ -1,6 +1,6 @@
-package expressions.impl.numFunction;
-import expressions.Expression;
-import expressions.impl.BinaryExpression;
+package expression.impl.numFunction;
+import expression.api.Expression;
+import expression.variantImpl.BinaryExpression;
 
 public class Minus extends BinaryExpression {
 

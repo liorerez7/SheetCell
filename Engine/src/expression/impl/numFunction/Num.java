@@ -1,6 +1,6 @@
-package expressions.impl.numFunction;
+package expression.impl.numFunction;
 
-import expressions.Expression;
+import expression.api.Expression;
 
 public class Num implements Expression {
 

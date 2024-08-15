@@ -1,6 +1,7 @@
-package expressions;
-import expressions.impl.numFunction.Minus;
-import expressions.impl.numFunction.Plus;
+package expression;
+import expression.api.Expression;
+import expression.impl.numFunction.Minus;
+import expression.impl.numFunction.Plus;
 
 import java.util.List;
 

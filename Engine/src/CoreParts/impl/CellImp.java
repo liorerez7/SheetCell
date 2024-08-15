@@ -1,8 +1,8 @@
 package CoreParts.impl;
 
-import CoreParts.interfaces.Cell;
+import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
-import expressions.Expression;
+import expression.api.Expression;
 
 import java.util.HashSet;
 import java.util.Set;

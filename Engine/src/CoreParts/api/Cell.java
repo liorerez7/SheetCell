@@ -1,7 +1,6 @@
-package CoreParts.interfaces;
+package CoreParts.api;
 
-import CoreParts.smallParts.CellLocation;
-import expressions.Expression;
+import expression.api.Expression;
 
 import java.util.Set;
 

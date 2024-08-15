@@ -1,11 +1,14 @@
 package CoreParts.smallParts;
 
-public class CellLocation {
+public class CellLocation { // TODO: Implement the CellLocation interface maybe change name to Location.
     private char visualColumn;
     private char visuaRow;
     private int realRow;
     private int realColumn;
 
+    /*TODO:maybe make constructor private and crate a factory class
+               that can be used to create the object
+      */
     public CellLocation(char col, char row) {
         this.visuaRow = row;
         this.visualColumn = col;
