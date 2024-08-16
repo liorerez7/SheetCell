@@ -1,9 +1,13 @@
 package expression.impl.numFunction;
 
 import expression.api.Expression;
+import expression.api.ExpressionVisitor;
 
 public class Num implements Expression {
-
+    @Override
+    public void accept(ExpressionVisitor visitor) {
+        visitor.visit(this);
+    }
     private double num;
 
     public Num(double num) {

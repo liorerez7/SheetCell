@@ -9,4 +9,5 @@ public interface Expression {
     Object evaluate() throws IllegalArgumentException;
 //TODO: maybe Expressions should also know what type of expression they are. BinaryExpression, UnaryExpression, etc.
     String getOperationSign();
+    void accept(ExpressionVisitor visitor);
 }

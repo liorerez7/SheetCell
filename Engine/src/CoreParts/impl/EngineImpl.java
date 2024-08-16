@@ -42,8 +42,6 @@ public class EngineImpl implements Engine {
 
     }
     @Override
-    //TODO :maybe change the implementaion of the function: checkIfCellsAreOfSameType,
-    // explanation why is inside the function.
 
     public void updateCell(String newValue, char col, char row) {
 

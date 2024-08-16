@@ -1,7 +1,7 @@
 package expression.impl.numFunction;
 
 import expression.api.Expression;
-import expression.variantImpl.BinaryExpression;
+import expression.impl.variantImpl.BinaryExpression;
 
 public class Plus extends BinaryExpression {
 

@@ -1,6 +1,7 @@
-package expression.variantImpl;
+package expression.impl.variantImpl;
 
 import expression.api.Expression;
+import expression.api.ExpressionVisitor;
 
 public abstract class UnaryExpression implements Expression {
 
@@ -18,6 +19,10 @@ public abstract class UnaryExpression implements Expression {
     @Override
     public String getOperationSign() {
         return "";
+    }
+
+    public void accept(ExpressionVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

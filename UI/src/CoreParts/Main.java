@@ -8,7 +8,6 @@ public class Main {
     public static void main(String[] args) {
 
         EngineImpl engine = new EngineImpl();
-
         engine.updateCell("5", 'A', '1');
         engine.updateCell("8", 'A', '2');
         engine.updateCell("2", 'A', '4');

@@ -6,5 +6,5 @@ public class GeneralQuestions {
 
 // TODO: Question: Should we use the ExtractValueWithExpectaion method https://youtu.be/UXOCLAdSXyY?si=hXvvDVfTvJHit_gf&t=2500
 
-
+// TODO: Question: CHANGING COLOR OF METHODS CALLS SETTING->COLOR SCHEME -> LANGUAGE DEFAULT -> FUNCTION CALL
 }

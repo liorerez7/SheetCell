@@ -1,6 +1,7 @@
 package expression.impl.stringFunction;
 
 import expression.api.Expression;
+import expression.api.ExpressionVisitor;
 
 public class Str implements Expression {
 
@@ -24,6 +25,5 @@ public class Str implements Expression {
     public String toString() {
         return value;
     }
-
 }
 

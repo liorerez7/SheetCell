@@ -1,6 +1,7 @@
-package expression.variantImpl;
+package expression.impl.variantImpl;
 
 import expression.api.Expression;
+import expression.api.ExpressionVisitor;
 
 public abstract class BinaryExpression implements Expression{
 
@@ -36,6 +37,10 @@ public abstract class BinaryExpression implements Expression{
 
     public void setExpressionRight(Expression newExpression) {
         rightExpression = newExpression;
+    }
+
+    public void accept(ExpressionVisitor visitor) {
+        visitor.visit(this);
     }
 
     abstract protected Object evaluate(Object evaluate, Object evaluate2);
