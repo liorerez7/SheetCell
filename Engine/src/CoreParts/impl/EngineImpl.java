@@ -39,22 +39,22 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void readSheetCellFromXML() throws FileNotFoundException, JAXBException {
-        InputStream in = new FileInputStream(new File("C:\\Users\\nivii\\programming\\CS degree\\year 2\\javaCourse\\sheetCell ex 1\\Engine\\src\\CoreParts\\impl\\basic.xml"));
+    public void readSheetCellFromXML(String path) throws FileNotFoundException, JAXBException {
+        InputStream in = new FileInputStream(new File(path));
         STLSheet sheet = EngineUtilies.deserializeFrom(in);
-    }
 
+    }
 
     @Override
     public void updateCell(String newValue, char col, char row) {
-
         Cell targetCell = getCell(CellLocation.fromCellId(col, row));
-        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell());
+        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell());//TODO:we are adding to the lists before we deleted the old ones. also we need to delete only when the expression is valid
         try {
             expression.evaluate().getValue();
             targetCell.setOriginalValue(newValue);
             //before change:
             Expression oldExpression = targetCell.getEffectiveValue(); // old expression
+
             targetCell.setEffectiveValue(expression);
             CellUtils.recalculateCellsRec(targetCell, oldExpression);
         }

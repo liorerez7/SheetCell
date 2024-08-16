@@ -7,6 +7,8 @@ import CoreParts.smallParts.CellLocation;
 import expression.Operation;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
+import expression.api.processing.ExpressionParser;
+import expression.impl.Processing.ExpressionParserImpl;
 import expression.impl.numFunction.Num;
 import expression.impl.stringFunction.Str;
 import expression.impl.variantImpl.BinaryExpression;
@@ -26,107 +28,25 @@ public class CellUtils {
         }
     }
 
-    public static List<String> processFunction(String newValue) {
-        return getCellAsStringRepresention(newValue);
-    }
-
-    public static boolean isPotentialOperation(String newValue)
-    {
-        if (newValue.startsWith("{") && newValue.endsWith("}")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static String extractFunctionName(String input) {
-        String content = input.substring(1, input.length() - 1).trim();
-        // Split the content by comma or space
-        String[] parts = content.split("[, ]");
-
-        if (parts.length > 0) {
-            return parts[0]; // The function name is the first part
-        }
-
-        throw new IllegalArgumentException("Invalid function format");
-    }
-
-    public static String removeParantecesFromString(String input) {
-        return input.substring(1, input.length() - 1).trim();
-    }
-
-
-    private static List<String> getCellAsStringRepresention(String newValue) {
-        List<String> cells = new ArrayList<>();
-        String content = newValue.substring(1, newValue.length() - 1).trim();
-        // Split the content by space
-        String[] parts = content.split(" ");
-        for (int i = 1; i < parts.length; i++) {
-            cells.add(parts[i]);
-        }
-        return cells;
-    }
-
-    public static void checkIfCellsAreOfSameType(List<CellImp> cells) {
-        Class clazz = cells.get(0).getEffectiveValue().getClass();
-        for (CellImp cell : cells) {
-            if (cell.getEffectiveValue().getClass() != clazz) {
-                throw new IllegalArgumentException("Cells are not of the same type");
-            }
-        }
-    }
-
-    public static List<String> splitArguments(String content) {
-        List<String> arguments = new ArrayList<>();
-        int braceLevel = 0;
-        StringBuilder currentArg = new StringBuilder();
-
-        for (char c : content.toCharArray()) {
-            if (c == '{') braceLevel++;
-            if (c == '}') braceLevel--;
-
-            if (c == ',' && braceLevel == 0) {
-                arguments.add(currentArg.toString().trim());
-                currentArg.setLength(0);  // Reset currentArg
-            } else {
-                currentArg.append(c);
-            }
-        }
-
-        if (currentArg.length() > 0) {
-            arguments.add(currentArg.toString().trim());  // Add the last argument
-        }
-
-        return arguments;
-    }
-
-
     // TODO : when cell is updated we need to delete his relayed by cells.
 
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) {// this is a recursive function
-
+        ExpressionParser parser = new ExpressionParserImpl(value);
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
             return new Num(Double.parseDouble(value));
         }
-
-        if (!CellUtils.isPotentialOperation(value)) {  // base case: value is a string
+        if (!parser.isPotentialOperation()) {  // base case: value is a string
             return new Str(value);
         }
-
-        List<String> arguments = parseArguments(value);
-        Operation operation = Operation.fromString(arguments.get(0)); // argument(0) = FUNCION_NAME
+        List<String> arguments = parser.getArgumentList();
+        Operation operation = Operation.fromString(parser.getFunctionName()); // argument(0) = FUNCION_NAME
 
         if (operation == Operation.REF) {
-            Cell cellThatBeenEffected = sheetCell.getCell(CellLocation.fromCellId(arguments.get(1)));
+            Cell cellThatBeenEffected = sheetCell.getCell(CellLocation.fromCellId(arguments.getFirst()));
             return handleReferenceOperation(cellThatBeenEffected, targetCell);//argument(1) = CELL_ID
         }
 
-        return operation.calculate(processArguments(arguments.subList(1, arguments.size()), targetCell, sheetCell));
-    }
-
-    private static List<String> parseArguments(String value) {
-        String cellId = CellUtils.removeParantecesFromString(value);
-        return CellUtils.splitArguments(cellId);//for example Plus 5 6
+        return operation.calculate(processArguments(arguments, targetCell, sheetCell));
     }
 
     private static Expression handleReferenceOperation(Cell cellThatBeenEffected, Cell cellThatAffects) {
@@ -156,12 +76,10 @@ public class CellUtils {
         return expressions;
     }
 
-
     public static void recalculateCellsHelper(Expression expTree, Expression toFind, Expression newValue) {
         ExpressionVisitor visitor = new TravarseExpTreeVisitor(toFind, newValue);
         expTree.accept(visitor);
     }
-
 
     public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
         for (Cell cell : targetCell.getAffectingOn()) {

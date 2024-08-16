@@ -4,11 +4,12 @@ import java.util.List;
 
 //TODO: just an idea.
 public interface ExpressionParser {
-    public  boolean isPotentialOperation(String newValue);
+    public  boolean isPotentialOperation();
+    public  String removeParanthesesFromString();
+    public  String extractFunctionName();
+    public List<String> parseArguments();
+    public  List<String> splitArguments(String cellId);
+    public List<String> getArgumentList();
+    public String getFunctionName();
 
-    public  String removeParanthesesFromString(String input);
-
-    public  List<String> splitArguments(String content);
-
-    public  List<String> getCellAsStringRepresentation(String newValue);
 }

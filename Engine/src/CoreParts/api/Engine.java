@@ -11,7 +11,7 @@ public interface Engine {
     CellImp getRequestedCell(char row, char col);
     SheetCellImp getSheetCell();
     SheetCellImp getSheetCell(int versionNumber);
-    void readSheetCellFromXML() throws FileNotFoundException, JAXBException;
+    void readSheetCellFromXML(String path) throws FileNotFoundException, JAXBException;
     //TODO: Generate all classes from the xml file using JAXB unmarshal
     //TODO: Write a methods that take the class genreated from the unmarshal method and make my on class from itd
     void updateCell(String newValue, char col, char row);
