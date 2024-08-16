@@ -2,6 +2,7 @@ package expression;
 import expression.api.Expression;
 import expression.impl.numFunction.*;
 import expression.impl.stringFunction.Concat;
+import expression.impl.stringFunction.Sub;
 
 import java.util.List;
 
@@ -56,6 +57,13 @@ public enum Operation {
         @Override
         public Expression calculate(List<Expression> expressions) {
             return new Concat(expressions.get(0), expressions.get(1));
+        }
+    },
+
+    SUB {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return new Sub(expressions.get(0), expressions.get(1), expressions.get(2));
         }
     },
 

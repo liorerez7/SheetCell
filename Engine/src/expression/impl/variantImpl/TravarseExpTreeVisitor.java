@@ -44,6 +44,18 @@ public class TravarseExpTreeVisitor implements ExpressionVisitor {
     @Override
     public void visit(TernaryExpression expression) {
 
+        if (expression.getFirstOperand() == toFind) {
+            expression.setFirstOperand(newValue);
+        } else if (expression.getSecondOperand() == toFind) {
+            expression.setSecondOperand(newValue);
+        } else if (expression.getThirdOperand() == toFind) {
+            expression.setThirdOperand(newValue);
+        } else {
+            CellUtils.recalculateCellsHelper(expression.getFirstOperand(), toFind, newValue);
+            CellUtils.recalculateCellsHelper(expression.getSecondOperand(), toFind, newValue);
+            CellUtils.recalculateCellsHelper(expression.getThirdOperand(), toFind, newValue);
+        }
+
     }
 
     @Override

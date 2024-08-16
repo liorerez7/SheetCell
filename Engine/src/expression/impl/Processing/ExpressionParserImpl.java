@@ -26,7 +26,7 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     public String getFunctionName() {
-        return getFunctionName();
+        return FunctionName;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ExpressionParserImpl implements ExpressionParser {
     int braceLevel = 0;
     StringBuilder currentArg = new StringBuilder();
 
-    for (char c : expression.toCharArray()) {
+    for (char c : cellId.toCharArray()) {
         if (c == '{') braceLevel++;
         if (c == '}') braceLevel--;
 
