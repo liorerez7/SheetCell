@@ -11,8 +11,8 @@ import java.io.InputStream;
 
 public class EngineUtilies {
 
-    public static STLSheet deserializeFrom(InputStream in)throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(SheetCellImp.class);
+    public static STLSheet deserializeFrom(InputStream in) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(STLSheet.class);
         Unmarshaller u = jaxbContext.createUnmarshaller();
         return (STLSheet) u.unmarshal(in);
     }

@@ -3,11 +3,22 @@ package CoreParts;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 
 import CoreParts.impl.EngineImpl;
 import CoreParts.smallParts.CellLocation;
+import jakarta.xml.bind.JAXBException;
+
+import java.io.FileNotFoundException;
 
 public class Main {
     public static void main(String[] args) {
 
         EngineImpl engine = new EngineImpl();
+        try {
+             engine.readSheetCellFromXML();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+
         engine.updateCell("5", 'A', '1');
         engine.updateCell("8", 'A', '2');
         engine.updateCell("2", 'A', '4');

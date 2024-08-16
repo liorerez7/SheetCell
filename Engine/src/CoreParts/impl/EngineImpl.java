@@ -1,15 +1,22 @@
 package CoreParts.impl;
 
 import CoreParts.api.Cell;
+import GeneratedClasses.STLSheet;
 import Utility.CellUtils;
 import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
+import Utility.EngineUtilies;
 import expression.api.Expression;
+import jakarta.xml.bind.JAXBException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class EngineImpl implements Engine {
 
     private SheetCellImp sheetCellImp = new SheetCellImp(4, 3);
-
 
     @Override
     public CellImp getRequestedCell(char row, char col) {
@@ -32,11 +39,13 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void readSheetCellFromXML() {
-
+    public void readSheetCellFromXML() throws FileNotFoundException, JAXBException {
+        InputStream in = new FileInputStream(new File("C:\\Users\\nivii\\programming\\CS degree\\year 2\\javaCourse\\sheetCell ex 1\\Engine\\src\\CoreParts\\impl\\basic.xml"));
+        STLSheet sheet = EngineUtilies.deserializeFrom(in);
     }
-    @Override
 
+
+    @Override
     public void updateCell(String newValue, char col, char row) {
 
         Cell targetCell = getCell(CellLocation.fromCellId(col, row));
