@@ -1,6 +1,9 @@
 package expression.impl.numFunction;
+import expression.ReturnedValueType;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.variantImpl.BinaryExpression;
+import expression.impl.variantImpl.EffectiveValueImpl;
 
 public class Minus extends BinaryExpression {
 
@@ -14,7 +17,8 @@ public class Minus extends BinaryExpression {
     }
 
     @Override
-    protected Object evaluate(Object e1, Object e2) {
-        return (Double)e1 - (Double)e2;
+    protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
+        Double result = (Double) e1.getValue() - (Double)e2.getValue();
+        return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
     }
 }

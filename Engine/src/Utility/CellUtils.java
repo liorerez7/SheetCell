@@ -30,7 +30,7 @@ public class CellUtils {
         return getCellAsStringRepresention(newValue);
     }
 
-    public static boolean isPotentialOperation(String newValue) // TODO : implement function
+    public static boolean isPotentialOperation(String newValue)
     {
         if (newValue.startsWith("{") && newValue.endsWith("}")) {
             return true;
@@ -156,7 +156,7 @@ public class CellUtils {
         return expressions;
     }
 
-    //TODO: Implement visitor pattern for this function https://www.youtube.com/watch?v=UQP5XqMqtqQ
+
     public static void recalculateCellsHelper(Expression expTree, Expression toFind, Expression newValue) {
         ExpressionVisitor visitor = new TravarseExpTreeVisitor(toFind, newValue);
         expTree.accept(visitor);
@@ -169,8 +169,4 @@ public class CellUtils {
             recalculateCellsHelper(effectiveValue, oldExpression, targetCell.getEffectiveValue());
         }
     }
-
-
-
-//TODO: ADD TRINARY EXPRESSION
 }

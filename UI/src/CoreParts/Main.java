@@ -16,10 +16,10 @@ public class Main {
 
         engine.updateCell("{PLUS, {REF, A1}, {PLUS, {REF, A3}, {REF, A4}}}", 'B', '1');
 
-        System.out.print(engine.getCell(CellLocation.fromCellId('B', '1')).getEffectiveValue().evaluate() + "\n");
+        System.out.print(engine.getCell(CellLocation.fromCellId('B', '1')).getEffectiveValue().evaluate().getValue() + "\n");
 
         engine.updateCell("10", 'A', '4');
         //engine.updateCell("{PLUS, {REF, A1}, {REF, A2}}", 'A', '3');
-        System.out.print(engine.getCell(CellLocation.fromCellId('B', '1')).getEffectiveValue().evaluate() + "\n");
+        System.out.print(engine.getCell(CellLocation.fromCellId('B', '1')).getEffectiveValue().evaluate().getValue() + "\n");
     }
 }

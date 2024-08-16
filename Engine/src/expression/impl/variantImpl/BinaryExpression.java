@@ -1,5 +1,6 @@
 package expression.impl.variantImpl;
 
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
 
@@ -14,7 +15,7 @@ public abstract class BinaryExpression implements Expression{
     }
 
     @Override
-    public Object evaluate() {
+    public EffectiveValue evaluate() {
         return evaluate(leftExpression.evaluate(), rightExpression.evaluate());
     }
 
@@ -43,6 +44,6 @@ public abstract class BinaryExpression implements Expression{
         visitor.visit(this);
     }
 
-    abstract protected Object evaluate(Object evaluate, Object evaluate2);
+    abstract protected EffectiveValue evaluate(EffectiveValue evaluate, EffectiveValue evaluate2);
 
 }

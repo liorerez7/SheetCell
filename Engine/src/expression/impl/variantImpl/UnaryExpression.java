@@ -1,5 +1,6 @@
 package expression.impl.variantImpl;
 
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
 
@@ -12,7 +13,7 @@ public abstract class UnaryExpression implements Expression {
     }
 
     @Override
-    public Object evaluate() {
+    public EffectiveValue evaluate() {
         return expression.evaluate();
     }
 

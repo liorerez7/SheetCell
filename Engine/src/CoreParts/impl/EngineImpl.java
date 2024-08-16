@@ -12,16 +12,10 @@ public class EngineImpl implements Engine {
 
 
     @Override
-    public void updateGivenCell() {
-
-    }
-
-    @Override
     public CellImp getRequestedCell(char row, char col) {
 
         return null;
     }
-
 
     public CellImp getCell(CellLocation location) {
         return sheetCellImp.getCell(location);
@@ -46,10 +40,9 @@ public class EngineImpl implements Engine {
     public void updateCell(String newValue, char col, char row) {
 
         Cell targetCell = getCell(CellLocation.fromCellId(col, row));
-        //TODO : CHECK OF WE REALLY NEED TO SEND THE SHEETCELL IN LINE 60
         Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell());
         try {
-            expression.evaluate();
+            expression.evaluate().getValue();
             targetCell.setOriginalValue(newValue);
             //before change:
             Expression oldExpression = targetCell.getEffectiveValue(); // old expression

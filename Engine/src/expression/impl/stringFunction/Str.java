@@ -1,7 +1,10 @@
 package expression.impl.stringFunction;
 
+import expression.ReturnedValueType;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
+import expression.impl.variantImpl.EffectiveValueImpl;
 
 public class Str implements Expression {
 
@@ -17,8 +20,8 @@ public class Str implements Expression {
     }
 
     @Override
-    public Object evaluate() {
-        return value;
+    public EffectiveValue evaluate() {
+        return new EffectiveValueImpl(ReturnedValueType.STRING, value);
     }
 
     @Override

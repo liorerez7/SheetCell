@@ -1,13 +1,13 @@
 package expression.impl.numFunction;
 
+import expression.ReturnedValueType;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
+import expression.impl.variantImpl.EffectiveValueImpl;
 
 public class Num implements Expression {
-    @Override
-    public void accept(ExpressionVisitor visitor) {
-        visitor.visit(this);
-    }
+
     private double num;
 
     public Num(double num) {
@@ -15,8 +15,13 @@ public class Num implements Expression {
     }
 
     @Override
-    public Object evaluate() {
-        return num;
+    public EffectiveValue evaluate() {
+        return new EffectiveValueImpl(ReturnedValueType.NUMERIC, num);
+    }
+
+    @Override
+    public void accept(ExpressionVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

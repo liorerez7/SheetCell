@@ -6,8 +6,8 @@ public interface Expression {
      *
      * @return the results of the expression
      */
-    Object evaluate() throws IllegalArgumentException;
-//TODO: maybe Expressions should also know what type of expression they are. BinaryExpression, UnaryExpression, etc.
+    EffectiveValue evaluate() throws IllegalArgumentException;
+
     String getOperationSign();
     void accept(ExpressionVisitor visitor);
 }
