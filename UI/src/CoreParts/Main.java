@@ -15,7 +15,7 @@ public class Main {
         engine.updateCell("{MINUS, {REF, A4}, 1}", 'A', '3');
 
         engine.updateCell("{PLUS, {REF, A1}, {PLUS, {REF, A3}, {REF, A4}}}", 'B', '1');
-
+        System.out.println("check!!");
         System.out.print(engine.getCell(CellLocation.fromCellId('B', '1')).getEffectiveValue().evaluate().getValue() + "\n");
 
         engine.updateCell("10", 'A', '4');

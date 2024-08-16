@@ -70,6 +70,6 @@ public class CellImp implements Cell
         affectedBy.add(cell);
     }
 
-
+//// note!!
 
 }
