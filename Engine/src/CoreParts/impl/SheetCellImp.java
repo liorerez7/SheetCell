@@ -1,10 +1,12 @@
 package CoreParts.impl;
 
+import CoreParts.api.Cell;
 import CoreParts.api.SheetCell;
 import CoreParts.smallParts.CellLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //TODO: Implement the SheetCell interface
 public class SheetCellImp implements SheetCell

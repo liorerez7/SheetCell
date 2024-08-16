@@ -104,6 +104,7 @@ public class CellUtils {
     // TODO : when cell is updated we need to delete his relayed by cells.
 
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) {// this is a recursive function
+
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
             return new Num(Double.parseDouble(value));
         }

@@ -7,6 +7,11 @@ public class Str implements Expression {
 
     private String value;
 
+    @Override
+    public void accept(ExpressionVisitor visitor) {
+        visitor.visit(this);
+    }
+
     public Str(String val) {
         this.value = val;
     }
