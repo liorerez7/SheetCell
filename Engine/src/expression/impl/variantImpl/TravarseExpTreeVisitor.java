@@ -42,6 +42,11 @@ public class TravarseExpTreeVisitor implements ExpressionVisitor {
     }
 
     @Override
+    public void visit(TernaryExpression expression) {
+
+    }
+
+    @Override
     public void visit(Num expression) {
         return;
     }

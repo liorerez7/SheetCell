@@ -16,7 +16,6 @@ public abstract class UnaryExpression implements Expression {
     public EffectiveValue evaluate() {
         return expression.evaluate();
     }
-
     @Override
     public String getOperationSign() {
         return "";
@@ -25,7 +24,6 @@ public abstract class UnaryExpression implements Expression {
     public void accept(ExpressionVisitor visitor) {
         visitor.visit(this);
     }
-
     @Override
     public String toString() {
         return expression.toString();
@@ -38,5 +36,6 @@ public abstract class UnaryExpression implements Expression {
     public void setExpression(Expression newExpression) {
         expression = newExpression;
     }
+    abstract protected EffectiveValue evaluate(EffectiveValue evaluate);
 
 }
