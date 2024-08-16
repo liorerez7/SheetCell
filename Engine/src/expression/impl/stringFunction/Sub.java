@@ -19,7 +19,13 @@ public class Sub  extends TernaryExpression {
     }
 
     @Override
-    protected EffectiveValue evaluate(EffectiveValue evaluate, EffectiveValue evaluate2, EffectiveValue evaluate3) {
-        return null;
+    protected EffectiveValue evaluate(EffectiveValue source,
+                                      EffectiveValue start,
+                                      EffectiveValue end) throws IndexOutOfBoundsException {
+        String sourceValue = source.getValue().toString();
+        int startValue = (int) start.getValue();
+        int endValue = (int) end.getValue();
+        String result = sourceValue.substring(startValue,endValue);
+        return new EffectiveValueImpl(ReturnedValueType.STRING,result);
     }
 }

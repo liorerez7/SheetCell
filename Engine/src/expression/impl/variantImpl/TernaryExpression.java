@@ -31,6 +31,7 @@ public abstract class TernaryExpression implements Expression {
     public EffectiveValue evaluate() throws IllegalArgumentException {
         return evaluate(firstOperand.evaluate(), secondOperand.evaluate(), thirdOperand.evaluate());
     }
+
     @Override
     public void accept(ExpressionVisitor visitor) {
         visitor.visit(this);

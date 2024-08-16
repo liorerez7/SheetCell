@@ -12,10 +12,10 @@ public class Main {
 
         EngineImpl engine = new EngineImpl();
 
-        engine.updateCell("5", 'A', '1');
-        engine.updateCell("8", 'A', '2');
-        engine.updateCell("2", 'A', '4');
-
+        engine.updateCell("Hello", 'A', '1');
+        engine.updateCell("Goodbye And Hello", 'A', '3');
+        engine.updateCell("{PLUS, {REF, A1}, {REF, A2}}", 'A', '2');
+        engine.updateCell("{SUB, {REF, A4}, {REF, A5}}", 'B', '1');
         System.out.println("check!!");
 
         engine.updateCell("10", 'A', '4');

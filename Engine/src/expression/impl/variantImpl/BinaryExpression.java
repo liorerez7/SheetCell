@@ -43,7 +43,6 @@ public abstract class BinaryExpression implements Expression{
     public void accept(ExpressionVisitor visitor) {
         visitor.visit(this);
     }
-
     abstract protected EffectiveValue evaluate(EffectiveValue evaluate, EffectiveValue evaluate2);
 
 }

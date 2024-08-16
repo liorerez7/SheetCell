@@ -20,13 +20,13 @@ public class EngineImpl implements Engine {
 
     @Override
     public CellImp getRequestedCell(char row, char col) {
-
         return null;
     }
 
     public CellImp getCell(CellLocation location) {
         return sheetCellImp.getCell(location);
     }
+
 
     @Override
     public SheetCellImp getSheetCell() {

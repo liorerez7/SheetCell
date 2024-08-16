@@ -1,7 +1,7 @@
 package expression;
 import expression.api.Expression;
-import expression.impl.numFunction.Minus;
-import expression.impl.numFunction.Plus;
+import expression.impl.numFunction.*;
+import expression.impl.stringFunction.Concat;
 
 import java.util.List;
 
@@ -15,6 +15,36 @@ public enum Operation {
             return new Plus(expressions.get(0), expressions.get(1));
         }
     },
+    TIMES {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return new Times(expressions.get(0), expressions.get(1));
+        }
+    },
+    DIVIDE {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return new Divide(expressions.get(0), expressions.get(1));
+        }
+    },
+    POW {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return new Pow(expressions.get(0), expressions.get(1));
+        }
+    },
+    MOD {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return new Mod(expressions.get(0), expressions.get(1));
+        }
+    },
+    ABS {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return new Abs(expressions.getFirst());
+        }
+    },
 
     MINUS {
         @Override
@@ -22,20 +52,19 @@ public enum Operation {
             return new Minus(expressions.get(0), expressions.get(1));
         }
     },
+    CONCAT {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return new Concat(expressions.get(0), expressions.get(1));
+        }
+    },
 
     REF{
       @Override
       public  Expression calculate(List<Expression> expressions){
-          return (expressions.get(0));
+          return (expressions.getFirst());
       }
     };
-
-//    ABS {
-//        @Override
-//        public Expression calculate(List<CellImp> listOfCells) {
-//            return new Abs(listOfCells.get(0).getEffectiveValue());
-//        }
-//    };
 
     // Method to convert a string to the corresponding Operation enum
     public static Operation fromString(String operation) {

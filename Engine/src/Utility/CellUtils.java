@@ -39,13 +39,12 @@ public class CellUtils {
             return new Str(value);
         }
         List<String> arguments = parser.getArgumentList();
-        Operation operation = Operation.fromString(parser.getFunctionName()); // argument(0) = FUNCION_NAME
+        Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
 
         if (operation == Operation.REF) {
             Cell cellThatBeenEffected = sheetCell.getCell(CellLocation.fromCellId(arguments.getFirst()));
             return handleReferenceOperation(cellThatBeenEffected, targetCell);//argument(1) = CELL_ID
         }
-
         return operation.calculate(processArguments(arguments, targetCell, sheetCell));
     }
 
