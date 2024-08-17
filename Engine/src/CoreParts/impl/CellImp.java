@@ -70,6 +70,16 @@ public class CellImp implements Cell
         affectedBy.add(cell);
     }
 
+    @Override
+    public void removeCellFromAffectingOn(Cell cell) {
+        affectingOn.remove(cell);
+    }
+
+    @Override
+    public void removeCellFromAffectedBy(Cell cell) {
+        affectedBy.remove(cell);
+    }
+
 //// note!!
 
 }

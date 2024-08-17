@@ -12,6 +12,8 @@ public interface Cell {
     String getOriginalValue();
     void addCellToAffectingOn(Cell cell);
     void addCellToAffectedBy(Cell cell);
+    void removeCellFromAffectingOn(Cell cell);
+    void removeCellFromAffectedBy(Cell cell);
     boolean isCellAffectingOn(Cell cell);
     boolean isCellAffectedBy(Cell cell) ;
     Set<Cell> getAffectingOn();
