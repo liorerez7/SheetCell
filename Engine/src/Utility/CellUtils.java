@@ -27,7 +27,6 @@ public class CellUtils {
             return false;
         }
     }
-
     // TODO : when cell is updated we need to delete his relayed by cells.
 
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) {// this is a recursive function
