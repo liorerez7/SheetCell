@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 
 public class Main {
     public static void main(String[] args) {
-
         EngineImpl engine = new EngineImpl();
 
         engine.updateCell("10", 'A', '1');

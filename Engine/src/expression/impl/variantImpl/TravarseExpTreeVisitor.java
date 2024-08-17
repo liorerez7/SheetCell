@@ -6,7 +6,7 @@ import expression.api.ExpressionVisitor;
 import expression.impl.numFunction.Num;
 import expression.impl.stringFunction.Str;
 
-
+import java.util.Optional;
 
 
 public class TravarseExpTreeVisitor implements ExpressionVisitor {
@@ -40,7 +40,6 @@ public class TravarseExpTreeVisitor implements ExpressionVisitor {
            CellUtils.recalculateCellsHelper(expression.getExpressionRight(), toFind, newValue);
         }
     }
-
     @Override
     public void visit(TernaryExpression expression) {
 

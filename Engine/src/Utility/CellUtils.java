@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CellUtils {
-
     public static boolean trySetNumericValue(String value) {
         try {
             Double numericValue = Double.parseDouble(value);
