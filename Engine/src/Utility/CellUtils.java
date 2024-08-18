@@ -77,6 +77,7 @@ public class CellUtils {
     public static void recalculateCellsHelper(Expression expTree, Expression toFind, Expression newValue) {
         ExpressionVisitor visitor = new TravarseExpTreeVisitor(toFind, newValue);
         expTree.accept(visitor);
+        validateExpression(expTree);
     }
 
     public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
@@ -84,5 +85,19 @@ public class CellUtils {
             Expression effectiveValue = cell.getEffectiveValue();
             recalculateCellsHelper(effectiveValue, oldExpression, targetCell.getEffectiveValue());
         }
+    }
+
+    //--------------------------------------------------------------------------
+    public static void unMarkCellRef(Cell targetCell) {
+
+        for (Cell cell : targetCell.getAffectedBy()) {
+            cell.removeCellFromAffectingOn(targetCell);
+        }
+
+        targetCell.getAffectedBy().clear(); // clears only after unMark the ref cells recursively
+    }
+
+    public static void validateExpression(Expression expression) {
+        expression.evaluate().getValue();
     }
 }

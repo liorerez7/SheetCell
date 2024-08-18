@@ -48,6 +48,9 @@ public class EngineImpl implements Engine {
     @Override
     public void updateCell(String newValue, char col, char row) {
         Cell targetCell = getCell(CellLocation.fromCellId(col, row));
+
+        CellUtils.unMarkCellRef(targetCell);
+
         Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell());//TODO:we are adding to the lists before we deleted the old ones. also we need to delete only when the expression is valid
         try {
             expression.evaluate().getValue();
