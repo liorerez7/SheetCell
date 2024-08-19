@@ -6,13 +6,19 @@ import Utility.CellUtils;
 import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
+import expression.Operation;
 import expression.api.Expression;
+import expression.api.processing.ExpressionParser;
+import expression.impl.Processing.ExpressionParserImpl;
+import expression.impl.stringFunction.Str;
 import jakarta.xml.bind.JAXBException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EngineImpl implements Engine {
 
@@ -47,19 +53,42 @@ public class EngineImpl implements Engine {
 
     @Override
     public void updateCell(String newValue, char col, char row) {
+
         Cell targetCell = getCell(CellLocation.fromCellId(col, row));
 
-        CellUtils.unMarkCellRef(targetCell);
 
-        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell());//TODO:we are adding to the lists before we deleted the old ones. also we need to delete only when the expression is valid
+        Set<Cell> CloneAffectedBy = new HashSet<>();
+
+        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell(), CloneAffectedBy);//TODO:we are adding to the lists before we deleted the old ones. also we need to delete only when the expression is valid
+
         try {
-            expression.evaluate().getValue();
-            targetCell.setOriginalValue(newValue);
-            //before change:
-            Expression oldExpression = targetCell.getEffectiveValue(); // old expression
 
+            expression.evaluate().getValue();
+
+
+
+            for(Cell cell : targetCell.getAffectingOn()){
+
+                ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
+
+                if(Operation.fromString(parser.getFunctionName()) == Operation.REF){
+                    continue;
+                }
+
+                if(expression.evaluate().getCellType() != cell.getEffectiveValue().evaluate().getCellType()){
+                    throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
+                }
+            }
+
+            targetCell.setOriginalValue(newValue);
+            Expression oldExpression = targetCell.getEffectiveValue(); // old expression
             targetCell.setEffectiveValue(expression);
+
+            CellUtils.updateAffectedByAndOnLists(targetCell, CloneAffectedBy);
+
             CellUtils.recalculateCellsRec(targetCell, oldExpression);
+
+
         }
         catch(Exception illegalArgumentException){
             throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
