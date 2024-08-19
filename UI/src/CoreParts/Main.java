@@ -1,20 +1,42 @@
 package CoreParts;
 
+import CoreParts.api.Engine;
+import CoreParts.api.controller.Command;
+import CoreParts.api.controller.CommandManager;
+import CoreParts.api.controller.InputHandler;
 import CoreParts.impl.EngineImpl;
+import CoreParts.impl.controller.commands.InputHandlerImpl;
 import CoreParts.smallParts.CellLocation;
+import CoreParts.impl.controller.CommandManagerImpl;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        EngineImpl TestEngine1 = new EngineImpl();
-        EngineImpl TestEngine2 = new EngineImpl();
-        EngineImpl TestEngine3 = new EngineImpl();
 
-        EngineTestOne(TestEngine1);
-        EngineTestTwo(TestEngine2);
-        EngineTestThree(TestEngine3);
+        // Create instances of the implementations
+        Engine engine = new EngineImpl();
+
+        CommandManager commandManager = new CommandManagerImpl(engine);
+        InputHandler inputHandler = new InputHandlerImpl(commandManager);
+        // Create MenuHandler with the Engine and CommandManager
+        MenuHandler menuHandler = new MenuHandler(engine, commandManager, inputHandler);
+
+
+
+
+//
+//        EngineImpl TestEngine1 = new EngineImpl();
+//        EngineImpl TestEngine2 = new EngineImpl();
+//        EngineImpl TestEngine3 = new EngineImpl();
+//
+//
+//        EngineTestOne(TestEngine1);
+//        EngineTestTwo(TestEngine2);
+//        EngineTestThree(TestEngine3);
     }
+
+
 
     private static void EngineTestOne(EngineImpl testEngine1) {
         testEngine1.updateCell("10", 'A', '1');
