@@ -18,7 +18,12 @@ public class Minus extends BinaryExpression {
 
     @Override
     protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
-        Double result = (Double) e1.getValue() - (Double)e2.getValue();
-        return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
+        try{
+            Double result = (Double) e1.getValue() - (Double)e2.getValue();
+            return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
+        }
+        catch (ClassCastException e) {
+            throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type Double", e);
+        }
     }
 }

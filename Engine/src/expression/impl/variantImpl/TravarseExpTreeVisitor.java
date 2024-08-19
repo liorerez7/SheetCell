@@ -36,7 +36,7 @@ public class TravarseExpTreeVisitor implements ExpressionVisitor {
         } else if (expression.getExpressionRight() == toFind) {
             expression.setExpressionRight(newValue);
         } else {
-            CellUtils.recalculateCellsHelper(expression.getExpressionLeft(), toFind, newValue);
+           CellUtils.recalculateCellsHelper(expression.getExpressionLeft(), toFind, newValue);
            CellUtils.recalculateCellsHelper(expression.getExpressionRight(), toFind, newValue);
         }
     }
