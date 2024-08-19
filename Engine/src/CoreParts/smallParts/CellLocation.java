@@ -1,8 +1,10 @@
 package CoreParts.smallParts;
 
+import java.util.Objects;
+
 public class CellLocation { // TODO: Implement the CellLocation interface maybe change name to Location.
     private char visualColumn;
-    private char visuaRow;
+    private char visualRow;
     private int realRow;
     private int realColumn;
 
@@ -10,9 +12,9 @@ public class CellLocation { // TODO: Implement the CellLocation interface maybe 
                that can be used to create the object
       */
     public CellLocation(char col, char row) {
-        this.visuaRow = row;
+        this.visualRow = row;
         this.visualColumn = col;
-        realRow = visuaRow - '1';
+        realRow = visualRow - '1';
         realColumn = visualColumn - 'A';
     }
 
@@ -29,6 +31,20 @@ public class CellLocation { // TODO: Implement the CellLocation interface maybe 
         return fromCellId(cellId);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CellLocation that = (CellLocation) o;
+        return visualColumn == that.visualColumn &&
+                visualRow == that.visualRow;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(visualColumn, visualRow);
+    }
+
     public int getRealColumn() {
         return realColumn;
     }
@@ -40,6 +56,6 @@ public class CellLocation { // TODO: Implement the CellLocation interface maybe 
         return visualColumn;
     }
     public char getVisualRow() {
-        return visuaRow;
+        return visualRow;
     }
 }

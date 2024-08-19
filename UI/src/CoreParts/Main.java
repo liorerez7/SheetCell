@@ -4,21 +4,23 @@ import CoreParts.impl.EngineImpl;
 import CoreParts.smallParts.CellLocation;
 
 public class Main {
+
     public static void main(String[] args) {
 
         EngineImpl TestEngine1 = new EngineImpl();
         EngineImpl TestEngine2 = new EngineImpl();
+        EngineImpl TestEngine3 = new EngineImpl();
 
         EngineTestOne(TestEngine1);
         EngineTestTwo(TestEngine2);
-
+        EngineTestThree(TestEngine3);
     }
 
-    private static void EngineTestOne(EngineImpl testEngine1)
-    {
+    private static void EngineTestOne(EngineImpl testEngine1) {
         testEngine1.updateCell("10", 'A', '1');
         testEngine1.updateCell("8", 'A', '3');
         testEngine1.updateCell("5", 'A', '4');
+
 
         // Tests
         System.out.println("Test Engine 1:");
@@ -34,7 +36,7 @@ public class Main {
 
     }
 
-    public static void EngineTestTwo(EngineImpl testEngine2) {
+    private static void EngineTestTwo(EngineImpl testEngine2) {
         // Initial Setup: A1 -> 10, A2 -> {REF, A1}, A3 -> {REF, A2}, A4 -> {REF, A3}
         testEngine2.updateCell("10", 'A', '1');
         testEngine2.updateCell("{REF, A1}", 'A', '2');
@@ -57,7 +59,29 @@ public class Main {
 
     }
 
-    // Test function to check if the value of the cell matches the expected value
+    private static void EngineTestThree(EngineImpl testEngine3){
+
+        testEngine3.updateCell("10", 'A', '1');
+        testEngine3.updateCell("{REF, A1}", 'A', '2'); // a2 = 10
+        testEngine3.updateCell("{MINUS, {REF, A2}, 7}", 'A', '3'); // a3 = 3
+
+
+        // Tests
+        System.out.println("Test Engine 3:");
+        System.out.println("---------------------------------------------------------------------------------");
+
+        numbericRunTest("Calculating A4: (A3{3} + A2{10})", testEngine3, "{PLUS, {REF, A3}, {REF, A2}}", 'A', '4', 13);
+        numbericRunTest("Calculating A1: (A1{10})", testEngine3, "9", 'A', '1', 9);
+
+        testEngine3.updateCell("{REF, A4}", 'B', '1');
+
+       // testEngine3.updateCell("Yossi", 'B', '1');
+        stringRunTest("Check if B1 is 'Yossi' after B1 change", testEngine3, "Yossi", 'B', '1', "Yossi");
+
+        System.out.println("---------------------------------------------------------------------------------");
+
+    }
+
     private static void numbericRunTest(String testName, EngineImpl engine, String expression, char col, char row, double expectedValue) {
         engine.updateCell(expression, col, row);
         double actualValue = (double)engine.getCell(CellLocation.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
@@ -92,7 +116,6 @@ public class Main {
         }
     }
 
-    // Test function for invalid updates
     private static void runInvalidUpdateTest(String testName, EngineImpl engine, String expression, char col, char row) {
         System.out.println("\n" + testName);
         System.out.println("Expression: " + expression);
@@ -106,5 +129,4 @@ public class Main {
             System.out.println("Result: Pass\n");
         }
     }
-
 }

@@ -29,7 +29,8 @@ public class EngineImpl implements Engine {
         return null;
     }
 
-    public CellImp getCell(CellLocation location) {
+    public Cell getCell(CellLocation location) {
+        // Fetch the cell directly from the map in SheetCellImp
         return sheetCellImp.getCell(location);
     }
 

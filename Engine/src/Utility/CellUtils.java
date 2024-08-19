@@ -87,7 +87,7 @@ public class CellUtils {
 
             ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
 
-            if(Operation.fromString(parser.getFunctionName()) == Operation.REF){
+            if(Operation.fromString(parser.getFunctionName()) == Operation.REF){ // in case i the operation is REF
                 cell.setEffectiveValue(targetCell.getEffectiveValue());
                 recalculateCellsRec(cell, oldExpression);
             }
