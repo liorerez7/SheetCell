@@ -13,9 +13,9 @@ public class CommandManagerImpl implements CommandManager {
     private final int numberOfCommands;
 
     public CommandManagerImpl(Engine engine) {
-        commandMap.put(0, new CoreParts.impl.controller.commands.DisplaySheet(engine));
-        commandMap.put(1, new CoreParts.impl.controller.commands.UpdateCell(engine));
-
+        commandMap.put(1, new CoreParts.impl.controller.commands.DisplaySheet(engine));
+        commandMap.put(2, new CoreParts.impl.controller.commands.UpdateCell(engine));
+        commandMap.put(3, new CoreParts.impl.controller.commands.DisplayCell(engine));
         numberOfCommands = commandMap.size();
 
     }

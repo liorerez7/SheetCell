@@ -4,11 +4,6 @@ import CoreParts.api.Engine;
 import CoreParts.api.controller.Command;
 import CoreParts.api.controller.CommandManager;
 import CoreParts.api.controller.InputHandler;
-import CoreParts.impl.EngineImpl;
-import CoreParts.impl.controller.CommandManagerImpl;
-import CoreParts.impl.controller.commands.InputHandlerImpl;
-
-import java.util.List;
 
 public class MenuHandler {
 
@@ -23,13 +18,16 @@ public class MenuHandler {
     }
 
     public void run() {
+
         while (true) {
+
             displayMenu();
+
             try {
+
                 int commandId = inputHandler.getMenuOptionInput();
                 Command command = commandManager.getCommand(commandId);
-
-                command.execute(attributesForSpecificCommand);
+                command.execute();
 
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -38,7 +36,9 @@ public class MenuHandler {
     }
 
     void displayMenu() {
+        System.out.println("\nMenu:");
         System.out.println("1. Display Sheet");
         System.out.println("2. Update Cell");
+        System.out.println("3. Display Cell");
     }
 }

@@ -1,7 +1,7 @@
 package Utility;
 
 import CoreParts.api.Cell;
-import CoreParts.impl.SheetCellImp;
+import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import expression.Operation;
 import expression.api.Expression;
@@ -86,7 +86,7 @@ public class CellUtils {
 
             ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
 
-            if(Operation.fromString(parser.getFunctionName()) == Operation.REF){ // in case i the operation is REF
+            if(Operation.fromString(parser.getFunctionName()) == Operation.REF){
                 cell.setEffectiveValue(targetCell.getEffectiveValue());
                 recalculateCellsRec(cell, oldExpression);
             }

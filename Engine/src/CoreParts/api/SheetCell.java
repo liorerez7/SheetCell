@@ -4,6 +4,12 @@ import CoreParts.smallParts.CellLocation;
 
 public interface SheetCell {
 
-    public SheetCell restoreSheetCell(int versionNumber);
-    public Cell getCell(CellLocation location);
+    SheetCell restoreSheetCell(int versionNumber);
+    Cell getCell(CellLocation location);
+    int getCellLength();
+    int getCellWidth();
+    int getLatestVersion();
+    int getNumberOfRows();
+    int getNumberOfColumns();
+    String getSheetName();
 }

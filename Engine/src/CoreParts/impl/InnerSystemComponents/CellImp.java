@@ -1,4 +1,4 @@
-package CoreParts.impl;
+package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
@@ -80,6 +80,10 @@ public class CellImp implements Cell
         affectedBy.remove(cell);
     }
 
-//// note!!
+    @Override
+    public CellLocation getLocation() {
+        return location;
+    }
+
 
 }

@@ -30,6 +30,9 @@ public class CellLocation { // TODO: Implement the CellLocation interface maybe 
 
         return fromCellId(cellId);
     }
+    public String getCellId() {
+        return "" + visualColumn + visualRow;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -45,6 +48,7 @@ public class CellLocation { // TODO: Implement the CellLocation interface maybe 
         return Objects.hash(visualColumn, visualRow);
     }
 
+
     public int getRealColumn() {
         return realColumn;
     }
@@ -52,9 +56,12 @@ public class CellLocation { // TODO: Implement the CellLocation interface maybe 
     public int getRealRow() {
         return realRow;
     }
+
+
     public char getVisualColumn() {
         return visualColumn;
     }
+
     public char getVisualRow() {
         return visualRow;
     }

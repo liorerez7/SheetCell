@@ -1,6 +1,8 @@
-package CoreParts.impl;
+package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
+import CoreParts.impl.DtoComponents.DtoCell;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
 import GeneratedClasses.STLSheet;
 import Utility.CellUtils;
 import CoreParts.api.Engine;
@@ -10,7 +12,6 @@ import expression.Operation;
 import expression.api.Expression;
 import expression.api.processing.ExpressionParser;
 import expression.impl.Processing.ExpressionParserImpl;
-import expression.impl.stringFunction.Str;
 import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,21 +22,27 @@ import java.util.Set;
 
 public class EngineImpl implements Engine {
 
-    private SheetCellImp sheetCellImp = new SheetCellImp(4, 3);
+    private SheetCellImp sheetCellImp = new SheetCellImp(
+            4, 3, "lior and niv sheet cell", 3, 15
+    );
 
     @Override
-    public CellImp getRequestedCell(char row, char col) {
-        return null;
+    public DtoCell getRequestedCell(String cellId) {
+        return new DtoCell(getCell(CellLocation.fromCellId(cellId.charAt(0), cellId.charAt(1))));
     }
 
     public Cell getCell(CellLocation location) {
         // Fetch the cell directly from the map in SheetCellImp
         return sheetCellImp.getCell(location);
+
     }
 
-
     @Override
-    public SheetCellImp getSheetCell() {
+    public DtoSheetCell getSheetCell() {
+        return new DtoSheetCell(sheetCellImp);
+    }
+
+    public SheetCellImp getInnerSystemSheetCell() {
         return sheetCellImp;
     }
 
@@ -55,16 +62,13 @@ public class EngineImpl implements Engine {
 
         Cell targetCell = getCell(CellLocation.fromCellId(col, row));
 
-
         Set<Cell> CloneAffectedBy = new HashSet<>();
 
-        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getSheetCell(), CloneAffectedBy);//TODO:we are adding to the lists before we deleted the old ones. also we need to delete only when the expression is valid
+        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell(), CloneAffectedBy);
 
         try {
 
             expression.evaluate().getValue();
-
-
 
             for(Cell cell : targetCell.getAffectingOn()){
 
@@ -87,12 +91,10 @@ public class EngineImpl implements Engine {
 
             CellUtils.recalculateCellsRec(targetCell, oldExpression);
 
-
         }
         catch(Exception illegalArgumentException){
             throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
         }
     }
-
 
 }

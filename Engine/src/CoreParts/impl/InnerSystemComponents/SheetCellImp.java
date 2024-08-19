@@ -1,30 +1,34 @@
-package CoreParts.impl;
+package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.api.SheetCell;
 import CoreParts.smallParts.CellLocation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //TODO: Implement the SheetCell interface
 public class SheetCellImp implements SheetCell
 {
     private Map<CellLocation, Cell> sheetCell = new HashMap<>(); // Changed to map of CellLocation to Cell
-    int version;
+    private final String name;
+    private int versionNumber;
     private static final int maxRows = 50;
-    private static final int maxCols = 100;
-    private int currentRowLength;
-    private int currentColLength;
+    private static final int maxCols = 20;
+    private int currentNumberOfRows;
+    private int currentNumberOfCols;
+    private int currentCellLength;
+    private int currentCellWidth;
 
-    public SheetCellImp(int row, int col) {
+    public SheetCellImp(int row, int col, String sheetName, int currentCellLength, int currentCellWidth) {
         if (row > maxRows || col > maxCols) {
             throw new IllegalArgumentException("Row and column numbers exceed maximum allowed limits.");
         }
-        currentRowLength = row;
-        currentColLength = col;
+        this.name = sheetName;
+        currentNumberOfRows = row;
+        currentNumberOfCols = col;
+        this.currentCellLength = currentCellLength;
+        this.currentCellWidth = currentCellWidth;
 
     }
 
@@ -39,6 +43,36 @@ public class SheetCellImp implements SheetCell
     public Cell getCell(CellLocation location) {
         // If the cell does not exist, create and add it to the map dynamically
         return sheetCell.computeIfAbsent(location, loc -> new CellImp(loc));
+    }
+
+    @Override
+    public int getCellLength() {
+        return currentCellLength;
+    }
+
+    @Override
+    public int getCellWidth() {
+        return currentCellWidth;
+    }
+
+    @Override
+    public int getLatestVersion() {
+        return versionNumber;
+    }
+
+    @Override
+    public int getNumberOfRows() {
+        return currentNumberOfRows;
+    }
+
+    @Override
+    public int getNumberOfColumns() {
+        return currentNumberOfCols;
+    }
+
+    @Override
+    public String getSheetName() {
+        return name;
     }
 
 
@@ -56,5 +90,9 @@ public class SheetCellImp implements SheetCell
             throw new IllegalArgumentException("Invalid cell location");
         }
         sheetCell.put(location, newCell);
+    }
+
+    public Map<CellLocation, Cell> getSheetCell() {
+        return sheetCell;
     }
 }

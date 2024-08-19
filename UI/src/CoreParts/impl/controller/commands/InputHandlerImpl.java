@@ -27,7 +27,7 @@ public class InputHandlerImpl implements InputHandler {
     public int getMenuOptionInput() throws Exception {
 
         int numOfCommads = commandManager.getNumberOfCommands();
-        int input = scanner.nextInt();
+        int input = scanner.nextInt();                        // TODO: maybe change to nextLine and add an example of input
         if(input > 0 && input <= numOfCommads) {
             return input;
         } else {
@@ -39,22 +39,24 @@ public class InputHandlerImpl implements InputHandler {
     public String getCellInput() throws Exception {
 
         System.out.println("Enter Cell ID:  ");
-        String input = scanner.next();
-        if (input.matches("[A-Z][0-9]+")) {
+        String input = scanner.nextLine();
+
+        if (input.matches("[A-Z][1-9]+")) {
             return input;
         } else {
             throw new IllegalArgumentException("Invalid input: input should be a letter followed by a number\nExample: A1");
         }
     }
 
+    //TODO: add more syntax checks, like commas.
     @Override
     public String getCommandInput() throws Exception {
 
         System.out.println("Enter Expression Value: ");
+
         String input = scanner.nextLine();
 
-        // Check if input starts with '{' and ends with '}'
-        if (input.startsWith("{") && input.endsWith("}")) {
+        if (input.startsWith("{") && !(input.endsWith("}"))) {
             throw new Exception("Invalid input: Input should not start with '{' and end with '}'");
         }
 

@@ -1,5 +1,6 @@
 package CoreParts.api;
 
+import CoreParts.smallParts.CellLocation;
 import expression.api.Expression;
 
 import java.util.Set;
@@ -18,4 +19,5 @@ public interface Cell {
     boolean isCellAffectedBy(Cell cell) ;
     Set<Cell> getAffectingOn();
     Set<Cell> getAffectedBy();
+    CellLocation getLocation();
 }
