@@ -1,6 +1,7 @@
 package CoreParts.impl.DtoComponents;
 
 import CoreParts.api.Cell;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 
 import java.util.Objects;
@@ -8,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DtoCell {
-    private Expression effectiveValue;
+    private EffectiveValue effectiveValue;
     private String originalValue;
     private DtoLocation location;
 
@@ -22,7 +23,11 @@ public class DtoCell {
         this.originalValue = cell.getOriginalValue();
 
         // Convert the Expression to a string for the DTO
-        this.effectiveValue = cell.getEffectiveValue();
+        if (cell.getEffectiveValue() == null) {
+            this.effectiveValue = null;
+        }
+        else
+            this.effectiveValue = cell.getEffectiveValue().evaluate();
 
         // Convert the CellLocation to DtoLocation
         this.location = new DtoLocation(cell.getLocation());
@@ -38,7 +43,7 @@ public class DtoCell {
                 .collect(Collectors.toSet());
     }
 
-    public Expression getEffectiveValue() {
+    public EffectiveValue getEffectiveValue() {
         return effectiveValue;
     }
 

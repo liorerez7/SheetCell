@@ -91,14 +91,12 @@ public class CellUtils {
 
     public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
         for (Cell cell : targetCell.getAffectingOn()) {
-
             ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
-
             if(Operation.fromString(parser.getFunctionName()) == Operation.REF){
                 cell.setEffectiveValue(targetCell.getEffectiveValue());
+                cell.updateVersion(targetCell.getLatestVersion());
                 recalculateCellsRec(cell, oldExpression);
             }
-
             Expression effectiveValue = cell.getEffectiveValue();
             recalculateCellsHelper(effectiveValue, oldExpression, targetCell.getEffectiveValue());
         }

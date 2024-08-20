@@ -13,7 +13,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         // Create instances of the implementations
         Engine engine = new EngineImpl();
 
@@ -86,7 +85,6 @@ public class Main {
         System.out.println("---------------------------------------------------------------------------------");
 
     }
-
     private static void EngineTestThree(EngineImpl testEngine3){
 
         testEngine3.updateCell("10", 'A', '1');

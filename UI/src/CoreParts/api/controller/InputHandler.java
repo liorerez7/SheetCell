@@ -7,5 +7,6 @@ import java.util.Scanner;
 public interface InputHandler {
     int getMenuOptionInput() throws Exception;
     String getCellInput() throws Exception;
-    public String getCommandInput() throws Exception;
+     String getCommandInput() throws Exception;
+     int getVersionInput() throws Exception;
 }

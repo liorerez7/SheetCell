@@ -26,11 +26,11 @@ public class UpdateCell extends SheetEngineCommand {
 
         if(cell.getEffectiveValue() != null)
         {
-            ReturnedValueType returnedValueType = cell.getEffectiveValue().evaluate().getCellType();
+            ReturnedValueType returnedValueType = cell.getEffectiveValue().getCellType();
 
             System.out.println("Cell id: " + cellId);
             System.out.println("Original value: " + cell.getOriginalValue());
-            System.out.println("Effective value: " + cell.getEffectiveValue().evaluate().getValue());
+            System.out.println("Effective value: " + cell.getEffectiveValue().getValue());
 
             switch (returnedValueType){
                 case STRING:
@@ -43,6 +43,7 @@ public class UpdateCell extends SheetEngineCommand {
         }
 
         String newExpressionValue = inputHandler.getCommandInput();
+
 
         engine.updateCell(newExpressionValue, cellId.charAt(0), cellId.charAt(1));
     }

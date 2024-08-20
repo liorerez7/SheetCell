@@ -12,7 +12,7 @@ public class SheetCellImp implements SheetCell
 {
     private Map<CellLocation, Cell> sheetCell = new HashMap<>(); // Changed to map of CellLocation to Cell
     private final String name;
-    private int versionNumber;
+    private int versionNumber = 1;
     private static final int maxRows = 50;
     private static final int maxCols = 20;
     private int currentNumberOfRows;
@@ -41,6 +41,10 @@ public class SheetCellImp implements SheetCell
         sheetCell.put(location, cell);
     }
 
+    @Override
+    public int getActiveCellsCount() {
+        return sheetCell.size();
+    }
     // Get a cell based on its CellLocation
     // Method to get a cell or create it if it doesn't exist
     @Override
@@ -48,7 +52,9 @@ public class SheetCellImp implements SheetCell
         // If the cell does not exist, create and add it to the map dynamically
         return sheetCell.computeIfAbsent(location, loc -> new CellImp(loc));
     }
-
+    public void updateVersion() {
+        versionNumber++;
+    }
     @Override
     public int getCellLength() {
         return currentCellLength;

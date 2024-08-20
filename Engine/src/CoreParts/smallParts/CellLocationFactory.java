@@ -12,7 +12,6 @@ public class CellLocationFactory {
             return cachedCoordinates.get(key);
         }
 
-
         CellLocation coordinate = new CellLocation(key.charAt(0), key.charAt(1));
         cachedCoordinates.put(key, coordinate);
 
@@ -20,6 +19,7 @@ public class CellLocationFactory {
     }
 
     public static CellLocation fromCellId(char col, char row) {
+
         String cellId = "" + col + row;
 
         return CellLocationFactory.fromCellId(cellId);

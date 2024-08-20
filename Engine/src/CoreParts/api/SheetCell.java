@@ -13,5 +13,6 @@ public interface SheetCell {
     int getNumberOfColumns();
     String getSheetName();
     void setCell(CellLocation location, Cell cell);
+    int getActiveCellsCount();
 
     }

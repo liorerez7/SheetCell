@@ -17,7 +17,6 @@ public class InputHandlerImpl implements InputHandler {
         scanner = new Scanner(System.in);
         this.commandManager = commandManager;
     }
-
     public InputHandlerImpl() {
         scanner = new Scanner(System.in);
         this.commandManager = null;
@@ -45,6 +44,15 @@ public class InputHandlerImpl implements InputHandler {
             return input;
         } else {
             throw new IllegalArgumentException("Invalid input: input should be a letter followed by a number\nExample: A1");
+        }
+    }
+    public int getVersionInput() throws Exception {
+        System.out.println("Enter the version number: ");
+        int input = scanner.nextInt();
+        if (input > 0) {
+            return input;
+        } else {
+            throw new Exception("Invalid input enter a positive number");
         }
     }
 

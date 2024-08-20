@@ -1,18 +1,20 @@
 package CoreParts.impl.DtoComponents;
 
 import CoreParts.api.Cell;
+import CoreParts.api.SheetCell;
+import CoreParts.impl.InnerSystemComponents.CellImp;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
+import expression.api.EffectiveValue;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DtoSheetCell {
 
-    private Map<DtoLocation, DtoCell> sheetCell = new HashMap<>();
+    private Map<DtoLocation,EffectiveValue> sheetCell = new HashMap<>();
     private static final int maxRows = 50;
     private static final int maxCols = 20;
-    private final String name;
+    private String name;
     private int versionNumber;
     private int currentNumberOfRows;
     private int currentNumberOfCols;
@@ -21,26 +23,39 @@ public class DtoSheetCell {
 
     // Constructor to populate DtoSheetCell from SheetCellImp
     public DtoSheetCell(SheetCellImp sheetCellImp) {
-
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
-            // Convert CellLocation to DtoLocation
-            DtoLocation dtoLocation = new DtoLocation(entry.getKey());
-            sheetCell.put(dtoLocation, new DtoCell(entry.getValue()));
+            sheetCell.put(new DtoLocation(entry.getKey()),entry.getValue().getEffectiveValue().evaluate());
         }
-
-        this.name = sheetCellImp.getSheetName();
-        this.versionNumber = sheetCellImp.getLatestVersion();
-        this.currentNumberOfRows = sheetCellImp.getNumberOfRows();
-        this.currentNumberOfCols = sheetCellImp.getNumberOfColumns();
-        this.currentCellLength = sheetCellImp.getCellLength();
-        this.currentCellWidth = sheetCellImp.getCellWidth();
+        copyBasicTypes(sheetCellImp);
     }
-
-    public Map<DtoLocation, DtoCell> getSheetCell() {
+    public DtoSheetCell(Map<Integer,Map<CellLocation, EffectiveValue>> sheetCellVersions, SheetCell sheetCell, int requestedVersion) {
+        Set<DtoLocation> markedLocations = new HashSet<>();
+        copyBasicTypes(sheetCell);
+        Map<CellLocation, EffectiveValue> sheetCellChanges = sheetCellVersions.get(requestedVersion);
+       while (markedLocations.size() < sheetCell.getActiveCellsCount()) {
+           for (Map.Entry<CellLocation, EffectiveValue> entry : sheetCellChanges.entrySet()) {
+               DtoLocation location = new DtoLocation(entry.getKey());
+               if(markedLocations.contains(location)) {
+                   continue;
+               }
+               this.sheetCell.put(location, entry.getValue());
+               markedLocations.add(location);
+           }
+           versionNumber--;
+           sheetCellChanges = sheetCellVersions.get(versionNumber);
+       }
+    }
+    public Map<DtoLocation, EffectiveValue> getSheetCell() {
         return sheetCell;
     }
-
-
+    public void copyBasicTypes(SheetCell sheetCell) {
+        this.name = sheetCell.getSheetName();
+        this.versionNumber = sheetCell.getLatestVersion();
+        this.currentNumberOfRows = sheetCell.getNumberOfRows();
+        this.currentNumberOfCols = sheetCell.getNumberOfColumns();
+        this.currentCellLength = sheetCell.getCellLength();
+        this.currentCellWidth = sheetCell.getCellWidth();
+    }
 
     public int getCellWidth() {
         return currentCellWidth;
@@ -59,5 +74,9 @@ public class DtoSheetCell {
     }
     public String getName() {
         return name;
+    }
+    public EffectiveValue getEffectiveValue(DtoLocation dtoLocation) {
+        EffectiveValue value = sheetCell.get(dtoLocation);
+        return sheetCell.get(dtoLocation);
     }
 }

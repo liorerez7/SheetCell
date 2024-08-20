@@ -20,4 +20,6 @@ public interface Cell {
     Set<Cell> getAffectingOn();
     Set<Cell> getAffectedBy();
     CellLocation getLocation();
+    void updateVersion(int latestVersion);
+    int getLatestVersion();
 }

@@ -2,6 +2,8 @@ package CoreParts.impl.DtoComponents;
 
 import CoreParts.smallParts.CellLocation;
 
+import java.util.Objects;
+
 public class DtoLocation {
 
     private char visualColumn;
@@ -40,4 +42,19 @@ public class DtoLocation {
     public String getCellId() {
         return "" + visualColumn + visualRow;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DtoLocation that = (DtoLocation) o;
+        return visualColumn == that.visualColumn &&
+                visualRow == that.visualRow;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(visualColumn, visualRow);
+    }
+
+
 }

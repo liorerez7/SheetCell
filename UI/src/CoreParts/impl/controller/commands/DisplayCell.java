@@ -18,7 +18,7 @@ public class DisplayCell extends SheetEngineCommand {
         DtoCell cell = engine.getRequestedCell(cellId);
         System.out.println("Cell id: " + cellId);
         System.out.println("Original value: " + cell.getOriginalValue());
-        System.out.println("Effective value: " + cell.getEffectiveValue().evaluate().getValue());
+        System.out.println("Effective value: " + cell.getEffectiveValue().getValue());
 
         // Print affected cells
         printAffectedCells(cell);

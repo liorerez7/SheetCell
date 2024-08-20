@@ -90,5 +90,15 @@ public class CellImp implements Cell
         return location;
     }
 
+    @Override
+    public void updateVersion(int latestVersion) {
+        latesetVersion = latestVersion;
+    }
+
+    @Override
+    public int getLatestVersion() {
+        return latesetVersion;
+    }
+
 
 }

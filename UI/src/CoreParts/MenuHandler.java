@@ -20,11 +20,9 @@ public class MenuHandler {
     public void run() {
 
         while (true) {
-
             displayMenu();
 
             try {
-
                 int commandId = inputHandler.getMenuOptionInput();
                 Command command = commandManager.getCommand(commandId);
                 command.execute();
@@ -40,5 +38,6 @@ public class MenuHandler {
         System.out.println("1. Display Sheet");
         System.out.println("2. Update Cell");
         System.out.println("3. Display Cell");
+        System.out.println("4. Display Version");
     }
 }
