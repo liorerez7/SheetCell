@@ -7,6 +7,7 @@ import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.impl.controller.commands.InputHandlerImpl;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.impl.controller.CommandManagerImpl;
+import CoreParts.smallParts.CellLocationFactory;
 
 public class Main {
 
@@ -16,24 +17,25 @@ public class Main {
         // Create instances of the implementations
         Engine engine = new EngineImpl();
 
-//        CommandManager commandManager = new CommandManagerImpl(engine);
-//        InputHandler inputHandler = new InputHandlerImpl(commandManager);
-//        // Create MenuHandler with the Engine and CommandManager
-//        MenuHandler menuHandler = new MenuHandler(engine, commandManager, inputHandler);
-//        menuHandler.run();
-
-
-        engine.updateCell("2", 'A', '1');
-        engine.updateCell("{REF, A1}", 'A', '2');
-        engine.updateCell("{REF, A2}", 'A', '3');
-        engine.updateCell("{REF, A3}", 'A', '4');
-        engine.updateCell("{REF, A4}", 'A', '2');
-
+        CommandManager commandManager = new CommandManagerImpl(engine);
+        InputHandler inputHandler = new InputHandlerImpl(commandManager);
+        // Create MenuHandler with the Engine and CommandManager
+        MenuHandler menuHandler = new MenuHandler(engine, commandManager, inputHandler);
+        menuHandler.run();
+//
+//        try{
+//            engine.updateCell("2", 'A', '1');
+//            engine.updateCell("{REF, A1}", 'A', '2');
+//            engine.updateCell("{REF, A2}", 'A', '3');
+//            engine.updateCell("{REF, A3}", 'A', '4');
+//            engine.updateCell("{REF, A4}", 'A', '2');
+//        }catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
 //
 //        EngineImpl TestEngine1 = new EngineImpl();
 //        EngineImpl TestEngine2 = new EngineImpl();
 //        EngineImpl TestEngine3 = new EngineImpl();
-//
 //
 //        EngineTestOne(TestEngine1);
 //        EngineTestTwo(TestEngine2);
@@ -110,7 +112,7 @@ public class Main {
 
     private static void numbericRunTest(String testName, EngineImpl engine, String expression, char col, char row, double expectedValue) {
         engine.updateCell(expression, col, row);
-        double actualValue = (double)engine.getCell(CellLocation.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
+        double actualValue = (double)engine.getCell(CellLocationFactory.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
 
         System.out.println("\n" + testName);
         System.out.println("Expression: " + expression);
@@ -127,7 +129,7 @@ public class Main {
 
     private static void stringRunTest(String testName, EngineImpl engine, String expression, char col, char row, String expectedValue) {
         engine.updateCell(expression, col, row);
-        String actualValue = (String)engine.getCell(CellLocation.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
+        String actualValue = (String)engine.getCell(CellLocationFactory.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
 
         System.out.println("\n" + testName);
         System.out.println("Expression: " + expression);

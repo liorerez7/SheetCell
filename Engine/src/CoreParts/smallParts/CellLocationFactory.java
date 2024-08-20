@@ -18,4 +18,10 @@ public class CellLocationFactory {
 
         return coordinate;
     }
+
+    public static CellLocation fromCellId(char col, char row) {
+        String cellId = "" + col + row;
+
+        return CellLocationFactory.fromCellId(cellId);
+    }
 }

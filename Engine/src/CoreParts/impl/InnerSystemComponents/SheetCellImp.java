@@ -36,6 +36,11 @@ public class SheetCellImp implements SheetCell
         return null;
     }
 
+    @Override
+    public void setCell(CellLocation location, Cell cell) {
+        sheetCell.put(location, cell);
+    }
+
     // Get a cell based on its CellLocation
     // Method to get a cell or create it if it doesn't exist
     @Override

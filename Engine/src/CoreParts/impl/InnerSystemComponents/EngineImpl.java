@@ -61,7 +61,7 @@ public class EngineImpl implements Engine {
     @Override
     public void updateCell(String newValue, char col, char row) {
 
-        Cell targetCell = getCell(CellLocation.fromCellId(col, row));
+        Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
         Set<Cell> CloneAffectedBy = new HashSet<>();
 

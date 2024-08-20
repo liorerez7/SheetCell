@@ -29,11 +29,7 @@ public class CellLocation { // TODO: Implement the CellLocation interface maybe 
 //        return new CellLocation(cellId.charAt(0), cellId.charAt(1));
 //    }
 
-    public static CellLocation fromCellId(char col, char row) {
-        String cellId = "" + col + row;
 
-        return CellLocationFactory.fromCellId(cellId);
-    }
     public String getCellId() {
         return "" + visualColumn + visualRow;
     }
