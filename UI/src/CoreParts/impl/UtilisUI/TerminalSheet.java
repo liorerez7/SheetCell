@@ -14,7 +14,7 @@ public class TerminalSheet implements Displayer {
         int cellLength = sheetCell.getCellLength();
         int cellWidth = sheetCell.getCellWidth();
         String sheetName = sheetCell.getName();
-
+        int versionNumber = sheetCell.getVersionNumber();
         // Calculate the total width of the table
         int tableWidth = (numberOfCols * (cellWidth + 3)) + 1; // 3 for " | " and 1 for leading space
 
@@ -22,7 +22,7 @@ public class TerminalSheet implements Displayer {
         int nameLength = sheetName.length() + 7; // "Sheet: " and spaces
         int spacesBefore = (((tableWidth - nameLength) / 2)+ 5);
         int spacesAfter = tableWidth - nameLength - spacesBefore;
-        System.out.println("\n" + " ".repeat(spacesBefore) + "Sheet: " + sheetName + " ".repeat(spacesAfter) + "\n");
+        System.out.println("\n" + " ".repeat(spacesBefore) + "Sheet: " + sheetName + " ".repeat(spacesAfter) + "version: " + versionNumber+ "\n");
 
         // Print the column headers
         System.out.print("    "); // Initial space for row headers

@@ -32,7 +32,7 @@ public class DtoSheetCell {
         Set<DtoLocation> markedLocations = new HashSet<>();
         copyBasicTypes(sheetCell);
         Map<CellLocation, EffectiveValue> sheetCellChanges = sheetCellVersions.get(requestedVersion);
-       while (markedLocations.size() < sheetCell.getActiveCellsCount()) {
+       while (requestedVersion > 0) {
            for (Map.Entry<CellLocation, EffectiveValue> entry : sheetCellChanges.entrySet()) {
                DtoLocation location = new DtoLocation(entry.getKey());
                if(markedLocations.contains(location)) {
@@ -41,8 +41,8 @@ public class DtoSheetCell {
                this.sheetCell.put(location, entry.getValue());
                markedLocations.add(location);
            }
-           versionNumber--;
-           sheetCellChanges = sheetCellVersions.get(versionNumber);
+           requestedVersion--;
+           sheetCellChanges = sheetCellVersions.get(requestedVersion);
        }
     }
     public Map<DtoLocation, EffectiveValue> getSheetCell() {

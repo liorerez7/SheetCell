@@ -76,8 +76,6 @@ public class EngineImpl implements Engine {
 
     @Override
     public void updateCell(String newValue, char col, char row) {
-
-
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
         Set<Cell> CloneAffectedBy = new HashSet<>();
@@ -85,7 +83,6 @@ public class EngineImpl implements Engine {
         Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell(), CloneAffectedBy);
 
         try {
-
             expression.evaluate().getValue();
 
             for(Cell cell : targetCell.getAffectingOn()){
