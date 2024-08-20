@@ -2,7 +2,6 @@ package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.impl.DtoComponents.DtoCell;
-import CoreParts.impl.DtoComponents.DtoLocation;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocationFactory;
 import GeneratedClasses.STLSheet;
@@ -44,22 +43,17 @@ public class EngineImpl implements Engine {
 
     }
     private void versionControl() {
-        int sheetCellLatestVersion = sheetCell.getLatestVersion();
-        versionToCellsChanges.put(sheetCellLatestVersion,new HashMap<>());
-        Set<DtoLocation> markedLocations = new HashSet<>();
-        Map<CellLocation, EffectiveValue> changedCells = versionToCellsChanges.get(sheetCellLatestVersion);
-        while (markedLocations.size() < sheetCell.getActiveCellsCount()) {
-            for (Map.Entry<CellLocation, Cell> entry : sheetCell.getSheetCell().entrySet()) {
-                CellLocation location = entry.getKey();
-                Cell cell = entry.getValue();
-                // Check if the cell's latest version matches the sheet's latest version
-                if (cell.getLatestVersion() == sheetCellLatestVersion) {  // Assuming Cell has a getVersion() method// Replace with your logic to calculate the effective value
-                    changedCells.put(location, cell.getEffectiveValue().evaluate());
-                }
-            }
-            sheetCellLatestVersion--;
-            changedCells = versionToCellsChanges.get(sheetCellLatestVersion);
+    int sheetCellLatestVersion = sheetCell.getLatestVersion();
+    versionToCellsChanges.put(sheetCellLatestVersion,new HashMap<>());
+    Map<CellLocation, EffectiveValue> changedCells = versionToCellsChanges.get(sheetCellLatestVersion);
+        for (Map.Entry<CellLocation, Cell> entry : sheetCell.getSheetCell().entrySet()) {
+            CellLocation location = entry.getKey();
+            Cell cell = entry.getValue();
+            // Check if the cell's latest version matches the sheet's latest version
+            if (cell.getLatestVersion() == sheetCellLatestVersion)   // Assuming Cell has a getVersion() method// Replace with your logic to calculate the effective value
+                changedCells.put(location, cell.getEffectiveValue().evaluate());
         }
+
     }
     @Override
     public DtoSheetCell getSheetCell() {
