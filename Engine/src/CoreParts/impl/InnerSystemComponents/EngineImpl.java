@@ -92,7 +92,6 @@ public class EngineImpl implements Engine {
                 if(Operation.fromString(parser.getFunctionName()) == Operation.REF){
                     continue;
                 }
-
                 if(expression.evaluate().getCellType() != cell.getEffectiveValue().evaluate().getCellType()){
                     throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
                 }

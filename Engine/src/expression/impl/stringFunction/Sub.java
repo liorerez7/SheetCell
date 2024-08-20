@@ -23,9 +23,11 @@ public class Sub  extends TernaryExpression {
                                       EffectiveValue start,
                                       EffectiveValue end) throws IndexOutOfBoundsException {
         String sourceValue = source.getValue().toString();
-        int startValue = (int) start.getValue();
-        int endValue = (int) end.getValue();
-        String result = sourceValue.substring(startValue,endValue); //TODO:not working getting error not of the same type
+        double startValue = (double) start.getValue();
+        double endValue = (double) end.getValue();
+        int startInt = (int) startValue;
+        int endInt = (int) endValue;
+        String result = sourceValue.substring(startInt,endInt); //TODO:not working getting error not of the same type
         return new EffectiveValueImpl(ReturnedValueType.STRING,result);
     }
 }

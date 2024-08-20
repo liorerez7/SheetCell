@@ -14,8 +14,9 @@ public abstract class UnaryExpression implements Expression {
 
     @Override
     public EffectiveValue evaluate() {
-        return expression.evaluate();
+        return evaluate(expression.evaluate());
     }
+
     @Override
     public String getOperationSign() {
         return "";
