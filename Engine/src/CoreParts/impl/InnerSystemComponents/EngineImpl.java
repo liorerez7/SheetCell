@@ -3,6 +3,7 @@ package CoreParts.impl.InnerSystemComponents;
 import CoreParts.api.Cell;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
+import CoreParts.smallParts.CellLocationFactory;
 import GeneratedClasses.STLSheet;
 import Utility.CellUtils;
 import CoreParts.api.Engine;
@@ -28,7 +29,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public DtoCell getRequestedCell(String cellId) {
-        return new DtoCell(getCell(CellLocation.fromCellId(cellId.charAt(0), cellId.charAt(1))));
+        return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
     }
 
     public Cell getCell(CellLocation location) {

@@ -1,6 +1,7 @@
 package CoreParts.impl.controller.commands;
 
 import CoreParts.api.Engine;
+import CoreParts.api.SheetCell;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoLocation;
 import CoreParts.impl.DtoComponents.DtoSheetCell;

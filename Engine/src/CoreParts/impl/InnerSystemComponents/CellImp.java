@@ -25,6 +25,11 @@ public class CellImp implements Cell
         originalValue = "";
         effectiveValue = null;
     }
+    public CellImp(CellLocation location, String originalValue) {
+        this.location = location;
+        this.originalValue = originalValue;
+        effectiveValue = null;
+    }
 
     public boolean isCellAffectedBy(Cell cell) {
         return affectedBy.contains(cell);

@@ -29,7 +29,6 @@ public class SheetCellImp implements SheetCell
         currentNumberOfCols = col;
         this.currentCellLength = currentCellLength;
         this.currentCellWidth = currentCellWidth;
-
     }
 
     @Override
