@@ -13,7 +13,7 @@ public class CellLocationFactory {
         }
 
 
-        CellLocation coordinate = new CellLocation(key.charAt(0), key.charAt(0));
+        CellLocation coordinate = new CellLocation(key.charAt(0), key.charAt(1));
         cachedCoordinates.put(key, coordinate);
 
         return coordinate;

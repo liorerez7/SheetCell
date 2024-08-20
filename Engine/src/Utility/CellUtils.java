@@ -3,6 +3,7 @@ package Utility;
 import CoreParts.api.Cell;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
+import CoreParts.smallParts.CellLocationFactory;
 import expression.Operation;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
@@ -39,14 +40,16 @@ public class CellUtils {
         Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
 
         if (operation == Operation.REF) {
-            Cell cellThatBeenEffected = sheetCell.getCell(CellLocation.fromCellId(arguments.getFirst()));
+            Cell cellThatBeenEffected = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
             return handleReferenceOperation(cellThatBeenEffected, targetCell, CloneAffectedBy);//argument(1) = CELL_ID
         }
         return operation.calculate(processArguments(arguments, targetCell, sheetCell, CloneAffectedBy));
     }
 
     private static Expression handleReferenceOperation(Cell cellThatBeenEffected, Cell cellThatAffects, Set<Cell> CloneAffectedBy) {
+
         validateCircularDependency(cellThatBeenEffected, cellThatAffects, CloneAffectedBy);
+        CloneAffectedBy.add(cellThatBeenEffected);
 
         if (cellThatBeenEffected.getEffectiveValue() == null) {
 
@@ -58,13 +61,18 @@ public class CellUtils {
 
     public static void validateCircularDependency(Cell cell, Cell targetCell, Set<Cell> CloneAffectedBy) {
 
+        if(cell.getAffectedBy().isEmpty()){
+            return;
+        }
+
         if (cell.isCellAffectedBy(targetCell) == true) {
             throw new IllegalArgumentException("Invalid expression: circular dependency");
         }
         else{
-            CloneAffectedBy.add(cell);
+            for(Cell cell1 : cell.getAffectedBy()){
+                validateCircularDependency(cell1, targetCell, CloneAffectedBy);
+            }
         }
-
     }
 
     public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell, Set<Cell> CloneAffectedBy) {
