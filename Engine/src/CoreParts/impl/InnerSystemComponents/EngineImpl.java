@@ -1,6 +1,7 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
+import CoreParts.api.SheetConvertor;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocationFactory;
@@ -15,10 +16,8 @@ import expression.api.Expression;
 import expression.api.processing.ExpressionParser;
 import expression.impl.Processing.ExpressionParserImpl;
 import jakarta.xml.bind.JAXBException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,16 +25,25 @@ import java.util.Set;
 
 public class EngineImpl implements Engine {
     Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges = new HashMap<>();
+
     public EngineImpl() {
-        versionToCellsChanges.put(sheetCell.getLatestVersion(),new HashMap<>());
+        versionToCellsChanges.put(sheetCell.getLatestVersion(), new HashMap<>());
     }
+
     private SheetCellImp sheetCell = new SheetCellImp(
             4, 3, "lior and niv sheet cell", 3, 15
     );
 
     @Override
-    public DtoCell getRequestedCell(String cellId) {
-        return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
+    public DtoCell getRequestedCell(String cellId, boolean updateCell) {
+        if (updateCell)
+            return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
+        else
+            if (!CellLocationFactory.isContained(cellId))
+            {
+                throw new IllegalArgumentException("cell does not exist(you can create a cell using the updateCell command)");
+            }
+        return null;
     }
     public Cell getCell(CellLocation location) {
         // Fetch the cell directly from the map in SheetCellImp
@@ -72,6 +80,8 @@ public class EngineImpl implements Engine {
     public void readSheetCellFromXML(String path) throws FileNotFoundException, JAXBException {
         InputStream in = new FileInputStream(new File(path));
         STLSheet sheet = EngineUtilies.deserializeFrom(in);
+        SheetConvertor convertor = new SheetConvertorImpl();
+        sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
     }
 
     @Override
@@ -96,7 +106,6 @@ public class EngineImpl implements Engine {
                     throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
                 }
             }
-
             targetCell.setOriginalValue(newValue);
             Expression oldExpression = targetCell.getEffectiveValue(); // old expression
             targetCell.setEffectiveValue(expression);
@@ -108,6 +117,22 @@ public class EngineImpl implements Engine {
         }
         catch(Exception illegalArgumentException){
             throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
+        }
+    }
+
+    @Override
+    public void exit() {
+        System.exit(0);
+    }
+
+    @Override
+    public void save(String path) throws Exception {
+        try (FileOutputStream fileOut = new FileOutputStream("serializedObject.ser");
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            System.out.println("Object serialized to serializedObject.ser");
+        }
+        catch (IOException i) {
+            i.printStackTrace();
         }
     }
 

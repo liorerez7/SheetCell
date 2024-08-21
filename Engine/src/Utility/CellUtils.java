@@ -5,6 +5,8 @@ import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import expression.Operation;
+import expression.ReturnedValueType;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
 import expression.api.processing.ExpressionParser;
@@ -61,15 +63,14 @@ public class CellUtils {
 
     public static void validateCircularDependency(Cell cell, Cell targetCell, Set<Cell> CloneAffectedBy) {
 
-        if(cell.getAffectedBy().isEmpty()){
+        if (cell.getAffectedBy().isEmpty()) {
             return;
         }
 
         if (cell.isCellAffectedBy(targetCell) == true) {
             throw new IllegalArgumentException("Invalid expression: circular dependency");
-        }
-        else{
-            for(Cell cell1 : cell.getAffectedBy()){
+        } else {
+            for (Cell cell1 : cell.getAffectedBy()) {
                 validateCircularDependency(cell1, targetCell, CloneAffectedBy);
             }
         }
@@ -92,7 +93,7 @@ public class CellUtils {
     public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
         for (Cell cell : targetCell.getAffectingOn()) {
             ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
-            if(Operation.fromString(parser.getFunctionName()) == Operation.REF){
+            if (Operation.fromString(parser.getFunctionName()) == Operation.REF) {
                 cell.setEffectiveValue(targetCell.getEffectiveValue());
                 cell.updateVersion(targetCell.getLatestVersion());
                 recalculateCellsRec(cell, oldExpression);
@@ -102,7 +103,6 @@ public class CellUtils {
         }
     }
 
-    //--------------------------------------------------------------------------
     public static void updateAffectedByAndOnLists(Cell targetCell, Set<Cell> CloneAffectedBy) {
 
         for (Cell cell : targetCell.getAffectedBy()) {
@@ -111,11 +111,11 @@ public class CellUtils {
 
         targetCell.getAffectedBy().clear(); // clears only after unMark the ref cells recursively
 
-        for(Cell cell : CloneAffectedBy){
+        for (Cell cell : CloneAffectedBy) {
             cell.addCellToAffectingOn(targetCell);
         }
 
-        for(Cell cell : CloneAffectedBy){
+        for (Cell cell : CloneAffectedBy) {
             targetCell.addCellToAffectedBy(cell);
         }
 
@@ -123,5 +123,13 @@ public class CellUtils {
 
     public static void validateExpression(Expression expression) {
         expression.evaluate().getValue();
+    }
+
+    public static void formatDoubleValue(EffectiveValue value) {
+        if (value.getCellType() == ReturnedValueType.NUMERIC) {
+            double numericValue = (double) value.getValue();
+            if (numericValue == Math.floor(numericValue))
+                value.setValue((int)numericValue);
+        }
     }
 }

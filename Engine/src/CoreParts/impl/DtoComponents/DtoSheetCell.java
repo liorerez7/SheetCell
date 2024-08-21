@@ -5,6 +5,7 @@ import CoreParts.api.SheetCell;
 import CoreParts.impl.InnerSystemComponents.CellImp;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
+import Utility.CellUtils;
 import expression.api.EffectiveValue;
 
 import java.util.*;
@@ -24,11 +25,16 @@ public class DtoSheetCell {
     // Constructor to populate DtoSheetCell from SheetCellImp
     public DtoSheetCell(SheetCellImp sheetCellImp) {
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
-            sheetCell.put(new DtoLocation(entry.getKey()),entry.getValue().getEffectiveValue().evaluate());
+           EffectiveValue effectiveValue = entry.getValue().getEffectiveValue().evaluate();
+            CellUtils.formatDoubleValue(effectiveValue);
+            sheetCell.put(new DtoLocation(entry.getKey()), effectiveValue);
         }
         copyBasicTypes(sheetCellImp);
     }
     public DtoSheetCell(Map<Integer,Map<CellLocation, EffectiveValue>> sheetCellVersions, SheetCell sheetCell, int requestedVersion) {
+        if (sheetCell.getLatestVersion() < requestedVersion) {
+            throw new IllegalArgumentException("Requested version is not available latest version is " + sheetCell.getLatestVersion());
+        }
         Set<DtoLocation> markedLocations = new HashSet<>();
         copyBasicTypes(sheetCell);
         Map<CellLocation, EffectiveValue> sheetCellChanges = sheetCellVersions.get(requestedVersion);

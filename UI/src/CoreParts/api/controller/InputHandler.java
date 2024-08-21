@@ -6,7 +6,10 @@ import java.util.Scanner;
 
 public interface InputHandler {
     int getMenuOptionInput() throws Exception;
-    String getCellInput() throws Exception;
-     String getCommandInput() throws Exception;
+    String getCellInput(int userTryCount) throws Exception;
+     String getCommandInput(int userTryCount) throws Exception;
      int getVersionInput() throws Exception;
+     boolean getExitInput() throws Exception;
+     boolean getSaveInput() throws Exception;
+     String getFilePathInput() throws Exception;
 }

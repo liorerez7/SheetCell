@@ -24,6 +24,11 @@ public class EffectiveValueImpl implements EffectiveValue {
         return value;
     }
 
+    @Override
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     //TODO :: to do for later
     /*
     @Override

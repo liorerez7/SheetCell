@@ -1,6 +1,7 @@
 package CoreParts.impl.DtoComponents;
 
 import CoreParts.api.Cell;
+import Utility.CellUtils;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 
@@ -26,9 +27,10 @@ public class DtoCell {
         if (cell.getEffectiveValue() == null) {
             this.effectiveValue = null;
         }
-        else
+        else {
+            CellUtils.formatDoubleValue(cell.getEffectiveValue().evaluate());
             this.effectiveValue = cell.getEffectiveValue().evaluate();
-
+        }
         // Convert the CellLocation to DtoLocation
         this.location = new DtoLocation(cell.getLocation());
 

@@ -14,8 +14,16 @@ public class DisplayCell extends SheetEngineCommand {
     @Override
     public void execute() throws Exception {
 
-        String cellId = inputHandler.getCellInput();
-        DtoCell cell = engine.getRequestedCell(cellId);
+        String cellId = inputHandler.getCellInput(0);
+        if (cellId == null) return;
+        DtoCell cell = null;
+        try {
+            cell = engine.getRequestedCell(cellId, false);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            execute();
+        }
+
         System.out.println("Cell id: " + cellId);
         System.out.println("Original value: " + cell.getOriginalValue());
         System.out.println("Effective value: " + cell.getEffectiveValue().getValue());

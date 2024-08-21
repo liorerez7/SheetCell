@@ -2,9 +2,11 @@ package CoreParts.impl.controller.commands;
 
 import CoreParts.api.Engine;
 import CoreParts.api.Cell;
+import CoreParts.api.UtilsUI.Displayer;
 import CoreParts.api.controller.Command;
 import CoreParts.api.controller.InputHandler;
 import CoreParts.impl.DtoComponents.DtoCell;
+import CoreParts.impl.UtilisUI.TerminalSheet;
 import expression.ReturnedValueType;
 
 import java.util.ArrayList;
@@ -20,9 +22,9 @@ public class UpdateCell extends SheetEngineCommand {
     @Override
     public void execute() throws Exception {
 
-        String cellId = inputHandler.getCellInput();
-
-        DtoCell cell = engine.getRequestedCell(cellId);
+        String cellId = inputHandler.getCellInput(0);
+        if (cellId == null) return;
+        DtoCell cell = engine.getRequestedCell(cellId,true);
 
         if(cell.getEffectiveValue() != null)
         {
@@ -41,10 +43,10 @@ public class UpdateCell extends SheetEngineCommand {
                     break;
             }
         }
-
-        String newExpressionValue = inputHandler.getCommandInput();
-
-
+        String newExpressionValue = inputHandler.getCommandInput(0);
+        if (newExpressionValue == null) return;
         engine.updateCell(newExpressionValue, cellId.charAt(0), cellId.charAt(1));
+        Displayer displayer = new TerminalSheet();
+        displayer.display(engine.getSheetCell());
     }
 }

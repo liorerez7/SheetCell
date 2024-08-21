@@ -8,7 +8,6 @@ public abstract class SheetEngineCommand implements Command {
 
     protected Engine engine;
     protected InputHandler inputHandler;
-
     public SheetEngineCommand(Engine engine) {
         this.engine = engine;
         this.inputHandler = new InputHandlerImpl();

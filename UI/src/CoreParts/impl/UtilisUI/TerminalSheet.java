@@ -4,11 +4,13 @@ import CoreParts.api.UtilsUI.Displayer;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoLocation;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
+import expression.Operation;
+import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 
 public class TerminalSheet implements Displayer {
     @Override
-    public  void display(DtoSheetCell sheetCell) {
+    public void display(DtoSheetCell sheetCell) {
         int numberOfRows = sheetCell.getCurrentNumberOfRows();
         int numberOfCols = sheetCell.getCurrentNumberOfCols();
         int cellLength = sheetCell.getCellLength();

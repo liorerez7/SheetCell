@@ -14,7 +14,16 @@ public class DisplayRequestedVersion extends SheetEngineCommand {
     public void execute() throws Exception {
 
         int requestedVersion = inputHandler.getVersionInput();
-        DtoSheetCell sheetCell = engine.getSheetCell(requestedVersion);
+        if (requestedVersion == 0) {
+            return;
+        }
+        DtoSheetCell sheetCell = null;
+        try {
+            sheetCell = engine.getSheetCell(requestedVersion);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            execute();
+        }
         Displayer displayer = new TerminalSheet();
 
         displayer.display(sheetCell);

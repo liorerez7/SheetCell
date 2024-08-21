@@ -7,7 +7,9 @@ public interface EffectiveValue {
     ReturnedValueType getCellType();
     Object getValue();
 
-   // <T> T extractValueWithExpectation(Class<T> type);     //TODO: mabye add this
+    void setValue(int value);
+
+    // <T> T extractValueWithExpectation(Class<T> type);     //TODO: mabye add this
 }
 
 

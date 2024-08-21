@@ -67,7 +67,8 @@ public class TestVersionOne {
         System.out.println("---------------------------------------------------------------------------------");
 
     }
-    private static void EngineTestThree(EngineImpl testEngine3){
+
+    private static void EngineTestThree(EngineImpl testEngine3) {
 
         testEngine3.updateCell("10", 'A', '1');
         testEngine3.updateCell("{REF, A1}", 'A', '2'); // a2 = 10
@@ -83,7 +84,7 @@ public class TestVersionOne {
 
         testEngine3.updateCell("{REF, A4}", 'B', '1');
 
-       // testEngine3.updateCell("Yossi", 'B', '1');
+        // testEngine3.updateCell("Yossi", 'B', '1');
         stringRunTest("Check if B1 is 'Yossi' after B1 change", testEngine3, "Yossi", 'B', '1', "Yossi");
 
         System.out.println("---------------------------------------------------------------------------------");
@@ -92,7 +93,7 @@ public class TestVersionOne {
 
     private static void numbericRunTest(String testName, EngineImpl engine, String expression, char col, char row, double expectedValue) {
         engine.updateCell(expression, col, row);
-        double actualValue = (double)engine.getCell(CellLocationFactory.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
+        double actualValue = (double) engine.getCell(CellLocationFactory.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
 
         System.out.println("\n" + testName);
         System.out.println("Expression: " + expression);
@@ -109,7 +110,7 @@ public class TestVersionOne {
 
     private static void stringRunTest(String testName, EngineImpl engine, String expression, char col, char row, String expectedValue) {
         engine.updateCell(expression, col, row);
-        String actualValue = (String)engine.getCell(CellLocationFactory.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
+        String actualValue = (String) engine.getCell(CellLocationFactory.fromCellId(col, row)).getEffectiveValue().evaluate().getValue();
 
         System.out.println("\n" + testName);
         System.out.println("Expression: " + expression);
