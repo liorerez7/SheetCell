@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class CellLocationFactory {
     private static Map<String,CellLocation> cachedCoordinates = new HashMap<>();
-
     public static CellLocation fromCellId(String key) {
         if (cachedCoordinates.containsKey(key)) {
             return cachedCoordinates.get(key);

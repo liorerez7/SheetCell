@@ -8,12 +8,12 @@ import CoreParts.impl.controller.commands.LoadSheetFromXML;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandManagerImpl implements CommandManager {
+public class AfterLoadCommandManagerImpl implements CommandManager {
 
     private final Map<Integer, Command> commandMap = new HashMap<>();
     private final int numberOfCommands;
 
-    public CommandManagerImpl(Engine engine) {
+    public AfterLoadCommandManagerImpl(Engine engine) {
         commandMap.put(1, new CoreParts.impl.controller.commands.DisplaySheet(engine));
         commandMap.put(2, new CoreParts.impl.controller.commands.UpdateCell(engine));
         commandMap.put(3, new CoreParts.impl.controller.commands.DisplayCell(engine));

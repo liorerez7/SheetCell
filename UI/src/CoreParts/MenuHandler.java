@@ -4,6 +4,8 @@ import CoreParts.api.Engine;
 import CoreParts.api.controller.Command;
 import CoreParts.api.controller.CommandManager;
 import CoreParts.api.controller.InputHandler;
+import CoreParts.impl.controller.AfterLoadCommandManagerImpl;
+import CoreParts.impl.controller.commands.InputHandlerImpl;
 
 import javax.sound.midi.Soundbank;
 
@@ -18,10 +20,25 @@ public class MenuHandler {
         this.commandManager = commandManager;
         this.inputHandler = inputHandler;
     }
+    public void setCommandManager(CommandManager commandManager) {
+        this.commandManager = commandManager;
+    }
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
 
+    }
     public void run() {
-
+        try {
+        displayLoadingMenu();
+        int commandId = inputHandler.getMenuOptionInput();
+        Command command = commandManager.getCommand(commandId);
+        command.execute();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         while (true) {
+            setCommandManager(new AfterLoadCommandManagerImpl(engine));
+            setInputHandler(new InputHandlerImpl(commandManager));
             displayMenu();
             try {
                 int commandId = inputHandler.getMenuOptionInput();
@@ -33,7 +50,13 @@ public class MenuHandler {
             }
         }
     }
-
+    void displayLoadingMenu() {
+        System.out.println("\n=== Loading Menu ===");
+        System.out.println("1. Load Sheet From XML");
+        System.out.println("2. Load Saved Sheet");
+        System.out.println("3. Exit");
+        System.out.println("\nSelect an option (1-3): ");
+    }
     void displayMenu() {
         System.out.println("\n=== Main Menu ===");
         System.out.println("1. Display Sheet");
@@ -46,6 +69,5 @@ public class MenuHandler {
         System.out.println("8. Exit");
         System.out.println("\nSelect an option (1-8): ");
     }
-
     }
 

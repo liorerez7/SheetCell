@@ -1,13 +1,5 @@
 package CoreParts.TestCases;
 
-import CoreParts.api.Engine;
-import CoreParts.api.controller.CommandManager;
-import CoreParts.api.controller.InputHandler;
-import CoreParts.impl.InnerSystemComponents.EngineImpl;
-import CoreParts.impl.controller.commands.InputHandlerImpl;
-import CoreParts.smallParts.CellLocation;
-import CoreParts.impl.controller.CommandManagerImpl;
-import CoreParts.smallParts.CellLocationFactory;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 
 public class TestAbs {

@@ -3,7 +3,9 @@ package expression.api;
 
 import expression.ReturnedValueType;
 
-public interface EffectiveValue {
+import java.io.Serializable;
+
+public interface EffectiveValue{
     ReturnedValueType getCellType();
     Object getValue();
 

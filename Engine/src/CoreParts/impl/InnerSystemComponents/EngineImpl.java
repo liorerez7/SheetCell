@@ -18,6 +18,7 @@ import expression.impl.Processing.ExpressionParserImpl;
 import jakarta.xml.bind.JAXBException;
 
 import java.io.*;
+import java.nio.file.InvalidPathException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -127,12 +128,24 @@ public class EngineImpl implements Engine {
 
     @Override
     public void save(String path) throws Exception {
-        try (FileOutputStream fileOut = new FileOutputStream("serializedObject.ser");
+        try (FileOutputStream fileOut = new FileOutputStream(path);
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            System.out.println("Object serialized to serializedObject.ser");
+            out.writeObject(versionToCellsChanges);
+            out.writeObject(sheetCell);
+            out.flush();
+            System.out.println("Data saved to " + path);
+        } catch (IOException e) {
+            throw new Exception("Error saving data to " + path + ": " + e.getMessage(), e);
         }
-        catch (IOException i) {
-            i.printStackTrace();
+    }
+    public void load(String path) throws Exception {
+        try (FileInputStream fileIn = new FileInputStream(new File(path));
+             ObjectInputStream in = new ObjectInputStream(fileIn)) {
+            Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) in.readObject();
+            SheetCellImp sheetCell = (SheetCellImp) in.readObject();
+            System.out.println("sheet loaded.");
+        } catch (IOException | ClassNotFoundException e) {
+            throw new Exception("Invalid path: " + path);
         }
     }
 

@@ -12,7 +12,7 @@ public class DisplayRequestedVersion extends SheetEngineCommand {
 
     @Override
     public void execute() throws Exception {
-
+        System.out.println("lastest version: " + engine.getSheetCell().getVersionNumber());
         int requestedVersion = inputHandler.getVersionInput();
         if (requestedVersion == 0) {
             return;

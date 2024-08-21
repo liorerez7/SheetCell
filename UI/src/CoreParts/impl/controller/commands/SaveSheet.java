@@ -15,6 +15,7 @@ public class SaveSheet extends SheetEngineCommand {
         try {
             if (save) {
                 engine.save(path);
+                return;
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

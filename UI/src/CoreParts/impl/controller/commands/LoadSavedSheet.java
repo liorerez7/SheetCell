@@ -9,6 +9,8 @@ public class LoadSavedSheet extends SheetEngineCommand {
 
     @Override
     public void execute() throws Exception {
-
+        String path = inputHandler.getFilePathInput();
+        if (path == null) return;
+        engine.load(path);
     }
 }

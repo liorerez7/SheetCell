@@ -6,12 +6,19 @@ import CoreParts.api.SheetConvertor;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import GeneratedClasses.*;
+import Utility.CellUtils;
 
 import javax.xml.stream.Location;
 import java.util.List;
 
 public class SheetConvertorImpl implements SheetConvertor {
-    @Override
+    final static int MAX_ROWS = 50;
+    final static int MAX_COLUMNS = 20;
+    private void chechRowsAndColumns(STLLayout stlLayout) {
+        boolean valid = (stlLayout.getColumns() > 0 && stlLayout.getRows() > 0) && (stlLayout.getColumns() <= MAX_COLUMNS && stlLayout.getRows() <= MAX_ROWS);
+        if(!valid)
+            throw new IllegalArgumentException("Invalid rows and columns values Max 20x50");
+    }
     public SheetCell convertSheet(STLSheet sheet) {
          STLCells cells = sheet.getSTLCells();
          String sheetName = sheet.getName();
@@ -22,16 +29,19 @@ public class SheetConvertorImpl implements SheetConvertor {
         int cellWidth = stlSize.getColumnWidthUnits();
          int cellLength = stlSize.getRowsHeightUnits();// Hypothetical method
         List<STLCell> stlCellList = cells.getSTLCell();
+        chechRowsAndColumns(stlLayout);
         SheetCell ourSheet = new SheetCellImp(numOfRows, numOfcoulmns, sheetName, cellLength, cellWidth);
         convertSTLCellListToCellList(stlCellList, ourSheet);  // Method to convert list of cells
         return ourSheet;
     }
-
-
     public Cell convertSTLCellToCell(STLCell stlCell)
     {
         String orignalValue = stlCell.getSTLOriginalValue();
-        CellLocation cellLocation = CellLocationFactory.fromCellId((stlCell.getColumn().charAt(0)),(char)stlCell.getRow()); // Hypothetical location
+        char column = stlCell.getColumn().charAt(0);
+        char row = (char)stlCell.getRow();
+        CellUtils.isWithinLocationBounds(column - 'A',row - '1',MAX_COLUMNS,MAX_ROWS);
+        CellLocation cellLocation = CellLocationFactory.fromCellId(column,row); // Hypothetical location
+
         Cell ourCell = new CellImp(cellLocation, orignalValue);
         return ourCell;
     }

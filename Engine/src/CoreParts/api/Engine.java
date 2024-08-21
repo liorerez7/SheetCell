@@ -16,4 +16,5 @@ public interface Engine {
     void updateCell(String newValue, char col, char row);
     void exit();
     void save(String path) throws Exception;
+    void load(String path) throws Exception;
 }

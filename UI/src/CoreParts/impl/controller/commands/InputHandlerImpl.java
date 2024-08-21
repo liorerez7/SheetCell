@@ -2,13 +2,9 @@ package CoreParts.impl.controller.commands;
 
 import CoreParts.api.controller.CommandManager;
 import CoreParts.api.controller.InputHandler;
-import CoreParts.impl.controller.CommandManagerImpl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.io.File;
-import java.io.IOException;
 
 public class InputHandlerImpl implements InputHandler {
 
@@ -140,14 +136,7 @@ public class InputHandlerImpl implements InputHandler {
                 System.out.println("File path cannot be empty. Please enter a valid file path.");
                 continue;
             }
-
-            // Check if the path points to an existing file (optional)
-            File file = new File(filePath);
-            if (file.exists() && file.isFile()) {
-                return filePath;
-            } else {
-                System.out.println("Invalid file path: The file does not exist or is not a file. Please try again.");
-            }
+            return filePath;
         }
     }
 

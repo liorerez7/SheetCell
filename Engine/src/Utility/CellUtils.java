@@ -132,4 +132,7 @@ public class CellUtils {
                 value.setValue((int)numericValue);
         }
     }
+    public static boolean isWithinLocationBounds(int col, int row, int maxCol, int maxRow) {
+        return (col >= 'A' && col <= maxCol) && (row >= '1' && row <= maxRow);
+    }
 }

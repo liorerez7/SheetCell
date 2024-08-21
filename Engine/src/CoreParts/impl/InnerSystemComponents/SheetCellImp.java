@@ -4,11 +4,12 @@ import CoreParts.api.Cell;
 import CoreParts.api.SheetCell;
 import CoreParts.smallParts.CellLocation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 //TODO: Implement the SheetCell interface
-public class SheetCellImp implements SheetCell
+public class SheetCellImp implements SheetCell, Serializable
 {
     private Map<CellLocation, Cell> sheetCell = new HashMap<>(); // Changed to map of CellLocation to Cell
     private final String name;
