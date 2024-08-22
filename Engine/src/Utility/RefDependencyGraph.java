@@ -68,7 +68,7 @@ public class RefDependencyGraph {
             if (!visited.containsKey(dependentCell)) {
                 topologicalSortUtil(dependentCell, visited, stack);
             } else if (visited.get(dependentCell)) {
-                throw new Exception("Cycle detected in the graph! make sure there is no self dependency\n for example: A5 depends on A3 and A3 depends on A5");
+                throw new Exception("Cycle detected! make sure there is no self dependency cell was not updated\n for example: A5 depends on A3 and A3 depends on A5");
             }
         }
 

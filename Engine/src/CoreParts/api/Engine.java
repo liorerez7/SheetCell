@@ -11,7 +11,7 @@ public interface Engine {
     DtoSheetCell getSheetCell();
     DtoSheetCell getSheetCell(int versionNumber);
     void readSheetCellFromXML(String path) throws Exception;
-    void updateCell(String newValue, char col, String row);
+    void updateCell(String newValue, char col, String row) throws Exception;
     void exit();
     void save(String path) throws Exception;
     void load(String path) throws Exception;

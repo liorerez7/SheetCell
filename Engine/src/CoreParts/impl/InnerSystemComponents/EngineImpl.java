@@ -100,7 +100,7 @@ public class EngineImpl implements Engine {
         setUpSheet();
     }
     @Override
-    public void updateCell(String newValue, char col,String row) {
+    public void updateCell(String newValue, char col,String row) throws Exception {
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
         Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell());
         // 1.save sheet serilize
@@ -109,6 +109,8 @@ public class EngineImpl implements Engine {
         targetCell.setEffectiveValue(expression);
         //3. create graph
         sheetCell.createRefDependencyGraph();
+        sheetCell.getRefDependencyGraph().topologicalSort();
+
         //4.change effected by and on list from the graph
         sheetCell.updateEffectedByAndOnLists();
         // alternitive way
