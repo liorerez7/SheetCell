@@ -103,8 +103,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public String getSheetName() {
         return name;
     }
-
-
     // Helper method to check if a location is valid
     private boolean isValidLocation(CellLocation location) {
         int row = location.getRealRow();
@@ -128,8 +126,10 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         Map<Cell,Set<Cell>> adjacencyList= refDependencyGraph.getadjacencyList();
         Map<Cell,Set<Cell>> reverseAdjacencyList = refDependencyGraph.getreverseAdjacencyList();
         sheetCell.forEach((location, cell) -> {
-            cell.setEffectingOn(adjacencyList.get(cell));
-            cell.setAffectedBy(reverseAdjacencyList.get(cell));
+            if(adjacencyList.containsKey(cell))
+                cell.setEffectingOn(adjacencyList.get(cell));
+            if(reverseAdjacencyList.containsKey(cell))
+                cell.setAffectedBy(reverseAdjacencyList.get(cell));
         });
     }
 }

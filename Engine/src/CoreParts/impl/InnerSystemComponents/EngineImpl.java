@@ -100,12 +100,10 @@ public class EngineImpl implements Engine {
         setUpSheet();
     }
     @Override
-    public void updateCell(String newValue, char col,String row){
+    public void updateCell(String newValue, char col,String row) {
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
         Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell());
-
         // 1.save sheet serilize
-
         //2. change cell orignal and effective value.
         targetCell.setOriginalValue(newValue);
         targetCell.setEffectiveValue(expression);
@@ -115,7 +113,6 @@ public class EngineImpl implements Engine {
         sheetCell.updateEffectedByAndOnLists();
         // alternitive way
         // topological sort for graph
-
         try {
             expression.evaluate().getValue();
             for(Cell cell : targetCell.getAffectingOn()){
@@ -154,6 +151,7 @@ public class EngineImpl implements Engine {
             throw new Exception("Error saving data to " + path + ": " + e.getMessage(), e);
         }
     }
+
     public void load(String path) throws Exception {
         try (FileInputStream fileIn = new FileInputStream(new File(path));
              ObjectInputStream in = new ObjectInputStream(fileIn)) {

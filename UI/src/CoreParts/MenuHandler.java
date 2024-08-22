@@ -35,6 +35,7 @@ public class MenuHandler {
         command.execute();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            //TODO: THIS MENU SHOULD BE REPEATED
         }
         while (true) {
             setCommandManager(new AfterLoadCommandManagerImpl(engine));
