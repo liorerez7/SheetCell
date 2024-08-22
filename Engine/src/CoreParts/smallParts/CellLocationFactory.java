@@ -18,9 +18,9 @@ public class CellLocationFactory {
         return cachedCoordinates.containsKey(key);
     }
 
-    public static CellLocation fromCellId(char col, char row) {
+    public static CellLocation fromCellId(char col, String row) {
 
-        String cellId = "" + col + row;
+        String cellId =col + row;
 
         return CellLocationFactory.fromCellId(cellId);
     }

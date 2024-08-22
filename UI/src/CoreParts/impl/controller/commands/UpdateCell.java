@@ -45,7 +45,7 @@ public class UpdateCell extends SheetEngineCommand {
         }
         String newExpressionValue = inputHandler.getCommandInput(0);
         if (newExpressionValue == null) return;
-        engine.updateCell(newExpressionValue, cellId.charAt(0), cellId.charAt(1));
+        engine.updateCell(newExpressionValue, cellId.charAt(0),cellId.substring(1));
         Displayer displayer = new TerminalSheet();
         displayer.display(engine.getSheetCell());
     }

@@ -40,7 +40,7 @@ public class SheetConvertorImpl implements SheetConvertor {
         char column = stlCell.getColumn().charAt(0);
         int row = stlCell.getRow();
        // CellUtils.isWithinLocationBounds(column - 'A',row - '1',MAX_COLUMNS,MAX_ROWS);
-        CellLocation cellLocation = CellLocationFactory.fromCellId(column,(char)row); // Hypothetical location
+        CellLocation cellLocation = CellLocationFactory.fromCellId(column,String.valueOf(row)); // Hypothetical location
 
         Cell ourCell = new CellImp(cellLocation, orignalValue);
         return ourCell;
