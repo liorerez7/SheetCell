@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RefGraphBuilder {
-
     private final RefDependencyGraph dependencyGraph;
     private SheetCellViewOnly sheetCell;
-    public RefGraphBuilder(RefDependencyGraph dependencyGraph, SheetCellViewOnly sheetCell) {
-        this.dependencyGraph = dependencyGraph;
+    public RefGraphBuilder(SheetCellViewOnly sheetCell) {
+        this.dependencyGraph = sheetCell.getGraph();
         this.sheetCell = sheetCell;
     }
     public RefDependencyGraph getDependencyGraph() {
@@ -52,11 +51,10 @@ public class RefGraphBuilder {
         return references;
     }
 
-    public void build(SheetCellImp sheetCell) {
+    public void build() {
         for (Cell cell : sheetCell.getSheetCell().values()) {
             processCell(cell);
         }
     }
-
 }
 

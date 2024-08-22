@@ -11,12 +11,10 @@ public abstract class UnaryExpression implements Expression {
     public UnaryExpression(Expression expression) {
         this.expression = expression;
     }
-
     @Override
     public EffectiveValue evaluate() {
         return evaluate(expression.evaluate());
     }
-
     @Override
     public String getOperationSign() {
         return "";

@@ -71,6 +71,16 @@ public class CellImp implements Cell
     }
 
     @Override
+    public void setEffectingOn(Set<Cell> cells) {
+        affectingOn = cells;
+    }
+
+    @Override
+    public void setAffectedBy(Set<Cell> cells) {
+        affectedBy = cells;
+    }
+
+    @Override
     public void addCellToAffectedBy(Cell cell) {
         affectedBy.add(cell);
     }

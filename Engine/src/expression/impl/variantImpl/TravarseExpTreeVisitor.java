@@ -19,7 +19,6 @@ public class TravarseExpTreeVisitor implements ExpressionVisitor {
         this.toFind = toFind;
         this.newValue = newValue;
     }
-
     @Override
     public void visit(UnaryExpression expression) {
         if (expression == toFind)
@@ -27,10 +26,8 @@ public class TravarseExpTreeVisitor implements ExpressionVisitor {
         else
             CellUtils.recalculateCellsHelper(expression.getExpression(), toFind, newValue);
     }
-
     @Override
     public void visit(BinaryExpression expression) {
-
         if (expression.getExpressionLeft() == toFind) {
             expression.setExpressionLeft(newValue);
         } else if (expression.getExpressionRight() == toFind) {
@@ -40,6 +37,7 @@ public class TravarseExpTreeVisitor implements ExpressionVisitor {
            CellUtils.recalculateCellsHelper(expression.getExpressionRight(), toFind, newValue);
         }
     }
+
     @Override
     public void visit(TernaryExpression expression) {
 

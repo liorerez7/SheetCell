@@ -29,7 +29,6 @@ public class CellUtils {
         }
     }
     // TODO : when cell is updated we need to delete his relayed by cells.
-
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) {// this is a recursive function
         ExpressionParser parser = new ExpressionParserImpl(value);
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
@@ -43,7 +42,7 @@ public class CellUtils {
 
         if (operation == Operation.REF) {
             Cell cellThatBeenEffected = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
-            return handleReferenceOperation(cellThatBeenEffected, targetCell);//argument(1) = CELL_ID
+            return handleReferenceOperation(cellThatBeenEffected,targetCell);//argument(1) = CELL_ID
         }
         return operation.calculate(processArguments(arguments, targetCell, sheetCell));
     }
@@ -54,7 +53,6 @@ public class CellUtils {
 
             throw new IllegalArgumentException("Invalid expression: cell referenced before being set");
         }
-
         return cellThatBeenEffected.getEffectiveValue();
     }
 
@@ -72,7 +70,6 @@ public class CellUtils {
         expTree.accept(visitor);
         validateExpression(expTree);
     }
-
     public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
         for (Cell cell : targetCell.getAffectingOn()) {
             ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());

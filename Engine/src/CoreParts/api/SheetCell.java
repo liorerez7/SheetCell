@@ -1,6 +1,9 @@
 package CoreParts.api;
 
 import CoreParts.smallParts.CellLocation;
+import Utility.RefDependencyGraph;
+
+import java.util.Map;
 
 public interface SheetCell {
 
@@ -14,5 +17,6 @@ public interface SheetCell {
     String getSheetName();
     void setCell(CellLocation location, Cell cell);
     int getActiveCellsCount();
-
+    Map<CellLocation, Cell> getSheetCell();
+    RefDependencyGraph getGraph();
     }

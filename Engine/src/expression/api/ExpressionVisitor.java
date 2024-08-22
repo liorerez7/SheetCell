@@ -12,5 +12,5 @@ public interface ExpressionVisitor {
     void visit(TernaryExpression expression);
     void visit(Num expression);
     void visit(Str expression);
-    //TODO:visit(trinary expression);
 }
+

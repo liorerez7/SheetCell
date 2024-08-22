@@ -12,6 +12,8 @@ public interface Cell {
     Expression getEffectiveValue();
     String getOriginalValue();
     void addCellToAffectingOn(Cell cell);
+    void setEffectingOn(Set<Cell> cells);
+    void setAffectedBy(Set<Cell> cells);
     void addCellToAffectedBy(Cell cell);
     void removeCellFromAffectingOn(Cell cell);
     void removeCellFromAffectedBy(Cell cell);

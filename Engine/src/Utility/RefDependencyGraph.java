@@ -4,17 +4,29 @@ import java.util.*;
 
 public class RefDependencyGraph {
     private final Map<Cell,Set<Cell>> adjacencyList = new HashMap<>();
-    // Adds a dependency edge from cellA to cellB (i.e., cellA depends on cellB)
+    private final Map<Cell,Set<Cell>> reverseAdjacencyList = new HashMap<>();
+
     public void addDependency(Cell cellA, Cell cellB) {
         adjacencyList.computeIfAbsent(cellB, k -> new HashSet<>()).add(cellA);
         adjacencyList.computeIfAbsent(cellA, k -> new HashSet<>()); // Ensure cellB is in the map
+        reverseAdjacencyList.computeIfAbsent(cellA, k -> new HashSet<>()).add(cellB);
+        reverseAdjacencyList.computeIfAbsent(cellB, k -> new HashSet<>()); // Ensure cellB is in the map
     }
-
+    public Map<Cell,Set<Cell>> getadjacencyList() {
+        return adjacencyList;
+    }
+    public Map<Cell,Set<Cell>> getreverseAdjacencyList() {
+        return reverseAdjacencyList;
+    }
     // Removes a dependency edge from cellA to cellB
     public void removeDependency(Cell cellA, Cell cellB) {
         Set<Cell> dependencies = adjacencyList.get(cellA);
         if (dependencies != null) {
             dependencies.remove(cellB);
+        }
+        Set<Cell> reverseDependencies = reverseAdjacencyList.get(cellB);
+        if (reverseDependencies != null) {
+            reverseDependencies.remove(cellA);
         }
     }
     // Returns a set of cells that cell depends on
@@ -32,7 +44,6 @@ public class RefDependencyGraph {
         }
         return dependents;
     }
-
     // Performs a topological sort and returns the cells in evaluation order
     public List<Cell> topologicalSort() throws Exception {
         Map<Cell, Boolean> visited = new HashMap<>();
@@ -91,4 +102,5 @@ public class RefDependencyGraph {
         visited.put(cell, false);
         return false;
     }
+
 }
