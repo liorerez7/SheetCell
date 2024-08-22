@@ -6,8 +6,8 @@ public class RefDependencyGraph {
     private final Map<Cell,Set<Cell>> adjacencyList = new HashMap<>();
     // Adds a dependency edge from cellA to cellB (i.e., cellA depends on cellB)
     public void addDependency(Cell cellA, Cell cellB) {
-        adjacencyList.computeIfAbsent(cellA, k -> new HashSet<>()).add(cellB);
-        adjacencyList.computeIfAbsent(cellB, k -> new HashSet<>()); // Ensure cellB is in the map
+        adjacencyList.computeIfAbsent(cellB, k -> new HashSet<>()).add(cellA);
+        adjacencyList.computeIfAbsent(cellA, k -> new HashSet<>()); // Ensure cellB is in the map
     }
 
     // Removes a dependency edge from cellA to cellB

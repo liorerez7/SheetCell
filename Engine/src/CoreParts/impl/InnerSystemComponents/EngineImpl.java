@@ -81,15 +81,16 @@ public class EngineImpl implements Engine {
         STLSheet sheet = EngineUtilies.deserializeFrom(in);
         SheetConvertor convertor = new SheetConvertorImpl();
         sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
-        RefGraphBuilder refGraphBuilder = new RefGraphBuilder(new RefDependencyGraph(), sheetCell);
+        RefGraphBuilder refGraphBuilder = new RefGraphBuilder(new RefDependencyGraph(),sheetCell);
         refGraphBuilder.build(sheetCell);
-        RefDependencyGraph refDependencyGraph = refGraphBuilder.getDependencyGraph();
-         List<Cell> topologicalOrderCells = refDependencyGraph.topologicalSort();
-         //topologicalOrderCells.forEach(cell -> CellUtils.processExpressionRec(cell.getOriginalValue(),getInnerSystemSheetCell(),));
+        List<Cell> topologicalOrder;
+        topologicalOrder = refGraphBuilder.getDependencyGraph().topologicalSort();
+        topologicalOrder.forEach(cell -> cell.setEffectiveValue(CellUtils.processExpressionRec(cell.getOriginalValue(), cell, getInnerSystemSheetCell())));
     }
 
-        @Override
-    public void updateCell(String newValue, char col, String row) {
+
+    @Override
+    public void updateCell(String newValue, char col,String row) {
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
         Set<Cell> CloneAffectedBy = new HashSet<>();
