@@ -2,6 +2,7 @@ package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.api.SheetCell;
+import CoreParts.api.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO: Implement the SheetCell interface
-public class SheetCellImp implements SheetCell, Serializable
+public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 {
     private Map<CellLocation, Cell> sheetCell = new HashMap<>(); // Changed to map of CellLocation to Cell
     private final String name;

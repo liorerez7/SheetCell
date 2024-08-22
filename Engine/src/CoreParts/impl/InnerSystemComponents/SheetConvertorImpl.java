@@ -38,9 +38,9 @@ public class SheetConvertorImpl implements SheetConvertor {
     {
         String orignalValue = stlCell.getSTLOriginalValue();
         char column = stlCell.getColumn().charAt(0);
-        char row = (char)stlCell.getRow();
-        CellUtils.isWithinLocationBounds(column - 'A',row - '1',MAX_COLUMNS,MAX_ROWS);
-        CellLocation cellLocation = CellLocationFactory.fromCellId(column,row); // Hypothetical location
+        int row = stlCell.getRow();
+       // CellUtils.isWithinLocationBounds(column - 'A',row - '1',MAX_COLUMNS,MAX_ROWS);
+        CellLocation cellLocation = CellLocationFactory.fromCellId(column,(char)row); // Hypothetical location
 
         Cell ourCell = new CellImp(cellLocation, orignalValue);
         return ourCell;

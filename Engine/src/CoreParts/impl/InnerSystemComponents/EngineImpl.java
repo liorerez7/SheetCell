@@ -10,6 +10,8 @@ import Utility.CellUtils;
 import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
+import Utility.RefDependencyGraph;
+import Utility.RefGraphBuilder;
 import expression.Operation;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
@@ -34,7 +36,6 @@ public class EngineImpl implements Engine {
     private SheetCellImp sheetCell = new SheetCellImp(
             4, 3, "lior and niv sheet cell", 3, 15
     );
-
     @Override
     public DtoCell getRequestedCell(String cellId, boolean updateCell) {
         if (updateCell)
@@ -83,6 +84,8 @@ public class EngineImpl implements Engine {
         STLSheet sheet = EngineUtilies.deserializeFrom(in);
         SheetConvertor convertor = new SheetConvertorImpl();
         sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
+        RefGraphBuilder refGraphBuilder = new RefGraphBuilder(new RefDependencyGraph(),sheetCell);
+        refGraphBuilder.build(sheetCell);
     }
 
     @Override
@@ -90,14 +93,10 @@ public class EngineImpl implements Engine {
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
         Set<Cell> CloneAffectedBy = new HashSet<>();
-
-        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell(), CloneAffectedBy);
-
+        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell(),CloneAffectedBy);
         try {
             expression.evaluate().getValue();
-
             for(Cell cell : targetCell.getAffectingOn()){
-
                 ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
 
                 if(Operation.fromString(parser.getFunctionName()) == Operation.REF){
@@ -148,5 +147,6 @@ public class EngineImpl implements Engine {
             throw new Exception("Invalid path: " + path);
         }
     }
+
 
 }
