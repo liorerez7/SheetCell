@@ -17,7 +17,9 @@ public class RefGraphBuilder {
         this.dependencyGraph = dependencyGraph;
         this.sheetCell = sheetCell;
     }
-
+    public RefDependencyGraph getDependencyGraph() {
+        return dependencyGraph;
+    }
     public void processCell(Cell cell) {
         String originalValue = cell.getOriginalValue();
         // Parse the original value and extract references
@@ -56,3 +58,4 @@ public class RefGraphBuilder {
         }
     }
 }
+

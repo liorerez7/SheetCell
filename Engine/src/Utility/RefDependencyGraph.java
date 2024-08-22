@@ -4,7 +4,6 @@ import java.util.*;
 
 public class RefDependencyGraph {
     private final Map<Cell,Set<Cell>> adjacencyList = new HashMap<>();
-
     // Adds a dependency edge from cellA to cellB (i.e., cellA depends on cellB)
     public void addDependency(Cell cellA, Cell cellB) {
         adjacencyList.computeIfAbsent(cellA, k -> new HashSet<>()).add(cellB);
@@ -44,7 +43,6 @@ public class RefDependencyGraph {
                 topologicalSortUtil(cell, visited, stack);
             }
         }
-
         List<Cell> sortedCells = new ArrayList<>();
         while (!stack.isEmpty()) {
             sortedCells.add(stack.pop());
@@ -59,7 +57,7 @@ public class RefDependencyGraph {
             if (!visited.containsKey(dependentCell)) {
                 topologicalSortUtil(dependentCell, visited, stack);
             } else if (visited.get(dependentCell)) {
-                throw new Exception("Cycle detected in the graph!");
+                throw new Exception("Cycle detected in the graph! make sure there is no self dependency\n for example: A5 depends on A3 and A3 depends on A5");
             }
         }
 

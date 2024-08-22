@@ -21,10 +21,7 @@ import jakarta.xml.bind.JAXBException;
 
 import java.io.*;
 import java.nio.file.InvalidPathException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class EngineImpl implements Engine {
     Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges = new HashMap<>();
@@ -79,17 +76,20 @@ public class EngineImpl implements Engine {
         return new DtoSheetCell(versionToCellsChanges, sheetCell, versionNumber);
     }
     @Override
-    public void readSheetCellFromXML(String path) throws FileNotFoundException, JAXBException {
+    public void readSheetCellFromXML(String path) throws Exception {
         InputStream in = new FileInputStream(new File(path));
         STLSheet sheet = EngineUtilies.deserializeFrom(in);
         SheetConvertor convertor = new SheetConvertorImpl();
         sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
-        RefGraphBuilder refGraphBuilder = new RefGraphBuilder(new RefDependencyGraph(),sheetCell);
+        RefGraphBuilder refGraphBuilder = new RefGraphBuilder(new RefDependencyGraph(), sheetCell);
         refGraphBuilder.build(sheetCell);
+        RefDependencyGraph refDependencyGraph = refGraphBuilder.getDependencyGraph();
+         List<Cell> topologicalOrderCells = refDependencyGraph.topologicalSort();
+         //topologicalOrderCells.forEach(cell -> CellUtils.processExpressionRec(cell.getOriginalValue(),getInnerSystemSheetCell(),));
     }
 
-    @Override
-    public void updateCell(String newValue, char col, char row) {
+        @Override
+    public void updateCell(String newValue, char col, String row) {
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
         Set<Cell> CloneAffectedBy = new HashSet<>();
