@@ -30,7 +30,7 @@ public class CellUtils {
     }
     // TODO : when cell is updated we need to delete his relayed by cells.
 
-    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell, Set<Cell> CloneAffectedBy) {// this is a recursive function
+    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) {// this is a recursive function
         ExpressionParser parser = new ExpressionParserImpl(value);
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
             return new Num(Double.parseDouble(value));
@@ -43,15 +43,12 @@ public class CellUtils {
 
         if (operation == Operation.REF) {
             Cell cellThatBeenEffected = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
-            return handleReferenceOperation(cellThatBeenEffected, targetCell, CloneAffectedBy);//argument(1) = CELL_ID
+            return handleReferenceOperation(cellThatBeenEffected, targetCell);//argument(1) = CELL_ID
         }
-        return operation.calculate(processArguments(arguments, targetCell, sheetCell, CloneAffectedBy));
+        return operation.calculate(processArguments(arguments, targetCell, sheetCell));
     }
 
-    private static Expression handleReferenceOperation(Cell cellThatBeenEffected, Cell cellThatAffects, Set<Cell> CloneAffectedBy) {
-
-        validateCircularDependency(cellThatBeenEffected, cellThatAffects, CloneAffectedBy);
-        CloneAffectedBy.add(cellThatBeenEffected);
+    private static Expression handleReferenceOperation(Cell cellThatBeenEffected, Cell cellThatAffects) {
 
         if (cellThatBeenEffected.getEffectiveValue() == null) {
 
@@ -61,25 +58,11 @@ public class CellUtils {
         return cellThatBeenEffected.getEffectiveValue();
     }
 
-    public static void validateCircularDependency(Cell cell, Cell targetCell, Set<Cell> CloneAffectedBy) {
 
-        if (cell.getAffectedBy().isEmpty()) {
-            return;
-        }
-
-        if (cell.isCellAffectedBy(targetCell) == true) {
-            throw new IllegalArgumentException("Invalid expression: circular dependency");
-        } else {
-            for (Cell cell1 : cell.getAffectedBy()) {
-                validateCircularDependency(cell1, targetCell, CloneAffectedBy);
-            }
-        }
-    }
-
-    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell, Set<Cell> CloneAffectedBy) {
+    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell) {
         List<Expression> expressions = new ArrayList<>();
         for (String arg : arguments) {
-            expressions.add(processExpressionRec(arg.trim(), targetCell, sheetCell, CloneAffectedBy));
+            expressions.add(processExpressionRec(arg.trim(), targetCell, sheetCell));
         }
         return expressions;
     }

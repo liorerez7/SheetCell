@@ -93,7 +93,7 @@ public class EngineImpl implements Engine {
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
         Set<Cell> CloneAffectedBy = new HashSet<>();
-        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell(),CloneAffectedBy);
+        Expression expression = CellUtils.processExpressionRec(newValue,targetCell,getInnerSystemSheetCell());
         try {
             expression.evaluate().getValue();
             for(Cell cell : targetCell.getAffectingOn()){
