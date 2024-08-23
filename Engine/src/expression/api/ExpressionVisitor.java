@@ -6,7 +6,9 @@ import expression.impl.variantImpl.BinaryExpression;
 import expression.impl.variantImpl.TernaryExpression;
 import expression.impl.variantImpl.UnaryExpression;
 
-public interface ExpressionVisitor {
+import java.io.Serializable;
+
+public interface ExpressionVisitor  {
     void visit(UnaryExpression expression);
     void visit(BinaryExpression expression);
     void visit(TernaryExpression expression);

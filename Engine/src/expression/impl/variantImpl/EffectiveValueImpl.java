@@ -6,7 +6,7 @@ import expression.api.EffectiveValue;
 
 import java.io.Serializable;
 
-public class EffectiveValueImpl implements EffectiveValue, Serializable {
+public class EffectiveValueImpl implements EffectiveValue {
 
     private ReturnedValueType cellType;
     private Object value;

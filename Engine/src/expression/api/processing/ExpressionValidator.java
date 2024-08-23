@@ -1,4 +1,6 @@
 package expression.api.processing;
 
-public interface ExpressionValidator {
+import java.io.Serializable;
+
+public interface ExpressionValidator  extends Serializable {
 }

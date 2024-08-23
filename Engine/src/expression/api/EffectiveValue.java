@@ -5,7 +5,7 @@ import expression.ReturnedValueType;
 
 import java.io.Serializable;
 
-public interface EffectiveValue{
+public interface EffectiveValue extends Serializable {
     ReturnedValueType getCellType();
     Object getValue();
     void setValue(int value);

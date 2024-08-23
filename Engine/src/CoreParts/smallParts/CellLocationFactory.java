@@ -1,9 +1,10 @@
 package CoreParts.smallParts;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CellLocationFactory {
+public class CellLocationFactory implements Serializable {
     private static Map<String,CellLocation> cachedCoordinates = new HashMap<>();
     public static CellLocation fromCellId(String key) {
         if (cachedCoordinates.containsKey(key)) {

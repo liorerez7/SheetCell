@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class CellLocation implements Serializable { // TODO: Implement the CellLocation interface maybe change name to Location.
+    private static final long serialVersionUID = 1L; // Add serialVersionUID
     private char visualColumn;
     private char visualRow;
     private int realRow;

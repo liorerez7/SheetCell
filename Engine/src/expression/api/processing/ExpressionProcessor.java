@@ -1,4 +1,6 @@
 package expression.api.processing;
 
-public interface ExpressionProcessor {
+import java.io.Serializable;
+
+public interface ExpressionProcessor  extends Serializable {
 }

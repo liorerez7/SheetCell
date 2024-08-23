@@ -15,6 +15,7 @@ import java.util.Set;
 //TODO: Implement the SheetCell interface
 public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 {
+    private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Map<CellLocation, Cell> sheetCell = new HashMap<>(); // Changed to map of CellLocation to Cell
     private RefDependencyGraph refDependencyGraph = new RefDependencyGraph();
     private RefGraphBuilder refGraphBuilder;

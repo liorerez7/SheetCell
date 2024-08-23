@@ -5,6 +5,7 @@ import expression.api.Expression;
 import expression.api.processing.ExpressionParser;
 import expression.impl.stringFunction.Str;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,7 +2,9 @@ package Utility;
 import CoreParts.api.Cell;
 import java.util.*;
 
-public class RefDependencyGraph {
+public class RefDependencyGraph implements java.io.Serializable {
+
+    private static final long serialVersionUID = 1L; // Add serialVersionUID
     private final Map<Cell,Set<Cell>> adjacencyList = new HashMap<>();
     private final Map<Cell,Set<Cell>> reverseAdjacencyList = new HashMap<>();
 

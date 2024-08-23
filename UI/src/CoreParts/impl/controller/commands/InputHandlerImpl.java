@@ -51,7 +51,7 @@ public class InputHandlerImpl implements InputHandler {
     @Override
     public String getCellInput(int userTryCount) throws Exception {
         try {
-            System.out.println("Enter Cell ID: for example A1 ( enter BACK to go to main menu): \n");
+            System.out.println("Enter Cell ID: for example A1 ( enter BACK to go to main menu):");
             String input = scanner.nextLine();
 
             if (input.equalsIgnoreCase("BACK")) {
@@ -127,7 +127,7 @@ public class InputHandlerImpl implements InputHandler {
     @Override
     public String getFilePathInput() throws Exception {
         while (true) {
-            System.out.println("Enter the file path or BACK to go back to main menu\n: ");
+            System.out.println("Enter the file path or BACK to go back to main menu: ");
             String filePath = scanner.nextLine().trim();
             if (filePath.equalsIgnoreCase("BACK"))
                 return null;
@@ -145,7 +145,7 @@ public class InputHandlerImpl implements InputHandler {
     @Override
     public String getCommandInput(int UserTryCount) throws Exception {
 
-            System.out.println("Enter Expression Value: ( enter BACK to go to main menu): \n");
+            System.out.println("Enter Expression Value: ( enter BACK to go to main menu):");
         try {
             String input = scanner.nextLine();
 

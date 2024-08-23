@@ -26,6 +26,6 @@ public class DisplayRequestedVersion extends SheetEngineCommand {
         }
         Displayer displayer = new TerminalSheet();
 
-        displayer.display(sheetCell);
+        displayer.displaySpecificVersion(sheetCell, requestedVersion);
     }
 }

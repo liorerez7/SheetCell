@@ -3,12 +3,13 @@ package CoreParts.impl.InnerSystemComponents;
 import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
 import expression.api.Expression;
-
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CellImp implements Cell
+public class CellImp implements Cell ,Serializable
 {
+    private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Expression effectiveValue;
     private String originalValue;
     private CellLocation location;

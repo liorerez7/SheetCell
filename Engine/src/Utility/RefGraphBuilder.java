@@ -6,10 +6,13 @@ import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefGraphBuilder {
+public class RefGraphBuilder implements Serializable {
+
+    private static final long serialVersionUID = 1L; // Add serialVersionUID
     private final RefDependencyGraph dependencyGraph;
     private SheetCellViewOnly sheetCell;
     public RefGraphBuilder(SheetCellViewOnly sheetCell) {
