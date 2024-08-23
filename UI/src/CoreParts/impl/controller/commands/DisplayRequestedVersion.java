@@ -3,11 +3,12 @@ package CoreParts.impl.controller.commands;
 import CoreParts.api.Engine;
 import CoreParts.api.UtilsUI.Displayer;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
+import CoreParts.impl.UtilisUI.MenuHandler;
 import CoreParts.impl.UtilisUI.TerminalSheet;
 
 public class DisplayRequestedVersion extends SheetEngineCommand {
-    public DisplayRequestedVersion(Engine engine) {
-        super(engine);
+    public DisplayRequestedVersion(Engine engine, MenuHandler menuHandler) {
+        super(engine, menuHandler);
     }
 
     @Override

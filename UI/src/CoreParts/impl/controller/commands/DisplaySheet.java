@@ -6,6 +6,7 @@ import CoreParts.api.UtilsUI.Displayer;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoLocation;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
+import CoreParts.impl.UtilisUI.MenuHandler;
 import CoreParts.impl.UtilisUI.TerminalSheet;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
@@ -14,8 +15,8 @@ import java.util.Map;
 
 public class DisplaySheet extends SheetEngineCommand {
 
-    public DisplaySheet(Engine engine) {
-        super(engine);
+    public DisplaySheet(Engine engine, MenuHandler menuHandler) {
+        super(engine, menuHandler);
     }
 
 

@@ -2,11 +2,13 @@ package CoreParts.impl.controller.commands;
 
 import CoreParts.api.Engine;
 import CoreParts.api.controller.InputHandler;
+import CoreParts.impl.UtilisUI.MenuHandler;
+import CoreParts.impl.UtilisUI.MenuTypes;
 
 public class ExitSheet extends SheetEngineCommand{
 
-    public ExitSheet(Engine engine) {
-        super(engine);
+    public ExitSheet(Engine engine, MenuHandler menuHandler) {
+        super(engine, menuHandler);
     }
 
     @Override
@@ -18,10 +20,15 @@ public class ExitSheet extends SheetEngineCommand{
             save = inputHandler.getSaveInput();
             if (save) {
                 path = inputHandler.getFilePathInput();
-                if (path == null) return;
+                if (path == null){
+                    menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);
+                }
                 engine.save(path);
             }
-            engine.exit();
+            menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);
         }
+        else{
+            menuHandler.setMenuStatus(MenuTypes.SECOND_MENU);
         }
     }
+}

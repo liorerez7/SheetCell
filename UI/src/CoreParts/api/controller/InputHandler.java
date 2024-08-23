@@ -12,4 +12,5 @@ public interface InputHandler {
      boolean getExitInput() throws Exception;
      boolean getSaveInput() throws Exception;
      String getFilePathInput() throws Exception;
+     void setCommandManager(CommandManager commandManager);
 }

@@ -1,11 +1,12 @@
 package CoreParts.impl.controller.commands;
 
 import CoreParts.api.Engine;
+import CoreParts.impl.UtilisUI.MenuHandler;
 
 public class SaveSheet extends SheetEngineCommand {
 
-    public SaveSheet(Engine engine) {
-        super(engine);
+    public SaveSheet(Engine engine, MenuHandler menuHandler) {
+        super(engine, menuHandler);
     }
 
     @Override

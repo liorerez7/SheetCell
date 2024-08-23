@@ -6,6 +6,7 @@ import CoreParts.api.UtilsUI.Displayer;
 import CoreParts.api.controller.Command;
 import CoreParts.api.controller.InputHandler;
 import CoreParts.impl.DtoComponents.DtoCell;
+import CoreParts.impl.UtilisUI.MenuHandler;
 import CoreParts.impl.UtilisUI.TerminalSheet;
 import expression.ReturnedValueType;
 
@@ -15,8 +16,8 @@ import java.util.Scanner;
 
 public class UpdateCell extends SheetEngineCommand {
 
-    public UpdateCell(Engine engine) {
-        super(engine);
+    public UpdateCell(Engine engine, MenuHandler menuHandler) {
+        super(engine, menuHandler);
     }
 
     @Override

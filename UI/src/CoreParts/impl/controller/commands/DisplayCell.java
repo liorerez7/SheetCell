@@ -4,11 +4,12 @@ import CoreParts.api.Cell;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoLocation;
+import CoreParts.impl.UtilisUI.MenuHandler;
 
 public class DisplayCell extends SheetEngineCommand {
 
-    public DisplayCell(Engine engine) {
-        super(engine);
+    public DisplayCell(Engine engine, MenuHandler menuHandler) {
+        super(engine, menuHandler);
     }
 
     @Override

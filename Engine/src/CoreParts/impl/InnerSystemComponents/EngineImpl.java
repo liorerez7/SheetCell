@@ -96,8 +96,13 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void save(String path1) throws Exception {
-        String path = "C:\\Users\\Lior\\Documents\\my_sheet_state.dat";
+    public void save(String path) throws Exception {
+
+        /*
+        example path which has permissions:
+        String path1 = "C:\\Users\\Lior\\Documents\\my_sheet_state.dat";
+        */
+
         try (FileOutputStream fileOut = new FileOutputStream(path);
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(versionToCellsChanges);

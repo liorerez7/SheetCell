@@ -1,15 +1,15 @@
-package CoreParts.impl.controller.commands;
+package CoreParts.impl.UtilisUI;
 
 import CoreParts.api.controller.CommandManager;
 import CoreParts.api.controller.InputHandler;
 
 import java.util.Scanner;
-import java.io.File;
 
 public class InputHandlerImpl implements InputHandler {
 
     private Scanner scanner;
     private CommandManager commandManager;
+
 
     public InputHandlerImpl(CommandManager commandManager) {
         scanner = new Scanner(System.in);
@@ -47,7 +47,6 @@ public class InputHandlerImpl implements InputHandler {
     }
 
 
-
     @Override
     public String getCellInput(int userTryCount) throws Exception {
         try {
@@ -68,6 +67,7 @@ public class InputHandlerImpl implements InputHandler {
             return getCellInput(userTryCount);
         }
     }
+
     public int getVersionInput() throws Exception {
         while (true) {
             System.out.println("Enter the version number (positive integer) to display\n(enter 0 to go to main menu): ");
@@ -140,6 +140,10 @@ public class InputHandlerImpl implements InputHandler {
         }
     }
 
+    @Override
+    public void setCommandManager(CommandManager commandManager) {
+        this.commandManager = commandManager;
+    }
 
     //TODO: add more syntax checks, like commas.
     @Override
