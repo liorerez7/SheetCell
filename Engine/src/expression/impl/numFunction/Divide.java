@@ -18,7 +18,12 @@ public class Divide extends BinaryExpression {
 
     @Override
     protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
-        Double result = ((Double) e1.getValue()/(Double)e2.getValue());
+        double result = ((Double) e1.getValue()/(Double)e2.getValue());
+
+        if((Double)e2.getValue() == 0){
+            result = Double.NaN;
+        }
+
         return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
     }
 }

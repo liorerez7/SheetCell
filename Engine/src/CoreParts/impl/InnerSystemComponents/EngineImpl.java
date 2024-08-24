@@ -32,17 +32,14 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public DtoCell getRequestedCell(String cellId, boolean updateCell) {
-        if (updateCell)
+    public DtoCell getRequestedCell(String cellId) {
+
+        if(CellLocationFactory.isContained(cellId)) {
             return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
-        else
-            if (!CellLocationFactory.isContained(cellId))
-            {
-                throw new IllegalArgumentException("cell does not exist(you can create a cell using the updateCell command)");
-            }
-
-        return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
-
+        }
+        else {
+            return null;
+        }
     }
     @Override
     public DtoSheetCell getSheetCell() {
@@ -71,6 +68,9 @@ public class EngineImpl implements Engine {
     @Override
     public void updateCell(String newValue, char col, String row) throws Exception {
 
+        // Step 1: Serialize and save the current sheetCell
+        byte[] savedSheetCellState = saveSheetCellState();
+
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
         Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell());
         Expression oldExpression = targetCell.getEffectiveValue(); // old expression
@@ -85,6 +85,10 @@ public class EngineImpl implements Engine {
             versionControl();
         } catch (Exception e) {
             restoreSheetCellState(savedSheetCellState);
+            CellLocationFactory.removeKey(col + row);
+            if(CellLocationFactory.isContained(col + row)){
+                System.out.println("BUGGG");
+            }
             throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed", e);
         }
     }

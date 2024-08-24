@@ -18,6 +18,9 @@ public class CellLocationFactory implements Serializable {
     public static boolean isContained(String key) {
         return cachedCoordinates.containsKey(key);
     }
+    public static void removeKey(String key) {
+        cachedCoordinates.remove(key);
+    }
 
     public static CellLocation fromCellId(char col, String row) {
 
