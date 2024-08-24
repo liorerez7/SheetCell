@@ -8,8 +8,7 @@ import java.util.Optional;
 
 public interface Expression extends Serializable {
 
-
-    EffectiveValue evaluate() throws IllegalArgumentException;
+    EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException;
 
     String getOperationSign();
     void accept(ExpressionVisitor visitor);

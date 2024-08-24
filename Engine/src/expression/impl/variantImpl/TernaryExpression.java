@@ -1,5 +1,6 @@
 package expression.impl.variantImpl;
 
+import CoreParts.api.SheetCellViewOnly;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
@@ -28,8 +29,8 @@ public abstract class TernaryExpression implements Expression {
         this.secondOperand = secondOperand;
         this.thirdOperand = thirdOperand;
     }
-    public EffectiveValue evaluate() throws IllegalArgumentException {
-        return evaluate(firstOperand.evaluate(), secondOperand.evaluate(), thirdOperand.evaluate());
+    public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {
+        return evaluate(firstOperand.evaluate(sheet), secondOperand.evaluate(sheet), thirdOperand.evaluate(sheet));
     }
 
     @Override

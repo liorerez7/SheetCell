@@ -48,7 +48,6 @@ public class EngineImpl implements Engine {
         return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
 
     }
-
     @Override
     public DtoSheetCell getSheetCell() {
         return new DtoSheetCell(sheetCell);
@@ -67,6 +66,11 @@ public class EngineImpl implements Engine {
         sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
         setUpSheet();
     }
+    public void recalculateCellsValues() throws Exception {
+        sheetCell.createRefDependencyGraph();
+         List<Cell> cells = sheetCell.getRefDependencyGraph().topologicalSort();
+        cells.forEach(cell -> cell.setActualValue(sheetCell));
+    }
 
     @Override
     public void updateCell(String newValue, char col, String row) throws Exception {
@@ -77,12 +81,11 @@ public class EngineImpl implements Engine {
 
         // Step 1: Serialize and save the current sheetCell
         byte[] savedSheetCellState = saveSheetCellState();
-
         try {
             applyCellUpdates(targetCell, newValue, expression);
             performGraphOperations();
-            validateExpression(expression, targetCell);
-            updateVersionsAndRecalculate(targetCell, oldExpression);
+            //validateExpression(expression, targetCell);
+            updateVersions(targetCell, oldExpression);
             versionControl();
         } catch (Exception e) {
             restoreSheetCellState(savedSheetCellState);
@@ -102,7 +105,6 @@ public class EngineImpl implements Engine {
         example path which has permissions:
         String path1 = "C:\\Users\\Lior\\Documents\\my_sheet_state.dat";
         */
-
         try (FileOutputStream fileOut = new FileOutputStream(path);
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(versionToCellsChanges);
@@ -129,24 +131,26 @@ public class EngineImpl implements Engine {
     private void applyCellUpdates(Cell targetCell, String originalValue, Expression expression) {
         targetCell.setOriginalValue(originalValue);
         targetCell.setEffectiveValue(expression);
+        targetCell.setActualValue(sheetCell);
     }
 
     private void performGraphOperations() throws Exception {
         sheetCell.createRefDependencyGraph();
-        sheetCell.getRefDependencyGraph().topologicalSort();
+        List<Cell> cells = sheetCell.getRefDependencyGraph().topologicalSort();
         sheetCell.updateEffectedByAndOnLists();
+        cells.forEach(cell -> cell.setActualValue(sheetCell));
     }
 
     private void validateExpression(Expression expression, Cell targetCell) {
         try {
-            expression.evaluate().getValue();
+            expression.evaluate(sheetCell).getValue();
 
             for (Cell cell : targetCell.getAffectingOn()) {
                 ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
                 if (Operation.fromString(parser.getFunctionName()) == Operation.REF) {
                     continue;
                 }
-                if (expression.evaluate().getCellType() != cell.getEffectiveValue().evaluate().getCellType()) {
+                if (expression.evaluate(sheetCell).getCellType() != cell.getEffectiveValue().evaluate(sheetCell).getCellType()) {
                     throw new IllegalArgumentException("Invalid expression: arguments not of the same type\nValue was not changed");
                 }
             }
@@ -158,7 +162,8 @@ public class EngineImpl implements Engine {
     private void updateVersionsAndRecalculate(Cell targetCell, Expression oldExpression) {
         sheetCell.updateVersion();
         targetCell.updateVersion(sheetCell.getLatestVersion());
-        CellUtils.recalculateCellsRec(targetCell, oldExpression);
+
+        //CellUtils.recalculateCellsRec(targetCell, oldExpression);
     }
 
     private void restoreSheetCellState(byte[] savedSheetCellState) throws Exception {
@@ -198,7 +203,7 @@ public class EngineImpl implements Engine {
             Cell cell = entry.getValue();
             // Check if the cell's latest version matches the sheet's latest version
             if (cell.getLatestVersion() == sheetCellLatestVersion)   // Assuming Cell has a getVersion() method// Replace with your logic to calculate the effective value
-                changedCells.put(location, cell.getEffectiveValue().evaluate());
+                changedCells.put(location, cell.getEffectiveValue().evaluate(sheetCell));
         }
     }
 
@@ -216,12 +221,12 @@ public class EngineImpl implements Engine {
     private void setUpSheet() throws Exception {
         sheetCell.createRefDependencyGraph();
         List<Cell> topologicalOrder = gettopologicalSortOfExpressions();
-
         topologicalOrder.forEach(cell -> {
             Expression expression = CellUtils.processExpressionRec(cell.getOriginalValue(), cell, getInnerSystemSheetCell());
-            expression.evaluate();
-            cell.updateVersion(sheetCell.getLatestVersion());
+            expression.evaluate(sheetCell);
             cell.setEffectiveValue(expression);
+            cell.setActualValue(sheetCell);
+            cell.updateVersion(sheetCell.getLatestVersion());
         });
         versionControl();
         sheetCell.updateEffectedByAndOnLists();

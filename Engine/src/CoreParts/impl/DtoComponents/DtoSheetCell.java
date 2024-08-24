@@ -25,7 +25,7 @@ public class DtoSheetCell {
     // Constructor to populate DtoSheetCell from SheetCellImp
     public DtoSheetCell(SheetCellImp sheetCellImp) {
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
-           EffectiveValue effectiveValue = entry.getValue().getEffectiveValue().evaluate();
+           EffectiveValue effectiveValue = entry.getValue().getActualValue();
             CellUtils.formatDoubleValue(effectiveValue);
             sheetCell.put(new DtoLocation(entry.getKey()), effectiveValue);
         }

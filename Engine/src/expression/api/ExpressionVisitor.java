@@ -15,4 +15,3 @@ public interface ExpressionVisitor  {
     void visit(Num expression);
     void visit(Str expression);
 }
-

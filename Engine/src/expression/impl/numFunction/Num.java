@@ -1,5 +1,6 @@
 package expression.impl.numFunction;
 
+import CoreParts.api.SheetCellViewOnly;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
@@ -15,7 +16,7 @@ public class Num implements Expression {
     }
 
     @Override
-    public EffectiveValue evaluate() {
+    public EffectiveValue evaluate(SheetCellViewOnly sheet) {
         return new EffectiveValueImpl(ReturnedValueType.NUMERIC, num);
     }
 

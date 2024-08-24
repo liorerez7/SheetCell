@@ -1,7 +1,9 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
+import CoreParts.api.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -11,6 +13,7 @@ public class CellImp implements Cell ,Serializable
 {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Expression effectiveValue;
+    private EffectiveValue actualValue;
     private String originalValue;
     private CellLocation location;
     private int latesetVersion;
@@ -21,6 +24,15 @@ public class CellImp implements Cell ,Serializable
     this.effectiveValue = effectiveValue;
     this.originalValue = originalValue;
 }
+public void setActualValue(SheetCellViewOnly sheet) {
+    actualValue = effectiveValue.evaluate(sheet);
+}
+
+    @Override
+    public EffectiveValue getActualValue() {
+        return actualValue;
+    }
+
     public CellImp(CellLocation location) {
         this.location = location;
         originalValue = "";

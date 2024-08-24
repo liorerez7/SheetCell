@@ -1,5 +1,6 @@
 package expression.impl.stringFunction;
 
+import CoreParts.api.SheetCellViewOnly;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
@@ -20,7 +21,7 @@ public class Str implements Expression {
     }
 
     @Override
-    public EffectiveValue evaluate() {
+    public EffectiveValue evaluate(SheetCellViewOnly sheet) {
         return new EffectiveValueImpl(ReturnedValueType.STRING, value);
     }
 

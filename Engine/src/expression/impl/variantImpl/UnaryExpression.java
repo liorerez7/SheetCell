@@ -1,5 +1,6 @@
 package expression.impl.variantImpl;
 
+import CoreParts.api.SheetCellViewOnly;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
@@ -12,8 +13,8 @@ public abstract class UnaryExpression implements Expression {
         this.expression = expression;
     }
     @Override
-    public EffectiveValue evaluate() {
-        return evaluate(expression.evaluate());
+    public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {
+        return evaluate(expression.evaluate(sheet));
     }
     @Override
     public String getOperationSign() {

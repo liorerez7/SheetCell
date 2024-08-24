@@ -1,5 +1,6 @@
 package expression.impl.variantImpl;
 
+import CoreParts.api.SheetCellViewOnly;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
@@ -15,8 +16,8 @@ public abstract class BinaryExpression implements Expression{
     }
 
     @Override
-    public EffectiveValue evaluate() {
-        return evaluate(leftExpression.evaluate(), rightExpression.evaluate());
+    public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {
+        return evaluate(leftExpression.evaluate(sheet), rightExpression.evaluate(sheet));
     }
 
     @Override

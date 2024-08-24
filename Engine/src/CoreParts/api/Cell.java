@@ -1,6 +1,7 @@
 package CoreParts.api;
 
 import CoreParts.smallParts.CellLocation;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
 
 import java.util.Set;
@@ -24,4 +25,6 @@ public interface Cell {
     CellLocation getLocation();
     void updateVersion(int latestVersion);
     int getLatestVersion();
+    void setActualValue(SheetCellViewOnly sheet);
+    EffectiveValue getActualValue();
 }

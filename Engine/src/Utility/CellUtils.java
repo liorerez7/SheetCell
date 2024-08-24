@@ -11,6 +11,7 @@ import expression.api.Expression;
 import expression.api.ExpressionVisitor;
 import expression.api.processing.ExpressionParser;
 import expression.impl.Processing.ExpressionParserImpl;
+import expression.impl.Ref;
 import expression.impl.numFunction.Num;
 import expression.impl.stringFunction.Str;
 import expression.impl.variantImpl.TravarseExpTreeVisitor;
@@ -53,7 +54,7 @@ public class CellUtils {
 
             throw new IllegalArgumentException("Invalid expression: cell referenced before being set");
         }
-        return cellThatBeenEffected.getEffectiveValue();
+        return new Ref(cellThatBeenEffected.getLocation());
     }
 
 
@@ -102,7 +103,7 @@ public class CellUtils {
     }
 
     public static void validateExpression(Expression expression) {
-        expression.evaluate().getValue();
+        return;
     }
 
     public static void formatDoubleValue(EffectiveValue value) {

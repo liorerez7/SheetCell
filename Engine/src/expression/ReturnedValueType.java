@@ -16,6 +16,5 @@ public enum ReturnedValueType {
     public boolean isAssignableFrom(Class<?> aType) {
         return type.isAssignableFrom(aType);
     }
-
     */
 }
