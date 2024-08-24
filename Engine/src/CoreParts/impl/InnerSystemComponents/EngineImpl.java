@@ -1,7 +1,6 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCell;
 import CoreParts.api.SheetConvertor;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
@@ -12,16 +11,13 @@ import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
 import Utility.RefDependencyGraph;
-import Utility.RefGraphBuilder;
 import expression.Operation;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.processing.ExpressionParser;
 import expression.impl.Processing.ExpressionParserImpl;
-import jakarta.xml.bind.JAXBException;
 
 import java.io.*;
-import java.nio.file.InvalidPathException;
 import java.util.*;
 
 public class EngineImpl implements Engine {
@@ -159,7 +155,7 @@ public class EngineImpl implements Engine {
         }
     }
 
-    private void updateVersionsAndRecalculate(Cell targetCell, Expression oldExpression) {
+    private void updateVersions(Cell targetCell, Expression oldExpression) {
         sheetCell.updateVersion();
         targetCell.updateVersion(sheetCell.getLatestVersion());
 
