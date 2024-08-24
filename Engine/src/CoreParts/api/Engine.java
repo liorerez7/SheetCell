@@ -7,7 +7,7 @@ import jakarta.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 
 public interface Engine {
-    DtoCell getRequestedCell(String cellId,boolean updateCell);
+    DtoCell getRequestedCell(String cellId);
     DtoSheetCell getSheetCell();
     DtoSheetCell getSheetCell(int versionNumber);
     void readSheetCellFromXML(String path) throws Exception;

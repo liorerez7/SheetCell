@@ -18,10 +18,10 @@ public class DisplayCell extends SheetEngineCommand {
         String cellId = inputHandler.getCellInput(0);
         if (cellId == null) return;
         DtoCell cell = null;
-        try {
-            cell = engine.getRequestedCell(cellId, false);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+
+        cell = engine.getRequestedCell(cellId);
+        if(cell == null) {
+            System.out.println("Cant display cell that doesnt exist, use update cell method");
             execute();
         }
 
