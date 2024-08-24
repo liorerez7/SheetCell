@@ -75,8 +75,6 @@ public class EngineImpl implements Engine {
         Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell());
         Expression oldExpression = targetCell.getEffectiveValue(); // old expression
 
-        // Step 1: Serialize and save the current sheetCell
-        byte[] savedSheetCellState = saveSheetCellState();
         try {
             applyCellUpdates(targetCell, newValue, expression);
             performGraphOperations();
