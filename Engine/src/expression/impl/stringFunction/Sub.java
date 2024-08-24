@@ -22,12 +22,20 @@ public class Sub  extends TernaryExpression {
     protected EffectiveValue evaluate(EffectiveValue source,
                                       EffectiveValue start,
                                       EffectiveValue end) throws IndexOutOfBoundsException {
+
         String sourceValue = source.getValue().toString();
         double startValue = (double) start.getValue();
         double endValue = (double) end.getValue();
         int startInt = (int) startValue;
         int endInt = (int) endValue;
-        String result = sourceValue.substring(startInt,endInt); //TODO:not working getting error not of the same type
+
+        // Check for invalid ranges
+        if (startInt < 0 || startInt >= sourceValue.length() ||
+                endInt < 0 || endInt > sourceValue.length() || startInt > endInt) {
+            return new EffectiveValueImpl(ReturnedValueType.UNDEFINED, "UNDEFINED");
+        }
+
+        String result = sourceValue.substring(startInt,endInt);
         return new EffectiveValueImpl(ReturnedValueType.STRING,result);
     }
 }

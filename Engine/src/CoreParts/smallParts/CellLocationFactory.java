@@ -7,9 +7,13 @@ import java.util.Map;
 public class CellLocationFactory implements Serializable {
     private static Map<String,CellLocation> cachedCoordinates = new HashMap<>();
     public static CellLocation fromCellId(String key) {
+
+        key = key.toUpperCase();
+
         if (cachedCoordinates.containsKey(key)) {
             return cachedCoordinates.get(key);
         }
+
         CellLocation coordinate = new CellLocation(key.charAt(0), key.charAt(1));
         cachedCoordinates.put(key, coordinate);
 
@@ -27,5 +31,9 @@ public class CellLocationFactory implements Serializable {
         String cellId =col + row;
 
         return CellLocationFactory.fromCellId(cellId);
+    }
+
+    public static void clearCache() {
+        cachedCoordinates.clear();
     }
 }

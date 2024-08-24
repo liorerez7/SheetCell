@@ -20,6 +20,11 @@ public class Concat extends BinaryExpression {
 
     @Override
     protected EffectiveValue evaluate(EffectiveValue evaluate1, EffectiveValue evaluate2) {
+
+        if(evaluate1.getCellType() == ReturnedValueType.UNDEFINED || evaluate2.getCellType() == ReturnedValueType.UNDEFINED) {
+            return new EffectiveValueImpl(ReturnedValueType.UNDEFINED, "UNDEFINED");
+        }
+
         String result = (String)(evaluate1.getValue()) + " " + (String)(evaluate2.getValue());
         return new EffectiveValueImpl(ReturnedValueType.STRING, result);
     }

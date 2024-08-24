@@ -75,11 +75,22 @@ public class TerminalSheet implements Displayer {
         }
     }
 
+
+
+
+
     private void printCell(DtoSheetCell sheetCell, char col, int row, int cellWidth) {
         CellLocation dtoLocation = new CellLocation(col, (char) ('0' + row));
         EffectiveValue effectiveValue = sheetCell.getEffectiveValue(dtoLocation);
         Object objectValue = (effectiveValue != null) ? effectiveValue.getValue() : "";
         String value = objectValue.toString();
+
+        // If the value length exceeds the cell width, truncate it
+        if (value.length() > cellWidth) {
+
+            value = value.substring(0, cellWidth-2);
+        }
+
         System.out.print(" | ");
         String formattedValue = String.format("%" + ((cellWidth - value.length()) / 2) + "s", value);
         String trailingSpacesValue = String.format("%" + (cellWidth - formattedValue.length() + 1) + "s", "");

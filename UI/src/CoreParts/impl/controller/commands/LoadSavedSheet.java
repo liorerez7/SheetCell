@@ -17,5 +17,6 @@ public class LoadSavedSheet extends SheetEngineCommand {
         }
         menuHandler.setMenuStatus(MenuTypes.SECOND_MENU);
         engine.load(path);
+        System.out.println("Sheet loaded successfully");
     }
 }

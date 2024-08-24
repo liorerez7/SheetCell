@@ -16,13 +16,19 @@ public class ExitSheet extends SheetEngineCommand{
         boolean exit = inputHandler.getExitInput();
         boolean save = false;
         String path = "";
+
         if (exit) {
+
             save = inputHandler.getSaveInput();
+
             if (save) {
                 path = inputHandler.getFilePathInput();
+
                 if (path == null){
                     menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);
                 }
+
+                System.out.println("Sheet saved successfully");
                 engine.save(path);
             }
             menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);

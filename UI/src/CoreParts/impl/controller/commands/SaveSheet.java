@@ -2,6 +2,7 @@ package CoreParts.impl.controller.commands;
 
 import CoreParts.api.Engine;
 import CoreParts.impl.UtilisUI.MenuHandler;
+import CoreParts.impl.UtilisUI.MenuTypes;
 
 public class SaveSheet extends SheetEngineCommand {
 
@@ -11,15 +12,22 @@ public class SaveSheet extends SheetEngineCommand {
 
     @Override
     public void execute() throws Exception {
+
         boolean save = inputHandler.getSaveInput();
-        String path = inputHandler.getFilePathInput();
-        try {
-            if (save) {
+
+        if(save) {
+            try {
+                String path = inputHandler.getFilePathInput();
+
+                System.out.println("Sheet saved successfully");
                 engine.save(path);
-                return;
+
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        }
+        else{
+            menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);
         }
     }
 }
