@@ -1,6 +1,7 @@
 package CoreParts.impl.DtoComponents;
 
 import CoreParts.api.Cell;
+import CoreParts.smallParts.CellLocation;
 import Utility.CellUtils;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
@@ -12,10 +13,10 @@ import java.util.stream.Collectors;
 public class DtoCell {
     private EffectiveValue effectiveValue;
     private String originalValue;
-    private DtoLocation location;
+    private CellLocation  location;
 
-    private Set<DtoLocation> affectedBy;
-    private Set<DtoLocation> affectingOn;
+    private Set<CellLocation > affectedBy;
+    private Set<CellLocation> affectingOn;
 
 
     // Constructor to populate DtoCell from CellImp
@@ -32,16 +33,14 @@ public class DtoCell {
             this.effectiveValue = cell.getActualValue();
         }
         // Convert the CellLocation to DtoLocation
-        this.location = new DtoLocation(cell.getLocation());
+        this.location = cell.getLocation();
 
-        // Convert the affected cells to DtoLocation
         this.affectedBy = cell.getAffectedBy().stream()
-                .map(c -> new DtoLocation(c.getLocation()))
+                .map(Cell::getLocation)
                 .collect(Collectors.toSet());
 
-        // Convert the affecting cells to DtoLocation
         this.affectingOn = cell.getAffectingOn().stream()
-                .map(c -> new DtoLocation(c.getLocation()))
+                .map(Cell::getLocation)
                 .collect(Collectors.toSet());
     }
 
@@ -53,15 +52,15 @@ public class DtoCell {
         return originalValue;
     }
 
-    public DtoLocation getLocation() {
+    public CellLocation getLocation() {
         return location;
     }
 
-    public Set<DtoLocation> getAffectedBy() {
+    public Set<CellLocation> getAffectedBy() {
         return affectedBy;
     }
 
-    public Set<DtoLocation> getAffectingOn() {
+    public Set<CellLocation> getAffectingOn() {
         return affectingOn;
     }
 }

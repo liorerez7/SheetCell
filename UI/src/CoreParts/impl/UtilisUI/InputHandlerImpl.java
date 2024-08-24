@@ -56,7 +56,11 @@ public class InputHandlerImpl implements InputHandler {
             if (input.equalsIgnoreCase("BACK")) {
                 return null;
             }
-            if (input.matches("[A-Z][1-9][0-9]*")) {
+
+            // Convert first letter to uppercase and check for valid input
+            if (input.matches("[a-zA-Z][1-9][0-9]*")) {
+                // Convert the first letter to uppercase and return the formatted input
+                input = input.substring(0, 1).toUpperCase() + input.substring(1);
                 return input;
             } else {
                 throw new IllegalArgumentException("Invalid input: input should be a letter followed by a number\nExample: A1 ");
@@ -67,6 +71,7 @@ public class InputHandlerImpl implements InputHandler {
             return getCellInput(userTryCount);
         }
     }
+
 
     public int getVersionInput() throws Exception {
         while (true) {

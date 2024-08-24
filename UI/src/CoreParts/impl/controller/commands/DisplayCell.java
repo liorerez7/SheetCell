@@ -3,8 +3,8 @@ package CoreParts.impl.controller.commands;
 import CoreParts.api.Cell;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
-import CoreParts.impl.DtoComponents.DtoLocation;
 import CoreParts.impl.UtilisUI.MenuHandler;
+import CoreParts.smallParts.CellLocation;
 
 public class DisplayCell extends SheetEngineCommand {
 
@@ -15,25 +15,36 @@ public class DisplayCell extends SheetEngineCommand {
     @Override
     public void execute() throws Exception {
 
-        String cellId = inputHandler.getCellInput(0);
-        if (cellId == null) return;
-        DtoCell cell = null;
+        boolean inputIsValid = true;
 
-        cell = engine.getRequestedCell(cellId);
-        if(cell == null) {
-            System.out.println("Cant display cell that doesnt exist, use update cell method");
-            execute();
+        while (inputIsValid) {
+
+            String cellId = inputHandler.getCellInput(0);
+
+            // Check if the user wants to return to the main menu
+            if (cellId == null) {
+                return;
+            }
+
+            // Get the requested cell
+            DtoCell cell = engine.getRequestedCell(cellId);
+
+            // Handle invalid cell
+            if (cell == null) {
+                System.out.println("Can't display a cell that doesn't exist. Use the update cell method.");
+            } else {
+                // If a valid cell is found, display its information
+                System.out.println("Cell id: " + cellId);
+                System.out.println("Original value: " + cell.getOriginalValue());
+                System.out.println("Effective value: " + cell.getEffectiveValue().getValue());
+
+                // Print affected and affecting cells
+                printAffectedCells(cell);
+                printAffectingCells(cell);
+
+                inputIsValid = false;  // Valid cell, exit the loop
+            }
         }
-
-        System.out.println("Cell id: " + cellId);
-        System.out.println("Original value: " + cell.getOriginalValue());
-        System.out.println("Effective value: " + cell.getEffectiveValue().getValue());
-
-        // Print affected cells
-        printAffectedCells(cell);
-
-        // Print affecting cells
-        printAffectingCells(cell);
     }
 
     private void printAffectedCells(DtoCell cell) {
@@ -41,8 +52,8 @@ public class DisplayCell extends SheetEngineCommand {
             System.out.println("This cell is not affected by any cell");
         } else {
             System.out.println("List of cells that affects this cell:");
-            for (DtoLocation dtoLocationCell : cell.getAffectedBy()) {
-                System.out.println("Cell id: " + dtoLocationCell.getCellId());
+            for (CellLocation cellLocation : cell.getAffectedBy()) {
+                System.out.println("Cell id: " + cellLocation.getCellId());
             }
         }
     }
@@ -52,8 +63,8 @@ public class DisplayCell extends SheetEngineCommand {
             System.out.println("This is not affecting any cell");
         } else {
             System.out.println("List of Cells that this cell affecting on:");
-            for (DtoLocation dtoLocationCell : cell.getAffectingOn()) {
-                System.out.println("Cell id: " + dtoLocationCell.getCellId());
+            for (CellLocation cellLocation : cell.getAffectingOn()) {
+                System.out.println("Cell id: " + cellLocation.getCellId());
             }
         }
     }

@@ -2,8 +2,8 @@ package CoreParts.impl.UtilisUI;
 
 import CoreParts.api.UtilsUI.Displayer;
 import CoreParts.impl.DtoComponents.DtoCell;
-import CoreParts.impl.DtoComponents.DtoLocation;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
+import CoreParts.smallParts.CellLocation;
 import expression.Operation;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
@@ -76,7 +76,7 @@ public class TerminalSheet implements Displayer {
     }
 
     private void printCell(DtoSheetCell sheetCell, char col, int row, int cellWidth) {
-        DtoLocation dtoLocation = new DtoLocation(col, (char) ('0' + row));
+        CellLocation dtoLocation = new CellLocation(col, (char) ('0' + row));
         EffectiveValue effectiveValue = sheetCell.getEffectiveValue(dtoLocation);
         Object objectValue = (effectiveValue != null) ? effectiveValue.getValue() : "";
         String value = objectValue.toString();
