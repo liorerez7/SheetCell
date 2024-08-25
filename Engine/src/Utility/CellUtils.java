@@ -4,6 +4,7 @@ import CoreParts.api.Cell;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
+import Utility.Exception.RefToUnSetCell;
 import expression.Operation;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
@@ -14,11 +15,9 @@ import expression.impl.Processing.ExpressionParserImpl;
 import expression.impl.Ref;
 import expression.impl.numFunction.Num;
 import expression.impl.stringFunction.Str;
-import expression.impl.variantImpl.TravarseExpTreeVisitor;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 public class CellUtils {
     public static boolean trySetNumericValue(String value) {
@@ -30,7 +29,7 @@ public class CellUtils {
         }
     }
     // TODO : when cell is updated we need to delete his relayed by cells.
-    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) {// this is a recursive function
+    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) throws RefToUnSetCell {// this is a recursive function
         ExpressionParser parser = new ExpressionParserImpl(value);
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
             return new Num(Double.parseDouble(value));
@@ -42,68 +41,30 @@ public class CellUtils {
         Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
 
         if (operation == Operation.REF) {
-            Cell cellThatBeenEffected = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
-            return handleReferenceOperation(cellThatBeenEffected,targetCell);//argument(1) = CELL_ID
+            Cell cellThatAffects = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
+            return handleReferenceOperation(cellThatAffects);  //argument(1) = CELL_ID
         }
+
         return operation.calculate(processArguments(arguments, targetCell, sheetCell));
     }
 
-    private static Expression handleReferenceOperation(Cell cellThatBeenEffected, Cell cellThatAffects) {
+    private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCell {
 
-        if (cellThatBeenEffected.getEffectiveValue() == null) {
+        if (cellThatAffects.getEffectiveValue() == null) {
 
-            throw new IllegalArgumentException("Invalid expression: cell referenced before being set");
+            throw new RefToUnSetCell(cellThatAffects);
         }
-        return new Ref(cellThatBeenEffected.getLocation());
+
+        return new Ref(cellThatAffects.getLocation());
     }
 
 
-    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell) {
+    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell) throws RefToUnSetCell {
         List<Expression> expressions = new ArrayList<>();
         for (String arg : arguments) {
             expressions.add(processExpressionRec(arg.trim(), targetCell, sheetCell));
         }
         return expressions;
-    }
-
-    public static void recalculateCellsHelper(Expression expTree, Expression toFind, Expression newValue) {
-        ExpressionVisitor visitor = new TravarseExpTreeVisitor(toFind, newValue);
-        expTree.accept(visitor);
-        validateExpression(expTree);
-    }
-    public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
-        for (Cell cell : targetCell.getAffectingOn()) {
-            ExpressionParser parser = new ExpressionParserImpl(cell.getOriginalValue());
-            if (Operation.fromString(parser.getFunctionName()) == Operation.REF) {
-                cell.setEffectiveValue(targetCell.getEffectiveValue());
-                cell.updateVersion(targetCell.getLatestVersion());
-                recalculateCellsRec(cell, oldExpression);
-            }
-            Expression effectiveValue = cell.getEffectiveValue();
-            recalculateCellsHelper(effectiveValue, oldExpression, targetCell.getEffectiveValue());
-        }
-    }
-
-    public static void updateAffectedByAndOnLists(Cell targetCell, Set<Cell> CloneAffectedBy) {
-
-        for (Cell cell : targetCell.getAffectedBy()) {
-            cell.removeCellFromAffectingOn(targetCell);
-        }
-
-        targetCell.getAffectedBy().clear(); // clears only after unMark the ref cells recursively
-
-        for (Cell cell : CloneAffectedBy) {
-            cell.addCellToAffectingOn(targetCell);
-        }
-
-        for (Cell cell : CloneAffectedBy) {
-            targetCell.addCellToAffectedBy(cell);
-        }
-
-    }
-
-    public static void validateExpression(Expression expression) {
-        return;
     }
 
     public static void formatDoubleValue(EffectiveValue value) {
@@ -113,7 +74,5 @@ public class CellUtils {
                 value.setValue((int)numericValue);
         }
     }
-    public static boolean isWithinLocationBounds(int col, int row, int maxCol, int maxRow) {
-        return (col >= 'A' && col <= maxCol) && (row >= '1' && row <= maxRow);
-    }
+
 }

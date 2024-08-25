@@ -99,4 +99,5 @@ public class DtoSheetCell {
     public EffectiveValue getEffectiveValue(CellLocation cellLocation) {
         return sheetCell.get(cellLocation);
     }
+
 }

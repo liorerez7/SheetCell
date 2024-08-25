@@ -6,31 +6,22 @@ import java.util.Objects;
 public class CellLocation implements Serializable { // TODO: Implement the CellLocation interface maybe change name to Location.
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private char visualColumn;
-    private char visualRow;
+    private String visualRow;
     private int realRow;
     private int realColumn;
 
     /*TODO:maybe make constructor private and crate a factory class
                that can be used to create the object
       */
-    public CellLocation(char col, char row) {
+    public CellLocation(char col, String row) {
         this.visualRow = row;
         this.visualColumn = col;
-        realRow = visualRow - '1';
+
+        realRow = (Integer.parseInt(row) -1);
+
         realColumn = visualColumn - 'A';
 
     }
-
-//    public static CellLocation fromCellId(String cellId) {
-//
-//
-//
-//        if (cellId.length() != 2) {
-//            throw new IllegalArgumentException("Invalid cell id");
-//        }
-//        return new CellLocation(cellId.charAt(0), cellId.charAt(1));
-//    }
-
 
     public String getCellId() {
         return "" + visualColumn + visualRow;
@@ -42,7 +33,7 @@ public class CellLocation implements Serializable { // TODO: Implement the CellL
         if (o == null || getClass() != o.getClass()) return false;
         CellLocation that = (CellLocation) o;
         return visualColumn == that.visualColumn &&
-                visualRow == that.visualRow;
+                visualRow.equals(that.visualRow); // Changed to equals for Strings
     }
 
     @Override
@@ -64,7 +55,7 @@ public class CellLocation implements Serializable { // TODO: Implement the CellL
         return visualColumn;
     }
 
-    public char getVisualRow() {
+    public String getVisualRow() {
         return visualRow;
     }
 }

@@ -76,7 +76,11 @@ public enum Operation {
 
     // Method to convert a string to the corresponding Operation enum
     public static Operation fromString(String operation) {
-        return valueOf(operation.toUpperCase());
+        try {
+            return valueOf(operation.toUpperCase());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid operation: " + operation);
+        }
     }
 
     // Abstract method that each enum constant must implement

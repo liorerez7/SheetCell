@@ -50,7 +50,7 @@ public class InputHandlerImpl implements InputHandler {
     @Override
     public String getCellInput(int userTryCount) throws Exception {
         try {
-            System.out.println("Enter Cell ID: for example A1 ( enter BACK to go to main menu):");
+            System.out.println("Enter Cell ID: ( enter BACK to go to main menu):");
             String input = scanner.nextLine();
 
             if (input.equalsIgnoreCase("BACK")) {
@@ -162,7 +162,7 @@ public class InputHandlerImpl implements InputHandler {
                 return null;
             }
             if (input.startsWith("{") && !(input.endsWith("}"))) {
-                throw new Exception("Invalid input: Input should not start with '{' and end with '}'");
+                throw new Exception("Input should not start with '{' and end with '}'");
             }
 
             return input;

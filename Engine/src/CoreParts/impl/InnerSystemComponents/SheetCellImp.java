@@ -4,6 +4,7 @@ import CoreParts.api.Cell;
 import CoreParts.api.SheetCell;
 import CoreParts.api.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
+import CoreParts.smallParts.CellLocationFactory;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
 
@@ -70,6 +71,12 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     @Override
     public Cell getCell(CellLocation location) {
         // If the cell does not exist, create and add it to the map dynamically
+        if(location.getRealRow() >= currentNumberOfRows || location.getRealColumn() >= currentNumberOfCols) {
+
+            CellLocationFactory.removeKey(location.getCellId());
+            throw new IllegalArgumentException("Invalid cell location");
+
+        }
         return sheetCell.computeIfAbsent(location, loc -> new CellImp(loc));
     }
     public void updateVersion() {

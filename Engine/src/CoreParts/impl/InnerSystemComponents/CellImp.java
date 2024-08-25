@@ -3,6 +3,7 @@ package CoreParts.impl.InnerSystemComponents;
 import CoreParts.api.Cell;
 import CoreParts.api.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
+import Utility.Exception.CellCantBeEvaluated;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import java.io.Serializable;
@@ -25,7 +26,12 @@ public class CellImp implements Cell ,Serializable
     this.originalValue = originalValue;
 }
 public void setActualValue(SheetCellViewOnly sheet) {
-    actualValue = effectiveValue.evaluate(sheet);
+
+    try{
+        actualValue = effectiveValue.evaluate(sheet);
+    }catch (Exception e){
+        throw new CellCantBeEvaluated(this);
+    }
 }
 
     @Override

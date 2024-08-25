@@ -10,6 +10,9 @@ import Utility.CellUtils;
 import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
+import Utility.Exception.CellCantBeEvaluated;
+import Utility.Exception.CycleDetectedException;
+import Utility.Exception.RefToUnSetCell;
 import Utility.RefDependencyGraph;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
@@ -33,13 +36,13 @@ public class EngineImpl implements Engine {
     @Override
     public DtoCell getRequestedCell(String cellId) {
 
-        if(CellLocationFactory.isContained(cellId)) {
+        if (CellLocationFactory.isContained(cellId)) {
             return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
-        }
-        else {
+        } else {
             return null;
         }
     }
+
     @Override
     public DtoSheetCell getSheetCell() {
         return new DtoSheetCell(sheetCell);
@@ -53,43 +56,66 @@ public class EngineImpl implements Engine {
     @Override
     public void readSheetCellFromXML(String path) throws Exception {
 
-        CellLocationFactory.clearCache();
-        InputStream in = new FileInputStream(new File(path));
-        STLSheet sheet = EngineUtilies.deserializeFrom(in);
-        SheetConvertor convertor = new SheetConvertorImpl();
-        sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
-        setUpSheet();
+
+        Path filePath = Paths.get(path);
+
+        // Check if the path is absolute
+        if (!filePath.isAbsolute()) {
+            throw new IllegalArgumentException("Provided path is not absolute. Please provide a full path.");
+        }
+
+        Map<String, CellLocation> mappingCellLocations = CellLocationFactory.getCacheCoordiante();
+        byte[] savedSheetCellState = saveSheetCellState();
+
+        try {
+
+            CellLocationFactory.clearCache();
+            InputStream in = new FileInputStream(new File(path));
+            STLSheet sheet = EngineUtilies.deserializeFrom(in);
+            SheetConvertor convertor = new SheetConvertorImpl();
+            sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
+            setUpSheet();
+
+        } catch (Exception e) {
+
+            restoreSheetCellState(savedSheetCellState);
+            CellLocationFactory.setCacheCoordiante(mappingCellLocations);
+            throw new Exception(e.getMessage());
+        }
+
+
     }
 
     @Override
-    public void updateCell(String newValue, char col, String row) throws Exception {
+    public void updateCell(String newValue, char col, String row) throws
+            CycleDetectedException, IllegalArgumentException, RefToUnSetCell {
 
         // Step 1: Serialize and save the current sheetCell
         byte[] savedSheetCellState = saveSheetCellState();
 
-        Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
-        Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell());
-        Expression oldExpression = targetCell.getEffectiveValue(); // old expression
-
         try {
+
+            Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
+            Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell());
+            Expression oldExpression = targetCell.getEffectiveValue(); // old expression
+
             applyCellUpdates(targetCell, newValue, expression);
             performGraphOperations();
             updateVersions(targetCell, oldExpression);
             versionControl();
+
         } catch (Exception e) {
+
             restoreSheetCellState(savedSheetCellState);
             CellLocationFactory.removeKey(col + row);
-            throw new IllegalArgumentException(e.getMessage() + "\nInvalid expression: arguments not of the same type\nValue was not changed", e);
+            throw e;
+
         }
     }
 
     @Override
-    public void save(String path) throws Exception {
+    public void save(String path) throws Exception, IOException, IllegalArgumentException {
 
-        /*
-        example path which has permissions:
-        String path1 = "C:\\Users\\Lior\\Documents\\my_sheet_state.dat";
-        */
 
         Path filePath = Paths.get(path);
 
@@ -115,7 +141,8 @@ public class EngineImpl implements Engine {
         }
     }
 
-    private byte[] saveSheetCellState() throws Exception {
+    private byte[] saveSheetCellState() throws IllegalStateException {
+
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -133,19 +160,25 @@ public class EngineImpl implements Engine {
         targetCell.setActualValue(sheetCell);
     }
 
-    private void performGraphOperations() throws Exception {
+    private void performGraphOperations() throws CycleDetectedException, CellCantBeEvaluated {
+
         sheetCell.createRefDependencyGraph();
+
         List<Cell> cells = sheetCell.getRefDependencyGraph().topologicalSort();
+
         sheetCell.updateEffectedByAndOnLists();
+
         cells.forEach(cell -> cell.setActualValue(sheetCell));
     }
+
 
     private void updateVersions(Cell targetCell, Expression oldExpression) {
         sheetCell.updateVersion();
         targetCell.updateVersion(sheetCell.getLatestVersion());
     }
 
-    private void restoreSheetCellState(byte[] savedSheetCellState) throws Exception {
+    private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {
+
         try {
             if (savedSheetCellState != null) {
                 ByteArrayInputStream bais = new ByteArrayInputStream(savedSheetCellState);
@@ -157,7 +190,14 @@ public class EngineImpl implements Engine {
         }
     }
 
-    public void load(String path) throws Exception {
+    public void load(String path) throws Exception, NoSuchFieldException {
+
+
+        Path filePath = Paths.get(path);
+        // Check if the path is absolute
+        if (!filePath.isAbsolute()) {
+            throw new Exception("Provided path is not absolute. Please provide a full path.");
+        }
 
         CellLocationFactory.clearCache();
         try (FileInputStream fileIn = new FileInputStream(new File(path));
@@ -166,7 +206,7 @@ public class EngineImpl implements Engine {
             sheetCell = (SheetCellImp) in.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
-            throw new Exception("Invalid path: " + path);
+            throw new NoSuchFieldException("file not found at this path: " + path);
         }
     }
 
@@ -192,14 +232,14 @@ public class EngineImpl implements Engine {
         return sheetCell;
     }
 
-    public List<Cell> getTopologicalSortOfExpressions() throws Exception {
+    public List<Cell> getTopologicalSortOfExpressions() throws CycleDetectedException{
         RefDependencyGraph graph = sheetCell.getRefDependencyGraph();
         List<Cell> topologicalOrder;
         topologicalOrder = graph.topologicalSort();
         return topologicalOrder;
     }
 
-    private void setUpSheet() throws Exception {
+    private void setUpSheet() throws CycleDetectedException, CellCantBeEvaluated {
         sheetCell.createRefDependencyGraph();
         List<Cell> topologicalOrder = getTopologicalSortOfExpressions();
         topologicalOrder.forEach(cell -> {

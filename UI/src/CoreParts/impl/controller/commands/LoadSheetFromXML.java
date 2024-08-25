@@ -16,12 +16,8 @@ public class LoadSheetFromXML extends SheetEngineCommand {
         if (path == null){
             menuHandler.setMenuStatus(MenuTypes.FIRST_MENU);
         }
-        try{
-            engine.readSheetCellFromXML(path);
-            System.out.println("Sheet loaded successfully");
-        }catch (Exception e){
-            throw new IllegalArgumentException("path is not valid");
-        }
+        engine.readSheetCellFromXML(path);
+        System.out.println("Sheet loaded successfully");
         menuHandler.setMenuStatus(MenuTypes.SECOND_MENU);
     }
 }

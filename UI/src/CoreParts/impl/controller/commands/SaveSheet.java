@@ -16,15 +16,10 @@ public class SaveSheet extends SheetEngineCommand {
         boolean save = inputHandler.getSaveInput();
 
         if(save) {
-            try {
-                String path = inputHandler.getFilePathInput();
+            String path = inputHandler.getFilePathInput();
 
-                System.out.println("Sheet saved successfully");
-                engine.save(path);
-
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+            System.out.println("Sheet saved successfully");
+            engine.save(path);
         }
         else{
             menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);

@@ -1,5 +1,7 @@
 package Utility;
 import CoreParts.api.Cell;
+import Utility.Exception.CycleDetectedException;
+
 import java.util.*;
 
 public class RefDependencyGraph implements java.io.Serializable {
@@ -7,6 +9,11 @@ public class RefDependencyGraph implements java.io.Serializable {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private final Map<Cell,Set<Cell>> adjacencyList = new HashMap<>();
     private final Map<Cell,Set<Cell>> reverseAdjacencyList = new HashMap<>();
+
+    public void addVertice(Cell cell) {
+        adjacencyList.putIfAbsent(cell, new HashSet<>());
+        reverseAdjacencyList.putIfAbsent(cell, new HashSet<>());
+    }
 
     public void addDependency(Cell cellA, Cell cellB) {
         adjacencyList.computeIfAbsent(cellB, k -> new HashSet<>()).add(cellA);
@@ -46,37 +53,87 @@ public class RefDependencyGraph implements java.io.Serializable {
         }
         return dependents;
     }
-    // Performs a topological sort and returns the cells in evaluation order
-    public List<Cell> topologicalSort() throws Exception {
+
+
+
+
+    public List<Cell> topologicalSort() throws CycleDetectedException {
         Map<Cell, Boolean> visited = new HashMap<>();
+        Map<Cell, Cell> parent = new HashMap<>();
         Stack<Cell> stack = new Stack<>();
 
         for (Cell cell : adjacencyList.keySet()) {
             if (!visited.containsKey(cell)) {
-                topologicalSortUtil(cell, visited, stack);
+                topologicalSortUtil(cell, visited, parent, stack, new ArrayList<>());
             }
         }
+
         List<Cell> sortedCells = new ArrayList<>();
         while (!stack.isEmpty()) {
             sortedCells.add(stack.pop());
         }
+
         return sortedCells;
     }
 
-    private void topologicalSortUtil(Cell cell, Map<Cell, Boolean> visited, Stack<Cell> stack) throws Exception {
+    private void topologicalSortUtil(Cell cell, Map<Cell, Boolean> visited, Map<Cell, Cell> parent, Stack<Cell> stack, List<Cell> path) throws CycleDetectedException {
         visited.put(cell, true);
+        path.add(cell);
 
         for (Cell dependentCell : getDependencies(cell)) {
             if (!visited.containsKey(dependentCell)) {
-                topologicalSortUtil(dependentCell, visited, stack);
+                parent.put(dependentCell, cell);
+                topologicalSortUtil(dependentCell, visited, parent, stack, path);
             } else if (visited.get(dependentCell)) {
-                throw new Exception("Cycle detected! make sure there is no self dependency cell was not updated\n for example: A5 depends on A3 and A3 depends on A5");
+                // Cycle detected: Build the cycle path
+                List<Cell> cycle = new ArrayList<>();
+                for (int i = path.indexOf(dependentCell); i < path.size(); i++) {
+                    cycle.add(path.get(i));
+                }
+                cycle.add(dependentCell);  // Complete the cycle
+
+                throw new CycleDetectedException("Cycle detected!", cycle);
             }
         }
 
-        visited.put(cell, false); // Mark cell as fully processed
+        path.remove(cell);
+        visited.put(cell, false);
         stack.push(cell);
     }
+
+
+//    // Performs a topological sort and returns the cells in evaluation order
+//    public List<Cell> topologicalSort() throws Exception {
+//        Map<Cell, Boolean> visited = new HashMap<>();
+//        Stack<Cell> stack = new Stack<>();
+//
+//        for (Cell cell : adjacencyList.keySet()) {
+//            if (!visited.containsKey(cell)) {
+//                topologicalSortUtil(cell, visited, stack);
+//            }
+//        }
+//        List<Cell> sortedCells = new ArrayList<>();
+//        while (!stack.isEmpty()) {
+//            sortedCells.add(stack.pop());
+//        }
+//        return sortedCells;
+//    }
+//
+//    private void topologicalSortUtil(Cell cell, Map<Cell, Boolean> visited, Stack<Cell> stack) throws Exception {
+//
+//        visited.put(cell, true);
+//
+//        for (Cell dependentCell : getDependencies(cell)) {
+//            if (!visited.containsKey(dependentCell)) {
+//                topologicalSortUtil(dependentCell, visited, stack);
+//            } else if (visited.get(dependentCell)) {
+//                throw new Exception("Cycle detected! make sure there is no self dependency cell was not updated\n for example: A5 depends on A3 and A3 depends on A5");
+//            }
+//        }
+//
+//        visited.put(cell, false); // Mark cell as fully processed
+//        stack.push(cell);
+//    }
 
     // Detects cycles in the graph (returns true if a cycle is found)
     public boolean hasCycle() {

@@ -41,7 +41,7 @@ public class MenuHandler {
             command.execute();
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 

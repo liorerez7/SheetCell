@@ -23,6 +23,9 @@ public class RefGraphBuilder implements Serializable {
         return dependencyGraph;
     }
     public void processCell(Cell cell) {
+
+        dependencyGraph.addVertice(cell);
+
         String originalValue = cell.getOriginalValue();
         // Parse the original value and extract references
         List<CellLocation> references = extractReferencesFromExpression(originalValue);
