@@ -269,27 +269,42 @@ public class TerminalSheet implements Displayer {
 
         CellLocation cellLocation = new CellLocation(col, rowStr);
 
-        if(cellLocation.getCellId() == "B2"){
-            System.out.println("B2");
-        }
-
 
         EffectiveValue effectiveValue = sheetCell.getEffectiveValue(cellLocation);
 
+
         Object objectValue;
+        String value;
 
         if (effectiveValue != null) {
             objectValue = effectiveValue.getValue();
+
+            if(effectiveValue.getCellType() == ReturnedValueType.NUMERIC){
+
+                double num = (double) objectValue;
+
+
+                if (num % 1 == 0) {  // Check if num is an integer (no decimal part)
+                    value = String.format("%d", (int) num);  // Print as integer
+                } else {
+                    value = String.format("%.2f", num);  // Print as double with 2 decimal places
+                }
+            }
+            else{
+                value = objectValue.toString();
+            }
+
         } else {
-            objectValue = "";
+            value = "";
         }
 
-        String value = objectValue.toString();
 
         // If the value length exceeds the cell width, truncate it
         if (value.length() > cellWidth) {
             value = value.substring(0, cellWidth - 2);  // Leave space for formatting
         }
+
+
 
         // Calculate padding for centering the value
         int totalPadding = cellWidth - value.length();

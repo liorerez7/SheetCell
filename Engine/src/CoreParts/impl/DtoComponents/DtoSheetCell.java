@@ -27,7 +27,7 @@ public class DtoSheetCell {
 
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
            EffectiveValue effectiveValue = entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
-            CellUtils.formatDoubleValue(effectiveValue);
+           //CellUtils.formatDoubleValue(effectiveValue);
             sheetCell.put(entry.getKey(), effectiveValue);
         }
 

@@ -29,7 +29,7 @@ public class DtoCell {
             this.effectiveValue = null;
         }
         else {
-            CellUtils.formatDoubleValue(cell.getActualValue());
+            //CellUtils.formatDoubleValue(cell.getActualValue());
             this.effectiveValue = cell.getActualValue();
         }
         // Convert the CellLocation to DtoLocation

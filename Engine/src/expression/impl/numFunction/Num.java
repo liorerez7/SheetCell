@@ -32,9 +32,11 @@ public class Num implements Expression {
 
     @Override
     public String toString() {
-        return num < 0 ?
-                "(" + num + ")" :
-                Double.toString(num);
+        if (num % 1 == 0) {  // Check if num is an integer (no decimal part)
+            return String.format("%d", (int) num);  // Print as integer
+        } else {
+            return String.format("%.2f", num);  // Print as double with 2 decimal places
+        }
     }
 
 }
