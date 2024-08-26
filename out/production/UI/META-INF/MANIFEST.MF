@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: CoreParts.Main
+Class-Path: ../Engine/Engine.jar
+

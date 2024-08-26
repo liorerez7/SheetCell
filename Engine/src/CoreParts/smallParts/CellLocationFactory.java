@@ -33,7 +33,7 @@ public class CellLocationFactory implements Serializable {
 
     public static CellLocation fromCellId(char col, String row) {
 
-        String cellId =col + row;
+        String cellId = col + row;
 
         return CellLocationFactory.fromCellId(cellId);
     }

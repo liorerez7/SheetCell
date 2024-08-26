@@ -111,6 +111,11 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public String getSheetName() {
         return name;
     }
+
+    boolean isCellPresent(CellLocation location) {
+        return sheetCell.containsKey(location);
+    }
+
     // Helper method to check if a location is valid
     private boolean isValidLocation(CellLocation location) {
         int row = location.getRealRow();

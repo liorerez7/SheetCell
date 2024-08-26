@@ -12,6 +12,7 @@ import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
 import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.CycleDetectedException;
+import Utility.Exception.DeleteWhileAffectingOtherCellException;
 import Utility.Exception.RefToUnSetCell;
 import Utility.RefDependencyGraph;
 import expression.api.EffectiveValue;
@@ -37,7 +38,16 @@ public class EngineImpl implements Engine {
     public DtoCell getRequestedCell(String cellId) {
 
         if (CellLocationFactory.isContained(cellId)) {
-            return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
+
+            if(sheetCell.isCellPresent(CellLocationFactory.fromCellId(cellId))){
+                return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
+            }
+
+            else{
+                return null;
+            }
+
+            //return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
         } else {
             return null;
         }
@@ -90,9 +100,16 @@ public class EngineImpl implements Engine {
     public void updateCell(String newValue, char col, String row) throws
             CycleDetectedException, IllegalArgumentException, RefToUnSetCell {
 
+        byte[] savedSheetCellState = saveSheetCellState();
+        byte[] savedCellLocationFactoryState = saveCellLocationFactoryState();
 
-        if(newValue.isEmpty()){
+        Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
+        if(!(targetCell.getAffectingOn().isEmpty()) && newValue.isEmpty()) {
+
+            throw new DeleteWhileAffectingOtherCellException(targetCell);
+        }
+        else if(newValue.isEmpty()){
             CellLocationFactory.removeKey(col + row);
             sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
 
@@ -100,12 +117,10 @@ public class EngineImpl implements Engine {
         else{
 
             // Step 1: Serialize and save the current sheetCell
-            byte[] savedSheetCellState = saveSheetCellState();
-            byte[] savedCellLocationFactoryState = saveCellLocationFactoryState();
+
 
             try {
-
-                Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
+               // Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
                 Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
                 Expression oldExpression = targetCell.getEffectiveValue(); // old expression
 
@@ -232,6 +247,7 @@ public class EngineImpl implements Engine {
     }
 
     private void versionControl() {
+
         int sheetCellLatestVersion = sheetCell.getLatestVersion();
         versionToCellsChanges.put(sheetCellLatestVersion,new HashMap<>());
         Map<CellLocation, EffectiveValue> changedCells = versionToCellsChanges.get(sheetCellLatestVersion);

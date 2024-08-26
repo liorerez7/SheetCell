@@ -14,6 +14,6 @@ public class RefToUnSetCell extends RuntimeException {
     @Override
     public String getMessage() {
 
-        return "Cell: " + cell.getLocation().getCellId() + " is not referenced by any other cell.";
+        return "Cell: " + cell.getLocation().getCellId() + " is does not exist.";
     }
 }
