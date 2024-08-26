@@ -69,7 +69,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         if (c == '}') braceLevel--;
 
         if (c == ',' && braceLevel == 0) {
-            arguments.add(currentArg.toString().trim());
+            arguments.add(currentArg.toString());
             currentArg.setLength(0);  // Reset currentArg
         } else {
             currentArg.append(c);
@@ -77,7 +77,7 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     if (currentArg.length() > 0) {
-        arguments.add(currentArg.toString().trim());  // Add the last argument
+        arguments.add(currentArg.toString());  // Add the last argument
     }
 
     return arguments;

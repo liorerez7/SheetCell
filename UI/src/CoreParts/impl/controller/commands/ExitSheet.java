@@ -28,8 +28,8 @@ public class ExitSheet extends SheetEngineCommand{
                     menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);
                 }
 
-                System.out.println("Sheet saved successfully");
                 engine.save(path);
+                System.out.println("Sheet saved successfully");
             }
             menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);
         }

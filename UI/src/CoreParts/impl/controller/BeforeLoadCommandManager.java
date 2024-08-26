@@ -15,7 +15,6 @@ public class BeforeLoadCommandManager implements CommandManager {
     public BeforeLoadCommandManager(Engine engine, MenuHandler menuHandler) {
         commandMap.put(1, new CoreParts.impl.controller.commands.LoadSheetFromXML(engine, menuHandler));
         commandMap.put(2, new CoreParts.impl.controller.commands.LoadSavedSheet(engine, menuHandler));
-        //commandMap.put(3, new CoreParts.impl.controller.commands.SaveSheet(engine, menuHandler));
         commandMap.put(3, new CoreParts.impl.controller.commands.ExitSheet(engine, menuHandler));
         numberOfCommands = commandMap.size();
     }

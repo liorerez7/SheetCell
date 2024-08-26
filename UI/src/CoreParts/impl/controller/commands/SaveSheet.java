@@ -22,7 +22,7 @@ public class SaveSheet extends SheetEngineCommand {
             engine.save(path);
         }
         else{
-            menuHandler.setMenuStatus(MenuTypes.EXIT_MENU);
+            menuHandler.setMenuStatus(MenuTypes.SECOND_MENU);
         }
     }
 }

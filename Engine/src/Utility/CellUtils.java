@@ -4,6 +4,7 @@ import CoreParts.api.Cell;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
+import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.RefToUnSetCell;
 import expression.Operation;
 import expression.ReturnedValueType;
@@ -28,15 +29,40 @@ public class CellUtils {
             return false;
         }
     }
+
     // TODO : when cell is updated we need to delete his relayed by cells.
-    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) throws RefToUnSetCell {// this is a recursive function
+    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell, boolean insideMethod) throws RefToUnSetCell {// this is a recursive function
+
         ExpressionParser parser = new ExpressionParserImpl(value);
+
+
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
+
+            if (insideMethod) {
+
+                String trimmedValue = value.trim();
+
+                if (!(value.equals(trimmedValue))) {
+                    throw new CellCantBeEvaluated(targetCell);
+                }
+            }
+            else{
+                value = value.trim();
+            }
+
             return new Num(Double.parseDouble(value));
         }
+
         if (!parser.isPotentialOperation()) {  // base case: value is a string
+
+            if (!insideMethod) {
+                value = value.trim();  // Trim spaces for ordinary strings
+            }
             return new Str(value);
         }
+
+
+
         List<String> arguments = parser.getArgumentList();
         Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
 
@@ -45,7 +71,8 @@ public class CellUtils {
             return handleReferenceOperation(cellThatAffects);  //argument(1) = CELL_ID
         }
 
-        return operation.calculate(processArguments(arguments, targetCell, sheetCell));
+        //isMethod = true;
+        return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
     }
 
     private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCell {
@@ -59,10 +86,13 @@ public class CellUtils {
     }
 
 
-    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell) throws RefToUnSetCell {
+    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell, boolean insideMethod)
+            throws RefToUnSetCell {
+
         List<Expression> expressions = new ArrayList<>();
         for (String arg : arguments) {
-            expressions.add(processExpressionRec(arg.trim(), targetCell, sheetCell));
+
+            expressions.add(processExpressionRec(arg, targetCell, sheetCell, insideMethod));
         }
         return expressions;
     }

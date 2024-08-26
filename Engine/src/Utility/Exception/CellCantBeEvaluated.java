@@ -7,11 +7,9 @@ import expression.impl.variantImpl.UnaryExpression;
 
 public class CellCantBeEvaluated extends RuntimeException {
 
-    private final Cell cell;
     private final String cellId;
 
     public CellCantBeEvaluated(Cell cell) {
-        this.cell = cell;
         cellId = cell.getLocation().getCellId();
 
     }
@@ -19,6 +17,7 @@ public class CellCantBeEvaluated extends RuntimeException {
     @Override
     public String getMessage() {
 
-        return "Cell: " + cellId + " can't be evaluated because arguments are not from type";
+        String returnedMessage = "Cell: " + cellId + " can't be evaluated because arguments are not from the same type";
+        return returnedMessage + "\nExample: '{PLUS,1,2}', without any spaces with the ','";
     }
 }

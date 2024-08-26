@@ -140,4 +140,8 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
                 cell.setAffectedBy(reverseAdjacencyList.get(cell));
         });
     }
+
+    public void removeCell(CellLocation cellLocation) {
+        sheetCell.remove(cellLocation);
+    }
 }
