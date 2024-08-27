@@ -82,6 +82,9 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public void updateVersion() {
         versionNumber++;
     }
+    public void clearVersionNumber(){
+        versionNumber = 1;
+    }
     @Override
     public int getCellLength() {
         return currentCellLength;

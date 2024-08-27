@@ -84,10 +84,14 @@ public class EngineImpl implements Engine {
         //Map<String, CellLocation> mappingCellLocations = CellLocationFactory.getCacheCoordiante();
         byte[] savedSheetCellState = saveSheetCellState();
         byte[] savedCellLocationFactoryState = saveCellLocationFactoryState();
+        byte[] savedVersions = saveVersions();
 
 
         try {
 
+            versionToCellsChanges.clear();
+            sheetCell.clearVersionNumber();
+            versionToCellsChanges.put(sheetCell.getLatestVersion(), new HashMap<>());
             CellLocationFactory.clearCache();
             InputStream in = new FileInputStream(new File(path));
             STLSheet sheet = EngineUtilies.deserializeFrom(in);
@@ -99,6 +103,8 @@ public class EngineImpl implements Engine {
 
             restoreSheetCellState(savedSheetCellState);
             restoreCellLocationFactoryState(savedCellLocationFactoryState);
+            restoreVersions(savedVersions);
+
 
            // CellLocationFactory.setCacheCoordiante(mappingCellLocations);
             throw new Exception(e.getMessage());
@@ -136,8 +142,8 @@ public class EngineImpl implements Engine {
                 Expression oldExpression = targetCell.getEffectiveValue(); // old expression
 
                 applyCellUpdates(targetCell, newValue, expression);
+                updateVersions(targetCell);
                 performGraphOperations();
-                updateVersions(targetCell, oldExpression);
                 versionControl();
 
             } catch (Exception e) {
@@ -209,11 +215,22 @@ public class EngineImpl implements Engine {
 
         sheetCell.updateEffectedByAndOnLists();
 
-        cells.forEach(cell -> cell.setActualValue(sheetCell));
+        cells.forEach(cell ->{
+
+            Object obj = cell.getActualValue().getValue();
+
+            cell.setActualValue(sheetCell);
+
+            if(!obj.equals(cell.getActualValue().getValue()))
+            {
+                cell.updateVersion(sheetCell.getLatestVersion());
+
+            }
+        } );
     }
 
 
-    private void updateVersions(Cell targetCell, Expression oldExpression) {
+    private void updateVersions(Cell targetCell) {
         sheetCell.updateVersion();
         targetCell.updateVersion(sheetCell.getLatestVersion());
     }
@@ -228,6 +245,30 @@ public class EngineImpl implements Engine {
             }
         } catch (Exception restoreEx) {
             throw new IllegalStateException("Failed to restore the original sheetCell state", restoreEx);
+        }
+    }
+
+    private byte[] saveVersions() throws IllegalStateException {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(versionToCellsChanges);
+            oos.close();
+            return baos.toByteArray();
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to save the versions state", e);
+        }
+    }
+
+    private void restoreVersions(byte[] savedVersions) throws IllegalStateException {
+        try {
+            if (savedVersions != null) {
+                ByteArrayInputStream bais = new ByteArrayInputStream(savedVersions);
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) ois.readObject();
+            }
+        } catch (Exception restoreEx) {
+            throw new IllegalStateException("Failed to restore the versions state", restoreEx);
         }
     }
 

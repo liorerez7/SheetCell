@@ -51,7 +51,7 @@ public class DisplayRequestedVersion extends SheetEngineCommand {
             }
 
             // Print the version number, cell locations, and the count of cells
-            System.out.printf("%-10d | %-40s | %-5d%n", versionNumber, cellLocations.toString().trim(), cellMap.size());
+            System.out.printf("%-10d | %-60s | %-5d%n", versionNumber, cellLocations.toString().trim(), cellMap.size());
         }
     }
 }
