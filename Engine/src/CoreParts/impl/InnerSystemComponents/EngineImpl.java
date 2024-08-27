@@ -54,6 +54,11 @@ public class EngineImpl implements Engine {
     }
 
     @Override
+    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions(){
+        return versionToCellsChanges;
+    }
+
+    @Override
     public DtoSheetCell getSheetCell() {
         return new DtoSheetCell(sheetCell);
     }
@@ -238,7 +243,7 @@ public class EngineImpl implements Engine {
         CellLocationFactory.clearCache();
         try (FileInputStream fileIn = new FileInputStream(new File(path));
              ObjectInputStream in = new ObjectInputStream(fileIn)) {
-            Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) in.readObject();
+            versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) in.readObject();
             sheetCell = (SheetCellImp) in.readObject();
             CellLocationFactory.setCacheCoordiante((Map<String, CellLocation>) in.readObject());
 

@@ -5,6 +5,8 @@ import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.UtilisUI.MenuHandler;
 import CoreParts.smallParts.CellLocation;
+import expression.ReturnedValueType;
+import expression.api.EffectiveValue;
 
 public class DisplayCell extends SheetEngineCommand {
 
@@ -36,7 +38,22 @@ public class DisplayCell extends SheetEngineCommand {
                 // If a valid cell is found, display its information
                 System.out.println("Cell id: " + cellId);
                 System.out.println("Original value: " + cell.getOriginalValue());
-                System.out.println("Effective value: " + cell.getEffectiveValue().getValue());
+
+                EffectiveValue effactiveValue = cell.getEffectiveValue();
+                Object value = effactiveValue.getValue();
+                if(effactiveValue.getCellType() == ReturnedValueType.NUMERIC){
+
+                    double num = (double) effactiveValue.getValue();
+
+                    if (num % 1 == 0) {  // Check if num is an integer (no decimal part)
+                        value = String.format("%d", (int) num);  // Print as integer
+                    } else {
+                        value = String.format("%.2f", num);  // Print as double with 2 decimal places
+                    }
+                }
+
+                System.out.println("Effective value: " + value);
+                System.out.println("latest version of change: " + cell.getLatestVersion());
 
                 // Print affected and affecting cells
                 printAffectedCells(cell);

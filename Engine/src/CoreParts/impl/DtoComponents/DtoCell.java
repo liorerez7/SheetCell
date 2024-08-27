@@ -14,7 +14,7 @@ public class DtoCell {
     private EffectiveValue effectiveValue;
     private String originalValue;
     private CellLocation  location;
-
+    private int version;
     private Set<CellLocation > affectedBy;
     private Set<CellLocation> affectingOn;
 
@@ -23,6 +23,8 @@ public class DtoCell {
     public DtoCell(Cell cell) {
 
         this.originalValue = cell.getOriginalValue();
+
+        version = cell.getLatestVersion();
 
         // Convert the Expression to a string for the DTO
         if (cell.getEffectiveValue() == null) {
@@ -42,6 +44,10 @@ public class DtoCell {
         this.affectingOn = cell.getAffectingOn().stream()
                 .map(Cell::getLocation)
                 .collect(Collectors.toSet());
+    }
+
+    public int getLatestVersion() {
+        return version;
     }
 
     public EffectiveValue getEffectiveValue() {
