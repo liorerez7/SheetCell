@@ -248,7 +248,9 @@ public class TerminalSheet implements Displayer {
     private void printRows(DtoSheetCell sheetCell, int numberOfRows, int numberOfCols, int cellLength, int cellWidth) {
         for (int row = 1; row <= numberOfRows; row++) {
             // Print the row header (row number) with padding
-            System.out.print(String.format("%2d", row) + "  ");
+            String formattedRow = row < 10 ? String.format("0%d", row) : String.format("%2d", row);
+            System.out.print(formattedRow + "  ");
+            //System.out.print(String.format("%2d", row) + "  ");
 
             // Print each cell in the row
             for (char col = 'A'; col < 'A' + numberOfCols; col++) {

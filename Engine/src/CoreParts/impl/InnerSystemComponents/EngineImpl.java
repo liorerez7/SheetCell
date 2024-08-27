@@ -67,6 +67,8 @@ public class EngineImpl implements Engine {
     public void readSheetCellFromXML(String path) throws Exception {
 
 
+
+
         Path filePath = Paths.get(path);
 
         // Check if the path is absolute
@@ -74,8 +76,10 @@ public class EngineImpl implements Engine {
             throw new IllegalArgumentException("Provided path is not absolute. Please provide a full path.");
         }
 
-        Map<String, CellLocation> mappingCellLocations = CellLocationFactory.getCacheCoordiante();
+        //Map<String, CellLocation> mappingCellLocations = CellLocationFactory.getCacheCoordiante();
         byte[] savedSheetCellState = saveSheetCellState();
+        byte[] savedCellLocationFactoryState = saveCellLocationFactoryState();
+
 
         try {
 
@@ -89,7 +93,9 @@ public class EngineImpl implements Engine {
         } catch (Exception e) {
 
             restoreSheetCellState(savedSheetCellState);
-            CellLocationFactory.setCacheCoordiante(mappingCellLocations);
+            restoreCellLocationFactoryState(savedCellLocationFactoryState);
+
+           // CellLocationFactory.setCacheCoordiante(mappingCellLocations);
             throw new Exception(e.getMessage());
         }
 

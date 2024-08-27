@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Engine">
+    <output-path>$PROJECT_DIR$/out/artifacts/Engine</output-path>
+    <root id="archive" name="Engine.jar">
+      <element id="module-output" name="Engine" />
+      <element id="module-output" name="Generated" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-jxc.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-xjc.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-core.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-impl.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/angus-activation.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jakarta.xml.bind-api.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jakarta.activation-api.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <STL-Sheet name="intermediate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="shtisel-v1.xsd">
 	<STL-Layout rows="20" columns="5">
-		<STL-Size column-width-units="12" rows-height-units="3"/>
+		<STL-Size column-width-units="4" rows-height-units="1"/>
 	</STL-Layout>
 	<STL-Cells>
 		<STL-Cell row="3" column="A">
