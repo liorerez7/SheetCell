@@ -16,6 +16,8 @@ public class Ref implements Expression {
     }
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {
+        EffectiveValue res = sheet.getCell(location).getActualValue();
+        //res.setType(ReturnedValueType.UNKNOWN);
         return sheet.getCell(location).getActualValue();
     }
 

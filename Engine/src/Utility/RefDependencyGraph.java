@@ -85,6 +85,7 @@ public class RefDependencyGraph implements java.io.Serializable {
                 parent.put(dependentCell, cell);
                 topologicalSortUtil(dependentCell, visited, parent, stack, path);
             } else if (visited.get(dependentCell)) {
+                dependentCell.getLocation().getCellId().toUpperCase();
                 // Cycle detected: Build the cycle path
                 List<Cell> cycle = new ArrayList<>();
                 for (int i = path.indexOf(dependentCell); i < path.size(); i++) {

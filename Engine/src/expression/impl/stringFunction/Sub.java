@@ -1,5 +1,6 @@
 package expression.impl.stringFunction;
 
+import Utility.Exception.CellCantBeEvaluated;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
@@ -22,6 +23,10 @@ public class Sub  extends TernaryExpression {
     protected EffectiveValue evaluate(EffectiveValue source,
                                       EffectiveValue start,
                                       EffectiveValue end) throws IndexOutOfBoundsException {
+
+        if(source.getCellType() == ReturnedValueType.NUMERIC){
+            throw new IllegalArgumentException();
+        }
 
         String sourceValue = source.getValue().toString();
         double startValue = (double) start.getValue();

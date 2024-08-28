@@ -16,12 +16,19 @@ public class Plus extends BinaryExpression {
     public String getOperationSign() {
         return "+";
     }
-
     @Override
     protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
         try {
-            Double result = (Double) e1.getValue() + (Double) e2.getValue();
-            return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
+           if(e1.getCellType() == ReturnedValueType.UNKOWN || e2.getCellType() == ReturnedValueType.UNKOWN){
+               try{
+                   Double result = (Double) e1.getValue() + (Double) e2.getValue();
+                   return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
+
+               }catch (ClassCastException e){
+                   return new EffectiveValueImpl(ReturnedValueType.UNKOWN, (Double.NAN));
+               }
+
+           }
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type Double", e);
         }

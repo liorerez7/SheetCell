@@ -25,6 +25,7 @@ public class UpdateCell extends SheetEngineCommand {
     public void execute() throws Exception {
 
         String cellId = inputHandler.getCellInput(0);
+
         if (cellId == null) return;
         DtoCell cell = engine.getRequestedCell(cellId);
 

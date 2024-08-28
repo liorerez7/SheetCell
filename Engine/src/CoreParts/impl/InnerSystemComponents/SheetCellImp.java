@@ -72,16 +72,15 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public Cell getCell(CellLocation location) {
         // If the cell does not exist, create and add it to the map dynamically
         if(location.getRealRow() >= currentNumberOfRows || location.getRealColumn() >= currentNumberOfCols) {
-
-            CellLocationFactory.removeKey(location.getCellId());
+            //CellLocationFactory.removeKey(location.getCellId());
             throw new IllegalArgumentException("Invalid cell location");
-
         }
         return sheetCell.computeIfAbsent(location, loc -> new CellImp(loc));
     }
     public void updateVersion() {
         versionNumber++;
     }
+
     public void clearVersionNumber(){
         versionNumber = 1;
     }

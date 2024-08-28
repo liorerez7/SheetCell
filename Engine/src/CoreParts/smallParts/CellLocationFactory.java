@@ -23,14 +23,6 @@ public class CellLocationFactory implements Serializable {
         return coordinate;
     }
 
-    public static boolean isContained(String key) {
-        return cachedCoordinates.containsKey(key);
-    }
-
-    public static void removeKey(String key) {
-        cachedCoordinates.remove(key);
-    }
-
     public static CellLocation fromCellId(char col, String row) {
 
         String cellId = col + row;
@@ -38,15 +30,8 @@ public class CellLocationFactory implements Serializable {
         return CellLocationFactory.fromCellId(cellId);
     }
 
-    public static void clearCache() {
-        cachedCoordinates.clear();
-    }
-
     public static Map<String, CellLocation>  getCacheCoordiante(){
         return cachedCoordinates;
     }
 
-    public static void setCacheCoordiante(Map<String, CellLocation>  cachedCoordinates){
-        CellLocationFactory.cachedCoordinates = cachedCoordinates;
-    }
 }

@@ -42,7 +42,7 @@ public class RefGraphBuilder implements Serializable {
         // Example parsing logic for "{REF, A5}"
         int index = 0;
         while (index < expression.length()) {
-            if (expression.startsWith("{REF", index)) {
+            if (expression.regionMatches(true, index, "{REF", 0, 4)) {
                 int start = expression.indexOf(',', index) + 1;
                 int end = expression.indexOf('}', start);
                 if (start != -1 && end != -1) {
