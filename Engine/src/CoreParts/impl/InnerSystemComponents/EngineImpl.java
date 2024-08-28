@@ -33,7 +33,6 @@ public class EngineImpl implements Engine {
         sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0);
         versionToCellsChanges.put(sheetCell.getLatestVersion(), new HashMap<>());
     }
-
     @Override
     public DtoCell getRequestedCell(String cellId) {
             if(sheetCell.isCellPresent(CellLocationFactory.fromCellId(cellId))){
@@ -71,7 +70,6 @@ public class EngineImpl implements Engine {
 
         //Map<String, CellLocation> mappingCellLocations = CellLocationFactory.getCacheCoordiante();
         byte[] savedSheetCellState = saveSheetCellState();
-        byte[] savedCellLocationFactoryState = saveCellLocationFactoryState();
         byte[] savedVersions = saveVersions();
 
         try {
@@ -86,25 +84,19 @@ public class EngineImpl implements Engine {
             setUpSheet();
 
         } catch (Exception e) {
-
             restoreSheetCellState(savedSheetCellState);
-            restoreCellLocationFactoryState(savedCellLocationFactoryState);
             restoreVersions(savedVersions);
-
 
            // CellLocationFactory.setCacheCoordiante(mappingCellLocations);
             throw new Exception(e.getMessage());
         }
 
-
     }
-
     @Override
     public void updateCell(String newValue, char col, String row) throws
             CycleDetectedException, IllegalArgumentException, RefToUnSetCell {
 
         byte[] savedSheetCellState = saveSheetCellState();
-        byte[] savedCellLocationFactoryState = saveCellLocationFactoryState();
 
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
@@ -114,13 +106,11 @@ public class EngineImpl implements Engine {
         }
 
         else if(newValue.isEmpty()){
-
             updateVersions(targetCell);
             versionControl();
             sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
         }
         else{
-
             // Step 1: Serialize and save the current sheetCell
 
             try {
@@ -135,8 +125,6 @@ public class EngineImpl implements Engine {
             } catch (Exception e) {
 
                 restoreSheetCellState(savedSheetCellState);
-                restoreCellLocationFactoryState(savedCellLocationFactoryState);
-
                 throw e;
 
             }
@@ -146,9 +134,7 @@ public class EngineImpl implements Engine {
     @Override
     public void save(String path) throws Exception, IOException, IllegalArgumentException {
 
-
         Path filePath = Paths.get(path);
-
         // Check if the path is absolute
         if (!filePath.isAbsolute()) {
             throw new IllegalArgumentException("Provided path is not absolute. Please provide a full path.");
@@ -160,7 +146,6 @@ public class EngineImpl implements Engine {
                 throw new IOException("No write permission for file: " + filePath.toString());
             }
         }
-
         try (FileOutputStream fileOut = new FileOutputStream(path);
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(versionToCellsChanges);
@@ -214,8 +199,6 @@ public class EngineImpl implements Engine {
             }
         } );
     }
-
-
     private void updateVersions(Cell targetCell) {
         sheetCell.updateVersion();
         targetCell.updateVersion(sheetCell.getLatestVersion());
@@ -260,13 +243,11 @@ public class EngineImpl implements Engine {
 
     public void load(String path) throws Exception, NoSuchFieldException {
 
-
         Path filePath = Paths.get(path);
         // Check if the path is absolute
         if (!filePath.isAbsolute()) {
             throw new Exception("Provided path is not absolute. Please provide a full path.");
         }
-
         try (FileInputStream fileIn = new FileInputStream(new File(path));
              ObjectInputStream in = new ObjectInputStream(fileIn)) {
             versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) in.readObject();
@@ -275,14 +256,12 @@ public class EngineImpl implements Engine {
             throw new NoSuchFieldException("file not found at this path: " + path);
         }
     }
-
     public Cell getCell(CellLocation location) {
         // Fetch the cell directly from the map in SheetCellImp
         return sheetCell.getCell(location);
     }
 
     private void versionControl() {
-
         int sheetCellLatestVersion = sheetCell.getLatestVersion();
         versionToCellsChanges.put(sheetCellLatestVersion,new HashMap<>());
         Map<CellLocation, EffectiveValue> changedCells = versionToCellsChanges.get(sheetCellLatestVersion);
@@ -320,28 +299,4 @@ public class EngineImpl implements Engine {
         sheetCell.updateEffectedByAndOnLists();
     }
 
-    private byte[] saveCellLocationFactoryState() throws IllegalStateException {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(CellLocationFactory.getCacheCoordiante());
-            oos.close();
-            return baos.toByteArray();
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to save the CellLocationFactory state", e);
-        }
-    }
-
-    private void restoreCellLocationFactoryState(byte[] savedCellLocationFactoryState) throws IllegalStateException {
-        try {
-            if (savedCellLocationFactoryState != null) {
-                ByteArrayInputStream bais = new ByteArrayInputStream(savedCellLocationFactoryState);
-                ObjectInputStream ois = new ObjectInputStream(bais);
-                Map<String, CellLocation> cachedCoordinates = (Map<String, CellLocation>) ois.readObject();
-                ois.close();
-            }
-        } catch (Exception restoreEx) {
-            throw new IllegalStateException("Failed to restore the CellLocationFactory state", restoreEx);
-        }
-    }
 }
