@@ -39,6 +39,7 @@ public class DisplayRequestedVersion extends SheetEngineCommand {
     }
 
     private void printVersionData(Map<Integer, Map<CellLocation, EffectiveValue>> mapOfMaps) {
+        System.out.printf("\n%-10s | %-60s | %-5s%n", "Version", "Cell Locations", "Count\n");
         for (Map.Entry<Integer, Map<CellLocation, EffectiveValue>> entry : mapOfMaps.entrySet()) {
             // Extract version number and cell map
             int versionNumber = entry.getKey();
