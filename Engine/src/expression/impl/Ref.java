@@ -23,9 +23,13 @@ public class Ref implements Expression {
         if(cell.getEffectiveValue()==null)
         {
             cell.setEffectiveValue(new Str(""));
-            cell.setActualValue(sheet);
-            return new EffectiveValueImpl(ReturnedValueType.EMPTY,"");
+            EffectiveValue value = new EffectiveValueImpl(ReturnedValueType.EMPTY,"");
+            cell.setActualValue(value);
+
+           // cell.setActualValue(sheet);
+            return cell.getActualValue();
         }
+
         EffectiveValue res = sheet.getCell(location).getActualValue();
         res.setType(ReturnedValueType.UNKNOWN);
         return res;

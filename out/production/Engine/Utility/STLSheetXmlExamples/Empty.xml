@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STL-Sheet name="emptySheet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="shtisel-v1.xsd">
+    <STL-Layout rows="3" columns="5">
+        <STL-Size column-width-units="15" rows-height-units="3"/>
+    </STL-Layout>
+    <STL-Cells>
+        <!-- No cells defined here -->
+    </STL-Cells>
+</STL-Sheet>

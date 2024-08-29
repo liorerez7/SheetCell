@@ -27,5 +27,6 @@ public interface Cell {
     void updateVersion(int latestVersion);
     int getLatestVersion();
     void setActualValue(SheetCellViewOnly sheet);
+    void setActualValue(EffectiveValue value);
     EffectiveValue getActualValue();
 }

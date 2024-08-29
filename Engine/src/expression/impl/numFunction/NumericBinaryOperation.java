@@ -22,7 +22,7 @@ public abstract class NumericBinaryOperation extends BinaryExpression {
         } catch (ClassCastException e)
         {
             if(e1.getCellType() == ReturnedValueType.EMPTY || e2.getCellType() == ReturnedValueType.EMPTY)
-                return new EffectiveValueImpl(ReturnedValueType.EMPTY,"");
+                return new EffectiveValueImpl(ReturnedValueType.NUMERIC,Double.NaN);
 
             if (e1.getCellType() == ReturnedValueType.UNKNOWN || e2.getCellType() == ReturnedValueType.UNKNOWN)
                 return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);

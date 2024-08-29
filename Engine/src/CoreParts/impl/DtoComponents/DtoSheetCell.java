@@ -3,6 +3,7 @@ package CoreParts.impl.DtoComponents;
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
 import CoreParts.smallParts.CellLocation;
+import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 
 import java.util.*;
@@ -24,7 +25,16 @@ public class DtoSheetCell {
     public DtoSheetCell(SheetCell sheetCellImp) {
 
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
-           EffectiveValue effectiveValue = entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
+
+            EffectiveValue effectiveValue;
+
+            //if(entry.getValue().getActualValue().getCellType() != ReturnedValueType.EMPTY) {
+                effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
+           // }
+          //  else{
+               /// effectiveValue = entry.getValue().getActualValue();
+        //    }
+
            //CellUtils.formatDoubleValue(effectiveValue);
             sheetCell.put(entry.getKey(), effectiveValue);
         }

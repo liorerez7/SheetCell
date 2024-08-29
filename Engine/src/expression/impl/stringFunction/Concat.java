@@ -23,22 +23,50 @@ public class Concat extends BinaryExpression {
         evaluate1.assertRawType(ReturnedValueType.STRING);
         evaluate2.assertRawType(ReturnedValueType.STRING);
 
-        if (evaluate1.getCellType() == ReturnedValueType.UNDEFINED || evaluate2.getCellType() == ReturnedValueType.UNDEFINED)
-            return new EffectiveValueImpl(ReturnedValueType.UNDEFINED, "UNDEFINED");
-        else {
-            try {
-                String result = (String) (evaluate1.getValue()) + " " + (String) evaluate2.getValue();
-                return new EffectiveValueImpl(ReturnedValueType.STRING, result);
-            } catch (ClassCastException e) {
-                if (evaluate1.getCellType() == ReturnedValueType.EMPTY || evaluate2.getCellType() == ReturnedValueType.EMPTY)
-                    return new EffectiveValueImpl(ReturnedValueType.EMPTY, "");
-
-                if (evaluate1.getCellType() == ReturnedValueType.UNKNOWN || evaluate2.getCellType() == ReturnedValueType.UNKNOWN)
-                    return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, "UNDEFINED");
-
-                throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type String", e);
-            }
+        if (isUndefined(evaluate1) || isUndefined(evaluate2)) {
+            return createEffectiveValue(ReturnedValueType.UNDEFINED, "UNDEFINED");
         }
+
+        try {
+            if (isEmptyOrUndefined(evaluate1) || isEmptyOrUndefined(evaluate2)) {
+                return createEffectiveValue(ReturnedValueType.UNKNOWN, "UNDEFINED");
+            }
+
+            String result = evaluate1.getValue() + " " + evaluate2.getValue();
+            return createEffectiveValue(ReturnedValueType.STRING, result);
+
+        } catch (ClassCastException e) {
+            if (isEmpty(evaluate1) || isEmpty(evaluate2)) {
+                return createEffectiveValue(ReturnedValueType.STRING, "UNDEFINED");
+            }
+
+            if (isUnknown(evaluate1) || isUnknown(evaluate2)) {
+                return createEffectiveValue(ReturnedValueType.UNKNOWN, "UNDEFINED");
+            }
+
+            throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type String", e);
+        }
+    }
+
+    private boolean isUndefined(EffectiveValue value) {
+        return value.getCellType() == ReturnedValueType.UNDEFINED;
+    }
+
+    private boolean isEmptyOrUndefined(EffectiveValue value) {
+        String val = (String) value.getValue();
+        return val.isEmpty() || val.equals("UNDEFINED");
+    }
+
+    private boolean isEmpty(EffectiveValue value) {
+        return value.getCellType() == ReturnedValueType.EMPTY;
+    }
+
+    private boolean isUnknown(EffectiveValue value) {
+        return value.getCellType() == ReturnedValueType.UNKNOWN;
+    }
+
+    private EffectiveValue createEffectiveValue(ReturnedValueType type, String value) {
+        return new EffectiveValueImpl(type, value);
     }
 }
 

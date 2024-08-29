@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STL-Sheet name="circular" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="shtisel-v1.xsd">
+	<STL-Layout rows="10" columns="3">
+		<STL-Size column-width-units="12" rows-height-units="2"/>
+	</STL-Layout>
+	<STL-Cells>
+		<STL-Cell row="1" column="A">
+			<STL-Original-Value>{PLUS,{REF,B2}, 3}</STL-Original-Value>
+		</STL-Cell>
+		<STL-Cell row="1" column="B">
+			<STL-Original-Value>10</STL-Original-Value>
+		</STL-Cell>
+		<STL-Cell row="1" column="C">
+			<STL-Original-Value>{PLUS,{REF,A1},{REF,B1}}</STL-Original-Value>
+		</STL-Cell>
+		<STL-Cell row="2" column="A">
+			<STL-Original-Value>{PLUS,{REF,B1},{REF,C1}}</STL-Original-Value>
+		</STL-Cell>
+		<STL-Cell row="2" column="B">
+			<STL-Original-Value>{PLUS,{REF,A2}, 5}</STL-Original-Value>
+		</STL-Cell>
+		<STL-Cell row="2" column="C">
+			<STL-Original-Value>{PLUS,{REF,A2},{REF,B2}}</STL-Original-Value>
+		</STL-Cell>
+	</STL-Cells>
+</STL-Sheet>

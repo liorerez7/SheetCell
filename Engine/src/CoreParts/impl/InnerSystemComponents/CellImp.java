@@ -33,6 +33,11 @@ public void setActualValue(SheetCellViewOnly sheet) {
     }
 }
 
+
+public void setActualValue(EffectiveValue actualValue) {
+    this.actualValue = actualValue;
+}
+
     @Override
     public EffectiveValue getActualValue() {
         return actualValue;

@@ -13,7 +13,8 @@ public class BasicFuncionTest {
     @BeforeEach
     public void setUp() throws Exception {
         engine = new EngineImpl();
-        engine.readSheetCellFromXML("C:\\Users\\nivii\\programming\\CS degree\\year 2\\javaCourse\\sheetCell ex 1\\Engine\\src\\Utility\\STLSheetXmlExamples\\Empty.xml");
+        String liorPath = "C:\\Users\\Lior\\Desktop\\Lior\\שנה 2\\java\\projects\\matalot\\SheetCelll\\Engine\\src\\Utility\\STLSheetXmlExamples\\Empty.xml";
+        engine.readSheetCellFromXML(liorPath);
         uiSheet = new TerminalSheet(); // Initialize your UI sheet implementation
     }
     @Test

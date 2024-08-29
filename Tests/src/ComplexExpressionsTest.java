@@ -16,7 +16,9 @@ public class ComplexExpressionsTest {
     @BeforeEach
     public void setUp() throws Exception {
         engine = new EngineImpl();
-        engine.readSheetCellFromXML("C:\\Users\\nivii\\programming\\CS degree\\year 2\\javaCourse\\sheetCell ex 1\\Engine\\src\\Utility\\STLSheetXmlExamples\\Empty.xml");
+        String liorPath = "C:\\Users\\Lior\\Desktop\\Lior\\שנה 2\\java\\projects\\matalot\\SheetCelll\\Engine\\src\\Utility\\STLSheetXmlExamples\\Empty.xml";
+
+        engine.readSheetCellFromXML(liorPath);
         uiSheet = new TerminalSheet(); // Initialize your UI sheet implementation
     }
 
@@ -125,5 +127,41 @@ public class ComplexExpressionsTest {
             System.out.println("Caught expected CellCantBeEvaluatedException:");
             System.out.println(e.getMessage());
         }
+    }
+    @Test
+    public void ConcatRefToEmptyCell() throws Exception {
+
+        engine.updateCell("{Concat,{ref,a1},{ref,a3}}", 'A', "2");
+        System.out.println("Updated A2 with two empty cells a1 and a3");
+        assertEquals("UNDEFINED", engine.getRequestedCell("A2").getEffectiveValue().getValue());
+        uiSheet.display(engine.getSheetCell());
+        engine.updateCell("hello", 'A', "1");
+        System.out.println("Updated A1 with 'hello'");
+        engine.updateCell("world", 'A', "3");
+        System.out.println("Updated A3 with 'world'");
+        assertEquals("hello world", engine.getRequestedCell("A2").getEffectiveValue().getValue());
+        uiSheet.display(engine.getSheetCell());
+
+    }
+
+    @Test
+    public void PlusRefToEmptyCell() throws Exception {
+        engine.updateCell("{plus,{ref,a1},{ref,a3}}", 'A', "2");
+        System.out.println("Updated A2 with two empty cells a1 and a3");
+        assertEquals(Double.NaN, engine.getRequestedCell("A2").getEffectiveValue().getValue());
+        uiSheet.display(engine.getSheetCell());
+        engine.updateCell("{plus,{ref,a2},{ref,b2}}", 'B', "1");
+        System.out.println("Updated B1 with formula {plus,{ref,a2},{ref,b2}}");
+        engine.updateCell("5", 'A', "1");
+        System.out.println("Updated A1 with 5");
+        engine.updateCell("10", 'A', "3");
+        System.out.println("Updated A3 with 10");
+        assertEquals(15.0, engine.getRequestedCell("A2").getEffectiveValue().getValue());
+        engine.updateCell("10", 'B', "2");
+        System.out.println("Updated B2 with 10");
+        assertEquals(25.0, engine.getRequestedCell("B1").getEffectiveValue().getValue());
+        uiSheet.display(engine.getSheetCell());
+
+
     }
 }

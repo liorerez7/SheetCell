@@ -9,6 +9,7 @@ import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.CycleDetectedException;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
+import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 
@@ -159,11 +160,16 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 
         updateEffectedByAndOnLists();
 
+
+
         cells.forEach(cell ->{
 
             Object obj = cell.getActualValue().getValue();
 
-            cell.setActualValue(this);
+            //if(cell.getActualValue().getCellType() != ReturnedValueType.EMPTY){
+                cell.setActualValue(this);
+
+         //   }
 
             if(!obj.equals(cell.getActualValue().getValue()))
             {
