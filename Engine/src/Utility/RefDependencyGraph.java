@@ -102,41 +102,12 @@ public class RefDependencyGraph implements java.io.Serializable {
         stack.push(cell);
     }
 
+    public List<Cell> getTopologicalSortOfExpressions() throws CycleDetectedException{
+        List<Cell> topologicalOrder;
+        topologicalOrder = topologicalSort();
+        return topologicalOrder;
+    }
 
-//    // Performs a topological sort and returns the cells in evaluation order
-//    public List<Cell> topologicalSort() throws Exception {
-//        Map<Cell, Boolean> visited = new HashMap<>();
-//        Stack<Cell> stack = new Stack<>();
-//
-//        for (Cell cell : adjacencyList.keySet()) {
-//            if (!visited.containsKey(cell)) {
-//                topologicalSortUtil(cell, visited, stack);
-//            }
-//        }
-//        List<Cell> sortedCells = new ArrayList<>();
-//        while (!stack.isEmpty()) {
-//            sortedCells.add(stack.pop());
-//        }
-//        return sortedCells;
-//    }
-//
-//    private void topologicalSortUtil(Cell cell, Map<Cell, Boolean> visited, Stack<Cell> stack) throws Exception {
-//
-//        visited.put(cell, true);
-//
-//        for (Cell dependentCell : getDependencies(cell)) {
-//            if (!visited.containsKey(dependentCell)) {
-//                topologicalSortUtil(dependentCell, visited, stack);
-//            } else if (visited.get(dependentCell)) {
-//                throw new Exception("Cycle detected! make sure there is no self dependency cell was not updated\n for example: A5 depends on A3 and A3 depends on A5");
-//            }
-//        }
-//
-//        visited.put(cell, false); // Mark cell as fully processed
-//        stack.push(cell);
-//    }
-
-    // Detects cycles in the graph (returns true if a cycle is found)
     public boolean hasCycle() {
         Map<Cell, Boolean> visited = new HashMap<>();
         for (Cell cell : adjacencyList.keySet()) {

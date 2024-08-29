@@ -2,6 +2,7 @@ package CoreParts.impl.DtoComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.api.SheetCell;
+import CoreParts.api.SheetCellViewOnly;
 import CoreParts.impl.InnerSystemComponents.CellImp;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
@@ -13,6 +14,7 @@ import java.util.*;
 public class DtoSheetCell {
 
     private Map<CellLocation,EffectiveValue> sheetCell = new HashMap<>();
+    private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
     private static final int maxRows = 50;
     private static final int maxCols = 20;
     private String name;
@@ -30,19 +32,23 @@ public class DtoSheetCell {
            //CellUtils.formatDoubleValue(effectiveValue);
             sheetCell.put(entry.getKey(), effectiveValue);
         }
-
+        versionToCellsChanges = sheetCellImp.getVersions();
         copyBasicTypes(sheetCellImp);
     }
 
-    public DtoSheetCell(Map<Integer,Map<CellLocation, EffectiveValue>> sheetCellVersions, SheetCell sheetCell, int requestedVersion) {
+    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersionToCellsChanges() {
+        return versionToCellsChanges;
+    }
+
+    public DtoSheetCell(SheetCell sheetCell, int requestedVersion) {
+
 
         if (sheetCell.getLatestVersion() < requestedVersion) {
             throw new IllegalArgumentException("Requested version is not available latest version is " + sheetCell.getLatestVersion());
         }
-
         Set<CellLocation> markedLocations = new HashSet<>();
         copyBasicTypes(sheetCell);
-        Map<CellLocation, EffectiveValue> sheetCellChanges = sheetCellVersions.get(requestedVersion);
+        Map<CellLocation, EffectiveValue> sheetCellChanges = sheetCell.getVersions().get(requestedVersion);
 
         while (requestedVersion > 0) {
             for (Map.Entry<CellLocation, EffectiveValue> entry : sheetCellChanges.entrySet()) {
@@ -55,7 +61,7 @@ public class DtoSheetCell {
             }
 
             requestedVersion--;
-            sheetCellChanges = sheetCellVersions.get(requestedVersion);
+            sheetCellChanges = sheetCell.getVersions().get(requestedVersion);
        }
     }
 

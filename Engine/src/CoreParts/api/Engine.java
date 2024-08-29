@@ -17,5 +17,4 @@ public interface Engine {
     void updateCell(String newValue, char col, String row) throws Exception;
     void save(String path) throws Exception;
     void load(String path) throws Exception;
-    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions();
 }

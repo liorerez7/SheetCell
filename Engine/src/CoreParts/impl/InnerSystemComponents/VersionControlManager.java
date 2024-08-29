@@ -23,6 +23,7 @@ public class VersionControlManager implements Serializable {
     public void setVersionToCellsChanges(Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges) {
         this.versionToCellsChanges = versionToCellsChanges;
     }
+
     public void versionControl() {
         int sheetCellLatestVersion = sheetCell.getLatestVersion();
         versionToCellsChanges.put(sheetCellLatestVersion, new HashMap<>());
@@ -35,32 +36,14 @@ public class VersionControlManager implements Serializable {
                 changedCells.put(location, cell.getEffectiveValue().evaluate(sheetCell));
         }
     }
-    public byte[] saveVersions() throws IllegalStateException {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(versionToCellsChanges);
-            oos.close();
-            return baos.toByteArray();
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to save the versions state", e);
-        }
-    }
 
-    public void restoreVersions(byte[] savedVersions) throws IllegalStateException {
-        try {
-            if (savedVersions != null) {
-                ByteArrayInputStream bais = new ByteArrayInputStream(savedVersions);
-                ObjectInputStream ois = new ObjectInputStream(bais);
-                versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) ois.readObject();
-            }
-        } catch (Exception restoreEx) {
-            throw new IllegalStateException("Failed to restore the versions state", restoreEx);
-        }
-    }
-    private void updateVersions(Cell targetCell) {
+    public void updateVersions(Cell targetCell) {
         sheetCell.updateVersion();
         targetCell.updateVersion(sheetCell.getLatestVersion());
+    }
+
+    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions() {
+        return versionToCellsChanges;
     }
 }
 

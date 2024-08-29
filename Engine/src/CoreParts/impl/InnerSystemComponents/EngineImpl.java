@@ -11,28 +11,23 @@ import Utility.CellUtils;
 import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
-import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.CycleDetectedException;
 import Utility.Exception.DeleteWhileAffectingOtherCellException;
 import Utility.Exception.RefToUnSetCell;
-import Utility.RefDependencyGraph;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
+import jakarta.xml.bind.JAXBException;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
 
 public class EngineImpl implements Engine {
 
-    Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
     private SheetCell sheetCell;
 
     public EngineImpl() {
-        versionToCellsChanges = new HashMap<>();
         sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0);
-        versionToCellsChanges.put(sheetCell.getLatestVersion(), new HashMap<>());
     }
     @Override
     public DtoCell getRequestedCell(String cellId) {
@@ -43,90 +38,67 @@ public class EngineImpl implements Engine {
                 return null;
             }
     }
+    @Override
+    public DtoSheetCell getSheetCell() {return new DtoSheetCell(sheetCell);}
 
     @Override
-    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions(){
-        return versionToCellsChanges;
-    }
-
-    @Override
-    public DtoSheetCell getSheetCell() {
-        return new DtoSheetCell(sheetCell);
-    }
-
-    @Override
-    public DtoSheetCell getSheetCell(int versionNumber) {
-        return new DtoSheetCell(versionToCellsChanges, sheetCell, versionNumber);
-    }
+    public DtoSheetCell getSheetCell(int versionNumber) {return new DtoSheetCell(sheetCell, versionNumber);}
 
     @Override
     public void readSheetCellFromXML(String path) throws Exception {
 
         Path filePath = Paths.get(path);
 
-        // Check if the path is absolute
         if (!filePath.isAbsolute()) {
             throw new IllegalArgumentException("Provided path is not absolute. Please provide a full path.");
         }
-
-        //Map<String, CellLocation> mappingCellLocations = CellLocationFactory.getCacheCoordiante();
-        byte[] savedSheetCellState = saveSheetCellState();
-        byte[] savedVersions = saveVersions();
+        byte[] savedSheetCellState =sheetCell.saveSheetCellState();
 
         try {
-            versionToCellsChanges.clear();
             sheetCell.clearVersionNumber();
-            versionToCellsChanges.put(sheetCell.getLatestVersion(), new HashMap<>());
-            InputStream in = new FileInputStream(new File(path));
-            STLSheet sheet = EngineUtilies.deserializeFrom(in);
-            SheetConvertor convertor = new SheetConvertorImpl();
-            sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
-            setUpSheet();
+            getsheetFromSTL(path);
+            sheetCell.setUpSheet();
 
         } catch (Exception e) {
             restoreSheetCellState(savedSheetCellState);
-            restoreVersions(savedVersions);
-
-           // CellLocationFactory.setCacheCoordiante(mappingCellLocations);
             throw new Exception(e.getMessage());
         }
-
     }
+
+    private void getsheetFromSTL(String path) throws FileNotFoundException, JAXBException {
+        InputStream in = new FileInputStream(new File(path));
+        STLSheet sheet = EngineUtilies.deserializeFrom(in);
+        SheetConvertor convertor = new SheetConvertorImpl();
+        sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
+    }
+
     @Override
     public void updateCell(String newValue, char col, String row) throws
             CycleDetectedException, IllegalArgumentException, RefToUnSetCell {
-
-        byte[] savedSheetCellState = saveSheetCellState();
+        byte[] savedSheetCellState = sheetCell.saveSheetCellState();
 
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
         if(!(targetCell.getAffectingOn().isEmpty()) && newValue.isEmpty()) {
-
             throw new DeleteWhileAffectingOtherCellException(targetCell);
         }
-
         else if(newValue.isEmpty()){
-            updateVersions(targetCell);
-            versionControl();
+            sheetCell.updateVersions(targetCell);
+            sheetCell.versionControl();
             sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
         }
         else{
-            // Step 1: Serialize and save the current sheetCell
-
             try {
-
                 Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
                 Expression oldExpression = targetCell.getEffectiveValue(); // old expression
-                applyCellUpdates(targetCell, newValue, expression);
-                updateVersions(targetCell);
-                performGraphOperations();
-                versionControl();
+                sheetCell.applyCellUpdates(targetCell,newValue, expression);
+                sheetCell.updateVersions(targetCell);
+                sheetCell.performGraphOperations();
+                sheetCell.versionControl();
 
             } catch (Exception e) {
-
                 restoreSheetCellState(savedSheetCellState);
                 throw e;
-
             }
         }
     }
@@ -139,7 +111,6 @@ public class EngineImpl implements Engine {
             throw new IllegalArgumentException("Provided path is not absolute. Please provide a full path.");
         }
 
-        // Check if the file can be created (this also ensures the path is valid)
         if (Files.exists(filePath)) {
             if (!Files.isWritable(filePath)) {
                 throw new IOException("No write permission for file: " + filePath.toString());
@@ -147,64 +118,14 @@ public class EngineImpl implements Engine {
         }
         try (FileOutputStream fileOut = new FileOutputStream(path);
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(versionToCellsChanges);
             out.writeObject(sheetCell);
-            out.writeObject(CellLocationFactory.getCacheCoordiante());
             out.flush();
         } catch (IOException e) {
             throw new Exception("Error saving data to " + path + ": " + e.getMessage(), e);
         }
     }
 
-
-
-    private byte[] saveSheetCellState() throws IllegalStateException {
-
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(sheetCell);
-            oos.close();
-            return baos.toByteArray();
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to save the sheetCell state", e);
-        }
-    }
-
-    private void applyCellUpdates(Cell targetCell, String originalValue, Expression expression) {
-        targetCell.setOriginalValue(originalValue);
-        targetCell.setEffectiveValue(expression);
-        targetCell.setActualValue(sheetCell);
-    }
-
-    private void performGraphOperations() throws CycleDetectedException, CellCantBeEvaluated {
-
-        sheetCell.createRefDependencyGraph();
-
-        List<Cell> cells = sheetCell.getRefDependencyGraph().topologicalSort();
-
-        sheetCell.updateEffectedByAndOnLists();
-
-        cells.forEach(cell ->{
-
-            Object obj = cell.getActualValue().getValue();
-
-            cell.setActualValue(sheetCell);
-
-            if(!obj.equals(cell.getActualValue().getValue()))
-            {
-                cell.updateVersion(sheetCell.getLatestVersion());
-
-            }
-        } );
-    }
-    private void updateVersions(Cell targetCell) {
-        sheetCell.updateVersion();
-        targetCell.updateVersion(sheetCell.getLatestVersion());
-    }
-
     private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {
-
         try {
             if (savedSheetCellState != null) {
                 ByteArrayInputStream bais = new ByteArrayInputStream(savedSheetCellState);
@@ -213,30 +134,6 @@ public class EngineImpl implements Engine {
             }
         } catch (Exception restoreEx) {
             throw new IllegalStateException("Failed to restore the original sheetCell state", restoreEx);
-        }
-    }
-
-    private byte[] saveVersions() throws IllegalStateException {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(versionToCellsChanges);
-            oos.close();
-            return baos.toByteArray();
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to save the versions state", e);
-        }
-    }
-
-    private void restoreVersions(byte[] savedVersions) throws IllegalStateException {
-        try {
-            if (savedVersions != null) {
-                ByteArrayInputStream bais = new ByteArrayInputStream(savedVersions);
-                ObjectInputStream ois = new ObjectInputStream(bais);
-                versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) ois.readObject();
-            }
-        } catch (Exception restoreEx) {
-            throw new IllegalStateException("Failed to restore the versions state", restoreEx);
         }
     }
 
@@ -249,7 +146,6 @@ public class EngineImpl implements Engine {
         }
         try (FileInputStream fileIn = new FileInputStream(new File(path));
              ObjectInputStream in = new ObjectInputStream(fileIn)) {
-            versionToCellsChanges = (Map<Integer, Map<CellLocation, EffectiveValue>>) in.readObject();
             sheetCell = (SheetCellImp) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new NoSuchFieldException("file not found at this path: " + path);
@@ -260,42 +156,7 @@ public class EngineImpl implements Engine {
         return sheetCell.getCell(location);
     }
 
-    private void versionControl() {
-        int sheetCellLatestVersion = sheetCell.getLatestVersion();
-        versionToCellsChanges.put(sheetCellLatestVersion,new HashMap<>());
-        Map<CellLocation, EffectiveValue> changedCells = versionToCellsChanges.get(sheetCellLatestVersion);
-        for (Map.Entry<CellLocation, Cell> entry : sheetCell.getSheetCell().entrySet()) {
-            CellLocation location = entry.getKey();
-            Cell cell = entry.getValue();
-            // Check if the cell's latest version matches the sheet's latest version
-            if (cell.getLatestVersion() == sheetCellLatestVersion)   // Assuming Cell has a getVersion() method// Replace with your logic to calculate the effective value
-                changedCells.put(location, cell.getEffectiveValue().evaluate(sheetCell));
-        }
-    }
-
     public SheetCell getInnerSystemSheetCell() {
         return sheetCell;
     }
-
-    public List<Cell> getTopologicalSortOfExpressions() throws CycleDetectedException{
-        RefDependencyGraph graph = sheetCell.getRefDependencyGraph();
-        List<Cell> topologicalOrder;
-        topologicalOrder = graph.topologicalSort();
-        return topologicalOrder;
-    }
-
-    private void setUpSheet() throws CycleDetectedException, CellCantBeEvaluated {
-        sheetCell.createRefDependencyGraph();
-        List<Cell> topologicalOrder = getTopologicalSortOfExpressions();
-        topologicalOrder.forEach(cell -> {
-            Expression expression = CellUtils.processExpressionRec(cell.getOriginalValue(), cell, getInnerSystemSheetCell(), false);
-            expression.evaluate(sheetCell);
-            cell.setEffectiveValue(expression);
-            cell.setActualValue(sheetCell);
-            cell.updateVersion(sheetCell.getLatestVersion());
-        });
-        versionControl();
-        sheetCell.updateEffectedByAndOnLists();
-    }
-
 }

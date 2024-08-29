@@ -4,13 +4,19 @@ import CoreParts.api.Cell;
 import CoreParts.api.SheetCell;
 import CoreParts.api.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
+import Utility.CellUtils;
+import Utility.Exception.CellCantBeEvaluated;
+import Utility.Exception.CycleDetectedException;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
 import expression.api.EffectiveValue;
+import expression.api.Expression;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,7 +56,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
          refGraphBuilder = new RefGraphBuilder(this);
          refGraphBuilder.build();
     }
-
     @Override
     public RefDependencyGraph getRefDependencyGraph() {return refDependencyGraph;}
     @Override
@@ -106,6 +111,73 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         });
     }
 
+    public byte[] saveSheetCellState() throws IllegalStateException {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this);
+            oos.close();
+            return baos.toByteArray();
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to save the sheetCell state", e);
+        }
+    }
     @Override
     public void removeCell(CellLocation cellLocation) {sheetCell.remove(cellLocation);}
+
+    @Override
+    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions() {return versionControlManager.getVersions();}
+
+    @Override
+    public void setUpSheet() throws CycleDetectedException, CellCantBeEvaluated {
+        createRefDependencyGraph();
+        List<Cell> topologicalOrder = refDependencyGraph.getTopologicalSortOfExpressions();
+        topologicalOrder.forEach(cell -> {
+            Expression expression = CellUtils.processExpressionRec(cell.getOriginalValue(), cell, this, false);
+            expression.evaluate(this);
+            cell.setEffectiveValue(expression);
+            cell.setActualValue(this);
+            cell.updateVersion(getLatestVersion());
+        });
+        versionControlManager.versionControl();
+        updateEffectedByAndOnLists();
+    }
+
+    @Override
+    public void updateVersions(Cell targetCell) {
+        versionControlManager.updateVersions(targetCell);
+    }
+    @Override
+    public void versionControl() {versionControlManager.versionControl();}
+    @Override
+
+    public void performGraphOperations() throws CycleDetectedException, CellCantBeEvaluated {
+
+        createRefDependencyGraph();
+
+        List<Cell> cells = getRefDependencyGraph().topologicalSort();
+
+        updateEffectedByAndOnLists();
+
+        cells.forEach(cell ->{
+
+            Object obj = cell.getActualValue().getValue();
+
+            cell.setActualValue(this);
+
+            if(!obj.equals(cell.getActualValue().getValue()))
+            {
+                cell.updateVersion(this.getLatestVersion());
+            }
+        } );
+    }
+
+    @Override
+    public void applyCellUpdates(Cell targetCell, String newValue, Expression expression)
+    {
+        targetCell.setOriginalValue(newValue);
+        targetCell.setEffectiveValue(expression);
+        targetCell.setActualValue(this);
+    }
+
 }
