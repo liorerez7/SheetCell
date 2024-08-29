@@ -1,6 +1,6 @@
 package expression.impl.stringFunction;
 
-import CoreParts.api.SheetCellViewOnly;
+import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;

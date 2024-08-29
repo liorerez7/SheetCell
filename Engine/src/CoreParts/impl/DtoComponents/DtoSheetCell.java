@@ -1,12 +1,8 @@
 package CoreParts.impl.DtoComponents;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCell;
-import CoreParts.api.SheetCellViewOnly;
-import CoreParts.impl.InnerSystemComponents.CellImp;
-import CoreParts.impl.InnerSystemComponents.SheetCellImp;
+import CoreParts.api.sheet.SheetCell;
 import CoreParts.smallParts.CellLocation;
-import Utility.CellUtils;
 import expression.api.EffectiveValue;
 
 import java.util.*;

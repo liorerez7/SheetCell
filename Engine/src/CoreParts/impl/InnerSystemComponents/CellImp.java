@@ -1,7 +1,7 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCellViewOnly;
+import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import Utility.Exception.CellCantBeEvaluated;
 import expression.api.EffectiveValue;

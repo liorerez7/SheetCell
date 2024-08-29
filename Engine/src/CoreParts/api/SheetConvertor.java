@@ -1,5 +1,6 @@
 package CoreParts.api;
 
+import CoreParts.api.sheet.SheetCell;
 import GeneratedClasses.STLSheet;
 
 public interface SheetConvertor {

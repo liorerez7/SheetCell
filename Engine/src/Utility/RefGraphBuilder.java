@@ -1,8 +1,7 @@
 package Utility;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCellViewOnly;
-import CoreParts.impl.InnerSystemComponents.SheetCellImp;
+import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 

@@ -1,12 +1,10 @@
 package expression.impl;
 
-import CoreParts.api.Cell;
-import CoreParts.api.SheetCellViewOnly;
+import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
-import expression.impl.variantImpl.UnaryExpression;
 
 
 public class Ref implements Expression {

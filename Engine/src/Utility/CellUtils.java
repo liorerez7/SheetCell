@@ -1,9 +1,7 @@
 package Utility;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCell;
-import CoreParts.impl.InnerSystemComponents.SheetCellImp;
-import CoreParts.smallParts.CellLocation;
+import CoreParts.api.sheet.SheetCell;
 import CoreParts.smallParts.CellLocationFactory;
 import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.RefToUnSetCell;
@@ -11,7 +9,6 @@ import expression.Operation;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.api.ExpressionVisitor;
 import expression.api.processing.ExpressionParser;
 import expression.impl.Processing.ExpressionParserImpl;
 import expression.impl.Ref;

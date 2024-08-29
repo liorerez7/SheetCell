@@ -1,7 +1,7 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCell;
+import CoreParts.api.sheet.SheetCell;
 import CoreParts.api.SheetConvertor;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
@@ -82,11 +82,13 @@ public class EngineImpl implements Engine {
         if(!(targetCell.getAffectingOn().isEmpty()) && newValue.isEmpty()) {
             throw new DeleteWhileAffectingOtherCellException(targetCell);
         }
+
         else if(newValue.isEmpty()){
             sheetCell.updateVersions(targetCell);
             sheetCell.versionControl();
             sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
         }
+
         else{
             try {
                 Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
@@ -138,7 +140,6 @@ public class EngineImpl implements Engine {
     }
 
     public void load(String path) throws Exception, NoSuchFieldException {
-
         Path filePath = Paths.get(path);
         // Check if the path is absolute
         if (!filePath.isAbsolute()) {

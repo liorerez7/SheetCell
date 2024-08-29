@@ -1,8 +1,8 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCell;
-import CoreParts.api.SheetCellViewOnly;
+import CoreParts.api.sheet.SheetCell;
+import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import Utility.CellUtils;
 import Utility.Exception.CellCantBeEvaluated;
@@ -36,6 +36,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     private int currentNumberOfCols;
     private int currentCellLength;
     private int currentCellWidth;
+
 
     public SheetCellImp(int row, int col, String sheetName, int currentCellLength, int currentCellWidth) {
         if (row > maxRows || col > maxCols) {

@@ -1,14 +1,12 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
-import CoreParts.api.SheetCell;
+import CoreParts.api.sheet.SheetCell;
 import CoreParts.api.SheetConvertor;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import GeneratedClasses.*;
-import Utility.CellUtils;
 
-import javax.xml.stream.Location;
 import java.util.List;
 
 public class SheetConvertorImpl implements SheetConvertor {
