@@ -75,20 +75,21 @@ public class EngineImpl implements Engine {
     @Override
     public void updateCell(String newValue, char col, String row) throws
             CycleDetectedException, IllegalArgumentException, RefToUnSetCell {
+
         byte[] savedSheetCellState = sheetCell.saveSheetCellState();
 
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
-        if(!(targetCell.getAffectingOn().isEmpty()) && newValue.isEmpty()) {
-            throw new DeleteWhileAffectingOtherCellException(targetCell);
-        }
+//        if(!(targetCell.getAffectingOn().isEmpty()) && newValue.isEmpty()) {
+//            throw new DeleteWhileAffectingOtherCellException(targetCell);
+//
+//        }
 
-        else if(newValue.isEmpty()){
+        if(newValue.isEmpty()){
             sheetCell.updateVersions(targetCell);
             sheetCell.versionControl();
             sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
         }
-
         else{
             try {
                 Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);

@@ -6,7 +6,12 @@ import expression.api.Expression;
 import expression.impl.variantImpl.BinaryExpression;
 import expression.impl.variantImpl.EffectiveValueImpl;
 
-public class Mod extends BinaryExpression{
+public class Mod extends NumericBinaryOperation {
+    @Override
+    protected Double applyOperation(Double value1, Double value2) {
+        return value1 % value2;
+    }
+
     public Mod(Expression expression1, Expression expression2) {
         super(expression1, expression2);
     }
@@ -14,12 +19,6 @@ public class Mod extends BinaryExpression{
     @Override
     public String getOperationSign() {
         return "%";
-    }
-
-    @Override
-    protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
-        Double result = ((Double) e1.getValue()%(Double)e2.getValue());
-        return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
     }
 }
 

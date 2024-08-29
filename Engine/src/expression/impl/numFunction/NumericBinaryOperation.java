@@ -17,16 +17,18 @@ public abstract class NumericBinaryOperation extends BinaryExpression {
         try {
             Double result = applyOperation((Double) e1.getValue(), (Double) e2.getValue());
             return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
-        } catch (ClassCastException e) {
-            if(e1.getCellType() == ReturnedValueType.EMPTY || e2.getCellType() == ReturnedValueType.EMPTY){ {
+
+        } catch (ClassCastException e)
+        {
+            if(e1.getCellType() == ReturnedValueType.EMPTY || e2.getCellType() == ReturnedValueType.EMPTY)
                 return new EffectiveValueImpl(ReturnedValueType.EMPTY,"");
-            }
-            }
-            if (e1.getCellType() == ReturnedValueType.UNKNOWN || e2.getCellType() == ReturnedValueType.UNKNOWN) {
+
+            if (e1.getCellType() == ReturnedValueType.UNKNOWN || e2.getCellType() == ReturnedValueType.UNKNOWN)
                 return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
-            }
+
             throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type Double", e);
         }
     }
 }
+
 

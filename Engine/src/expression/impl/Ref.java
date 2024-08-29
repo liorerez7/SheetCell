@@ -1,11 +1,13 @@
 package expression.impl;
 
+import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
+import expression.impl.stringFunction.Str;
 import expression.impl.variantImpl.EffectiveValueImpl;
 
 
@@ -16,7 +18,12 @@ public class Ref implements Expression {
     }
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {
-        if(!sheet.isCellPresent(location)) {
+        Cell cell = sheet.getCell(location);
+        //if cell is empty he will have no effective value but he will exist be cause we used getCell
+        if(cell.getEffectiveValue()==null)
+        {
+            cell.setEffectiveValue(new Str(""));
+            cell.setActualValue(sheet);
             return new EffectiveValueImpl(ReturnedValueType.EMPTY,"");
         }
         EffectiveValue res = sheet.getCell(location).getActualValue();

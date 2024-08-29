@@ -75,10 +75,10 @@ public class CellUtils {
 
     private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCell {
 
-        if (cellThatAffects.getEffectiveValue() == null) {
-
-            throw new RefToUnSetCell(cellThatAffects);
-        }
+//        if (cellThatAffects.getEffectiveValue() == null) {
+//
+//            throw new RefToUnSetCell(cellThatAffects);
+//        }
 
         return new Ref(cellThatAffects.getLocation());
     }

@@ -26,7 +26,6 @@ public class CellImp implements Cell ,Serializable
     this.originalValue = originalValue;
 }
 public void setActualValue(SheetCellViewOnly sheet) {
-
     try{
         actualValue = effectiveValue.evaluate(sheet);
     }catch (Exception e){
@@ -123,7 +122,6 @@ public void setActualValue(SheetCellViewOnly sheet) {
     public void updateVersion(int latestVersion) {
         latesetVersion = latestVersion;
     }
-
     @Override
     public int getLatestVersion() {
         return latesetVersion;
