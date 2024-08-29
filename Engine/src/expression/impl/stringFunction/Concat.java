@@ -23,22 +23,19 @@ public class Concat extends BinaryExpression {
         evaluate1.assertRawType(ReturnedValueType.STRING);
         evaluate2.assertRawType(ReturnedValueType.STRING);
 
-        if (isUndefined(evaluate1) || isUndefined(evaluate2)) {
-            return createEffectiveValue(ReturnedValueType.UNDEFINED, "UNDEFINED");
-        }
+//        if (isUndefined(evaluate1) || isUndefined(evaluate2)) {
+//            return createEffectiveValue(ReturnedValueType.UNDEFINED, "UNDEFINED");
+//        }
 
         try {
             if (isEmptyOrUndefined(evaluate1) || isEmptyOrUndefined(evaluate2)) {
-                return createEffectiveValue(ReturnedValueType.UNKNOWN, "UNDEFINED");
+                return createEffectiveValue(ReturnedValueType.STRING, "UNDEFINED");
             }
 
             String result = evaluate1.getValue() + " " + evaluate2.getValue();
             return createEffectiveValue(ReturnedValueType.STRING, result);
 
         } catch (ClassCastException e) {
-            if (isEmpty(evaluate1) || isEmpty(evaluate2)) {
-                return createEffectiveValue(ReturnedValueType.STRING, "UNDEFINED");
-            }
 
             if (isUnknown(evaluate1) || isUnknown(evaluate2)) {
                 return createEffectiveValue(ReturnedValueType.UNKNOWN, "UNDEFINED");

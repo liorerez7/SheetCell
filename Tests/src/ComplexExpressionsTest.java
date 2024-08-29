@@ -134,13 +134,39 @@ public class ComplexExpressionsTest {
         engine.updateCell("{Concat,{ref,a1},{ref,a3}}", 'A', "2");
         System.out.println("Updated A2 with two empty cells a1 and a3");
         assertEquals("UNDEFINED", engine.getRequestedCell("A2").getEffectiveValue().getValue());
+
         uiSheet.display(engine.getSheetCell());
-        engine.updateCell("hello", 'A', "1");
+
+        engine.updateCell("{Concat,{REf,A2},{REf,B2}}", 'B', "1");
+        System.out.println("Updated B1 with formula {Concat,{REf,A2},{REf,B2}}");
+        assertEquals("UNDEFINED", engine.getRequestedCell("B1").getEffectiveValue().getValue());
+
+        uiSheet.display(engine.getSheetCell());
+
+        engine.updateCell("{Concat,{ref,B1},{ref,a2}}", 'C', "1");
+        System.out.println("Updated C1 with formula {Concat,{ref,B1},{ref,a2}}");
+        assertEquals("UNDEFINED", engine.getRequestedCell("C1").getEffectiveValue().getValue());
+
+        uiSheet.display(engine.getSheetCell());
+
+
+        engine.updateCell("he", 'A', "1");
         System.out.println("Updated A1 with 'hello'");
-        engine.updateCell("world", 'A', "3");
+        engine.updateCell("be", 'A', "3");
         System.out.println("Updated A3 with 'world'");
-        assertEquals("hello world", engine.getRequestedCell("A2").getEffectiveValue().getValue());
+        assertEquals("he be", engine.getRequestedCell("A2").getEffectiveValue().getValue());
+
         uiSheet.display(engine.getSheetCell());
+
+
+        engine.updateCell("ce", 'B', "2");
+        System.out.println("Updated B2 with 'bye'");
+
+        uiSheet.display(engine.getSheetCell());
+
+        assertEquals("he be ce", engine.getRequestedCell("B1").getEffectiveValue().getValue());
+        assertEquals("he be ce he be", engine.getRequestedCell("C1").getEffectiveValue().getValue());
+
 
     }
 
