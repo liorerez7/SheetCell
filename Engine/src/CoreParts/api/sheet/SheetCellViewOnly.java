@@ -12,4 +12,5 @@ public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
     int getActiveCellsCount();
     Map<CellLocation, Cell> getSheetCell();
     RefDependencyGraph getGraph();
+    boolean isCellPresent(CellLocation location);
 }

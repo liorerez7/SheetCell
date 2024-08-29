@@ -31,6 +31,11 @@ public class EffectiveValueImpl implements EffectiveValue {
         this.value = value;
     }
 
+    @Override
+    public void setType(ReturnedValueType returnedValueType) {
+        this.cellType = returnedValueType;
+    }
+
     //TODO :: to do for later
     /*
     @Override

@@ -10,6 +10,8 @@ public interface EffectiveValue extends Serializable {
     Object getValue();
     void setValue(int value);
 
+    void setType(ReturnedValueType returnedValueType);
+
     // <T> T extractValueWithExpectation(Class<T> type);     //TODO: mabye add this
 }
 

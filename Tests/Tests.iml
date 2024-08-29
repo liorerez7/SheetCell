@@ -7,21 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="Generated" exported="" />
     <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" recursive="false" type="SOURCES" />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="file://$MODULE_DIR$/../../Junit" />
@@ -31,5 +17,9 @@
         <jarDirectory url="file://$MODULE_DIR$/../../Junit" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" scope="TEST" name="junit4" level="project" />
+    <orderEntry type="library" scope="TEST" name="junit" level="project" />
+    <orderEntry type="library" exported="" name="junit.jupiter" level="project" />
+    <orderEntry type="module" module-name="UI" exported="" />
   </component>
 </module>

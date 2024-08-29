@@ -24,7 +24,6 @@ public class Pow extends BinaryExpression {
             if((Double)e1.getValue() == 0 && (Double)e2.getValue() ==  0) {
                 result = Double.NaN;
             }
-
             return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type Double", e);

@@ -5,7 +5,9 @@ public enum ReturnedValueType {
     NUMERIC(Double.class) ,
     STRING(String.class) ,
     BOOLEAN(Boolean.class) ,
-    UNDEFINED(Void.class) ;
+    UNKNOWN(Object.class) ,
+    UNDEFINED(Void.class),
+    EMPTY(Void.class) ;
 
     private Class<?> type;
 
