@@ -1,13 +1,14 @@
 import CoreParts.api.Engine;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.impl.UtilisUI.TerminalSheet;
+import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.CycleDetectedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SheetUpdateTest {
+public class ComplexExpressionsTest {
 
     private Engine engine;
     private TerminalSheet uiSheet;
@@ -111,5 +112,18 @@ public class SheetUpdateTest {
         System.out.println("Updated B1 with 'hello'");
         uiSheet.display(engine.getSheetCell());
         assertEquals("hello World", engine.getRequestedCell("A1").getEffectiveValue().getValue());
+    }
+    @Test
+    public void concatRefToRawNumber() throws Exception {
+        engine.updateCell("hello", 'D', "2");
+        System.out.println("Updated B1 with 'hello'");
+        try {
+            System.out.println("trying to Update A1 with formula {CONCAT,{REF,D2},2}");
+            engine.updateCell("{CONCAT,{REF,D2},2}", 'A', "1");
+            fail("Expected CellCantBeEvaluated to be thrown");
+        }catch (CellCantBeEvaluated e) {
+            System.out.println("Caught expected CellCantBeEvaluatedException:");
+            System.out.println(e.getMessage());
+        }
     }
 }

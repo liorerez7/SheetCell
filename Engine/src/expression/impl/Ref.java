@@ -37,6 +37,5 @@ public class Ref implements Expression {
 
     @Override
     public void accept(ExpressionVisitor visitor) {
-
     }
 }

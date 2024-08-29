@@ -9,7 +9,7 @@ import expression.impl.variantImpl.EffectiveValueImpl;
 public class Divide extends NumericBinaryOperation {
     @Override
     protected Double applyOperation(Double value1, Double value2) {
-        if (value1 == 0 && value2 == 0) {
+        if (value2 == 0) {
             return Double.NaN;
         }
         return value1 / value2;

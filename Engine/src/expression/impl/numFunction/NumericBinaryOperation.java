@@ -14,10 +14,11 @@ public abstract class NumericBinaryOperation extends BinaryExpression {
     protected abstract Double applyOperation(Double value1, Double value2);
     @Override
     protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
+        e1.assertRawType(ReturnedValueType.NUMERIC);
+        e2.assertRawType(ReturnedValueType.NUMERIC);
         try {
             Double result = applyOperation((Double) e1.getValue(), (Double) e2.getValue());
             return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
-
         } catch (ClassCastException e)
         {
             if(e1.getCellType() == ReturnedValueType.EMPTY || e2.getCellType() == ReturnedValueType.EMPTY)

@@ -12,6 +12,8 @@ public interface EffectiveValue extends Serializable {
 
     void setType(ReturnedValueType returnedValueType);
 
+    void assertRawType(ReturnedValueType returnedValueType);
+
     // <T> T extractValueWithExpectation(Class<T> type);     //TODO: mabye add this
 }
 

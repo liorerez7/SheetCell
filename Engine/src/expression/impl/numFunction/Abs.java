@@ -7,19 +7,15 @@ import expression.impl.variantImpl.BinaryExpression;
 import expression.impl.variantImpl.EffectiveValueImpl;
 import expression.impl.variantImpl.UnaryExpression;
 
-public class Abs extends UnaryExpression {
+public class Abs extends NumericUnaryExpression {
         public Abs(Expression expression1) {
             super(expression1);
         }
+    @Override
+    protected Double applyOperation(Double value1) {return Math.abs(value1);}
 
-        @Override
+    @Override
         public String getOperationSign() {
             return "%";
-        }
-
-        @Override
-        protected EffectiveValue evaluate(EffectiveValue e1) {
-            Double result = (Math.abs((Double) e1.getValue()));
-            return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
         }
     }

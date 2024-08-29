@@ -28,7 +28,6 @@ public class CellUtils {
         }
     }
 
-    // TODO : when cell is updated we need to delete his relayed by cells.
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCell {// this is a recursive function
 
         ExpressionParser parser = new ExpressionParserImpl(value);

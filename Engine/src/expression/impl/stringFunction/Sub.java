@@ -8,12 +8,12 @@ import expression.impl.variantImpl.BinaryExpression;
 import expression.impl.variantImpl.EffectiveValueImpl;
 import expression.impl.variantImpl.TernaryExpression;
 
+//TODO: ADDING IF EMPTY OR UNDEFINED OR UNKNOWN
 public class Sub  extends TernaryExpression {
 
     public Sub(Expression expression1, Expression expression2, Expression expression3) {
         super(expression1, expression2, expression3);
     }
-
     @Override
     public String getOperationSign() {
         return "";

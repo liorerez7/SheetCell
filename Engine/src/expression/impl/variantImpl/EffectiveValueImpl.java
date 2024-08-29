@@ -6,6 +6,8 @@ import expression.api.EffectiveValue;
 
 import java.io.Serializable;
 
+import static expression.ReturnedValueType.*;
+
 public class EffectiveValueImpl implements EffectiveValue {
 
     private ReturnedValueType cellType;
@@ -36,17 +38,14 @@ public class EffectiveValueImpl implements EffectiveValue {
         this.cellType = returnedValueType;
     }
 
-    //TODO :: to do for later
-    /*
-    @Override
-    public <T> T extractValueWithExpectation(Class<T> type) {
-        if (cellType.isAssignableFrom(type)) {
-            return type.cast(value);
-        }
-        // error handling... exception ? return null ?
-        return null;
-    }
+    public boolean isRawType() {
+        return this.cellType == NUMERIC || this.cellType == STRING || this.cellType == BOOLEAN;}
 
-     */
+    @Override
+    public void assertRawType(ReturnedValueType type) throws IllegalArgumentException {
+        if (isRawType() && cellType != type) {
+            throw new IllegalArgumentException("The type " + this + " is a raw type but is not STRING.");
+        }
+    }
 }
 

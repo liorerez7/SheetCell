@@ -150,7 +150,6 @@ public class InputHandlerImpl implements InputHandler {
         this.commandManager = commandManager;
     }
 
-    //TODO: add more syntax checks, like commas.
     @Override
     public String getCommandInput(int UserTryCount) throws Exception {
 
