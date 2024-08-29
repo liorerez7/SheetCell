@@ -1,6 +1,7 @@
 package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
+import CoreParts.api.SheetCell;
 import CoreParts.api.SheetConvertor;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
@@ -26,7 +27,7 @@ import java.util.*;
 public class EngineImpl implements Engine {
 
     Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
-    private SheetCellImp sheetCell;
+    private SheetCell sheetCell;
 
     public EngineImpl() {
         versionToCellsChanges = new HashMap<>();
@@ -73,7 +74,6 @@ public class EngineImpl implements Engine {
         byte[] savedVersions = saveVersions();
 
         try {
-
             versionToCellsChanges.clear();
             sheetCell.clearVersionNumber();
             versionToCellsChanges.put(sheetCell.getLatestVersion(), new HashMap<>());
@@ -130,7 +130,6 @@ public class EngineImpl implements Engine {
             }
         }
     }
-
     @Override
     public void save(String path) throws Exception, IOException, IllegalArgumentException {
 
@@ -274,7 +273,7 @@ public class EngineImpl implements Engine {
         }
     }
 
-    public SheetCellImp getInnerSystemSheetCell() {
+    public SheetCell getInnerSystemSheetCell() {
         return sheetCell;
     }
 

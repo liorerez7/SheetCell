@@ -1,6 +1,7 @@
 package Utility;
 
 import CoreParts.api.Cell;
+import CoreParts.api.SheetCell;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
@@ -31,7 +32,7 @@ public class CellUtils {
     }
 
     // TODO : when cell is updated we need to delete his relayed by cells.
-    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell, boolean insideMethod) throws RefToUnSetCell {// this is a recursive function
+    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCell {// this is a recursive function
 
         ExpressionParser parser = new ExpressionParserImpl(value);
 
@@ -86,7 +87,7 @@ public class CellUtils {
     }
 
 
-    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell, boolean insideMethod)
+    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCell sheetCell, boolean insideMethod)
             throws RefToUnSetCell {
 
         List<Expression> expressions = new ArrayList<>();

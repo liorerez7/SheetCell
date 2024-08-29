@@ -23,7 +23,7 @@ public class DtoSheetCell {
     private int currentCellWidth;
 
     // Constructor to populate DtoSheetCell from SheetCellImp
-    public DtoSheetCell(SheetCellImp sheetCellImp) {
+    public DtoSheetCell(SheetCell sheetCellImp) {
 
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
            EffectiveValue effectiveValue = entry.getValue().getEffectiveValue().evaluate(sheetCellImp);

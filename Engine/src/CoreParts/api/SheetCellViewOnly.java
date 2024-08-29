@@ -3,9 +3,10 @@ package CoreParts.api;
 import CoreParts.smallParts.CellLocation;
 import Utility.RefDependencyGraph;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public interface SheetCellViewOnly {
+public interface SheetCellViewOnly extends Serializable {
     Cell getCell(CellLocation location);
     int getCellLength();
     int getCellWidth();

@@ -7,6 +7,7 @@ import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
+import expression.api.EffectiveValue;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Map<CellLocation, Cell> sheetCell = new HashMap<>(); // Changed to map of CellLocation to Cell
     private RefDependencyGraph refDependencyGraph = new RefDependencyGraph();
+    VersionControlManager versionControlManager;
     private RefGraphBuilder refGraphBuilder;
     private final String name;
     private int versionNumber = 1;
@@ -38,105 +40,61 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         currentNumberOfCols = col;
         this.currentCellLength = currentCellLength;
         this.currentCellWidth = currentCellWidth;
+        versionControlManager = new VersionControlManager(new HashMap<>(), this);
     }
+    @Override
+    public SheetCell restoreSheetCell(int versionNumber) {return null;}
 
     @Override
-    public SheetCell restoreSheetCell(int versionNumber) {
-        return null;
-    }
     public void createRefDependencyGraph() {
          refGraphBuilder = new RefGraphBuilder(this);
          refGraphBuilder.build();
     }
-    public RefDependencyGraph getRefDependencyGraph() {
-        return refDependencyGraph;
-    }
-    @Override
-    public void setCell(CellLocation location, Cell cell) {
-        sheetCell.put(location, cell);
-    }
 
     @Override
-    public int getActiveCellsCount() {
-        return sheetCell.size();
-    }
+    public RefDependencyGraph getRefDependencyGraph() {return refDependencyGraph;}
+    @Override
+    public void setCell(CellLocation location, Cell cell) {sheetCell.put(location, cell);}
+    @Override
+    public int getActiveCellsCount() {return sheetCell.size();}
 
     @Override
-    public RefDependencyGraph getGraph() {
-        return refDependencyGraph;
-    }
+    public RefDependencyGraph getGraph() {return refDependencyGraph;}
 
-    // Get a cell based on its CellLocation
-    // Method to get a cell or create it if it doesn't exist
     @Override
     public Cell getCell(CellLocation location) {
-        // If the cell does not exist, create and add it to the map dynamically
+
         if(location.getRealRow() >= currentNumberOfRows || location.getRealColumn() >= currentNumberOfCols) {
-            //CellLocationFactory.removeKey(location.getCellId());
+
             throw new IllegalArgumentException("Invalid cell location");
         }
         return sheetCell.computeIfAbsent(location, loc -> new CellImp(loc));
     }
-    public void updateVersion() {
-        versionNumber++;
-    }
-
-    public void clearVersionNumber(){
-        versionNumber = 1;
-    }
     @Override
-    public int getCellLength() {
-        return currentCellLength;
-    }
-
+    public void updateVersion() {versionNumber++;}
     @Override
-    public int getCellWidth() {
-        return currentCellWidth;
-    }
+    public void clearVersionNumber(){versionNumber = 1;}
+    @Override
+    public int getCellLength() {return currentCellLength;}
+    @Override
+    public int getCellWidth() {return currentCellWidth;}
+    @Override
+    public int getLatestVersion() {return versionNumber;}
 
     @Override
-    public int getLatestVersion() {
-        return versionNumber;
-    }
+    public int getNumberOfRows() {return currentNumberOfRows;}
+    @Override
+    public int getNumberOfColumns() {return currentNumberOfCols;}
+    @Override
+    public String getSheetName() {return name;}
 
     @Override
-    public int getNumberOfRows() {
-        return currentNumberOfRows;
-    }
+    public boolean isCellPresent(CellLocation location) {return sheetCell.containsKey(location);}
 
     @Override
-    public int getNumberOfColumns() {
-        return currentNumberOfCols;
-    }
+    public Map<CellLocation, Cell> getSheetCell() {return sheetCell;}
 
     @Override
-    public String getSheetName() {
-        return name;
-    }
-
-    boolean isCellPresent(CellLocation location) {
-        return sheetCell.containsKey(location);
-    }
-
-    // Helper method to check if a location is valid
-    private boolean isValidLocation(CellLocation location) {
-        int row = location.getRealRow();
-        int col = location.getRealColumn();
-
-        return row >= 0 && row < maxRows && col >= 0 && col < maxCols;
-    }
-
-    // Update a cell's value at a specific location
-    public void updateCell(CellLocation location, Cell newCell) {
-        if (!isValidLocation(location)) {
-            throw new IllegalArgumentException("Invalid cell location");
-        }
-        sheetCell.put(location, newCell);
-    }
-
-    public Map<CellLocation, Cell> getSheetCell() {
-        return sheetCell;
-    }
     public void updateEffectedByAndOnLists() {
         Map<Cell,Set<Cell>> adjacencyList= refDependencyGraph.getadjacencyList();
         Map<Cell,Set<Cell>> reverseAdjacencyList = refDependencyGraph.getreverseAdjacencyList();
@@ -148,7 +106,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         });
     }
 
-    public void removeCell(CellLocation cellLocation) {
-        sheetCell.remove(cellLocation);
-    }
+    @Override
+    public void removeCell(CellLocation cellLocation) {sheetCell.remove(cellLocation);}
 }
