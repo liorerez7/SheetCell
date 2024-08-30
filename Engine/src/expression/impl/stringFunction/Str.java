@@ -22,6 +22,9 @@ public class Str implements Expression {
 
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) {
+        if(value.isEmpty()){
+            return new EffectiveValueImpl(ReturnedValueType.EMPTY, value);
+        }
         return new EffectiveValueImpl(ReturnedValueType.STRING, value);
     }
 

@@ -274,32 +274,27 @@ public class TerminalSheet implements Displayer {
 
         EffectiveValue effectiveValue = sheetCell.getEffectiveValue(cellLocation);
 
-
         Object objectValue;
-        String value;
+        String value = "";
 
         if (effectiveValue != null) {
             objectValue = effectiveValue.getValue();
 
-            if(effectiveValue.getCellType() == ReturnedValueType.NUMERIC){
+            if (objectValue instanceof Double) {
+                Double doubleValue = (Double) objectValue;
 
-                double num = (double) objectValue;
-
-
-                if (num % 1 == 0) {  // Check if num is an integer (no decimal part)
-                    value = String.format("%d", (int) num);  // Print as integer
+                // Check if the value is NaN
+                if (doubleValue.isNaN()) {
+                    value = "NaN";
                 } else {
-                    value = String.format("%.2f", num);  // Print as double with 2 decimal places
+                    // Convert the double to an int and then to a string
+                    value = Integer.toString(doubleValue.intValue());
                 }
-            }
-            else{
+            } else {
+                // Just use the object's string value
                 value = objectValue.toString();
             }
-
-        } else {
-            value = "";
         }
-
 
         // If the value length exceeds the cell width, truncate it
         if (value.length() > cellWidth) {
