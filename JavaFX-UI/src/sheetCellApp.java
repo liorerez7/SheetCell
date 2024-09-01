@@ -11,7 +11,7 @@ import static javafx.application.Application.launch;
 public class sheetCellApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        URL location = getClass().getResource("Controller/Main/sheetCell.fxml");
+        URL location = getClass().getResource("Controller/Main/SheetCell.fxml");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(location);
         Parent root = loader.load();
@@ -19,7 +19,7 @@ public class sheetCellApp extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         launch(args);
     }
 }
