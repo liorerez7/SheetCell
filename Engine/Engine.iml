@@ -21,7 +21,7 @@
         <jarDirectory url="file://$MODULE_DIR$/../../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" />
