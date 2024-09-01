@@ -19,7 +19,7 @@ public class sheetCellApp extends Application {
         Parent root = loader.load();
 
         MainController mainController = loader.getController();
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root, 1001, 800);
         stage.setScene(scene);
         stage.show();
     }
