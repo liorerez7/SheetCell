@@ -1,4 +1,5 @@
 import Controller.Grid.GridController;
+import Controller.Main.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,8 +17,8 @@ public class sheetCellApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(location);
         Parent root = loader.load();
-        GridController controller = loader.getController();
-        controller.initializeGrid(10, 10);
+
+        MainController mainController = loader.getController();
         Scene scene = new Scene(root, 1200, 800);
         stage.setScene(scene);
         stage.show();
