@@ -29,5 +29,6 @@ public class MainController {
         gridController.setMainController(this);
         gridController.initializeGrid(20, 20);
     }
+    //;el;fdke
 }
 
