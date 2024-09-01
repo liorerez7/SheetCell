@@ -1,12 +1,13 @@
 package Controller.actionLine;
 
+import Controller.Main.MainController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.layout.GridPane;
 
 public class ActionLineController {
-
+    MainController MainController;
     @FXML
     private GridPane ActionLineGrid;
 
@@ -16,4 +17,7 @@ public class ActionLineController {
     @FXML
     private MenuButton VersionScroller;
 
+    public void setMainController(MainController mainController) {
+        this.MainController = mainController;
+    }
 }
