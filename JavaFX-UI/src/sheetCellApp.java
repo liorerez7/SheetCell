@@ -1,3 +1,4 @@
+import Controller.Grid.GridController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,15 +12,17 @@ import static javafx.application.Application.launch;
 public class sheetCellApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        URL location = getClass().getResource("Controller/Main/SheetCell.fxml");
+        URL location = getClass().getResource("Controller/Grid/Grid.fxml");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(location);
         Parent root = loader.load();
-        Scene scene = new Scene(root, 800, 600);
+        GridController controller = loader.getController();
+        controller.initializeGrid(10, 10);
+        Scene scene = new Scene(root, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         launch(args);
     }
 }
