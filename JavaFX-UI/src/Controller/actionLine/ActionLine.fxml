@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:id="ActionLineGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="223.0" prefWidth="597.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.actionLine.ActionLineController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="10.0" prefWidth="39.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="166.0" minWidth="10.0" prefWidth="88.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="171.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" /> <!-- This column grows the most -->
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Label text="Cell-ID:" />
+        <Label prefHeight="17.0" prefWidth="198.0" text="Original Value" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+        <Button fx:id="UpdateCellButton" mnemonicParsing="false" text="update Cell" GridPane.columnIndex="3" />
+        <Label text="lastUpdatedCell" GridPane.columnIndex="4" />
+        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" text="version" GridPane.columnIndex="5" GridPane.halignment="RIGHT">
+            <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+            </items>
+        </MenuButton>
+    </children>
+</GridPane>
