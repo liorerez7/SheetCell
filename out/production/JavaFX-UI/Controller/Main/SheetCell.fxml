@@ -20,7 +20,7 @@
         </rowConstraints>
          <children>
             <fx:include fx:id="menuBar" source="../MenuBar/MenuBar.fxml" GridPane.columnSpan="2" />
-            <fx:include minWidth="1100.0" source="../actionLine/ActionLine.fxml" GridPane.rowIndex="2" />
+            <fx:include fx:id="actionLine" minWidth="1100.0" source="../actionLine/ActionLine.fxml" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </top>
@@ -29,7 +29,7 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <fx:include source="../Customize/Customize.fxml" />
+                  <fx:include fx:id="customize" source="../Customize/Customize.fxml" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
@@ -40,4 +40,7 @@
          </children>
       </VBox>
    </left>
+   <center>
+      <fx:include fx:id="grid" source="../Grid/Grid.fxml" />
+   </center>
 </BorderPane>
