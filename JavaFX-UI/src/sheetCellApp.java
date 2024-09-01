@@ -12,7 +12,7 @@ import static javafx.application.Application.launch;
 public class sheetCellApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        URL location = getClass().getResource("Controller/Grid/Grid.fxml");
+        URL location = getClass().getResource("Controller/Main/SheetCell.fxml");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(location);
         Parent root = loader.load();

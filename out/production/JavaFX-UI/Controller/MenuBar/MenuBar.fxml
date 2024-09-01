@@ -1,42 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MenuBar.MenuBarController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-   </rowConstraints>
-   <children>
-      <MenuBar fx:id="menuBar" prefHeight="355.0" prefWidth="3815.0" GridPane.columnSpan="2">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <Label text="Currently Loaded File Path" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-   </children>
-</GridPane>
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Main.MainController" prefHeight="626.0" prefWidth="1005.0">
+
+    <!-- MenuBar at the top spanning the entire width -->
+    <top>
+        <VBox>
+            <!-- MenuBar -->
+            <fx:include fx:id="menuBar" source="../MenuBar/MenuBar.fxml" />
+
+            <!-- Action Line right below the MenuBar -->
+            <fx:include source="../actionLine/ActionLine.fxml" />
+        </VBox>
+    </top>
+
+    <!-- Left side with two VBox elements for Customize and Ranges -->
+    <left>
+        <VBox spacing="10.0" alignment="TOP_CENTER" prefWidth="200.0">
+            <fx:include source="../Customize/Customize.fxml" />
+            <fx:include source="../Ranges/Ranges.fxml" />
+        </VBox>
+    </left>
+
+    <!-- Center space for the dynamically initialized grid -->
+    <center>
+        <GridPane fx:id="dynamicGrid" />
+    </center>
+</BorderPane>
