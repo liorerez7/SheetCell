@@ -23,6 +23,7 @@ public class GridController {
     @FXML
     private GridPane grid;
     private MainController mainController;
+
     @FXML
     public void initializeGrid(DtoSheetCell sheetCell) {
 
@@ -93,6 +94,7 @@ public class GridController {
                 grid.add(cell, col, row);
             }
         }
+
     }
     public void setMainController(MainController mainController) {
         this.mainController = mainController;

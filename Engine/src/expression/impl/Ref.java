@@ -31,7 +31,6 @@ public class Ref implements Expression {
         }
 
         EffectiveValue res = sheet.getCell(location).getActualValue();
-       // res.setType(ReturnedValueType.UNKNOWN);
         EffectiveValue newRes = new EffectiveValueImpl(ReturnedValueType.UNKNOWN,res.getValue());
         return newRes;
     }

@@ -17,6 +17,9 @@ public class EffectiveValueImpl implements EffectiveValue {
         this.cellType = cellType;
         this.value = new SimpleObjectProperty<>(value);
     }
+
+
+
     @Override
     public ObjectProperty<Object> getValueProperty() {
         return value;

@@ -76,7 +76,7 @@ public class EngineImpl implements Engine {
     public void updateCell(String newValue, char col, String row) throws
             CycleDetectedException, IllegalArgumentException, RefToUnSetCell {
 
-        byte[] savedSheetCellState = sheetCell.saveSheetCellState();
+    //    byte[] savedSheetCellState = sheetCell.saveSheetCellState();
 
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
@@ -100,7 +100,7 @@ public class EngineImpl implements Engine {
                 sheetCell.versionControl();
 
             } catch (Exception e) {
-                restoreSheetCellState(savedSheetCellState);
+          //      restoreSheetCellState(savedSheetCellState);
                 throw e;
             }
         }

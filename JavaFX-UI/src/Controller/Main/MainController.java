@@ -6,12 +6,14 @@ import Controller.MenuBar.HeaderController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
+import CoreParts.smallParts.CellLocation;
 import expression.impl.stringFunction.Str;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.awt.*;
+import java.util.Map;
 
 public class MainController {
     Engine engine;
@@ -27,6 +29,8 @@ public class MainController {
     private GridController gridController;
     @FXML
     private CustomizeController customizeController;
+
+
 
     @FXML
     public void initialize() {
@@ -58,5 +62,6 @@ public class MainController {
     public void setEngine(EngineImpl engine) {
         this.engine = engine;
     }
+
 }
 

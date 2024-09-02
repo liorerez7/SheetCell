@@ -6,6 +6,7 @@ import CoreParts.smallParts.CellLocation;
 import Utility.Exception.CellCantBeEvaluated;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
+import expression.impl.variantImpl.EffectiveValueImpl;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
 import java.io.Serializable;
@@ -16,7 +17,7 @@ public class CellImp implements Cell ,Serializable
 {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Expression effectiveValue;
-    private EffectiveValue actualValue;
+    private EffectiveValue actualValue = new EffectiveValueImpl(null,null);
     private String originalValue;
     private CellLocation location;
     private int latesetVersion;
@@ -27,17 +28,23 @@ public class CellImp implements Cell ,Serializable
     this.effectiveValue = effectiveValue;
     this.originalValue = originalValue;
 }
+
 public void setActualValue(SheetCellViewOnly sheet) {
     try{
-        actualValue = effectiveValue.evaluate(sheet);
+        EffectiveValue effectiveValue1 = effectiveValue.evaluate(sheet);
+        actualValue.setValue(effectiveValue1.getValue());
+        actualValue.setType(effectiveValue1.getCellType());
+       // actualValue = effectiveValue.evaluate(sheet);
     }catch (Exception e){
         throw new CellCantBeEvaluated(this);
     }
 }
 
 
-public void setActualValue(EffectiveValue actualValue) {
-    this.actualValue = actualValue;
+public void setActualValue(EffectiveValue effectiveValue) {
+    actualValue.setValue(effectiveValue.getValue());
+    actualValue.setType(effectiveValue.getCellType());
+    //this.actualValue = effectiveValue;
 }
 
     @Override

@@ -31,7 +31,11 @@ public class DtoSheetCell implements SheetCellViewOnly {
 
             EffectiveValue effectiveValue;
 
-            effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
+            effectiveValue = entry.getValue().getActualValue();
+
+
+            //TODO: Check if this is correct
+            //effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
 
             sheetCell.put(entry.getKey(), effectiveValue);
         }
