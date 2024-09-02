@@ -4,12 +4,8 @@ import Controller.Main.MainController;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import expression.api.EffectiveValue;
-import javafx.beans.Observable;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -29,9 +25,7 @@ public class GridController {
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
-
-
-
+        Map<CellLocation,Label> cellLocationToLabel = new HashMap<>();
         // Clear existing constraints and children
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
@@ -84,15 +78,17 @@ public class GridController {
                 // Bind the Label's textProperty to the EffectiveValue
                 char colChar = (char) ('A' + col - 1);
                 String rowString = String.valueOf(row);
-
                 CellLocation location = new CellLocation(colChar, rowString);
+                cellLocationToLabel.put(location,cell);
                 EffectiveValue effectiveValue = viewSheetCell.get(location);
-                if(effectiveValue != null)
+                if (effectiveValue != null) {
                     cell.textProperty().bind(effectiveValue.getValueProperty().asString());
+                }
                 GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
             }
         }
+        mainController.setCellsLablesMap(cellLocationToLabel);
     }
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
