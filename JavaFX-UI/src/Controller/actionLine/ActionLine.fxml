@@ -5,41 +5,44 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 
-
-<StackPane maxWidth="1.7976931348623157E308" prefHeight="73.0" styleClass="stack-pane" stylesheets="@actionLine.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.actionLine.ActionLineController">
-   <children>
-      <GridPane fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="50.0" styleClass="grid-pane" stylesheets="@actionLine.css">
-          <columnConstraints>
-              <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="10.0" prefWidth="39.0" />
-              <ColumnConstraints hgrow="SOMETIMES" maxWidth="166.0" minWidth="10.0" prefWidth="88.0" />
-              <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="171.0" />
-              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" /> <!-- This column grows the most -->
-          </columnConstraints>
-          <rowConstraints>
-              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          </rowConstraints>
-          <children>
-              <Label prefHeight="21.0" prefWidth="58.0" text="Cell-ID:" />
-              <Label prefHeight="21.0" prefWidth="210.0" text="Original Value" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-              <Button fx:id="UpdateCellButton" mnemonicParsing="false" text="update Cell" GridPane.columnIndex="3" />
-              <Label text="lastUpdatedCell" GridPane.columnIndex="4" />
-              <MenuButton fx:id="VersionScroller" mnemonicParsing="false" text="version" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-                  <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
-                  </items>
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin>
-              </MenuButton>
-          </children>
-      </GridPane>
-   </children>
-</StackPane>
+<GridPane id="actionLine" fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="50.0" prefWidth="1100.0" styleClass="UserInterfaceSection" stylesheets="@BasicExcel.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.actionLine.ActionLineController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" prefWidth="115.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.0" minWidth="10.0" prefWidth="223.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="339.0" minWidth="10.0" prefWidth="166.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="389.0" minWidth="10.0" prefWidth="148.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.0" minWidth="10.0" prefWidth="77.0" />
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="477.0" minWidth="10.0" prefWidth="231.0" /> <!-- This column grows the most -->
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Label prefHeight="28.0" prefWidth="72.0" styleClass="LabelsOfUserInterfaceSection">
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin></Label>
+        <Label prefHeight="28.0" prefWidth="104.0" styleClass="LabelsOfUserInterfaceSection" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+        <Button fx:id="UpdateCellButton" mnemonicParsing="false" prefWidth="113.0" styleClass="ModernButton" text="update Cell" GridPane.columnIndex="3">
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </Button>
+        <Label text="last version" GridPane.columnIndex="4" />
+        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" styleClass="ModernButton" text="version" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <items>
+                <MenuItem mnemonicParsing="false" styleClass="LabelsOfUserInterfaceSection" text="Action 1" />
+                <MenuItem mnemonicParsing="false" styleClass="LabelsOfUserInterfaceSection" text="Action 2" />
+            </items>
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+        </MenuButton>
+      <TextField prefHeight="25.0" prefWidth="193.0" GridPane.columnIndex="2" />
+    </children>
+</GridPane>

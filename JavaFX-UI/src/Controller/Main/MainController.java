@@ -15,7 +15,6 @@ public class MainController {
     Engine engine;
     @FXML
     private HeaderController headerController;
-
     @FXML
     private VBox header;
 

@@ -10,18 +10,16 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.HashMap;
+
 public class GridController {
     @FXML
     private GridPane grid;
     private MainController mainController;
-
     @FXML
     public void initializeGrid(DtoSheetCell sheetCell) {
-
-
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
-
 
         // Clear existing constraints and children
         grid.getColumnConstraints().clear();
@@ -49,23 +47,32 @@ public class GridController {
         // Add column headers
         for (int col = 1; col <= numCols; col++) {
             Label header = new Label(String.valueOf((char) ('A' + col - 1)));
+            header.setId("header-label");
             grid.add(header, col, 0);
         }
 
         // Add row headers
         for (int row = 1; row <= numRows; row++) {
             Label header = new Label(String.valueOf(row));
+            header.setId("header-label");
             grid.add(header, 0, row);
         }
 
-        // Add cells with AnchorPane and TextField
+        // Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
-                AnchorPane anchorPane = new AnchorPane();
-                TextField textField = new TextField();
-                anchorPane.getChildren().add(textField);
-                GridPane.setConstraints(anchorPane, col, row);
-                grid.add(anchorPane, col, row);
+                Label cell = new Label(); // Empty Label for each cell
+                cell.setId("cell-label");
+//                grid.getStylesheets().add(getClass().getResource("").toExternalForm());
+//                grid.getStyleClass().add("grid");
+                cell.setStyle(
+                        "-fx-background-color: white; " +      // White background for cells
+                                "-fx-border-color: black; " +          // Black border for cells
+                                "-fx-border-width: 1px; " +            // 1px border width for cells
+                                "-fx-alignment: center; "              // Center alignment for cells
+                );
+                GridPane.setConstraints(cell, col, row);
+                grid.add(cell, col, row);
             }
         }
     }
