@@ -14,6 +14,7 @@ public class DtoSheetCell implements SheetCellViewOnly {
 
     private Map<CellLocation,EffectiveValue> sheetCell = new HashMap<>();
     private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
+
     private static final int maxRows = 50;
     private static final int maxCols = 20;
     private String name;
@@ -30,7 +31,11 @@ public class DtoSheetCell implements SheetCellViewOnly {
 
             EffectiveValue effectiveValue;
 
-            effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
+            effectiveValue = entry.getValue().getActualValue();
+
+
+            //TODO: Check if this is correct
+            //effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
 
             sheetCell.put(entry.getKey(), effectiveValue);
         }
