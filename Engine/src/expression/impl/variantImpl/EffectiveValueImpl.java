@@ -3,6 +3,8 @@ package expression.impl.variantImpl;
 
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.io.Serializable;
 
@@ -11,11 +13,18 @@ import static expression.ReturnedValueType.*;
 public class EffectiveValueImpl implements EffectiveValue {
 
     private ReturnedValueType cellType;
-    private Object value;
+    //private Object value;
+    private final ObjectProperty<Object> value;
 
     public EffectiveValueImpl(ReturnedValueType cellType, Object value) {
         this.cellType = cellType;
-        this.value = value;
+       // this.value = value;
+        this.value = new SimpleObjectProperty<>(value);
+    }
+
+    @Override
+    public ObjectProperty<Object> valueProperty() {
+        return value;
     }
 
     @Override
@@ -25,12 +34,13 @@ public class EffectiveValueImpl implements EffectiveValue {
 
     @Override
     public Object getValue() {
-        return value;
+        return value.get();
     }
 
     @Override
-    public void setValue(int value) {
-        this.value = value;
+    public void setValue(Object value) {
+
+        this.value.set(value);
     }
 
     @Override

@@ -34,5 +34,6 @@
         <jarDirectory url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>

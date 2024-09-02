@@ -7,6 +7,7 @@ import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import javafx.fxml.FXML;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.awt.*;
@@ -17,7 +18,8 @@ public class MainController {
     private HeaderController headerController;
     @FXML
     private VBox header;
-
+    @FXML
+    private GridPane actionLine;
     @FXML
     private ActionLineController actionLineController;
     @FXML

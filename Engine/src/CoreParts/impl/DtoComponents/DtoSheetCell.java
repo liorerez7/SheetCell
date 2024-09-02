@@ -14,6 +14,7 @@ public class DtoSheetCell implements SheetCellViewOnly {
 
     private Map<CellLocation,EffectiveValue> sheetCell = new HashMap<>();
     private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
+
     private static final int maxRows = 50;
     private static final int maxCols = 20;
     private String name;

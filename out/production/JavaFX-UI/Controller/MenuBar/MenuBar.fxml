@@ -4,30 +4,37 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="77.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MenuBar.HeaderController">
-    <children>
-        <MenuBar fx:id="menuBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="42.0" VBox.vgrow="ALWAYS">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="Load XML" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-        <Label text="Currently Loaded PATH" />
-    </children>
+<VBox fx:id="VboxMenu" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="72.0" prefWidth="204.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MenuBar.HeaderController">
+   <children>
+      <MenuBar fx:id="menuBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="42.0" VBox.vgrow="ALWAYS">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="load XML" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <AnchorPane prefHeight="71.0" prefWidth="204.0">
+         <children>
+            <Text layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="LabelsOfUserInterfaceSection" text="currently loaded path" />
+            <Label layoutX="129.0" layoutY="1.0" prefHeight="28.0" prefWidth="70.0" styleClass="LabelsOfUserInterfaceSection" stylesheets="@../actionLine/BasicExcel.css" />
+         </children>
+      </AnchorPane>
+   </children>
 </VBox>
