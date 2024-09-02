@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="1005.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Main.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="1005.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Main.MainController">
    <top>
-      <GridPane prefHeight="125.0" prefWidth="637.0" BorderPane.alignment="CENTER">
+      <GridPane prefHeight="145.0" prefWidth="1008.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="49.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <fx:include fx:id="menuBar" source="../MenuBar/MenuBar.fxml" GridPane.columnSpan="2" />
-            <fx:include fx:id="actionLine" minWidth="1100.0" source="../actionLine/ActionLine.fxml" GridPane.rowIndex="2" />
+            <fx:include fx:id="menuBar" source="../MenuBar/MenuBar.fxml" GridPane.columnSpan="2" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
+            <fx:include fx:id="actionLine" source="../actionLine/ActionLine.fxml" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </top>
    <left>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="221.0" prefWidth="100.0">
                <children>
                   <fx:include fx:id="customize" source="../Customize/Customize.fxml" />
                </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
@@ -43,4 +47,16 @@
    <center>
       <fx:include fx:id="grid" source="../Grid/Grid.fxml" />
    </center>
+   <bottom>
+      <GridPane prefHeight="91.0" prefWidth="1005.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="60.0" minHeight="7.0" prefHeight="38.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
+   </bottom>
 </BorderPane>
