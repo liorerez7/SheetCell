@@ -3,11 +3,10 @@ package Controller.Grid;
 import Controller.Main.MainController;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
-import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.Observable;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -20,7 +19,6 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.HashMap;
 import java.util.Map;
-
 public class GridController {
     @FXML
     private GridPane grid;
@@ -70,14 +68,12 @@ public class GridController {
             header.setId("header-label");
             grid.add(header, 0, row);
         }
-
-        // Add cells with Label
+// Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label(); // Empty Label for each cell
                 cell.setId("cell-label");
-//                grid.getStylesheets().add(getClass().getResource("").toExternalForm());
-//                grid.getStyleClass().add("grid");
+
                 cell.setStyle(
                         "-fx-background-color: white; " +      // White background for cells
                                 "-fx-border-color: black; " +          // Black border for cells
@@ -91,12 +87,8 @@ public class GridController {
 
                 CellLocation location = new CellLocation(colChar, rowString);
                 EffectiveValue effectiveValue = viewSheetCell.get(location);
-
-                if (effectiveValue != null) {
-                    // Bind the Label's textProperty directly to the effectiveValue's valueProperty
-                    cell.textProperty().bind(effectiveValue.valueProperty().asString());
-                }
-
+                if(effectiveValue != null)
+                    cell.textProperty().bind(effectiveValue.getValueProperty().asString());
                 GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
             }

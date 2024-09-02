@@ -7,12 +7,10 @@ import javafx.beans.property.ObjectProperty;
 import java.io.Serializable;
 
 public interface EffectiveValue extends Serializable {
+    ObjectProperty<Object> getValueProperty();
     ReturnedValueType getCellType();
     Object getValue();
     void setValue(Object value);
-
-    ObjectProperty<Object> valueProperty();
-
 
     void setType(ReturnedValueType returnedValueType);
 

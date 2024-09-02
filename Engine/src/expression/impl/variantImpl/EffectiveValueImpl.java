@@ -6,27 +6,21 @@ import expression.api.EffectiveValue;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.io.Serializable;
-
 import static expression.ReturnedValueType.*;
 
 public class EffectiveValueImpl implements EffectiveValue {
 
     private ReturnedValueType cellType;
-    //private Object value;
     private final ObjectProperty<Object> value;
 
     public EffectiveValueImpl(ReturnedValueType cellType, Object value) {
         this.cellType = cellType;
-       // this.value = value;
         this.value = new SimpleObjectProperty<>(value);
     }
-
     @Override
-    public ObjectProperty<Object> valueProperty() {
+    public ObjectProperty<Object> getValueProperty() {
         return value;
     }
-
     @Override
     public ReturnedValueType getCellType() {
         return cellType;
@@ -39,7 +33,6 @@ public class EffectiveValueImpl implements EffectiveValue {
 
     @Override
     public void setValue(Object value) {
-
         this.value.set(value);
     }
 
@@ -56,6 +49,11 @@ public class EffectiveValueImpl implements EffectiveValue {
         if (isRawType() && cellType != type) {
             throw new IllegalArgumentException("The type " + this + " is a raw type but is not STRING.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }
 

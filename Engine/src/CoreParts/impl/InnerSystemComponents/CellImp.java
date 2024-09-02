@@ -6,6 +6,8 @@ import CoreParts.smallParts.CellLocation;
 import Utility.Exception.CellCantBeEvaluated;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
