@@ -98,6 +98,11 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public boolean isCellPresent(CellLocation location) {return sheetCell.containsKey(location);}
 
     @Override
+    public Map<CellLocation, EffectiveValue> getViewSheetCell() {
+        return Map.of();
+    }
+
+    @Override
     public Map<CellLocation, Cell> getSheetCell() {return sheetCell;}
 
     @Override

@@ -188,7 +188,7 @@ public class TerminalSheet implements Displayer {
 
     @Override
     public void display(DtoSheetCell sheetCell) {
-        displayWithVersion(sheetCell, sheetCell.getVersionNumber());
+        displayWithVersion(sheetCell, sheetCell.getLatestVersion());
     }
 
     @Override
@@ -197,8 +197,8 @@ public class TerminalSheet implements Displayer {
     }
 
     private void displayWithVersion(DtoSheetCell sheetCell, int versionNumber) {
-        int numberOfRows = sheetCell.getCurrentNumberOfRows();
-        int numberOfCols = sheetCell.getCurrentNumberOfCols();
+        int numberOfRows = sheetCell.getNumberOfRows();
+        int numberOfCols = sheetCell.getNumberOfColumns();
         int cellLength = sheetCell.getCellLength();
         int cellWidth = sheetCell.getCellWidth();
         String sheetName = sheetCell.getName();

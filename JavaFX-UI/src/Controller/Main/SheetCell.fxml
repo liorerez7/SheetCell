@@ -20,7 +20,7 @@
           <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <fx:include fx:id="menuBar" source="../MenuBar/MenuBar.fxml" GridPane.columnSpan="2" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
+            <fx:include fx:id="header" source="../MenuBar/MenuBar.fxml" GridPane.columnSpan="2" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
             <fx:include fx:id="actionLine" maxWidth="1.7976931348623157E308" source="../actionLine/ActionLine.fxml" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
          </children>
       </GridPane>

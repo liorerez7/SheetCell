@@ -2,13 +2,15 @@ package CoreParts.impl.DtoComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
+import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
+import Utility.RefDependencyGraph;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 
 import java.util.*;
 
-public class DtoSheetCell {
+public class DtoSheetCell implements SheetCellViewOnly {
 
     private Map<CellLocation,EffectiveValue> sheetCell = new HashMap<>();
     private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
@@ -28,14 +30,8 @@ public class DtoSheetCell {
 
             EffectiveValue effectiveValue;
 
-            //if(entry.getValue().getActualValue().getCellType() != ReturnedValueType.EMPTY) {
-                effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
-           // }
-          //  else{
-               /// effectiveValue = entry.getValue().getActualValue();
-        //    }
+            effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
 
-           //CellUtils.formatDoubleValue(effectiveValue);
             sheetCell.put(entry.getKey(), effectiveValue);
         }
         versionToCellsChanges = sheetCellImp.getVersions();
@@ -71,7 +67,35 @@ public class DtoSheetCell {
        }
     }
 
-    public Map<CellLocation, EffectiveValue> getSheetCell() {
+    @Override
+    public Cell getCell(CellLocation location) {
+        return null;
+    }
+
+    @Override
+    public int getActiveCellsCount() {
+        return 0;
+    }
+
+
+    /* NEED TO CHANGE! */
+    @Override
+    public Map<CellLocation, Cell> getSheetCell() {
+        return null;
+    }
+
+    @Override
+    public RefDependencyGraph getGraph() {
+        return null;
+    }
+
+    @Override
+    public boolean isCellPresent(CellLocation location) {
+        return false;
+    }
+
+    @Override
+    public Map<CellLocation, EffectiveValue> getViewSheetCell() {
         return sheetCell;
     }
 
@@ -88,24 +112,28 @@ public class DtoSheetCell {
         return currentCellWidth;
     }
 
-    public int getCellLength() {
-        return currentCellLength;
-    }
-
-    public int getCurrentNumberOfRows() {
+    @Override
+    public int getNumberOfRows() {
         return currentNumberOfRows;
     }
 
-    public int getCurrentNumberOfCols() {
+    @Override
+    public int getNumberOfColumns() {
         return currentNumberOfCols;
     }
 
-    public int getVersionNumber() {
+    @Override
+    public String getSheetName() {
+        return name;
+    }
+
+    @Override
+    public int getLatestVersion() {
         return versionNumber;
     }
 
-    public String getName() {
-        return name;
+    public int getCellLength() {
+        return currentCellLength;
     }
 
     public EffectiveValue getEffectiveValue(CellLocation cellLocation) {

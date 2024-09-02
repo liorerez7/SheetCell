@@ -17,7 +17,7 @@ public class DisplayRequestedVersion extends SheetEngineCommand {
 
     @Override
     public void execute() throws Exception {
-        System.out.println("lastest version: " + engine.getSheetCell().getVersionNumber() + "\n");
+        System.out.println("lastest version: " + engine.getSheetCell().getLatestVersion() + "\n");
 
         Map<Integer, Map<CellLocation, EffectiveValue>> mapOfMaps = engine.getSheetCell().getVersionToCellsChanges();
         printVersionData(mapOfMaps);

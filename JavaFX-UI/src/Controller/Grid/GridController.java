@@ -1,6 +1,7 @@
 package Controller.Grid;
 
 import Controller.Main.MainController;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,7 +16,13 @@ public class GridController {
     private MainController mainController;
 
     @FXML
-    public void initializeGrid(int numRows, int numCols) {
+    public void initializeGrid(DtoSheetCell sheetCell) {
+
+
+        int numCols = sheetCell.getNumberOfColumns();
+        int numRows = sheetCell.getNumberOfRows();
+
+
         // Clear existing constraints and children
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();

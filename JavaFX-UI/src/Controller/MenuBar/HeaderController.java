@@ -10,10 +10,11 @@ import javafx.stage.Stage;
 import java.io.File;
 
 
-public class MenuBarController {
+public class HeaderController {
 
     @FXML
-    private MenuBar fileMenuBar;
+    private MenuBar menuBar;
+
     @FXML
     private MainController MainController;
 
@@ -24,14 +25,14 @@ public class MenuBarController {
     @FXML
     void openFileChooser(ActionEvent event) {
         // Retrieve the current stage
-        Stage stage = (Stage) fileMenuBar.getScene().getWindow();
+        Stage stage = (Stage) menuBar.getScene().getWindow();
 
         // Call the file chooser and get the selected file
         File selectedFile = openXMLFileChooser(stage);
 
         // Pass the selected file to the MainController
         if (selectedFile != null) {
-            MainController.openFileChooser(selectedFile.getAbsolutePath());
+            MainController.InitlizeGridBasedOnXML(selectedFile.getAbsolutePath());
         } else {
             System.out.println("File selection canceled.");
         }
