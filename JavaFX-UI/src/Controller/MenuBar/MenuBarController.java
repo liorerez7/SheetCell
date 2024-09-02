@@ -11,8 +11,9 @@ import java.io.File;
 
 
 public class MenuBarController {
+
     @FXML
-    private MenuBar menuBar;
+    private MenuBar fileMenuBar;
     @FXML
     private MainController MainController;
 
@@ -23,7 +24,7 @@ public class MenuBarController {
     @FXML
     void openFileChooser(ActionEvent event) {
         // Retrieve the current stage
-        Stage stage = (Stage) menuBar.getScene().getWindow();
+        Stage stage = (Stage) fileMenuBar.getScene().getWindow();
 
         // Call the file chooser and get the selected file
         File selectedFile = openXMLFileChooser(stage);

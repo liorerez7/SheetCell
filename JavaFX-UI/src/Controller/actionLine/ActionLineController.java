@@ -7,7 +7,9 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.layout.GridPane;
 
 public class ActionLineController {
+
     MainController MainController;
+
     @FXML
     private GridPane ActionLineGrid;
 

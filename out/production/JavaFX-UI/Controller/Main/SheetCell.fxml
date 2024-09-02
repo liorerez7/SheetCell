@@ -21,7 +21,7 @@
         </rowConstraints>
          <children>
             <fx:include fx:id="menuBar" source="../MenuBar/MenuBar.fxml" GridPane.columnSpan="2" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
-            <fx:include fx:id="actionLine" source="../actionLine/ActionLine.fxml" GridPane.rowIndex="2" />
+            <fx:include fx:id="actionLine" maxWidth="1.7976931348623157E308" source="../actionLine/ActionLine.fxml" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
          </children>
       </GridPane>
    </top>
@@ -47,16 +47,4 @@
    <center>
       <fx:include fx:id="grid" source="../Grid/Grid.fxml" />
    </center>
-   <bottom>
-      <GridPane prefHeight="91.0" prefWidth="1005.0" BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="60.0" minHeight="7.0" prefHeight="38.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-      </GridPane>
-   </bottom>
 </BorderPane>
