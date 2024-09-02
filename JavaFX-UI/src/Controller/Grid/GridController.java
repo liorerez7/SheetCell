@@ -2,6 +2,13 @@ package Controller.Grid;
 
 import Controller.Main.MainController;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
+import CoreParts.smallParts.CellLocation;
+import expression.api.EffectiveValue;
+import javafx.beans.Observable;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -11,15 +18,19 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import java.util.HashMap;
-
+import java.util.Map;
 public class GridController {
     @FXML
     private GridPane grid;
     private MainController mainController;
     @FXML
     public void initializeGrid(DtoSheetCell sheetCell) {
+
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
+        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
+
+
 
         // Clear existing constraints and children
         grid.getColumnConstraints().clear();
@@ -57,20 +68,27 @@ public class GridController {
             header.setId("header-label");
             grid.add(header, 0, row);
         }
-
-        // Add cells with Label
+// Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label(); // Empty Label for each cell
                 cell.setId("cell-label");
-//                grid.getStylesheets().add(getClass().getResource("").toExternalForm());
-//                grid.getStyleClass().add("grid");
+
                 cell.setStyle(
                         "-fx-background-color: white; " +      // White background for cells
                                 "-fx-border-color: black; " +          // Black border for cells
                                 "-fx-border-width: 1px; " +            // 1px border width for cells
-                                "-fx-alignment: center; "              // Center alignment for cells
+                                "-fx-alignment: center; "// Center alignment for cells
                 );
+
+                // Bind the Label's textProperty to the EffectiveValue
+                char colChar = (char) ('A' + col - 1);
+                String rowString = String.valueOf(row);
+
+                CellLocation location = new CellLocation(colChar, rowString);
+                EffectiveValue effectiveValue = viewSheetCell.get(location);
+                if(effectiveValue != null)
+                    cell.textProperty().bind(effectiveValue.getValueProperty().asString());
                 GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
             }

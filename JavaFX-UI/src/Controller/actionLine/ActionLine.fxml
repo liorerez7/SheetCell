@@ -23,18 +23,18 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Label prefHeight="28.0" prefWidth="72.0" styleClass="LabelsOfUserInterfaceSection">
+        <Label fx:id="cellidLabel" prefHeight="28.0" prefWidth="72.0" styleClass="LabelsOfUserInterfaceSection">
          <GridPane.margin>
             <Insets left="5.0" />
          </GridPane.margin></Label>
         <Label prefHeight="28.0" prefWidth="104.0" styleClass="LabelsOfUserInterfaceSection" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-        <Button fx:id="UpdateCellButton" mnemonicParsing="false" prefWidth="113.0" styleClass="ModernButton" text="update Cell" GridPane.columnIndex="3">
+        <Button mnemonicParsing="false" onAction="#UpdateCell" prefWidth="113.0" styleClass="ModernButton" text="update Cell" GridPane.columnIndex="3">
          <GridPane.margin>
             <Insets left="20.0" />
          </GridPane.margin>
       </Button>
         <Label text="last version" GridPane.columnIndex="4" />
-        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" styleClass="ModernButton" text="version" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" prefHeight="49.0" prefWidth="125.0" styleClass="ModernButton" text="version" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
             <items>
                 <MenuItem mnemonicParsing="false" styleClass="LabelsOfUserInterfaceSection" text="Action 1" />
                 <MenuItem mnemonicParsing="false" styleClass="LabelsOfUserInterfaceSection" text="Action 2" />
@@ -43,6 +43,6 @@
             <Insets right="10.0" />
          </GridPane.margin>
         </MenuButton>
-      <TextField prefHeight="25.0" prefWidth="193.0" GridPane.columnIndex="2" />
+      <TextField fx:id="newValueText" prefHeight="25.0" prefWidth="193.0" GridPane.columnIndex="2" />
     </children>
 </GridPane>

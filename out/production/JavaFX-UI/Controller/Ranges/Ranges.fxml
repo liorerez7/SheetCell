@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="200.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
+<StackPane prefHeight="192.0" prefWidth="89.0" styleClass="stack-pane" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
    <children>
-      <Button mnemonicParsing="false" text="ranges" />
+      <VBox prefHeight="200.0" prefWidth="100.0" styleClass="UserInterfaceSection">
+         <children>
+            <Button mnemonicParsing="false" text="ranges" />
+         </children>
+      </VBox>
    </children>
-</VBox>
+</StackPane>

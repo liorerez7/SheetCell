@@ -6,7 +6,9 @@ import Controller.MenuBar.HeaderController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
+import expression.impl.stringFunction.Str;
 import javafx.fxml.FXML;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.awt.*;
@@ -15,13 +17,12 @@ public class MainController {
     Engine engine;
     @FXML
     private HeaderController headerController;
-    @FXML
-    private VBox header;
 
-    @FXML
-    private ActionLineController actionLineController;
-    @FXML
-    private MenuBar menuBar;
+    @FXML private MenuBar menuBar;
+    @FXML private VBox header;
+
+    @FXML private ActionLineController actionLineController;
+    @FXML private GridPane actionLine;
     @FXML
     private GridController gridController;
     @FXML
@@ -29,7 +30,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        engine = new EngineImpl();
         customizeController.setMainController(this);
         headerController.setMainController(this);
         actionLineController.setMainController(this);
@@ -44,10 +44,19 @@ public class MainController {
         }catch (Exception e){
             e.printStackTrace();
         }
-
         gridController.initializeGrid(engine.getSheetCell());
+    }
 
+    public void UpdateCell(String text, String newValue) {
+        try {
+            engine.updateCell(newValue, text.charAt(0), text.substring(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void setEngine(EngineImpl engine) {
+        this.engine = engine;
     }
 }
 
