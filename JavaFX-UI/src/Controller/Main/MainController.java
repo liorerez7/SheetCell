@@ -6,9 +6,11 @@ import Controller.MenuBar.HeaderController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Cell;
 import CoreParts.api.Engine;
+import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
+import expression.api.EffectiveValue;
 import expression.impl.stringFunction.Str;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.IntegerProperty;
@@ -62,10 +64,10 @@ public class MainController {
         boolean isCellPresent = engine.getSheetCell().isCellPresent(CellLocationFactory.fromCellId(text));
         try {
             engine.updateCell(newValue, text.charAt(0), text.substring(1));
-            if (isCellPresent) {
+            if (!isCellPresent) {
                 Label label = cellLocationToLabel.get(CellLocationFactory.fromCellId(text));
-                Cell cell = engine.getSheetCell().getCell(CellLocationFactory.fromCellId(text));
-                StringBinding string = cell.getActualValue().getValueProperty().asString();
+                EffectiveValue effectiveValue = engine.getSheetCell().getViewSheetCell().get(CellLocationFactory.fromCellId(text));
+                StringBinding string = effectiveValue.getValueProperty().asString();
                 label.textProperty().bind(string);
             }
         } catch (Exception e) {

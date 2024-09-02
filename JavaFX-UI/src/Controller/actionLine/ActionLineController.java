@@ -29,7 +29,7 @@ public class ActionLineController {
     void UpdateCell(ActionEvent event) {
         String newValue = newValueText.getText();
         String cellId = cellidLabel.getText();
-        String id = "B2";
+        String id = "A1";
         mainController.UpdateCell(id , newValue);
     }
 
