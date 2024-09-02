@@ -16,7 +16,7 @@ public class MainController {
     @FXML
     private ActionLineController actionLineController;
     @FXML
-    private MenuBar MenuBar;
+    private MenuBar menuBar;
     @FXML
     private GridController gridController;
     @FXML
@@ -29,6 +29,10 @@ public class MainController {
         gridController.setMainController(this);
         gridController.initializeGrid(20, 20);
     }
-    //;el;fdke
+
+    public void openFileChooser(String absolutePath) {
+
+
+    }
 }
 
