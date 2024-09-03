@@ -43,7 +43,7 @@ public class MainController {
 
         try{
             engine.readSheetCellFromXML(absolutePath);
-
+            headerController.FileHasBeenLoaded(absolutePath);
         }catch (Exception e){
             e.printStackTrace();
         }
