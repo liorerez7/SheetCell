@@ -27,6 +27,13 @@ public class GridController {
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
+
+        int cellWidth = sheetCell.getCellWidth();
+        int cellLength = sheetCell.getCellLength();
+
+        cellWidth = cellWidth * 10;
+        cellLength = cellLength * 13;
+
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         // Clear existing constraints and children
         grid.getColumnConstraints().clear();
@@ -36,8 +43,8 @@ public class GridController {
         // Create column constraints
         for (int i = 0; i < numCols + 1; i++) { // +1 for header column
             ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setMinWidth(30); // Adjust width for better visibility
-            colConstraints.setPrefWidth(100);
+            colConstraints.setMinWidth(cellWidth); // Adjust width for better visibility
+            colConstraints.setPrefWidth(cellWidth);
             colConstraints.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
             grid.getColumnConstraints().add(colConstraints);
         }
@@ -45,8 +52,8 @@ public class GridController {
         // Create row constraints
         for (int i = 0; i < numRows + 1; i++) { // +1 for header row
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setMinHeight(30); // Adjust height for better visibility
-            rowConstraints.setPrefHeight(30);
+            rowConstraints.setMinHeight(cellLength); // Adjust height for better visibility
+            rowConstraints.setPrefHeight(cellLength);
             rowConstraints.setVgrow(javafx.scene.layout.Priority.SOMETIMES);
             grid.getRowConstraints().add(rowConstraints);
         }
@@ -68,6 +75,9 @@ public class GridController {
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label(); // Empty Label for each cell
+
+                cell.setMinSize(cellWidth, cellLength); // Adjust size for better visibility
+                cell.setPrefSize(cellWidth, cellLength);
 
                 cell.setStyle(
                         "-fx-background-color: white; " +             // White background for cells
