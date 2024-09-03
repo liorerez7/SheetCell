@@ -20,39 +20,50 @@ public class GridController {
     private GridPane grid;
     private MainController mainController;
     @FXML
-    private Map<CellLocation, StringProperty> cellLocToProperties = new HashMap<>();
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
 
-    public void initializeGrid(DtoSheetCell sheetCell) {
+    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
-        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
 
+        int cellWidth = sheetCell.getCellWidth();
+        int cellLength = sheetCell.getCellLength();
+
+        cellWidth = cellWidth * 10;
+        cellLength = cellLength * 13;
+
+        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         // Clear existing constraints and children
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
         grid.getChildren().clear();
 
-        // Create column constraints with no gaps
+        // Create column constraints
         for (int i = 0; i < numCols + 1; i++) { // +1 for header column
             ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setPrefWidth(100); // Adjust width as needed
-            colConstraints.setMinWidth(30);
+            colConstraints.setMinWidth(cellWidth); // Adjust width for better visibility
+            colConstraints.setPrefWidth(cellWidth);
+            colConstraints.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
             grid.getColumnConstraints().add(colConstraints);
         }
 
-        // Create row constraints with no gaps
+        // Create row constraints
         for (int i = 0; i < numRows + 1; i++) { // +1 for header row
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPrefHeight(30); // Adjust height as needed
-            rowConstraints.setMinHeight(30);
+            rowConstraints.setMinHeight(cellLength); // Adjust height for better visibility
+            rowConstraints.setPrefHeight(cellLength);
+            rowConstraints.setVgrow(javafx.scene.layout.Priority.SOMETIMES);
             grid.getRowConstraints().add(rowConstraints);
         }
 
         // Add column headers
         for (int col = 1; col <= numCols; col++) {
+
             Label header = new Label(String.valueOf((char) ('A' + col - 1)));
+
+            setLabelSize(header, cellWidth, cellLength);
+
             header.getStyleClass().add("header-label");
             grid.add(header, col, 0);
         }
@@ -60,6 +71,9 @@ public class GridController {
         // Add row headers
         for (int row = 1; row <= numRows; row++) {
             Label header = new Label(String.valueOf(row));
+
+            setLabelSize(header, cellWidth, cellLength);
+
             header.getStyleClass().add("header-label");
             grid.add(header, 0, row);
         }
@@ -70,6 +84,9 @@ public class GridController {
                 Label cell = new Label();
                 cell.getStyleClass().add("cell-label");
 
+                setLabelSize(cell, cellWidth, cellLength);
+
+                // Bind the Label's textProperty to the EffectiveValue
                 char colChar = (char) ('A' + col - 1);
                 String rowString = String.valueOf(row);
                 cell.setId(colChar + rowString);
@@ -82,12 +99,18 @@ public class GridController {
 
                 cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
 
-                cellLocationToLabel.put(location, cell);
+
+                cellLocationToLabel.put(location,cell);
+                //GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
             }
         }
+        return cellLocationToLabel;
+    }
 
-        mainController.setCellsLablesMap(cellLocationToLabel);
+    private void setLabelSize(Label header, int cellWidth, int cellLength) {
+        header.setMinSize(cellWidth, cellLength); // Adjust size for better visibility
+        header.setPrefSize(cellWidth, cellLength);
     }
 
     private void onCellClicked(String location) {
@@ -97,4 +120,5 @@ public class GridController {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
+
 }

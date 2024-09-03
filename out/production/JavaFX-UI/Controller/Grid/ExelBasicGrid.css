@@ -4,8 +4,8 @@
     -fx-background-color: lightgray;
     -fx-border-color: black;
     -fx-border-width: 1px;
-    -fx-pref-width: 100px;  /* Fixed width */
-    -fx-pref-height: 30px;  /* Fixed height */
+    /*-fx-pref-width: 100px;  !* Fixed width *!*/
+    /*-fx-pref-height: 30px;  !* Fixed height *!*/
 }
 
 /* Style for the cell labels */
@@ -14,15 +14,15 @@
     -fx-border-color: black;
     -fx-border-width: 1px;
     -fx-alignment: center;
-    -fx-pref-width: 100px;  /* Fixed width */
-    -fx-pref-height: 30px;  /* Fixed height */
+    /*-fx-pref-width: 100px;  !* Fixed width *!*/
+    /*-fx-pref-height: 30px;  !* Fixed height *!*/
     -fx-padding: 5px;  /* Padding to make the clickable area larger */
 
     -fx-wrap-text: false;  /* Prevent text wrapping */
     -fx-text-alignment: center;
-    -fx-max-width: 100px;  /* Ensure that max width is also fixed */
-    -fx-max-height: 30px;  /* Ensure that max height is also fixed */
+    /*-fx-max-width: 100px;  !* Ensure that max width is also fixed *!*/
+    /*-fx-max-height: 30px;  !* Ensure that max height is also fixed *!*/
 
-    -fx-min-width: 100px;  /* Ensure that min width is also fixed */
-    -fx-min-height: 30px;  /* Ensure that min height is also fixed */
+    /*-fx-min-width: 100px;  !* Ensure that min width is also fixed *!*/
+    /*-fx-min-height: 30px;  !* Ensure that min height is also fixed *!*/
 }

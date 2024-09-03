@@ -67,4 +67,10 @@
     -fx-border-width: 1px;       /* Width of the border around cells */
     -fx-alignment: center;
 }
+.faded {
+    -fx-opacity: 0.5;
+}
+.normalOpacity {
+    -fx-opacity: 1;
+}
 
