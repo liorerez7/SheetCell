@@ -6,10 +6,7 @@ import CoreParts.smallParts.CellLocation;
 import expression.api.EffectiveValue;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -23,10 +20,9 @@ public class GridController {
     private GridPane grid;
     private MainController mainController;
     @FXML
-    private Map<CellLocation, StringProperty> cellLocToProperties = new HashMap<>();
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
 
-    public void initializeGrid(DtoSheetCell sheetCell) {
+    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -63,7 +59,11 @@ public class GridController {
 
         // Add column headers
         for (int col = 1; col <= numCols; col++) {
+
             Label header = new Label(String.valueOf((char) ('A' + col - 1)));
+
+            setLabelSize(header, cellWidth, cellLength);
+
             header.getStyleClass().add("header-label");
             grid.add(header, col, 0);
         }
@@ -71,6 +71,9 @@ public class GridController {
         // Add row headers
         for (int row = 1; row <= numRows; row++) {
             Label header = new Label(String.valueOf(row));
+
+            setLabelSize(header, cellWidth, cellLength);
+
             header.getStyleClass().add("header-label");
             grid.add(header, 0, row);
         }
@@ -81,15 +84,7 @@ public class GridController {
                 Label cell = new Label();
                 cell.getStyleClass().add("cell-label");
 
-                cell.setMinSize(cellWidth, cellLength); // Adjust size for better visibility
-                cell.setPrefSize(cellWidth, cellLength);
-
-                cell.setStyle(
-                        "-fx-background-color: white; " +             // White background for cells
-                                "-fx-border-color: black; " +          // Black border for cells
-                                "-fx-border-width: 1px; " +            // 1px border width for cells
-                                "-fx-alignment: center; "// Center alignment for cells
-                );
+                setLabelSize(cell, cellWidth, cellLength);
 
                 // Bind the Label's textProperty to the EffectiveValue
                 char colChar = (char) ('A' + col - 1);
@@ -106,11 +101,16 @@ public class GridController {
 
 
                 cellLocationToLabel.put(location,cell);
-                GridPane.setConstraints(cell, col, row);
+                //GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
             }
         }
-        mainController.setCellsLablesMap(cellLocationToLabel);
+        return cellLocationToLabel;
+    }
+
+    private void setLabelSize(Label header, int cellWidth, int cellLength) {
+        header.setMinSize(cellWidth, cellLength); // Adjust size for better visibility
+        header.setPrefSize(cellWidth, cellLength);
     }
 
     private void onCellClicked(String location) {
