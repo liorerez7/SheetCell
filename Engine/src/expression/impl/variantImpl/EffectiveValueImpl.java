@@ -11,19 +11,16 @@ import static expression.ReturnedValueType.*;
 public class EffectiveValueImpl implements EffectiveValue {
 
     private ReturnedValueType cellType;
-    private final ObjectProperty<Object> value;
+    private Object value;
 
     public EffectiveValueImpl(ReturnedValueType cellType, Object value) {
         this.cellType = cellType;
-        this.value = new SimpleObjectProperty<>(value);
+        this.value = value;
     }
 
 
 
-    @Override
-    public ObjectProperty<Object> getValueProperty() {
-        return value;
-    }
+
     @Override
     public ReturnedValueType getCellType() {
         return cellType;
@@ -31,12 +28,12 @@ public class EffectiveValueImpl implements EffectiveValue {
 
     @Override
     public Object getValue() {
-        return value.get();
+        return value;
     }
 
     @Override
     public void setValue(Object value) {
-        this.value.set(value);
+        this.value = value;
     }
 
     @Override

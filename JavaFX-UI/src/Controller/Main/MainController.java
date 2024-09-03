@@ -4,19 +4,9 @@ import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
 import Controller.MenuBar.HeaderController;
 import Controller.actionLine.ActionLineController;
-import CoreParts.api.Cell;
 import CoreParts.api.Engine;
-import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
-import expression.api.EffectiveValue;
-import expression.impl.stringFunction.Str;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -61,15 +51,10 @@ public class MainController {
     }
 
     public void UpdateCell(String text, String newValue) {
-        boolean isCellPresent = engine.getSheetCell().isCellPresent(CellLocationFactory.fromCellId(text));
         try {
             engine.updateCell(newValue, text.charAt(0), text.substring(1));
-            if (!isCellPresent) {
-                Label label = cellLocationToLabel.get(CellLocationFactory.fromCellId(text));
-                EffectiveValue effectiveValue = engine.getSheetCell().getViewSheetCell().get(CellLocationFactory.fromCellId(text));
-                StringBinding string = effectiveValue.getValueProperty().asString();
-                label.textProperty().bind(string);
-            }
+            gridController.initializeGrid(engine.getSheetCell());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,6 +66,10 @@ public class MainController {
 
     public void setCellsLablesMap(Map<CellLocation,Label> cellLocationToLabel) {
         this.cellLocationToLabel = cellLocationToLabel;
+    }
+
+    public void cellClicked(String location) {
+        actionLineController.cellClicked(location);
     }
 }
 

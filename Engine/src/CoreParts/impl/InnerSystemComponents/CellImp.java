@@ -31,10 +31,10 @@ public class CellImp implements Cell ,Serializable
 
 public void setActualValue(SheetCellViewOnly sheet) {
     try{
-        EffectiveValue effectiveValue1 = effectiveValue.evaluate(sheet);
-        actualValue.setValue(effectiveValue1.getValue());
-        actualValue.setType(effectiveValue1.getCellType());
-       // actualValue = effectiveValue.evaluate(sheet);
+//        EffectiveValue effectiveValue1 = effectiveValue.evaluate(sheet);
+//        actualValue.setValue(effectiveValue1.getValue());
+//        actualValue.setType(effectiveValue1.getCellType());
+       actualValue = effectiveValue.evaluate(sheet);
     }catch (Exception e){
         throw new CellCantBeEvaluated(this);
     }
@@ -42,9 +42,9 @@ public void setActualValue(SheetCellViewOnly sheet) {
 
 
 public void setActualValue(EffectiveValue effectiveValue) {
-    actualValue.setValue(effectiveValue.getValue());
-    actualValue.setType(effectiveValue.getCellType());
-    //this.actualValue = effectiveValue;
+//    actualValue.setValue(effectiveValue.getValue());
+//    actualValue.setType(effectiveValue.getCellType());
+    this.actualValue = effectiveValue;
 }
 
     @Override

@@ -68,7 +68,6 @@ public class GridController {
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label(); // Empty Label for each cell
-                cell.setId("cell-label");
 
                 cell.setStyle(
                         "-fx-background-color: white; " +             // White background for cells
@@ -80,11 +79,17 @@ public class GridController {
                 // Bind the Label's textProperty to the EffectiveValue
                 char colChar = (char) ('A' + col - 1);
                 String rowString = String.valueOf(row);
+                cell.setId(colChar + rowString);
+
                 CellLocation location = new CellLocation(colChar, rowString);
                 EffectiveValue effectiveValue = viewSheetCell.get(location);
                 if (effectiveValue != null) {
                     cell.setText(effectiveValue.getValue().toString());
                 }
+
+                cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
+
+
                 cellLocationToLabel.put(location,cell);
                 GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
@@ -92,10 +97,13 @@ public class GridController {
         }
         mainController.setCellsLablesMap(cellLocationToLabel);
     }
+
+    private void onCellClicked(String location) {
+        mainController.cellClicked(location);
+    }
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
-    public void aCellHasBeenUpdated(EffectiveValue effectiveValue) {
 
-    }
 }

@@ -201,7 +201,7 @@ public class TerminalSheet implements Displayer {
         int numberOfCols = sheetCell.getNumberOfColumns();
         int cellLength = sheetCell.getCellLength();
         int cellWidth = sheetCell.getCellWidth();
-        String sheetName = sheetCell.getName();
+        String sheetName = sheetCell.getSheetName();
 
         // Calculate the total width of the table
         int tableWidth = calculateTableWidth(numberOfCols, cellWidth);

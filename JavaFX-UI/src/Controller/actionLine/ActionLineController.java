@@ -1,8 +1,14 @@
 package Controller.actionLine;
 
 import Controller.Main.MainController;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -11,26 +17,51 @@ import javafx.scene.layout.GridPane;
 
 public class ActionLineController {
 
-    MainController mainController;
+    private MainController mainController;
+    private BooleanProperty isCellSelected;
 
     @FXML private GridPane actionLine;
 
     @FXML private Label cellidLabel;
 
-    @FXML private Button UpdateCellButton;
+    @FXML private Button updateCellButton;
 
     @FXML private MenuButton VersionScroller;
 
     @FXML private TextField newValueText;
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
+
+
+
+    public ActionLineController() {
+
+        isCellSelected = new SimpleBooleanProperty(false);
+        // Bind the disable property of the TextField and Button to the isCellSelected property
+
+    }
+
+
+    @FXML
+    public void initialize() {
+        newValueText.disableProperty().bind(isCellSelected.not());
+        updateCellButton.disableProperty().bind(isCellSelected.not());
+    }
+
+
+
     @FXML
     void UpdateCell(ActionEvent event) {
         String newValue = newValueText.getText();
         String cellId = cellidLabel.getText();
-        String id = "A1";
-        mainController.UpdateCell(id , newValue);
+        mainController.UpdateCell(cellId , newValue);
     }
 
+    public void cellClicked(String location) {
+
+        cellidLabel.setText(location);
+        isCellSelected.setValue(true);
+    }
 }
