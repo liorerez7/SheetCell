@@ -4,6 +4,7 @@ import Controller.Main.MainController;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import expression.api.EffectiveValue;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
@@ -20,12 +21,13 @@ public class GridController {
     private GridPane grid;
     private MainController mainController;
     @FXML
+    private  Map<CellLocation, StringProperty> cellLocToProperties = new HashMap<>();
+    Map<CellLocation,Label> cellLocationToLabel = new HashMap<>();
     public void initializeGrid(DtoSheetCell sheetCell) {
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
-        Map<CellLocation,Label> cellLocationToLabel = new HashMap<>();
         // Clear existing constraints and children
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
@@ -69,7 +71,7 @@ public class GridController {
                 cell.setId("cell-label");
 
                 cell.setStyle(
-                        "-fx-background-color: white; " +      // White background for cells
+                        "-fx-background-color: white; " +             // White background for cells
                                 "-fx-border-color: black; " +          // Black border for cells
                                 "-fx-border-width: 1px; " +            // 1px border width for cells
                                 "-fx-alignment: center; "// Center alignment for cells
@@ -79,11 +81,11 @@ public class GridController {
                 char colChar = (char) ('A' + col - 1);
                 String rowString = String.valueOf(row);
                 CellLocation location = new CellLocation(colChar, rowString);
-                cellLocationToLabel.put(location,cell);
                 EffectiveValue effectiveValue = viewSheetCell.get(location);
                 if (effectiveValue != null) {
-                    cell.textProperty().bind(effectiveValue.getValueProperty().asString());
+                    cell.setText(effectiveValue.getValue().toString());
                 }
+                cellLocationToLabel.put(location,cell);
                 GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
             }
@@ -92,5 +94,8 @@ public class GridController {
     }
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+    public void aCellHasBeenUpdated(EffectiveValue effectiveValue) {
+
     }
 }
