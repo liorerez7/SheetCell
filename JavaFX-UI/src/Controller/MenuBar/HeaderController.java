@@ -1,22 +1,37 @@
 package Controller.MenuBar;
 
 import Controller.Main.MainController;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.security.PublicKey;
 
 
 public class HeaderController {
 
     @FXML
     private MenuBar menuBar;
-
+    @FXML
+    private Label path;
     @FXML
     private MainController MainController;
+    private StringProperty pathProperty;
+    @FXML public void initialize() {
+        path.textProperty().bind(pathProperty);
+    }
+    public HeaderController() {
+        pathProperty = new SimpleStringProperty("");
+    }
+    public void FileHasBeenLoaded(String absolutePath) {
+        pathProperty.setValue(absolutePath);
+    }
 
     public void setMainController(MainController mainController) {
         this.MainController = mainController;

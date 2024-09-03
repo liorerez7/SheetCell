@@ -16,15 +16,18 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 public class GridController {
     @FXML
     private GridPane grid;
     private MainController mainController;
     @FXML
-    private  Map<CellLocation, StringProperty> cellLocToProperties = new HashMap<>();
-    Map<CellLocation,Label> cellLocationToLabel = new HashMap<>();
-    public void initializeGrid(DtoSheetCell sheetCell) {
+    private Map<CellLocation, StringProperty> cellLocToProperties = new HashMap<>();
+    private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
 
+    public void initializeGrid(DtoSheetCell sheetCell) {
+        grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
 
@@ -61,20 +64,22 @@ public class GridController {
         // Add column headers
         for (int col = 1; col <= numCols; col++) {
             Label header = new Label(String.valueOf((char) ('A' + col - 1)));
-            header.setId("header-label");
+            header.getStyleClass().add("header-label");
             grid.add(header, col, 0);
         }
 
         // Add row headers
         for (int row = 1; row <= numRows; row++) {
             Label header = new Label(String.valueOf(row));
-            header.setId("header-label");
+            header.getStyleClass().add("header-label");
             grid.add(header, 0, row);
         }
-// Add cells with Label
+
+        // Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
-                Label cell = new Label(); // Empty Label for each cell
+                Label cell = new Label();
+                cell.getStyleClass().add("cell-label");
 
                 cell.setMinSize(cellWidth, cellLength); // Adjust size for better visibility
                 cell.setPrefSize(cellWidth, cellLength);

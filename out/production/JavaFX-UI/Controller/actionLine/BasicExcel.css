@@ -1,6 +1,6 @@
 /* Style for the StackPane */
 .Background {
-    -fx-background-color: #D3D3D3; /* Light gray background color */
+    -fx-background-color: #ebebeb; /* Light gray background color */
     -fx-padding: 10; /* Padding creates space between the StackPane and the GridPane */
 }
 
