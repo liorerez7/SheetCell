@@ -1,7 +1,7 @@
 .header-label {
     -fx-font-weight: bold;
     -fx-alignment: center;
-    -fx-background-color: lightgray;
+    -fx-background-color: #e4e4e4;
     -fx-border-color: black;
     -fx-border-width: 1px;
     /*-fx-pref-width: 100px;  !* Fixed width *!*/
