@@ -166,7 +166,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         updateEffectedByAndOnLists();
 
 
-
         cells.forEach(cell ->{
 
             Object obj = cell.getActualValue().getValue();
