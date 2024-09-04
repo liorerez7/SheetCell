@@ -10,7 +10,6 @@
     -fx-border-radius: 10; /* Rounded corners */
 }
 .LabelsOfUserInterfaceSection {
-
     -fx-text-fill: #000000; /* White text color */
     -fx-font-family: 'Arial'; /* Modern, clean font */
     -fx-font-size: 14px; /* Suitable font size */

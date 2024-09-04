@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Model {
-
-
     private final Map<Label, StringProperty> cellLebalToProperties = new HashMap<>();
     private DtoSheetCell sheetCell;
     private BooleanProperty isCellLebalClicked;
@@ -35,17 +33,14 @@ public class Model {
 
     public void setCellLabelToProperties(Map<CellLocation,Label> cellLocationLabelMap) {
 
-
         cellLocationLabelMap.forEach((cellLocation, label) -> {
             cellLebalToProperties.put(label, new SimpleStringProperty());
 
         });
 
     }
-
     public void bindCellLebelToProperties() {
         cellLebalToProperties.forEach((label, property) -> {
-
             label.textProperty().bind(property);
 
         });

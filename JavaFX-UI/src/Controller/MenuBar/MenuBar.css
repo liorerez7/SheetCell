@@ -1,0 +1,39 @@
+.menu-bar {
+    -fx-background-color: #f0f0f0;  /* Light grey background */
+    -fx-border-color: #dcdcdc;      /* Slightly darker grey border */
+    -fx-border-width: 0 0 1 0;      /* Border only on the bottom */
+    -fx-padding: 5px 10px;          /* Padding to space out menu items */
+}
+
+.menu-bar .menu {
+    -fx-background-color: transparent; /* Transparent background for menu items */
+    -fx-text-fill: #333333;            /* Dark grey text color */
+    -fx-font-size: 14px;               /* Font size */
+    -fx-padding: 5px 10px;             /* Padding inside menu items */
+}
+
+.menu-bar .menu:hover {
+    -fx-background-color: #e0e0e0;  /* Slightly darker grey on hover */
+}
+
+.menu-bar .menu:showing {
+    -fx-background-color: #d0d0d0;  /* Even darker grey when menu is active */
+}
+
+.menu-item {
+    -fx-background-color: #ffffff;  /* White background for menu items */
+    -fx-text-fill: #333333;         /* Dark grey text color */
+    -fx-padding: 5px 10px;          /* Padding inside menu items */
+}
+
+.menu-item:hover {
+    -fx-background-color: #e0e0e0;  /* Slightly darker grey on hover */
+}
+
+.menu-item:focused {
+    -fx-background-color: #cccccc;  /* Even darker grey when focused */
+}
+
+.separator {
+    -fx-background-color: #dcdcdc;  /* Grey separator between menu items */
+}
