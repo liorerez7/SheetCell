@@ -33,4 +33,15 @@ public class CycleDetectedException extends RuntimeException {
         }
         return cycleString.toString();
     }
+
+    public List<CellLocation> getCycle() {
+        if (cycle == null || cycle.isEmpty()) {
+            return null;
+        }
+        List<CellLocation> cycleList = new java.util.ArrayList<>();
+        for (Cell cell : cycle) {
+            cycleList.add(cell.getLocation());
+        }
+        return cycleList;
+    }
 }

@@ -10,18 +10,25 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
+import Utility.Exception.CycleDetectedException;
+import Utility.Exception.TooManyArgumentsException;
+import Utility.Exception.UnknownOperationTypeException;
 import expression.api.EffectiveValue;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,11 +37,15 @@ public class MainController {
 
     @FXML
     private HeaderController headerController;
-    @FXML private MenuBar menuBar;
-    @FXML private VBox header;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private VBox header;
 
-    @FXML private ActionLineController actionLineController;
-    @FXML private GridPane actionLine;
+    @FXML
+    private ActionLineController actionLineController;
+    @FXML
+    private GridPane actionLine;
     @FXML
     private GridController gridController;
     @FXML
@@ -61,12 +72,13 @@ public class MainController {
     public MainController() {
         model = new Model(null);
     }
+
     public void InitlizeGridBasedOnXML(String absolutePath) {
 
-        try{
+        try {
             engine.readSheetCellFromXML(absolutePath);
             headerController.FileHasBeenLoaded(absolutePath);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -81,13 +93,20 @@ public class MainController {
         try {
             engine.updateCell(newValue, text.charAt(0), text.substring(1));
             DtoCell requestedCell = engine.getRequestedCell(text);
-
             model.setPropertiesByDtoSheetCell(engine.getSheetCell());
             model.setLatestUpdatedVersionProperty(requestedCell);
             model.setOriginalValueLabelProperty(requestedCell);
             model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
 
             gridController.showNeighbors(requestedCell);
+
+        } catch (CycleDetectedException e) {
+            createPopUpCircularGrid(engine.getSheetCell(), e.getCycle());
+        } catch (TooManyArgumentsException e) {
+            createPopup(e.getMessage(),"Too Many Arguments Error");
+
+        } catch (UnknownOperationTypeException e) {
+            createPopup(e.getMessage(),"Unknown Operation Type");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +145,7 @@ public class MainController {
     private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
         // Create a new Stage (window) for the popup
         Stage popupStage = new Stage();
-       popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
         //popupStage.initModality(Modality.NONE); // Block events to other windows
 
         popupStage.setTitle("Version Grid " + versionNumber);
@@ -145,7 +164,68 @@ public class MainController {
         // Show the popup window
         popupStage.showAndWait();
 
-       // popupStage.show();
+        // popupStage.show();
+    }
+
+    public void createPopUpCircularGrid(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
+        //popupStage.initModality(Modality.NONE); // Block events to other windows
+
+        popupStage.setTitle("circularDependency error");
+
+        // Create a new GridPane for the popup
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
+        gridController.initializeCirclePopUp(popupGrid, dtoSheetCell, cycle);
+        // Create a Scene with the popupGrid
+        Scene popupScene = new Scene(popupGrid);
+        popupStage.setScene(popupScene);
+
+        // Show the popup window
+        popupStage.showAndWait();
+
+    }
+
+    public void createPopup(String message, String title) {
+        // Create a new Stage for the popup
+        Stage popupStage = new Stage();
+        popupStage.setTitle(title);
+
+        // Create a Label and set the message
+        Label messageLabel = new Label(message);
+        messageLabel.setWrapText(true); // Enable text wrapping to adjust size
+        messageLabel.setPadding(new Insets(10)); // Add some padding around the text
+
+        // Create a layout and add the Label
+        StackPane layout = new StackPane();
+        layout.getChildren().add(messageLabel);
+
+        // Create the Scene with the layout
+        Scene scene = new Scene(layout);
+
+        // Set the scene on the popup stage
+        popupStage.setScene(scene);
+
+        // Calculate and set the size of the popup based on the content
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
+            popupStage.sizeToScene(); // Adjust the size of the popup based on the content
+        });
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
+            popupStage.sizeToScene(); // Adjust the size of the popup based on the content
+        });
+
+        // Set modality to block input to other windows while this popup is open
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ErrorPopup.css")).toExternalForm());
+        messageLabel.getStyleClass().add("popup-label");
+        layout.getStyleClass().add("popup-container");
+
+        // Show the popup
+        popupStage.show();
     }
 }
+
 
