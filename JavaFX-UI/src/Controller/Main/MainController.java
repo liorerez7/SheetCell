@@ -108,7 +108,6 @@ public class MainController {
         actionLineController.updateCssWhenUpdatingCell(location);
         gridController.showNeighbors(requestedCell);
     }
-
     public StringProperty getOriginalValueLabelProperty() {
         return model.getOriginalValueLabelProperty();
     }
