@@ -6,17 +6,24 @@ import Controller.MenuBar.HeaderController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
+import CoreParts.smallParts.CellLocationFactory;
+import expression.api.EffectiveValue;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class MainController {
     Engine engine;
@@ -35,7 +42,7 @@ public class MainController {
     private Model model;
 
     public StringProperty getVersionProperty() {
-        return model.getVersionProperty();
+        return model.getLatestUpdatedVersionProperty();
     }
 
     public BooleanProperty getIsCellLebalClickedProperty() {
@@ -67,6 +74,7 @@ public class MainController {
         model.setCellLabelToProperties(cellLocationLabelMap);
         model.bindCellLebelToProperties();
         model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
     }
 
     public void UpdateCell(String text, String newValue) {
@@ -76,8 +84,9 @@ public class MainController {
 
 
             model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-            model.setVersionProperty(requestedCell);
+            model.setLatestUpdatedVersionProperty(requestedCell);
             model.setOriginalValueLabelProperty(requestedCell);
+            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,13 +103,48 @@ public class MainController {
         DtoCell requestedCell = engine.getRequestedCell(location);
 
         model.setIsCellLebalClicked(true);
-        model.setVersionProperty(requestedCell);
+        model.setLatestUpdatedVersionProperty(requestedCell);
         model.setOriginalValueLabelProperty(requestedCell);
         actionLineController.updateCssWhenUpdatingCell(location);
     }
 
     public StringProperty getOriginalValueLabelProperty() {
         return model.getOriginalValueLabelProperty();
+    }
+
+    public StringProperty getTotalVersionsProperty() {
+        return model.getTotalVersionsProperty();
+    }
+
+    public void speceifcVersionClicked(int versionNumber) {
+
+        DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
+        createPopUpVersionGrid(dtoSheetCell, versionNumber);
+    }
+
+    private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
+        // Create a new Stage (window) for the popup
+        Stage popupStage = new Stage();
+       popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
+        //popupStage.initModality(Modality.NONE); // Block events to other windows
+
+        popupStage.setTitle("Version Grid " + versionNumber);
+
+        // Create a new GridPane for the popup
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
+        gridController.initializePopupGrid(popupGrid, dtoSheetCell);
+
+        // Create a Scene with the popupGrid
+        Scene popupScene = new Scene(popupGrid);
+        popupStage.setScene(popupScene);
+
+        // Show the popup window
+        popupStage.showAndWait();
+
+       // popupStage.show();
     }
 }
 

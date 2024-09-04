@@ -7,7 +7,9 @@ import CoreParts.smallParts.CellLocationFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RefGraphBuilder implements Serializable {
 
@@ -21,20 +23,45 @@ public class RefGraphBuilder implements Serializable {
     public RefDependencyGraph getDependencyGraph() {
         return dependencyGraph;
     }
+
     public void processCell(Cell cell) {
 
         dependencyGraph.addVertice(cell);
 
+        Set<Cell> currentDependencies = dependencyGraph.getDependencies(cell);
+
+
         String originalValue = cell.getOriginalValue();
+
+
+
+
         // Parse the original value and extract references
-        List<CellLocation> references = extractReferencesFromExpression(originalValue);
+        List<CellLocation> newReferences = extractReferencesFromExpression(originalValue);
+
+
+        Set<Cell> newDependencies = new HashSet<>();
+
+
         // Add edges in the graph
-        for (CellLocation refLocation : references) {
+        for (CellLocation refLocation : newReferences) {
             Cell refCell = sheetCell.getCell(refLocation);
             if (refCell != null) {
                 dependencyGraph.addDependency(cell, refCell);
+                newDependencies.add(refCell);
+
             }
         }
+
+        /* I want that it will also remove the dependency of the cell if there is no references
+        *
+        * for example if before the cell was dependent on A1 and now the cell is not dependent on A1 then it
+        * should remove the dependency
+        *
+        *
+        */
+
+
     }
     private List<CellLocation> extractReferencesFromExpression(String expression) {
         List<CellLocation> references = new ArrayList<>();

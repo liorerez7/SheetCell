@@ -18,16 +18,18 @@ public class Model {
     private final Map<Label, StringProperty> cellLebalToProperties = new HashMap<>();
     private DtoSheetCell sheetCell;
     private BooleanProperty isCellLebalClicked;
-    private StringProperty versionProperty;
+    private StringProperty latestUpdatedVersionProperty;
     private StringProperty originalValueLabelProperty;
+    private StringProperty totalVersionsProperty;
 
 
     Model(DtoSheetCell sheetCell) {
         this.sheetCell = sheetCell;
 
         isCellLebalClicked = new SimpleBooleanProperty(false);
-        versionProperty = new SimpleStringProperty("");
+        latestUpdatedVersionProperty = new SimpleStringProperty("");
         originalValueLabelProperty = new SimpleStringProperty("");
+        totalVersionsProperty = new SimpleStringProperty("");
     }
 
 
@@ -93,11 +95,11 @@ public class Model {
     }
 
 
-     public StringProperty getVersionProperty() {
-        return versionProperty;
+     public StringProperty getLatestUpdatedVersionProperty() {
+        return latestUpdatedVersionProperty;
     }
 
-    public void setVersionProperty(DtoCell cell) {
+    public void setLatestUpdatedVersionProperty(DtoCell cell) {
 
         String latestVersion = "";
 
@@ -106,7 +108,7 @@ public class Model {
             latestVersion = Integer.toString(cell.getLatestVersion());
         }
 
-        versionProperty.set(latestVersion);
+        latestUpdatedVersionProperty.set(latestVersion);
     }
 
     public BooleanProperty getIsCellLebalClickedProperty() {
@@ -130,5 +132,19 @@ public class Model {
         }
 
         originalValueLabelProperty.set(OriginalValue);
+    }
+
+    public StringProperty getTotalVersionsProperty() {
+        return totalVersionsProperty;
+    }
+
+    public void setTotalVersionsProperty(int totalVersionsInTheSystem) {
+        String totalVersions = "";
+
+        if(totalVersionsInTheSystem != 0) {
+            totalVersions = Integer.toString(totalVersionsInTheSystem);
+        }
+
+        totalVersionsProperty.set(totalVersions);
     }
 }
