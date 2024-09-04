@@ -23,7 +23,7 @@ public class RefGraphBuilder implements Serializable {
     public RefGraphBuilder(SheetCellViewOnly sheetCell) {
         this.dependencyGraph = sheetCell.getGraph();
         this.sheetCell = sheetCell;
-        this.sheetCellImp = sheetCell;
+       // this.sheetCellImp = sheetCell;
     }
     public RefDependencyGraph getDependencyGraph() {
         return dependencyGraph;
