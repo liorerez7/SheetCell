@@ -5,6 +5,8 @@
     -fx-background-color: #e4e4e4;
     -fx-border-color: black;
     -fx-border-width: 1px;
+    -fx-padding: 0;
+    -fx-margin: 0;
     /*-fx-pref-width: 100px;  !* Fixed width *!*/
     /*-fx-pref-height: 30px;  !* Fixed height *!*/
 }
