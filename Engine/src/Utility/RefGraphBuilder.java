@@ -27,21 +27,13 @@ public class RefGraphBuilder implements Serializable {
     public void processCell(Cell cell) {
 
         dependencyGraph.addVertice(cell);
-
         Set<Cell> currentDependencies = dependencyGraph.getDependencies(cell);
-
-
         String originalValue = cell.getOriginalValue();
-
-
-
 
         // Parse the original value and extract references
         List<CellLocation> newReferences = extractReferencesFromExpression(originalValue);
 
-
         Set<Cell> newDependencies = new HashSet<>();
-
 
         // Add edges in the graph
         for (CellLocation refLocation : newReferences) {
@@ -50,6 +42,13 @@ public class RefGraphBuilder implements Serializable {
                 dependencyGraph.addDependency(cell, refCell);
                 newDependencies.add(refCell);
 
+            }
+        }
+
+        // Remove old dependencies that are no longer referenced
+        for (Cell oldDependency : currentDependencies) {
+            if (!newDependencies.contains(oldDependency)) {
+                dependencyGraph.removeDependency(cell, oldDependency);
             }
         }
 

@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -50,10 +49,6 @@
             <Insets left="12.0" />
          </GridPane.margin></Label>
         <MenuButton fx:id="VersionScroller" mnemonicParsing="false" prefHeight="37.0" prefWidth="160.0" styleClass="ModernButton" text="version" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-            <items>
-                <MenuItem mnemonicParsing="false" styleClass="LabelsOfUserInterfaceSection" text="Action 1" />
-                <MenuItem mnemonicParsing="false" styleClass="LabelsOfUserInterfaceSection" text="Action 2" />
-            </items>
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>
