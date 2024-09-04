@@ -74,10 +74,11 @@ public class MainController {
             engine.updateCell(newValue, text.charAt(0), text.substring(1));
             DtoCell requestedCell = engine.getRequestedCell(text);
 
-
             model.setPropertiesByDtoSheetCell(engine.getSheetCell());
             model.setVersionProperty(requestedCell);
             model.setOriginalValueLabelProperty(requestedCell);
+
+            gridController.showNeighbors(requestedCell);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,11 +93,11 @@ public class MainController {
     public void cellClicked(String location) {
 
         DtoCell requestedCell = engine.getRequestedCell(location);
-
         model.setIsCellLebalClicked(true);
         model.setVersionProperty(requestedCell);
         model.setOriginalValueLabelProperty(requestedCell);
         actionLineController.updateCssWhenUpdatingCell(location);
+        gridController.showNeighbors(requestedCell);
     }
 
     public StringProperty getOriginalValueLabelProperty() {

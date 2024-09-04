@@ -1,6 +1,7 @@
 package Controller.Grid;
 
 import Controller.Main.MainController;
+import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import expression.api.EffectiveValue;
@@ -14,6 +15,7 @@ import javafx.scene.layout.RowConstraints;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class GridController {
     @FXML
@@ -21,8 +23,10 @@ public class GridController {
     private MainController mainController;
     @FXML
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
+    NeighborsHandler neighborsHandler;
 
     public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
+        neighborsHandler = new NeighborsHandler();
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -99,7 +103,6 @@ public class GridController {
 
                 cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
 
-
                 cellLocationToLabel.put(location,cell);
                 //GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
@@ -113,12 +116,13 @@ public class GridController {
         header.setPrefSize(cellWidth, cellLength);
     }
 
-    private void onCellClicked(String location) {
-        mainController.cellClicked(location);
-    }
+    private void onCellClicked(String location) {mainController.cellClicked(location);}
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
+    public void showNeighbors(DtoCell cell) {
+            neighborsHandler.showNeighbors(cell,cellLocationToLabel);
+    }
 }

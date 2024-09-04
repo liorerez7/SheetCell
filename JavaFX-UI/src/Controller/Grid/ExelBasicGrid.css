@@ -26,3 +26,50 @@
     /*-fx-min-width: 100px;  !* Ensure that min width is also fixed *!*/
     /*-fx-min-height: 30px;  !* Ensure that min height is also fixed *!*/
 }
+
+.affects-target {
+    -fx-background-color: #FFFF99; /* Light yellow background */
+    -fx-border-color: #FFD700; /* Gold border color */
+    -fx-border-width: 2px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0); /* Initial glow */
+
+    /* Pulse animation */
+    -fx-animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0);
+    }
+    50% {
+        -fx-effect: dropshadow(gaussian, #FFD700, 20, 0.7, 0, 0);
+    }
+    100% {
+        -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0);
+    }
+}
+
+.affected-by-source {
+    -fx-background-color: #ADD8E6; /* Light blue background */
+    -fx-border-color: #1E90FF; /* Dodger blue border color */
+    -fx-border-width: 2px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+
+    /* Flashing background animation */
+    -fx-animation: flash 1s infinite;
+}
+
+@keyframes flash {
+    0% {
+        -fx-background-color: #ADD8E6; /* Light blue */
+    }
+    50% {
+        -fx-background-color: #87CEFA; /* Lighter blue */
+    }
+    100% {
+        -fx-background-color: #ADD8E6; /* Light blue */
+    }
+}
