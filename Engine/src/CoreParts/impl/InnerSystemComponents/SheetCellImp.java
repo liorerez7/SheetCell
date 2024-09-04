@@ -4,28 +4,27 @@ import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
+import CoreParts.smallParts.CellLocationFactory;
 import Utility.CellUtils;
 import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.CycleDetectedException;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
-import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
+import expression.impl.Range;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Map<CellLocation, Cell> sheetCell = new HashMap<>(); // Changed to map of CellLocation to Cell
     private RefDependencyGraph refDependencyGraph = new RefDependencyGraph();
+    private Set<Range> systemRanges = new HashSet<>();
     VersionControlManager versionControlManager;
     private RefGraphBuilder refGraphBuilder;
     private final String name;
@@ -147,6 +146,71 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         });
         versionControlManager.versionControl();
         updateEffectedByAndOnLists();
+    }
+
+    @Override
+    public void updateNewRange(String name, String range) {
+        // Split the range string into start and end cell IDs
+        String[] cells = range.split("\\.\\.");
+
+        // Validate the range format
+        if (cells.length != 2) {
+            throw new IllegalArgumentException("Invalid range format. Expected format: 'A1..C3'");
+        }
+
+        // Convert the start and end cell IDs to CellLocation objects
+        CellLocation startCell = CellLocationFactory.fromCellId(cells[0]);
+        CellLocation endCell = CellLocationFactory.fromCellId(cells[1]);
+
+        // Get the column and row indices for the start and end cells
+        char startCol = startCell.getVisualColumn();
+        char endCol = endCell.getVisualColumn();
+        int startRow = Integer.parseInt(startCell.getVisualRow());
+        int endRow = Integer.parseInt(endCell.getVisualRow());
+
+        // Ensure the columns and rows are in the correct order
+        if (startCol > endCol || startRow > endRow) {
+            throw new IllegalArgumentException("Invalid range: start cell must be before end cell.");
+        }
+
+        // Create a set to hold all CellLocation objects in the range
+        Set<CellLocation> cellLocations = new HashSet<>();
+
+        // Loop through the columns and rows to generate all CellLocations in the range
+        for (char col = startCol; col <= endCol; col++) {
+            for (int row = startRow; row <= endRow; row++) {
+                String cellId = col + Integer.toString(row);
+                CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
+                cellLocations.add(cellLocation);
+            }
+        }
+
+        // Create a new Range object with the specified name and the set of CellLocations
+        Range newRange = new Range(cellLocations, name);
+
+        // Add the new Range to the list of ranges
+        systemRanges.add(newRange);
+    }
+
+    public boolean isRangePresent(String rangeName) {
+
+        for (Range range : systemRanges) {
+            if (range.getRangeName().equals(rangeName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Set<CellLocation> getRange(String rangeName) {
+        for (Range range : systemRanges) {
+            if (range.getRangeName().equals(rangeName)) {
+                return range.getRangeOfCellLocation();
+            }
+        }
+
+        return null;
     }
 
     @Override

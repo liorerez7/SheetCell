@@ -13,6 +13,7 @@ import expression.api.processing.ExpressionParser;
 import expression.impl.Processing.ExpressionParserImpl;
 import expression.impl.Ref;
 import expression.impl.numFunction.Num;
+import expression.impl.numFunction.Sum;
 import expression.impl.stringFunction.Str;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,16 +69,15 @@ public class CellUtils {
             return handleReferenceOperation(cellThatAffects);  //argument(1) = CELL_ID
         }
 
+        else if(operation == Operation.SUM){
+            return new Sum(sheetCell.getRange(arguments.getFirst()));
+        }
+
         //isMethod = true;
         return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
     }
 
     private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCell {
-
-//        if (cellThatAffects.getEffectiveValue() == null) {
-//
-//            throw new RefToUnSetCell(cellThatAffects);
-//        }
 
         return new Ref(cellThatAffects.getLocation());
     }

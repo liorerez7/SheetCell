@@ -78,6 +78,13 @@ public enum Operation {
         }
     },
 
+    SUM {
+        @Override
+        public Expression calculate(List<Expression> expressions) {
+            return null;
+        }
+    },
+
     REF{
       @Override
       public  Expression calculate(List<Expression> expressions){

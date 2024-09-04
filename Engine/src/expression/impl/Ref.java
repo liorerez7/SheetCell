@@ -16,6 +16,7 @@ public class Ref implements Expression {
     public Ref(CellLocation location) {
         this.location = location;
     }
+
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {
         Cell cell = sheet.getCell(location);

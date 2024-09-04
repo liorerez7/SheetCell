@@ -23,6 +23,7 @@ public class AfterLoadCommandManagerImpl implements CommandManager {
         commandMap.put(6, new CoreParts.impl.controller.commands.LoadSavedSheet(engine, menuHandler));
         commandMap.put(7, new CoreParts.impl.controller.commands.SaveSheet(engine, menuHandler));
         commandMap.put(8, new CoreParts.impl.controller.commands.ExitSheet(engine, menuHandler));
+        commandMap.put(9, new CoreParts.impl.controller.commands.UpdateRange(engine, menuHandler));
         numberOfCommands = commandMap.size();
     }
     public Command getCommand(int commandId) {

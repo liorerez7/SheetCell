@@ -77,6 +77,7 @@ public class MenuHandler {
         System.out.println("6.load an existing file that has been saved");
         System.out.println("7. Save Sheet");
         System.out.println("8. Exit");
+        System.out.println("9. Create a new range");
         System.out.println("\nSelect an option (1-8): ");
     }
 
