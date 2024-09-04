@@ -26,31 +26,37 @@ public class RefGraphBuilder implements Serializable {
 
     public void processCell(Cell cell) {
 
+
+
         dependencyGraph.addVertice(cell);
-        Set<Cell> currentDependencies = dependencyGraph.getDependencies(cell);
+
+
+
+        //Set<Cell> currentDependencies = dependencyGraph.getDependencies(cell);
+
         String originalValue = cell.getOriginalValue();
 
         // Parse the original value and extract references
         List<CellLocation> newReferences = extractReferencesFromExpression(originalValue);
 
-        Set<Cell> newDependencies = new HashSet<>();
+        //Set<Cell> newDependencies = new HashSet<>();
 
         // Add edges in the graph
         for (CellLocation refLocation : newReferences) {
             Cell refCell = sheetCell.getCell(refLocation);
             if (refCell != null) {
                 dependencyGraph.addDependency(cell, refCell);
-                newDependencies.add(refCell);
+               // newDependencies.add(refCell);
 
             }
         }
 
-        // Remove old dependencies that are no longer referenced
-        for (Cell oldDependency : currentDependencies) {
-            if (!newDependencies.contains(oldDependency)) {
-                dependencyGraph.removeDependency(cell, oldDependency);
-            }
-        }
+//        // Remove old dependencies that are no longer referenced
+//        for (Cell oldDependency : currentDependencies) {
+//            if (!newDependencies.contains(oldDependency)) {
+//                dependencyGraph.removeDependency(cell, oldDependency);
+//            }
+//        }
 
         /* I want that it will also remove the dependency of the cell if there is no references
         *
@@ -83,6 +89,8 @@ public class RefGraphBuilder implements Serializable {
     }
 
     public void build() {
+
+        dependencyGraph.resetDependenciesGraph();
         for (Cell cell : sheetCell.getSheetCell().values()) {
             processCell(cell);
         }

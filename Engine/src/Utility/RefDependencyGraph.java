@@ -27,6 +27,7 @@ public class RefDependencyGraph implements java.io.Serializable {
     public Map<Cell,Set<Cell>> getreverseAdjacencyList() {
         return reverseAdjacencyList;
     }
+
     // Removes a dependency edge from cellA to cellB
     public void removeDependency(Cell cellA, Cell cellB) {
         Set<Cell> dependencies = adjacencyList.get(cellA);
@@ -38,11 +39,11 @@ public class RefDependencyGraph implements java.io.Serializable {
             reverseDependencies.remove(cellA);
         }
     }
+
     // Returns a set of cells that cell depends on
     public Set<Cell> getDependencies(Cell cell) {
         return adjacencyList.getOrDefault(cell, Collections.emptySet());
     }
-
     // Returns a set of cells that depend on the given cell
     public Set<Cell> getDependents(Cell cell) {
         Set<Cell> dependents = new HashSet<>();
@@ -54,6 +55,11 @@ public class RefDependencyGraph implements java.io.Serializable {
         return dependents;
     }
 
+
+    public void resetDependenciesGraph() {
+        adjacencyList.clear();
+        reverseAdjacencyList.clear();
+    }
 
 
 
