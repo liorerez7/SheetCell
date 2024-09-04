@@ -202,14 +202,22 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     }
 
     @Override
+    public Set<Range> getSystemRanges() {
+        return systemRanges;
+    }
+
+    @Override
     public Range getRange(String rangeName) {
         for (Range range : systemRanges) {
             if (range.getRangeName().equals(rangeName)) {
                 return range;
             }
         }
-
         return null;
+    }
+    @Override
+    public List<CellLocation> getRequestedRange(String rangeName) {
+        return getRange(rangeName).getCellLocations();
     }
 
     @Override

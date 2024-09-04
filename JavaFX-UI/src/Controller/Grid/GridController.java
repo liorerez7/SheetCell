@@ -31,8 +31,7 @@ public class GridController {
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
     NeighborsHandler neighborsHandler;
 
-    public GridPane initializeEmptyGrid(DtoSheetCell sheetCell) {
-        GridPane grid = new GridPane();
+    public void initializeEmptyGrid(DtoSheetCell sheetCell,GridPane grid) {
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
 
         int numCols = sheetCell.getNumberOfColumns();
@@ -85,10 +84,10 @@ public class GridController {
             header.getStyleClass().add("header-label");
             grid.add(header, 0, row);
         }
-        return grid;
     }
     public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         neighborsHandler = new NeighborsHandler();
+        initializeEmptyGrid(sheetCell,grid);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
@@ -102,9 +101,7 @@ public class GridController {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label();
                 cell.getStyleClass().add("cell-label");
-
                 setLabelSize(cell, cellWidth, cellLength);
-
                 // Bind the Label's textProperty to the EffectiveValue
                 char colChar = (char) ('A' + col - 1);
                 String rowString = String.valueOf(row);
@@ -118,7 +115,7 @@ public class GridController {
                 }
                 cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
                 cellLocationToLabel.put(location, cell);
-                grid.add(cell, col, row);
+                grid.add(cell,col, row);
             }
         }
         return cellLocationToLabel;
@@ -149,7 +146,7 @@ public class GridController {
 
 
     public void initializePopupGrid(GridPane grid, DtoSheetCell sheetCell) {
-        grid = initializeEmptyGrid(sheetCell);
+        initializeEmptyGrid(sheetCell, grid);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
@@ -178,7 +175,7 @@ public class GridController {
     }
 
     public void initializeCirclePopUp(GridPane grid, DtoSheetCell sheetCell, List<CellLocation> neighbors) {
-        grid = initializeEmptyGrid(sheetCell);
+        initializeEmptyGrid(sheetCell, grid);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();

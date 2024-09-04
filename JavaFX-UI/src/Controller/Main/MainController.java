@@ -3,17 +3,17 @@ package Controller.Main;
 import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
 import Controller.MenuBar.HeaderController;
+import Controller.Ranges.RangeStringsData;
+import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
 import Utility.Exception.CycleDetectedException;
 import Utility.Exception.TooManyArgumentsException;
 import Utility.Exception.UnknownOperationTypeException;
-import expression.api.EffectiveValue;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -27,7 +27,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,7 +40,6 @@ public class MainController {
     private MenuBar menuBar;
     @FXML
     private VBox header;
-
     @FXML
     private ActionLineController actionLineController;
     @FXML
@@ -50,8 +48,13 @@ public class MainController {
     private GridController gridController;
     @FXML
     private CustomizeController customizeController;
-    private Model model;
+    @FXML
+    private StackPane ranges;
+    @FXML
+    private RangesController rangesController;
 
+    private Model model;
+    private PopUpWindowsHandler popUpWindowsHandler;
     public StringProperty getVersionProperty() {
         return model.getLatestUpdatedVersionProperty();
     }
@@ -60,17 +63,18 @@ public class MainController {
         return model.getIsCellLebalClickedProperty();
     }
 
-
     @FXML
     public void initialize() {
         customizeController.setMainController(this);
         headerController.setMainController(this);
         actionLineController.setMainController(this);
         gridController.setMainController(this);
+        rangesController.setMainController(this);
     }
 
     public MainController() {
         model = new Model(null);
+        popUpWindowsHandler = new PopUpWindowsHandler();
     }
 
     public void InitlizeGridBasedOnXML(String absolutePath) {
@@ -137,7 +141,6 @@ public class MainController {
     }
 
     public void speceifcVersionClicked(int versionNumber) {
-
         DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
         createPopUpVersionGrid(dtoSheetCell, versionNumber);
     }
@@ -193,12 +196,10 @@ public class MainController {
         // Create a new Stage for the popup
         Stage popupStage = new Stage();
         popupStage.setTitle(title);
-
         // Create a Label and set the message
         Label messageLabel = new Label(message);
         messageLabel.setWrapText(true); // Enable text wrapping to adjust size
         messageLabel.setPadding(new Insets(10)); // Add some padding around the text
-
         // Create a layout and add the Label
         StackPane layout = new StackPane();
         layout.getChildren().add(messageLabel);
@@ -216,16 +217,25 @@ public class MainController {
         scene.heightProperty().addListener((obs, oldVal, newVal) -> {
             popupStage.sizeToScene(); // Adjust the size of the popup based on the content
         });
-
         // Set modality to block input to other windows while this popup is open
         popupStage.initModality(Modality.APPLICATION_MODAL);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ErrorPopup.css")).toExternalForm());
         messageLabel.getStyleClass().add("popup-label");
         layout.getStyleClass().add("popup-container");
-
         // Show the popup
         popupStage.show();
     }
+
+    public void rangeAddClicked() {
+         RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
+        String name = rangeStringsData.getName();
+        engine.UpdateNewRange(name,rangeStringsData.getRange());
+         rangesController.addRange(engine.getRequestedRange(name),name);
+    }
+    public void openDeleteRangeWindow() {
+        popUpWindowsHandler.openDeleteRangeWindow();
+    }
 }
+
 
 

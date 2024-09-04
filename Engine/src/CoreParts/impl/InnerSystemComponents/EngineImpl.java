@@ -15,6 +15,7 @@ import Utility.Exception.CycleDetectedException;
 import Utility.Exception.DeleteWhileAffectingOtherCellException;
 import Utility.Exception.RefToUnSetCell;
 import expression.api.Expression;
+import expression.impl.Range;
 import expression.impl.stringFunction.Str;
 import jakarta.xml.bind.JAXBException;
 
@@ -22,6 +23,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Set;
 
 public class EngineImpl implements Engine {
@@ -80,6 +82,11 @@ public class EngineImpl implements Engine {
     @Override
     public void UpdateNewRange(String name, String range) throws IllegalArgumentException {
         sheetCell.updateNewRange(name, range);
+    }
+
+    @Override
+    public List<CellLocation> getRequestedRange(String name) {
+        return sheetCell.getRequestedRange(name);
     }
 
     @Override

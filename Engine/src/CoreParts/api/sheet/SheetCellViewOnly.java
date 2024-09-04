@@ -7,6 +7,7 @@ import expression.api.EffectiveValue;
 import expression.impl.Range;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
@@ -16,6 +17,7 @@ public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
     RefDependencyGraph getGraph();
     boolean isCellPresent(CellLocation location);
     Map<CellLocation, EffectiveValue> getViewSheetCell();
-    public boolean isRangePresent(String rangeName);
-    public Range getRange(String rangeName);
+    boolean isRangePresent(String rangeName);
+    Range getRange(String rangeName);
+    List<CellLocation> getRequestedRange(String name);
 }

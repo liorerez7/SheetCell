@@ -8,6 +8,7 @@ import Utility.RefDependencyGraph;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.impl.Range;
+import expression.impl.stringFunction.Str;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class DtoSheetCell implements SheetCellViewOnly {
 
     private Map<CellLocation,EffectiveValue> sheetCell = new HashMap<>();
     private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
+    private Map<String,List<CellLocation>> ranges = new HashMap<>();
     private static final int maxRows = 50;
     private static final int maxCols = 20;
     private String name;
@@ -26,14 +28,8 @@ public class DtoSheetCell implements SheetCellViewOnly {
 
     // Constructor to populate DtoSheetCell from SheetCellImp
     public DtoSheetCell(SheetCell sheetCellImp) {
-
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
-
             EffectiveValue effectiveValue;
-//            effectiveValue = entry.getValue().getActualValue();
-
-
-
             //TODO: Check if this is correct
             effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
 
@@ -41,6 +37,10 @@ public class DtoSheetCell implements SheetCellViewOnly {
         }
         versionToCellsChanges = sheetCellImp.getVersions();
         copyBasicTypes(sheetCellImp);
+        Set<Range> systemRanges = sheetCellImp.getSystemRanges();
+        systemRanges.forEach(range -> {
+            ranges.put(range.getRangeName(),range.getCellLocations());
+        });
     }
 
     public Map<Integer, Map<CellLocation, EffectiveValue>> getVersionToCellsChanges() {
@@ -82,7 +82,6 @@ public class DtoSheetCell implements SheetCellViewOnly {
         return 0;
     }
 
-
     /* NEED TO CHANGE! */
     @Override
     public Map<CellLocation, Cell> getSheetCell() {
@@ -112,6 +111,10 @@ public class DtoSheetCell implements SheetCellViewOnly {
     @Override
     public Range getRange(String rangeName) {
         return null;
+    }
+    @Override
+    public List<CellLocation> getRequestedRange(String name) {
+        return ranges.get(name);
     }
 
     public void copyBasicTypes(SheetCell sheetCell) {

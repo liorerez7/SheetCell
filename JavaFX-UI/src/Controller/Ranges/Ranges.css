@@ -1,0 +1,46 @@
+/* Base style for the ComboBox */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+    -fx-font-family: Arial, sans-serif;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-text-fill: #333333;
+}
+
+/* Style for the ComboBox when focused */
+.combo-box:focused {
+    -fx-border-color: #007bff; /* Blue color for focus */
+    -fx-background-color: #f9f9f9;
+}
+
+/* Style for the ComboBox button */
+.combo-box .arrow-button {
+    -fx-background-color: #007bff; /* Blue color for the dropdown arrow */
+    -fx-background-radius: 4px;
+    -fx-padding: 5px;
+}
+
+/* Style for the items in the dropdown list */
+.combo-box .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-padding: 5px;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+/* Style for the hovered items in the dropdown list */
+.combo-box .list-cell:hover {
+    -fx-background-color: #007bff; /* Blue background for hover effect */
+    -fx-text-fill: #ffffff;
+}
+
+/* Style for the selected item in the dropdown list */
+.combo-box .list-cell:focused {
+    -fx-background-color: #0056b3; /* Darker blue for selection */
+    -fx-text-fill: #ffffff;
+}
