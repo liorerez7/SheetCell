@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="969.0" styleClass="Background" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Main.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="969.0" styleClass="Background" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Main.MainController">
    <top>
       <GridPane prefHeight="129.0" prefWidth="972.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -45,6 +45,6 @@
       </VBox>
    </left>
    <center>
-      <fx:include fx:id="grid" source="../Grid/Grid.fxml" />
+      <fx:include fx:id="grid" source="../Grid/Grid.fxml" BorderPane.alignment="TOP_LEFT" />
    </center>
 </BorderPane>

@@ -7,6 +7,7 @@ import CoreParts.smallParts.CellLocation;
 import expression.api.EffectiveValue;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -60,6 +61,9 @@ public class GridController {
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setMinHeight(cellLength); // Adjust height for better visibility
             rowConstraints.setPrefHeight(cellLength);
+
+            rowConstraints.setMaxHeight(cellLength);
+
             rowConstraints.setVgrow(javafx.scene.layout.Priority.SOMETIMES);
             grid.getRowConstraints().add(rowConstraints);
         }
@@ -115,9 +119,19 @@ public class GridController {
         return cellLocationToLabel;
     }
 
-    private void setLabelSize(Label header, int cellWidth, int cellLength) {
-        header.setMinSize(cellWidth, cellLength); // Adjust size for better visibility
-        header.setPrefSize(cellWidth, cellLength);
+    private void setLabelSize(Label label, int width, int height) {
+//        label.setMinSize(width, height); // Adjust size for better visibility
+//        label.setPrefSize(width, height);
+
+
+        label.setMinWidth(width);
+        label.setMinHeight(height);
+        label.setPrefWidth(width);
+        label.setPrefHeight(height);
+        label.setMaxWidth(width);
+        label.setMaxHeight(height);
+        label.setPadding(Insets.EMPTY);  // Removes padding
+
     }
 
     private void onCellClicked(String location) {mainController.cellClicked(location);}
