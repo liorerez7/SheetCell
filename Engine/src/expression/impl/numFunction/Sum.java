@@ -7,19 +7,31 @@ import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.ExpressionVisitor;
+import expression.impl.Range;
+import expression.impl.Ref;
 import expression.impl.stringFunction.Str;
 import expression.impl.variantImpl.EffectiveValueImpl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Sum implements Expression {
 
     Set<CellLocation> cellLocations;
+    Range range;
+    Set<Ref> refOfRange = new HashSet<>();
 
-    public Sum(Set<CellLocation> cellLocations) {
 
-        this.cellLocations = cellLocations;
+    public Sum(Range range) {
 
+        this.range = range;
+        this.cellLocations = range.getRangeOfCellLocation();
+
+        for(CellLocation cellLocation : cellLocations){
+            refOfRange.add(new Ref(cellLocation));
+        }
+
+        //range.AddObserver(this);
     }
 
     @Override
@@ -27,16 +39,13 @@ public class Sum implements Expression {
 
         double sum = 0.0;
 
-        for (CellLocation cellLocation : cellLocations) {
+        for(Ref ref : refOfRange){
 
-            Cell cell = sheet.getCell(cellLocation);
+            EffectiveValue value = ref.evaluate(sheet);
 
-            if (cell != null && cell.getEffectiveValue() != null) {
-
-                EffectiveValue effectiveValue = cell.getEffectiveValue().evaluate(sheet);
-                if (effectiveValue.getCellType() == ReturnedValueType.NUMERIC) {
-                    sum += (Double) effectiveValue.getValue();
-                }
+            try{
+                sum += (double) value.getValue();
+            }catch (Exception e){
             }
         }
 

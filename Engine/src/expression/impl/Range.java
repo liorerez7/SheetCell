@@ -11,6 +11,8 @@ public class Range implements Serializable {
     String rangeName;
 
     public Range(Set<CellLocation> rangeOfCellLocation, String rangeName) {
+
+
         this.rangeOfCellLocation = rangeOfCellLocation;
         this.rangeName = rangeName;
     }

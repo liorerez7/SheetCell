@@ -20,5 +20,5 @@ public interface SheetCell extends
     public boolean isRangePresent(String rangeName);
 
 
-    public Set<CellLocation> getRange(String rangeName);
+    public Range getRange(String rangeName);
 }

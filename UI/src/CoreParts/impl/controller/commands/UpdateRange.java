@@ -16,9 +16,11 @@ public class UpdateRange extends SheetEngineCommand {
     @Override
     public void execute() throws Exception {
 
+        System.out.println("Enter the name of the range: ");
         Scanner scanner = new Scanner(System.in);
         String name = scanner.next();
 
+        System.out.println("Enter the cell range: ");
         String cellRange = scanner.next();
 
 

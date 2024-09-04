@@ -203,10 +203,10 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         return false;
     }
 
-    public Set<CellLocation> getRange(String rangeName) {
+    public Range getRange(String rangeName) {
         for (Range range : systemRanges) {
             if (range.getRangeName().equals(rangeName)) {
-                return range.getRangeOfCellLocation();
+                return range;
             }
         }
 

@@ -2,8 +2,10 @@ package Utility;
 
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCellViewOnly;
+import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
+import expression.impl.Range;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,9 +18,12 @@ public class RefGraphBuilder implements Serializable {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private final RefDependencyGraph dependencyGraph;
     private SheetCellViewOnly sheetCell;
+    private SheetCellImp sheetCellImp;
+
     public RefGraphBuilder(SheetCellViewOnly sheetCell) {
         this.dependencyGraph = sheetCell.getGraph();
         this.sheetCell = sheetCell;
+        this.sheetCellImp = sheetCell;
     }
     public RefDependencyGraph getDependencyGraph() {
         return dependencyGraph;
@@ -51,22 +56,6 @@ public class RefGraphBuilder implements Serializable {
             }
         }
 
-//        // Remove old dependencies that are no longer referenced
-//        for (Cell oldDependency : currentDependencies) {
-//            if (!newDependencies.contains(oldDependency)) {
-//                dependencyGraph.removeDependency(cell, oldDependency);
-//            }
-//        }
-
-        /* I want that it will also remove the dependency of the cell if there is no references
-        *
-        * for example if before the cell was dependent on A1 and now the cell is not dependent on A1 then it
-        * should remove the dependency
-        *
-        *
-        */
-
-
     }
     private List<CellLocation> extractReferencesFromExpression(String expression) {
         List<CellLocation> references = new ArrayList<>();
@@ -85,6 +74,27 @@ public class RefGraphBuilder implements Serializable {
             }
             index++;
         }
+
+
+        index = 0;
+        while (index < expression.length()) {
+            if (expression.regionMatches(true, index, "{SUM", 0, 4)) {
+                int start = expression.indexOf(',', index) + 1;
+                int end = expression.indexOf('}', start);
+                if (start != -1 && end != -1) {
+                    String rangeName = expression.substring(start, end).trim();
+
+                    if(sheetCellImp.isRangePresent(rangeName)){
+                        Range range = sheetCellImp.getRange(rangeName);
+                        if (range != null) {
+                            references.addAll(range.getRangeOfCellLocation());
+                        }
+                    }
+                }
+            }
+            index++;
+        }
+
         return references;
     }
 
