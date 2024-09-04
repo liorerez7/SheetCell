@@ -6,6 +6,7 @@ import CoreParts.impl.InnerSystemComponents.SheetCellImp;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import expression.impl.Range;
+import expression.impl.Ref;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ public class RefGraphBuilder implements Serializable {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private final RefDependencyGraph dependencyGraph;
     private SheetCellViewOnly sheetCell;
-    private SheetCellImp sheetCellImp;
 
     public RefGraphBuilder(SheetCellViewOnly sheetCell) {
         this.dependencyGraph = sheetCell.getGraph();
@@ -84,10 +84,12 @@ public class RefGraphBuilder implements Serializable {
                 if (start != -1 && end != -1) {
                     String rangeName = expression.substring(start, end).trim();
 
-                    if(sheetCellImp.isRangePresent(rangeName)){
-                        Range range = sheetCellImp.getRange(rangeName);
+                    if(sheetCell.isRangePresent(rangeName)){
+                        Range range = sheetCell.getRange(rangeName);
+                        //TODO:chnged
                         if (range != null) {
-                            references.addAll(range.getRangeOfCellLocation());
+                            Set<Ref> rangeRefs = range.getRangeRefs();
+                            rangeRefs.forEach(ref -> references.add(ref.getCellLocation()));
                         }
                     }
                 }

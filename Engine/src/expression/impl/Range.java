@@ -7,30 +7,20 @@ import java.util.Set;
 
 public class Range implements Serializable {
 
-    Set<CellLocation> rangeOfCellLocation;
+    Set<Ref> rangeOfCellLocation;
     String rangeName;
 
-    public Range(Set<CellLocation> rangeOfCellLocation, String rangeName) {
-
-
+    public Range(Set<Ref> rangeOfCellLocation, String rangeName) {
         this.rangeOfCellLocation = rangeOfCellLocation;
         this.rangeName = rangeName;
     }
 
-    public Set<CellLocation> getRangeOfCellLocation() {
+    public Set<Ref> getRangeRefs() {
         return rangeOfCellLocation;
     }
 
     public String getRangeName() {
         return rangeName;
-    }
-
-    public void setRangeOfCellLocation(Set<CellLocation> rangeOfCellLocation) {
-        this.rangeOfCellLocation = rangeOfCellLocation;
-    }
-
-    public void setRangeName(String rangeName) {
-        this.rangeName = rangeName;
     }
 
 }

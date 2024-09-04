@@ -31,15 +31,14 @@ public class GridController {
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
     NeighborsHandler neighborsHandler;
 
-    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
-        neighborsHandler = new NeighborsHandler();
+    public GridPane initializeEmptyGrid(DtoSheetCell sheetCell) {
+        GridPane grid = new GridPane();
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
+
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
-
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-
         cellWidth = cellWidth * 10;
         cellLength = cellLength * 13;
 
@@ -86,7 +85,18 @@ public class GridController {
             header.getStyleClass().add("header-label");
             grid.add(header, 0, row);
         }
+        return grid;
+    }
+    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
+        neighborsHandler = new NeighborsHandler();
+        int numCols = sheetCell.getNumberOfColumns();
+        int numRows = sheetCell.getNumberOfRows();
+        int cellWidth = sheetCell.getCellWidth();
+        int cellLength = sheetCell.getCellLength();
+        cellWidth = cellWidth * 10;
+        cellLength = cellLength * 13;
 
+        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         // Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
@@ -107,9 +117,7 @@ public class GridController {
                     cell.setText(effectiveValue.getValue().toString());
                 }
                 cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
-
                 cellLocationToLabel.put(location, cell);
-                //GridPane.setConstraints(cell, col, row);
                 grid.add(cell, col, row);
             }
         }
@@ -141,57 +149,14 @@ public class GridController {
 
 
     public void initializePopupGrid(GridPane grid, DtoSheetCell sheetCell) {
+        grid = initializeEmptyGrid(sheetCell);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
-
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-
         cellWidth = cellWidth * 10;
         cellLength = cellLength * 13;
-
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
-
-        // Clear existing constraints and children
-        grid.getColumnConstraints().clear();
-        grid.getRowConstraints().clear();
-        grid.getChildren().clear();
-
-        // Create column constraints
-        for (int i = 0; i < numCols + 1; i++) { // +1 for header column
-            ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setMinWidth(cellWidth); // Adjust width for better visibility
-            colConstraints.setPrefWidth(cellWidth);
-            colConstraints.setHgrow(Priority.SOMETIMES);
-            grid.getColumnConstraints().add(colConstraints);
-        }
-
-        // Create row constraints
-        for (int i = 0; i < numRows + 1; i++) { // +1 for header row
-            RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setMinHeight(cellLength); // Adjust height for better visibility
-            rowConstraints.setPrefHeight(cellLength);
-            rowConstraints.setVgrow(Priority.SOMETIMES);
-            grid.getRowConstraints().add(rowConstraints);
-        }
-
-        // Add column headers
-        for (int col = 1; col <= numCols; col++) {
-            Label header = new Label(String.valueOf((char) ('A' + col - 1)));
-            setLabelSize(header, cellWidth, cellLength);
-            header.getStyleClass().add("header-label");
-            grid.add(header, col, 0);
-        }
-
-        // Add row headers
-        for (int row = 1; row <= numRows; row++) {
-            Label header = new Label(String.valueOf(row));
-            setLabelSize(header, cellWidth, cellLength);
-            header.getStyleClass().add("header-label");
-            grid.add(header, 0, row);
-        }
-
-        // Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label();
@@ -202,70 +167,25 @@ public class GridController {
                 char colChar = (char) ('A' + col - 1);
                 String rowString = String.valueOf(row);
                 cell.setId(colChar + rowString);
-
                 CellLocation location = new CellLocation(colChar, rowString);
                 EffectiveValue effectiveValue = viewSheetCell.get(location);
                 if (effectiveValue != null) {
                     cell.setText(effectiveValue.getValue().toString());
                 }
-
                 grid.add(cell, col, row);
             }
         }
     }
 
     public void initializeCirclePopUp(GridPane grid, DtoSheetCell sheetCell, List<CellLocation> neighbors) {
+        grid = initializeEmptyGrid(sheetCell);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
-
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-
         cellWidth = cellWidth * 10;
         cellLength = cellLength * 13;
-
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
-
-        // Clear existing constraints and children
-        grid.getColumnConstraints().clear();
-        grid.getRowConstraints().clear();
-        grid.getChildren().clear();
-
-        // Create column constraints
-        for (int i = 0; i < numCols + 1; i++) { // +1 for header column
-            ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setMinWidth(cellWidth); // Adjust width for better visibility
-            colConstraints.setPrefWidth(cellWidth);
-            colConstraints.setHgrow(Priority.SOMETIMES);
-            grid.getColumnConstraints().add(colConstraints);
-        }
-
-        // Create row constraints
-        for (int i = 0; i < numRows + 1; i++) { // +1 for header row
-            RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setMinHeight(cellLength); // Adjust height for better visibility
-            rowConstraints.setPrefHeight(cellLength);
-            rowConstraints.setVgrow(Priority.SOMETIMES);
-            grid.getRowConstraints().add(rowConstraints);
-        }
-
-        // Add column headers
-        for (int col = 1; col <= numCols; col++) {
-            Label header = new Label(String.valueOf((char) ('A' + col - 1)));
-            setLabelSize(header, cellWidth, cellLength);
-            header.getStyleClass().add("header-label");
-            grid.add(header, col, 0);
-        }
-
-        // Add row headers
-        for (int row = 1; row <= numRows; row++) {
-            Label header = new Label(String.valueOf(row));
-            setLabelSize(header, cellWidth, cellLength);
-            header.getStyleClass().add("header-label");
-            grid.add(header, 0, row);
-        }
-
-        // Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label();
@@ -285,7 +205,6 @@ public class GridController {
         }
         List<Label> labels = new ArrayList<>();
         neighbors.forEach(location -> labels.add(cellLocationToLabel.get(location)));
-
         addLinesBetweenLabels(labels);
     }
     private void addLinesBetweenLabels(List<Label> labels) {

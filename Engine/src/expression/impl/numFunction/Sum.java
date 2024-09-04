@@ -16,33 +16,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Sum implements Expression {
-
-    Set<CellLocation> cellLocations;
     Range range;
-    Set<Ref> refOfRange = new HashSet<>();
 
-
-    public Sum(Range range) {
-
-        this.range = range;
-        this.cellLocations = range.getRangeOfCellLocation();
-
-        for(CellLocation cellLocation : cellLocations){
-            refOfRange.add(new Ref(cellLocation));
-        }
-
-        //range.AddObserver(this);
-    }
+    public Sum(Range range) {this.range = range;}
 
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {
 
+        Set<Ref> refOfRange = range.getRangeRefs();
         double sum = 0.0;
 
         for(Ref ref : refOfRange){
 
             EffectiveValue value = ref.evaluate(sheet);
-
             try{
                 sum += (double) value.getValue();
             }catch (Exception e){

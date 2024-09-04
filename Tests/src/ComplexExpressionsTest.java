@@ -17,8 +17,8 @@ public class ComplexExpressionsTest {
     public void setUp() throws Exception {
         engine = new EngineImpl();
         String liorPath = "C:\\Users\\Lior\\Desktop\\Lior\\שנה 2\\java\\projects\\matalot\\SheetCelll\\Engine\\src\\Utility\\STLSheetXmlExamples\\Empty.xml";
-
-        engine.readSheetCellFromXML(liorPath);
+        String nivPath = "C:\\Users\\nivii\\programming\\CS degree\\year 2\\javaCourse\\sheetCell ex 1\\Engine\\src\\Utility\\STLSheetXmlExamples\\Empty.xml";
+        engine.readSheetCellFromXML(nivPath);
         uiSheet = new TerminalSheet(); // Initialize your UI sheet implementation
     }
 
@@ -187,7 +187,43 @@ public class ComplexExpressionsTest {
         System.out.println("Updated B2 with 10");
         assertEquals(25.0, engine.getRequestedCell("B1").getEffectiveValue().getValue());
         uiSheet.display(engine.getSheetCell());
-
-
+    }
+    @Test
+    public void testRangesBasic() throws Exception {
+        engine.UpdateNewRange("niv", "B1..B3");
+        System.out.println("Updated NIV with range B1..B3");
+        engine.updateCell("10", 'B', "1");
+        System.out.println("Updated B1 with 10");
+        engine.updateCell("10", 'B', "3");
+        System.out.println("Updated B3 with 10");
+        engine.updateCell("20", 'B', "2");
+        System.out.println("Updated B2 with 20");
+        uiSheet.display(engine.getSheetCell());
+        engine.updateCell("{SUM,niv}", 'A', "1");
+        uiSheet.display(engine.getSheetCell());
+        assertEquals(40.0, engine.getRequestedCell("A1").getEffectiveValue().getValue());
+    }
+    @Test
+    public void testRangesComplex() throws Exception {
+        engine.UpdateNewRange("niv", "A1..B3");
+        System.out.println("created range niv A1..B3");
+        engine.updateCell("10", 'A', "1");
+        System.out.println("Updated B1 with 10");
+        engine.updateCell("{ref,A1}", 'B', "1");
+        System.out.println("Updated B1 with formula {ref,A1}");
+        engine.updateCell("hello", 'A', "2");
+        System.out.println("Updated A2 with 'hello'");
+        engine.updateCell("{CONCAT,{REF,A2}, NIV}", 'B', "2");
+        System.out.println("Updated B2 with formula {CONCAT,{REF,A2}, NIV}");
+        engine.updateCell("{plus,{ref,B1},{ref,a1}}", 'A', "3");
+        System.out.println("Updated A3 with formula {plus,{ref,B1},{ref,a1}}");
+        uiSheet.display(engine.getSheetCell());
+        engine.updateCell("{SUM,niv}", 'C', "3");
+        System.out.println("Updated B3 with formula {SUM,niv}");
+        uiSheet.display(engine.getSheetCell());
+        assertEquals(40.0, engine.getRequestedCell("C3").getEffectiveValue().getValue());
+        engine.updateCell("1", 'A', "1");
+        uiSheet.display(engine.getSheetCell());
+        assertEquals(4.0, engine.getRequestedCell("C3").getEffectiveValue().getValue());
     }
 }

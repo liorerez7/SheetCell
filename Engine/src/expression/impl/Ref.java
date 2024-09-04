@@ -43,4 +43,8 @@ public class Ref implements Expression {
     @Override
     public void accept(ExpressionVisitor visitor) {
     }
+
+    public CellLocation getCellLocation() {
+        return location;
+    }
 }

@@ -30,5 +30,18 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../Aviad-Guides/jaxb/jaxb-ri/mod" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

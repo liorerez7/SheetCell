@@ -4,6 +4,7 @@ import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
 import Utility.RefDependencyGraph;
 import expression.api.EffectiveValue;
+import expression.impl.Range;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -15,4 +16,6 @@ public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
     RefDependencyGraph getGraph();
     boolean isCellPresent(CellLocation location);
     Map<CellLocation, EffectiveValue> getViewSheetCell();
+    public boolean isRangePresent(String rangeName);
+    public Range getRange(String rangeName);
 }

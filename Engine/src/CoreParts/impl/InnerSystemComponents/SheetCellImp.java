@@ -13,6 +13,7 @@ import Utility.RefGraphBuilder;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.Range;
+import expression.impl.Ref;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -147,7 +148,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         versionControlManager.versionControl();
         updateEffectedByAndOnLists();
     }
-
     @Override
     public void updateNewRange(String name, String range) {
         // Split the range string into start and end cell IDs
@@ -174,17 +174,16 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         }
 
         // Create a set to hold all CellLocation objects in the range
-        Set<CellLocation> cellLocations = new HashSet<>();
+        Set<Ref> cellLocations = new HashSet<>();
 
         // Loop through the columns and rows to generate all CellLocations in the range
         for (char col = startCol; col <= endCol; col++) {
             for (int row = startRow; row <= endRow; row++) {
                 String cellId = col + Integer.toString(row);
                 CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
-                cellLocations.add(cellLocation);
+                cellLocations.add(new Ref(cellLocation));
             }
         }
-
         // Create a new Range object with the specified name and the set of CellLocations
         Range newRange = new Range(cellLocations, name);
 
@@ -192,17 +191,17 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         systemRanges.add(newRange);
     }
 
+    @Override
     public boolean isRangePresent(String rangeName) {
-
         for (Range range : systemRanges) {
             if (range.getRangeName().equals(rangeName)) {
                 return true;
             }
         }
-
         return false;
     }
 
+    @Override
     public Range getRange(String rangeName) {
         for (Range range : systemRanges) {
             if (range.getRangeName().equals(rangeName)) {
