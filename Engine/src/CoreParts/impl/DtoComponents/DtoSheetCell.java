@@ -30,7 +30,6 @@ public class DtoSheetCell implements SheetCellViewOnly {
     public DtoSheetCell(SheetCell sheetCellImp) {
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
             EffectiveValue effectiveValue;
-            //TODO: Check if this is correct
             effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
 
             sheetCell.put(entry.getKey(), effectiveValue);

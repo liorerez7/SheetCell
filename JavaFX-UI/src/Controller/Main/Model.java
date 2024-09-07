@@ -30,7 +30,6 @@ public class Model {
         totalVersionsProperty = new SimpleStringProperty("");
     }
 
-
     public void setCellLabelToProperties(Map<CellLocation,Label> cellLocationLabelMap) {
 
         cellLocationLabelMap.forEach((cellLocation, label) -> {
@@ -39,6 +38,7 @@ public class Model {
         });
 
     }
+
     public void bindCellLebelToProperties() {
         cellLebalToProperties.forEach((label, property) -> {
             label.textProperty().bind(property);
@@ -85,12 +85,7 @@ public class Model {
         return value;
     }
 
-    public void setSheetCell(DtoSheetCell sheetCell) {
-        this.sheetCell = sheetCell;
-    }
-
-
-     public StringProperty getLatestUpdatedVersionProperty() {
+    public StringProperty getLatestUpdatedVersionProperty() {
         return latestUpdatedVersionProperty;
     }
 

@@ -75,6 +75,7 @@ public class RangesController {
     void addRangeClicked(ActionEvent event) {
         mainController.rangeAddClicked();
     }
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
