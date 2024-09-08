@@ -68,8 +68,6 @@ public class CellUtils {
             return new Str(value);
         }
 
-
-
         List<String> arguments = parser.getArgumentList();
         Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
 
@@ -91,20 +89,6 @@ public class CellUtils {
             return new Avg(range, targetCell.getLocation().getCellId());
         }
 
-//        else if(operation == Operation.SUM){
-//            Range range = sheetCell.getRange(arguments.getFirst());
-//            range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
-//            return new Sum(range);
-//        }
-//
-//        else if(operation == Operation.AVG){
-//            Range range = sheetCell.getRange(arguments.getFirst());
-//            range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
-//            return new Avg(range, targetCell.getLocation().getCellId());
-//
-//        }
-
-        //isMethod = true;
         return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
     }
 
