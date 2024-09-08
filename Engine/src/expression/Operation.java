@@ -2,6 +2,11 @@ package expression;
 import Utility.Exception.TooManyArgumentsException;
 import Utility.Exception.UnknownOperationTypeException;
 import expression.api.Expression;
+import expression.impl.If;
+import expression.impl.boolFunction.Bigger;
+import expression.impl.boolFunction.Equal;
+import expression.impl.boolFunction.Less;
+import expression.impl.boolFunction.Not;
 import expression.impl.numFunction.*;
 import expression.impl.stringFunction.Concat;
 import expression.impl.stringFunction.Sub;
@@ -81,6 +86,69 @@ public enum Operation {
     SUM {
         @Override
         public Expression calculate(List<Expression> expressions) {
+            return null;
+        }
+    },
+
+    EQUAL{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("EQUAL", 2, expressions.size());
+            return new Equal(expressions.get(0), expressions.get(1));
+        }
+    },
+
+    OR{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("OR", 2, expressions.size());
+            return new expression.impl.boolFunction.Or(expressions.get(0), expressions.get(1));
+        }
+    },
+
+    AND{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("AND", 2, expressions.size());
+            return new expression.impl.boolFunction.And(expressions.get(0), expressions.get(1));
+        }
+    },
+
+    NOT{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("NOT", 1, expressions.size());
+            return new Not(expressions.getFirst());
+        }
+    },
+
+    BIGGER{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("BIGGER", 2, expressions.size());
+            return new Bigger(expressions.get(0), expressions.get(1));
+        }
+    },
+
+    LESS{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("LESS", 2, expressions.size());
+            return new Less(expressions.get(0), expressions.get(1));
+        }
+    },
+
+    IF{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("IF", 3, expressions.size());
+            return new If(expressions.get(0), expressions.get(1), expressions.get(2));
+        }
+    },
+
+    AVG{
+        @Override
+        public Expression calculate(List<Expression> expressions){
             return null;
         }
     },

@@ -107,10 +107,17 @@ public class RangesController {
         this.mainController = mainController;
     }
 
+    // Reset the ComboBox to its default state when clicking other cell on grid
     public void resetComboBox() {
         SystemRanges.getSelectionModel().clearSelection(); // Clear the current selection
         SystemRanges.setPromptText("Ranges"); // Set default text after clearing selection
 
+    }
+
+    // Clear all ranges from the ComboBox when loading another XML file
+    public void clearAllRanges() {
+        SystemRanges.getItems().clear(); // Clear all items from the ComboBox
+        resetComboBox(); // Reset the ComboBox to its default state
     }
 }
 

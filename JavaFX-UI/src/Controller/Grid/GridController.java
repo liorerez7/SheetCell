@@ -253,4 +253,5 @@ public class GridController {
     public void clearAllHighlights() {
         neighborsHandler.clearAllHighlights(cellLocationToLabel);
     }
+
 }

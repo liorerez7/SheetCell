@@ -20,6 +20,7 @@ public class Concat extends BinaryExpression {
 
     @Override
     protected EffectiveValue evaluate(EffectiveValue evaluate1, EffectiveValue evaluate2) {
+
         evaluate1.assertRawType(ReturnedValueType.STRING);
         evaluate2.assertRawType(ReturnedValueType.STRING);
 

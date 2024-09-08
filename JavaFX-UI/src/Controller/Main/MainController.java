@@ -86,6 +86,7 @@ public class MainController {
         }
 
         Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
+        rangesController.clearAllRanges();
         model.setCellLabelToProperties(cellLocationLabelMap);
         model.bindCellLebelToProperties();
         model.setPropertiesByDtoSheetCell(engine.getSheetCell());
@@ -111,8 +112,11 @@ public class MainController {
         } catch (UnknownOperationTypeException e) {
             createErrorPopup(e.getMessage(),"Unknown Operation Type");
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch(AvgWithNoNumericCells e) {
+            createErrorPopup(e.getMessage(), "Avg With No Numeric Cells");
+        }
+        catch (Exception e) {
+            createErrorPopup(e.getMessage(), "Error");
         }
     }
 
@@ -270,6 +274,8 @@ public class MainController {
         gridController.clearAllHighlights();
         gridController.showAffectedCells(engine.getRequestedRange(rangeName));
     }
+
+
 }
 
 
