@@ -4,6 +4,7 @@ import CoreParts.smallParts.CellLocation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ public class Range implements Serializable {
 
     Set<Ref> refs;
     String rangeName;
+    Set<CellLocation> cellsThatThisRangeAffects = new HashSet<>();
 
     public Range(Set<Ref> rangeOfCellLocation, String rangeName) {
         this.refs = rangeOfCellLocation;
@@ -34,4 +36,15 @@ public class Range implements Serializable {
         return rangeName;
     }
 
+    public void addAffectedFromThisRangeCellLocation(CellLocation cellLocation) {
+        cellsThatThisRangeAffects.add(cellLocation);
+    }
+
+    public Set<CellLocation> getAffectingCellLocations() {
+        return cellsThatThisRangeAffects;
+    }
+
+    public boolean canBeDeleted() {
+        return cellsThatThisRangeAffects.isEmpty();
+    }
 }

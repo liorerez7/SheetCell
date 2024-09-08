@@ -16,9 +16,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Sum implements Expression {
+
     Range range;
 
-    public Sum(Range range) {this.range = range;}
+    public Sum(Range range) {
+
+        this.range = range;
+    }
 
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) throws IllegalArgumentException {

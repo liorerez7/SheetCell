@@ -11,7 +11,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.security.PublicKey;
 
 
 public class HeaderController {
@@ -47,7 +46,7 @@ public class HeaderController {
 
         // Pass the selected file to the MainController
         if (selectedFile != null) {
-            MainController.InitlizeGridBasedOnXML(selectedFile.getAbsolutePath());
+            MainController.initializeGridBasedOnXML(selectedFile.getAbsolutePath());
         } else {
             System.out.println("File selection canceled.");
         }

@@ -11,6 +11,7 @@ import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.api.processing.ExpressionParser;
 import expression.impl.Processing.ExpressionParserImpl;
+import expression.impl.Range;
 import expression.impl.Ref;
 import expression.impl.numFunction.Num;
 import expression.impl.numFunction.Sum;
@@ -32,7 +33,6 @@ public class CellUtils {
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCell {// this is a recursive function
 
         ExpressionParser parser = new ExpressionParserImpl(value);
-
 
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
 
@@ -70,7 +70,9 @@ public class CellUtils {
         }
 
         else if(operation == Operation.SUM){
-            return new Sum(sheetCell.getRange(arguments.getFirst()));
+            Range range = sheetCell.getRange(arguments.getFirst());
+            range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
+            return new Sum(range);
         }
 
         //isMethod = true;

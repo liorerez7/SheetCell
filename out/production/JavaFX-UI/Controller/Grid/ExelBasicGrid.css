@@ -39,7 +39,12 @@
     -fx-animation: pulse 1.5s infinite;
 }
 
-/* write for animation that starts at 0% and ends at 100*/
+/* style.css */
+.glow {
+    -fx-background-color: #ff4d4d;  /* Modern red */
+    -fx-border-color: black;
+    -fx-effect: dropshadow(gaussian, #ff1e00, 10, 0.5, 0, 0);
+}
 
 @keyframes pulse {
     0% {

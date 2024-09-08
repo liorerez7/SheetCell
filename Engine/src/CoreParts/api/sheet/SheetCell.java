@@ -17,7 +17,9 @@ public interface SheetCell extends
 
     void updateNewRange(String name, String range);
 
-    public boolean isRangePresent(String rangeName);
+    boolean isRangePresent(String rangeName);
     Set<Range> getSystemRanges();
-    public Range getRange(String rangeName);
+    Range getRange(String rangeName);
+
+    void deleteRange(String name);
 }

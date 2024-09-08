@@ -17,4 +17,5 @@ public interface Engine {
     void load(String path) throws Exception;
     void UpdateNewRange(String name, String range) throws IllegalArgumentException;
     List<CellLocation> getRequestedRange(String name);
+    void deleteRange(String name);
 }

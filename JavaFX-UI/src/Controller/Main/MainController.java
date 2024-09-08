@@ -11,9 +11,7 @@ import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
-import Utility.Exception.CycleDetectedException;
-import Utility.Exception.TooManyArgumentsException;
-import Utility.Exception.UnknownOperationTypeException;
+import Utility.Exception.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -55,13 +53,6 @@ public class MainController {
 
     private Model model;
     private PopUpWindowsHandler popUpWindowsHandler;
-    public StringProperty getVersionProperty() {
-        return model.getLatestUpdatedVersionProperty();
-    }
-
-    public BooleanProperty getIsCellLebalClickedProperty() {
-        return model.getIsCellLebalClickedProperty();
-    }
 
     @FXML
     public void initialize() {
@@ -72,12 +63,20 @@ public class MainController {
         rangesController.setMainController(this);
     }
 
+    public StringProperty getVersionProperty() {
+        return model.getLatestUpdatedVersionProperty();
+    }
+
+    public BooleanProperty getIsCellLabelClickedProperty() {
+        return model.getIsCellLebalClickedProperty();
+    }
+
     public MainController() {
         model = new Model(null);
         popUpWindowsHandler = new PopUpWindowsHandler();
     }
 
-    public void InitlizeGridBasedOnXML(String absolutePath) {
+    public void initializeGridBasedOnXML(String absolutePath) {
 
         try {
             engine.readSheetCellFromXML(absolutePath);
@@ -93,7 +92,7 @@ public class MainController {
         model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
     }
 
-    public void UpdateCell(String text, String newValue) {
+    public void updateCell(String text, String newValue) {
         try {
             engine.updateCell(newValue, text.charAt(0), text.substring(1));
             DtoCell requestedCell = engine.getRequestedCell(text);
@@ -107,10 +106,10 @@ public class MainController {
         } catch (CycleDetectedException e) {
             createPopUpCircularGrid(engine.getSheetCell(), e.getCycle());
         } catch (TooManyArgumentsException e) {
-            createPopup(e.getMessage(),"Too Many Arguments Error");
+            createErrorPopup(e.getMessage(),"Too Many Arguments Error");
 
         } catch (UnknownOperationTypeException e) {
-            createPopup(e.getMessage(),"Unknown Operation Type");
+            createErrorPopup(e.getMessage(),"Unknown Operation Type");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,28 +120,12 @@ public class MainController {
         this.engine = engine;
     }
 
-
-    public void cellClicked(String location) {
-
-        DtoCell requestedCell = engine.getRequestedCell(location);
-        model.setIsCellLebalClicked(true);
-        model.setLatestUpdatedVersionProperty(requestedCell);
-        model.setOriginalValueLabelProperty(requestedCell);
-        actionLineController.updateCssWhenUpdatingCell(location);
-        gridController.showNeighbors(requestedCell);
-    }
-
     public StringProperty getOriginalValueLabelProperty() {
         return model.getOriginalValueLabelProperty();
     }
 
     public StringProperty getTotalVersionsProperty() {
         return model.getTotalVersionsProperty();
-    }
-
-    public void speceifcVersionClicked(int versionNumber) {
-        DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
-        createPopUpVersionGrid(dtoSheetCell, versionNumber);
     }
 
     private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
@@ -192,7 +175,7 @@ public class MainController {
 
     }
 
-    public void createPopup(String message, String title) {
+    public void createErrorPopup(String message, String title) {
         // Create a new Stage for the popup
         Stage popupStage = new Stage();
         popupStage.setTitle(title);
@@ -227,13 +210,65 @@ public class MainController {
     }
 
     public void rangeAddClicked() {
-         RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
+
+        RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
         String name = rangeStringsData.getName();
-        engine.UpdateNewRange(name,rangeStringsData.getRange());
-         rangesController.addRange(engine.getRequestedRange(name),name);
+        if(name != null) //in case when just shutting the window without entering anything
+        {
+            try {
+                engine.UpdateNewRange(name,rangeStringsData.getRange());
+                rangesController.addRange(engine.getRequestedRange(name),name);
+            }
+            catch (IllegalArgumentException e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
+        }
     }
-    public void openDeleteRangeWindow() {
-        popUpWindowsHandler.openDeleteRangeWindow();
+
+    public void rangeDeleteClicked() {
+
+
+        RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow();
+        String name = rangeStringsData.getName();
+
+        if(name != null) //in case when just shutting the window without entering anything
+        {
+            try {
+                engine.deleteRange(name);
+                rangesController.deleteRange(name);
+            }
+            catch (RangeCantBeDeleted e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
+            catch (RangeDoesntExist e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
+        }
+
+
+    }
+
+    public void specificVersionClicked(int versionNumber) {
+        DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
+        createPopUpVersionGrid(dtoSheetCell, versionNumber);
+    }
+
+    public void cellClicked(String location) {
+
+        DtoCell requestedCell = engine.getRequestedCell(location);
+        model.setIsCellLebalClicked(true);
+        model.setLatestUpdatedVersionProperty(requestedCell);
+        model.setOriginalValueLabelProperty(requestedCell);
+        actionLineController.updateCssWhenUpdatingCell(location);
+        gridController.clearAllHighlights();
+        gridController.showNeighbors(requestedCell);
+        rangesController.resetComboBox();
+    }
+
+    public void handleRangeClick(String rangeName) {
+
+        gridController.clearAllHighlights();
+        gridController.showAffectedCells(engine.getRequestedRange(rangeName));
     }
 }
 

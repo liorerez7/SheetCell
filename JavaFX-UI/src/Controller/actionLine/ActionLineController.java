@@ -47,7 +47,7 @@ public class ActionLineController {
         String newValue = newValueText.getText();
         String cellId = cellidLabel.getText();
         newValueText.clear();
-        mainController.UpdateCell(cellId , newValue);
+        mainController.updateCell(cellId , newValue);
     }
 
 
@@ -86,8 +86,8 @@ public class ActionLineController {
 
     private void initializeBindings() {
         // Now that mainController is guaranteed to be initialized, you can safely bind properties
-        newValueText.disableProperty().bind(mainController.getIsCellLebalClickedProperty().not());
-        updateCellButton.disableProperty().bind(mainController.getIsCellLebalClickedProperty().not());
+        newValueText.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
+        updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         lastUpdatedVersion.textProperty().bind(Bindings.concat("Last Version: ", mainController.getVersionProperty()));
         originalValue.textProperty().bind(mainController.getOriginalValueLabelProperty());
     }
@@ -95,7 +95,7 @@ public class ActionLineController {
 
     private void handleVersionClick(int versionNumber) {
 
-        mainController.speceifcVersionClicked(versionNumber);
+        mainController.specificVersionClicked(versionNumber);
 
     }
 }

@@ -19,8 +19,7 @@ public class RangesController {
     MainController mainController;
 
     @FXML
-    private ComboBox<HBox> SystemRanges;
-
+    private ComboBox<Label> SystemRanges;
 
     @FXML
     private Button addRangeButton;
@@ -33,44 +32,72 @@ public class RangesController {
 
     @FXML
     public void initialize() {
-    }
+        // Handle rendering for ComboBox items
+        SystemRanges.setCellFactory(comboBox -> new ListCell<Label>() {
 
-    public void addRange(List<CellLocation> ranges, String rangeName) {
-        // Create the label for the range name
-        Label rangeLabel = new Label(rangeName);
-        rangeLabel.setOnMouseClicked(event -> {
-            // Handle click event for the range label
-            System.out.println("Range label clicked: " + rangeName);
-            // Additional logic for range label click can be added here
-        });
-
-        // Create the trashcan icon
-        ImageView trashIcon = new ImageView(new Image(getClass().getResourceAsStream("/resources/trashcan.png")));
-        trashIcon.setFitWidth(16);
-        trashIcon.setFitHeight(16);
-        trashIcon.setOnMouseClicked(event -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Are you sure you want to delete the range '" + rangeName + "'?",
-                    ButtonType.YES, ButtonType.NO);
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
-                    // Remove the range from the ComboBox
-                    SystemRanges.getItems().remove(rangeLabel.getParent()); // Removes the HBox containing rangeLabel and trashIcon
+            @Override
+            protected void updateItem(Label item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null); // Hide if null or empty
+                } else {
+                    setText(item.getText()); // Display label text
                 }
-            });
+            }
         });
 
-        // Create the HBox to hold the label and trashcan icon
-        HBox rangeItem = new HBox(10, rangeLabel, trashIcon);
-        rangeItem.getStyleClass().add("range-item");
+        // Ensure the selected item is displayed correctly
+        SystemRanges.setButtonCell(new ListCell<Label>() {
+            @Override
+            protected void updateItem(Label item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Ranges"); // Default text when nothing is selected
+                } else {
+                    setText(item.getText()); // Display selected label text
+                }
+            }
+        });
 
-        // Add the HBox to the ComboBox
-        SystemRanges.getItems().add(rangeItem);
+        // Handle selection event
+        SystemRanges.setOnAction(event -> {
+            Label selectedLabel = SystemRanges.getSelectionModel().getSelectedItem();
+            if (selectedLabel != null) {
+                handleRangeLabelClick(selectedLabel.getText());
+            }
+        });
     }
+
+    // Add a new range label to the ComboBox
+    public void addRange(List<CellLocation> ranges, String rangeName) {
+        // Create the label for the range
+        Label rangeLabel = new Label(rangeName);
+
+        // Add CSS or styling to the label if necessary
+        rangeLabel.getStyleClass().add("range-item");
+
+        // Add the label to the ComboBox
+        SystemRanges.getItems().add(rangeLabel);
+    }
+
+    // Method that gets called when a range label is clicked/selected
+    private void handleRangeLabelClick(String rangeName) {
+        mainController.handleRangeClick(rangeName);
+    }
+
+    // Delete a range by its name from the ComboBox
+    public void deleteRange(String rangeName) {
+        // Remove the label with the specified range name from the ComboBox
+        SystemRanges.getItems().removeIf(label ->
+                Objects.equals(label.getText(), rangeName)
+        );
+    }
+
     @FXML
-    void deleteRange(ActionEvent event) {
-
+    void deleteRangeClicked(ActionEvent event) {
+        mainController.rangeDeleteClicked();
     }
+
     @FXML
     void addRangeClicked(ActionEvent event) {
         mainController.rangeAddClicked();
@@ -80,5 +107,11 @@ public class RangesController {
         this.mainController = mainController;
     }
 
+    public void resetComboBox() {
+        SystemRanges.getSelectionModel().clearSelection(); // Clear the current selection
+        SystemRanges.setPromptText("Ranges"); // Set default text after clearing selection
+
+    }
 }
+
 

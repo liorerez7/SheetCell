@@ -8,6 +8,8 @@ import CoreParts.smallParts.CellLocationFactory;
 import Utility.CellUtils;
 import Utility.Exception.CellCantBeEvaluated;
 import Utility.Exception.CycleDetectedException;
+import Utility.Exception.RangeCantBeDeleted;
+import Utility.Exception.RangeDoesntExist;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
 import expression.api.EffectiveValue;
@@ -49,6 +51,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         this.currentCellWidth = currentCellWidth;
         versionControlManager = new VersionControlManager(new HashMap<>(), this);
     }
+
     @Override
     public SheetCell restoreSheetCell(int versionNumber) {return null;}
 
@@ -57,10 +60,13 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
          refGraphBuilder = new RefGraphBuilder(this);
          refGraphBuilder.build();
     }
+
     @Override
     public RefDependencyGraph getRefDependencyGraph() {return refDependencyGraph;}
+
     @Override
     public void setCell(CellLocation location, Cell cell) {sheetCell.put(location, cell);}
+
     @Override
     public int getActiveCellsCount() {return sheetCell.size();}
 
@@ -76,21 +82,28 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         }
         return sheetCell.computeIfAbsent(location, loc -> new CellImp(loc));
     }
+
     @Override
     public void updateVersion() {versionNumber++;}
+
     @Override
     public void clearVersionNumber(){versionNumber = 1;}
+
     @Override
     public int getCellLength() {return currentCellLength;}
+
     @Override
     public int getCellWidth() {return currentCellWidth;}
+
     @Override
     public int getLatestVersion() {return versionNumber;}
 
     @Override
     public int getNumberOfRows() {return currentNumberOfRows;}
+
     @Override
     public int getNumberOfColumns() {return currentNumberOfCols;}
+
     @Override
     public String getSheetName() {return name;}
 
@@ -128,6 +141,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
             throw new IllegalStateException("Failed to save the sheetCell state", e);
         }
     }
+
     @Override
     public void removeCell(CellLocation cellLocation) {sheetCell.remove(cellLocation);}
 
@@ -148,6 +162,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         versionControlManager.versionControl();
         updateEffectedByAndOnLists();
     }
+
     @Override
     public void updateNewRange(String name, String range) {
         // Split the range string into start and end cell IDs
@@ -215,6 +230,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         }
         return null;
     }
+
     @Override
     public List<CellLocation> getRequestedRange(String rangeName) {
         return getRange(rangeName).getCellLocations();
@@ -224,10 +240,11 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public void updateVersions(Cell targetCell) {
         versionControlManager.updateVersions(targetCell);
     }
+
     @Override
     public void versionControl() {versionControlManager.versionControl();}
-    @Override
 
+    @Override
     public void performGraphOperations() throws CycleDetectedException, CellCantBeEvaluated {
 
         createRefDependencyGraph();
@@ -259,6 +276,26 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         targetCell.setOriginalValue(newValue);
         targetCell.setEffectiveValue(expression);
         targetCell.setActualValue(this);
+    }
+
+    @Override
+    public void deleteRange(String name) {
+
+        Range range = getRange(name);
+
+        if(range == null)
+        {
+            throw new RangeDoesntExist(name);
+        }
+
+        if(range.canBeDeleted())
+        {
+            systemRanges.removeIf(rangeIterator -> range.getRangeName().equals(name));
+        }
+        else{
+            throw new RangeCantBeDeleted(name, range.getAffectingCellLocations());
+        }
+
     }
 
 }

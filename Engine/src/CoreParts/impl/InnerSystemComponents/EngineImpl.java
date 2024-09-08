@@ -12,11 +12,8 @@ import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
 import Utility.Exception.CycleDetectedException;
-import Utility.Exception.DeleteWhileAffectingOtherCellException;
 import Utility.Exception.RefToUnSetCell;
 import expression.api.Expression;
-import expression.impl.Range;
-import expression.impl.stringFunction.Str;
 import jakarta.xml.bind.JAXBException;
 
 import java.io.*;
@@ -24,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Set;
 
 public class EngineImpl implements Engine {
 
@@ -33,6 +29,7 @@ public class EngineImpl implements Engine {
     public EngineImpl() {
         sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0);
     }
+
     @Override
     public DtoCell getRequestedCell(String cellId) {
             if(sheetCell.isCellPresent(CellLocationFactory.fromCellId(cellId))){
@@ -42,7 +39,6 @@ public class EngineImpl implements Engine {
                 return null;
             }
     }
-
 
     @Override
     public DtoSheetCell getSheetCell() {return new DtoSheetCell(sheetCell);}
@@ -62,7 +58,7 @@ public class EngineImpl implements Engine {
 
         try {
             sheetCell.clearVersionNumber();
-            getsheetFromSTL(path);
+            getSheetFromSTL(path);
             sheetCell.setUpSheet();
 
         } catch (Exception e) {
@@ -71,8 +67,7 @@ public class EngineImpl implements Engine {
         }
     }
 
-
-    private void getsheetFromSTL(String path) throws FileNotFoundException, JAXBException {
+    private void getSheetFromSTL(String path) throws FileNotFoundException, JAXBException {
         InputStream in = new FileInputStream(new File(path));
         STLSheet sheet = EngineUtilies.deserializeFrom(in);
         SheetConvertor convertor = new SheetConvertorImpl();
@@ -82,6 +77,11 @@ public class EngineImpl implements Engine {
     @Override
     public void UpdateNewRange(String name, String range) throws IllegalArgumentException {
         sheetCell.updateNewRange(name, range);
+    }
+
+    @Override
+    public void deleteRange(String name) {
+        sheetCell.deleteRange(name);
     }
 
     @Override
@@ -121,6 +121,7 @@ public class EngineImpl implements Engine {
             }
         }
     }
+
     @Override
     public void save(String path) throws Exception, IOException, IllegalArgumentException {
 
@@ -169,6 +170,7 @@ public class EngineImpl implements Engine {
             throw new NoSuchFieldException("file not found at this path: " + path);
         }
     }
+
     public Cell getCell(CellLocation location) {
         // Fetch the cell directly from the map in SheetCellImp
         return sheetCell.getCell(location);
