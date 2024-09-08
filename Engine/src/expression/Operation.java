@@ -146,10 +146,18 @@ public enum Operation {
         }
     },
 
-    AVG{
+    AVERAGE {
         @Override
         public Expression calculate(List<Expression> expressions){
             return null;
+        }
+    },
+
+    PERCENT{
+        @Override
+        public Expression calculate(List<Expression> expressions){
+            ThrowExceptionOnTooManyArguments("PERCENT", 2, expressions.size());
+            return new Percent(expressions.get(0), expressions.get(1));
         }
     },
 

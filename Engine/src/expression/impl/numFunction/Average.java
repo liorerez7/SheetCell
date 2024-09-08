@@ -12,12 +12,12 @@ import expression.impl.variantImpl.EffectiveValueImpl;
 
 import java.util.Set;
 
-public class Avg implements Expression {
+public class Average implements Expression {
 
     Range range;
     String cellId;
 
-    public Avg(Range range, String cellId) {
+    public Average(Range range, String cellId) {
         this.range = range;
         this.cellId = cellId;
     }

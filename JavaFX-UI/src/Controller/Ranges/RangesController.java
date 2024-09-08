@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListCell;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class RangesController {
@@ -118,6 +119,10 @@ public class RangesController {
     public void clearAllRanges() {
         SystemRanges.getItems().clear(); // Clear all items from the ComboBox
         resetComboBox(); // Reset the ComboBox to its default state
+    }
+
+    public void setAllRanges(Map<String, List<CellLocation>> ranges) {
+        ranges.forEach((rangeName, range) -> addRange(range, rangeName));
     }
 }
 

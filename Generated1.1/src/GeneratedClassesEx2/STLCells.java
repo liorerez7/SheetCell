@@ -5,7 +5,7 @@
 //
 
 
-package GeneratedClasses;
+package GeneratedClassesEx2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element ref="{}STL-Range" maxOccurs="unbounded"/>
+ *         <element ref="{}STL-Cell" maxOccurs="unbounded"/>
  *       </sequence>
  *     </restriction>
  *   </complexContent>
@@ -37,44 +37,44 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "stlRange"
+    "stlCell"
 })
-@XmlRootElement(name = "STL-Ranges")
-public class STLRanges {
+@XmlRootElement(name = "STL-Cells")
+public class STLCells {
 
-    @XmlElement(name = "STL-Range", required = true)
-    protected List<STLRange> stlRange;
+    @XmlElement(name = "STL-Cell", required = true)
+    protected List<STLCell> stlCell;
 
     /**
-     * Gets the value of the stlRange property.
+     * Gets the value of the stlCell property.
      * 
      * <p>This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the stlRange property.</p>
+     * This is why there is not a <CODE>set</CODE> method for the stlCell property.</p>
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * </p>
      * <pre>
-     * getSTLRange().add(newItem);
+     * getSTLCell().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link STLRange }
+     * {@link STLCell }
      * </p>
      * 
      * 
      * @return
-     *     The value of the stlRange property.
+     *     The value of the stlCell property.
      */
-    public List<STLRange> getSTLRange() {
-        if (stlRange == null) {
-            stlRange = new ArrayList<>();
+    public List<STLCell> getSTLCell() {
+        if (stlCell == null) {
+            stlCell = new ArrayList<>();
         }
-        return this.stlRange;
+        return this.stlCell;
     }
 
 }

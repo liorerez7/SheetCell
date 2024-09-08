@@ -5,7 +5,7 @@
 //
 
 
-package GeneratedClasses;
+package GeneratedClassesEx2;
 
 import javax.xml.namespace.QName;
 import jakarta.xml.bind.JAXBElement;

@@ -40,7 +40,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     private int currentCellWidth;
 
 
-    public SheetCellImp(int row, int col, String sheetName, int currentCellLength, int currentCellWidth) {
+    public SheetCellImp(int row, int col, String sheetName, int currentCellLength, int currentCellWidth, Set<Range> systemRanges) {
         if (row > maxRows || col > maxCols) {
             throw new IllegalArgumentException("Row and column numbers exceed maximum allowed limits.");
         }
@@ -50,6 +50,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         this.currentCellLength = currentCellLength;
         this.currentCellWidth = currentCellWidth;
         versionControlManager = new VersionControlManager(new HashMap<>(), this);
+        this.systemRanges = systemRanges;
     }
 
     @Override
@@ -237,6 +238,11 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     }
 
     @Override
+    public Map<String, List<CellLocation>> getRanges() {
+        return null;
+    }
+
+    @Override
     public void updateVersions(Cell targetCell) {
         versionControlManager.updateVersions(targetCell);
     }
@@ -297,5 +303,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         }
 
     }
+
 
 }

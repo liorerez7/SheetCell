@@ -91,6 +91,7 @@ public class MainController {
         model.bindCellLebelToProperties();
         model.setPropertiesByDtoSheetCell(engine.getSheetCell());
         model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+        rangesController.setAllRanges(engine.getSheetCell().getRanges());
     }
 
     public void updateCell(String text, String newValue) {

@@ -5,7 +5,7 @@
 //
 
 
-package GeneratedClasses;
+package GeneratedClassesEx2;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

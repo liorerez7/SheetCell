@@ -6,7 +6,7 @@ import CoreParts.api.SheetConvertor;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocationFactory;
-import GeneratedClasses.STLSheet;
+import GeneratedClassesEx2.STLSheet;
 import Utility.CellUtils;
 import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
@@ -27,7 +27,7 @@ public class EngineImpl implements Engine {
     private SheetCell sheetCell;
 
     public EngineImpl() {
-        sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0);
+        sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0, null);
     }
 
     @Override

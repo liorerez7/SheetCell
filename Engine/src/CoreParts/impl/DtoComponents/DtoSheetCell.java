@@ -111,6 +111,12 @@ public class DtoSheetCell implements SheetCellViewOnly {
     public Range getRange(String rangeName) {
         return null;
     }
+
+    @Override
+    public Map<String,List<CellLocation>> getRanges() {
+        return ranges;
+    }
+
     @Override
     public List<CellLocation> getRequestedRange(String name) {
         return ranges.get(name);

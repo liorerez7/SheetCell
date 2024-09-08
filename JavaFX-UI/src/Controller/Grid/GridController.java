@@ -47,8 +47,8 @@ public class GridController {
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
-        int cellWidth = sheetCell.getCellWidth() * 10;
-        int cellLength = sheetCell.getCellLength() * 13;
+        int cellWidth = sheetCell.getCellWidth() * 2;
+        int cellLength = sheetCell.getCellLength() * 2;
 
         clearGrid(grid);
         setupColumnConstraints(grid, numCols, cellWidth);
@@ -64,8 +64,8 @@ public class GridController {
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-        cellWidth = cellWidth * 10;
-        cellLength = cellLength * 13;
+        cellWidth = cellWidth * 2;
+        cellLength = cellLength * 2;
 
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         // Add cells with Label
@@ -100,8 +100,8 @@ public class GridController {
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-        cellWidth = cellWidth * 10;
-        cellLength = cellLength * 13;
+        cellWidth = cellWidth * 2;
+        cellLength = cellLength * 2;
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
 
         for (int row = 1; row <= numRows; row++) {

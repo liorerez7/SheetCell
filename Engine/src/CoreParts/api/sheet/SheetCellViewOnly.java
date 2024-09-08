@@ -20,4 +20,5 @@ public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
     boolean isRangePresent(String rangeName);
     Range getRange(String rangeName);
     List<CellLocation> getRequestedRange(String name);
+    Map<String, List<CellLocation>> getRanges();
 }

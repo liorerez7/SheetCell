@@ -64,6 +64,7 @@ public class RefDependencyGraph implements java.io.Serializable {
 
 
     public List<Cell> topologicalSort() throws CycleDetectedException {
+
         Map<Cell, Boolean> visited = new HashMap<>();
         Map<Cell, Cell> parent = new HashMap<>();
         Stack<Cell> stack = new Stack<>();

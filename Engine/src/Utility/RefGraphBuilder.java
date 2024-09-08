@@ -23,8 +23,9 @@ public class RefGraphBuilder implements Serializable {
     public RefGraphBuilder(SheetCellViewOnly sheetCell) {
         this.dependencyGraph = sheetCell.getGraph();
         this.sheetCell = sheetCell;
-       // this.sheetCellImp = sheetCell;
+        // this.sheetCellImp = sheetCell;
     }
+
     public RefDependencyGraph getDependencyGraph() {
         return dependencyGraph;
     }
@@ -47,7 +48,7 @@ public class RefGraphBuilder implements Serializable {
             Cell refCell = sheetCell.getCell(refLocation);
             if (refCell != null) {
                 dependencyGraph.addDependency(cell, refCell);
-               // newDependencies.add(refCell);
+                // newDependencies.add(refCell);
 
             }
         }
@@ -62,7 +63,7 @@ public class RefGraphBuilder implements Serializable {
 
         // Extract range references for SUM and AVG
         extractRangeReferences(expression, "{SUM", references);
-        extractRangeReferences(expression, "{AVG", references);
+        extractRangeReferences(expression, "{AVERAGE", references);
 
         return references;
     }
@@ -108,7 +109,6 @@ public class RefGraphBuilder implements Serializable {
     }
 
 
-
     public void build() {
 
         dependencyGraph.resetDependenciesGraph();
@@ -116,22 +116,6 @@ public class RefGraphBuilder implements Serializable {
             processCell(cell);
         }
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //    private List<CellLocation> extractReferencesFromExpression(String expression) {
@@ -161,7 +145,7 @@ public class RefGraphBuilder implements Serializable {
 //                if (start != -1 && end != -1) {
 //                    String rangeName = expression.substring(start, end).trim();
 //
-//                    if(sheetCell.isRangePresent(rangeName)){
+//                    if (sheetCell.isRangePresent(rangeName)) {
 //                        Range range = sheetCell.getRange(rangeName);
 //                        //TODO:chnged
 //                        if (range != null) {
@@ -172,7 +156,7 @@ public class RefGraphBuilder implements Serializable {
 //                }
 //            }
 //            // Handle AVG
-//            else if (expression.regionMatches(true, index, "{AVG", 0, 4)) {
+//            else if (expression.regionMatches(true, index, "{AVERAGE", 0, 4)) {
 //                int start = expression.indexOf(',', index) + 1;
 //                int end = expression.indexOf('}', start);
 //                if (start != -1 && end != -1) {
@@ -192,3 +176,4 @@ public class RefGraphBuilder implements Serializable {
 //
 //        return references;
 //    }
+}
