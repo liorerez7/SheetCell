@@ -3,7 +3,6 @@ package expression.impl.variantImpl;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.api.ExpressionVisitor;
 
 public abstract class UnaryExpression implements Expression {
 
@@ -21,9 +20,6 @@ public abstract class UnaryExpression implements Expression {
         return "";
     }
 
-    public void accept(ExpressionVisitor visitor) {
-        visitor.visit(this);
-    }
     @Override
     public String toString() {
         return expression.toString();

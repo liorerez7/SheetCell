@@ -5,10 +5,8 @@ import CoreParts.api.sheet.SheetCell;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import Utility.RefDependencyGraph;
-import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.impl.Range;
-import expression.impl.stringFunction.Str;
 
 import java.util.*;
 
@@ -61,10 +59,6 @@ public class DtoSheetCell implements SheetCellViewOnly {
        }
     }
 
-    @Override
-    public Cell getCell(CellLocation location) {
-        return null;
-    }
 
     @Override
     public int getActiveCellsCount() {
@@ -81,6 +75,12 @@ public class DtoSheetCell implements SheetCellViewOnly {
     public RefDependencyGraph getGraph() {
         return null;
     }
+
+    @Override
+    public Cell getCell(CellLocation location) {
+        return null;
+    }
+
 
     @Override
     public boolean isCellPresent(CellLocation location) {

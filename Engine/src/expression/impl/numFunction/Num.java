@@ -4,7 +4,6 @@ import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.api.ExpressionVisitor;
 import expression.impl.variantImpl.EffectiveValueImpl;
 
 public class Num implements Expression {
@@ -18,11 +17,6 @@ public class Num implements Expression {
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) {
         return new EffectiveValueImpl(ReturnedValueType.NUMERIC, num);
-    }
-
-    @Override
-    public void accept(ExpressionVisitor visitor) {
-        visitor.visit(this);
     }
 
     @Override

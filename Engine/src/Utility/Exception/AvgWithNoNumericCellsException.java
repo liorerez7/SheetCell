@@ -1,10 +1,10 @@
 package Utility.Exception;
 
-public class AvgWithNoNumericCells extends RuntimeException {
+public class AvgWithNoNumericCellsException extends RuntimeException {
 
     String CellId;
 
-    public AvgWithNoNumericCells(String cellId) {
+    public AvgWithNoNumericCellsException(String cellId) {
         CellId = cellId;
     }
 

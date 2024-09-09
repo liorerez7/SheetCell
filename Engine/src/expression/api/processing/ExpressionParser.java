@@ -3,7 +3,6 @@ package expression.api.processing;
 import java.io.Serializable;
 import java.util.List;
 
-//TODO: just an idea.
 public interface ExpressionParser  extends Serializable {
     public  boolean isPotentialOperation();
     public  String removeParanthesesFromString();

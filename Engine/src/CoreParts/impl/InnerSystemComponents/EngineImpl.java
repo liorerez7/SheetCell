@@ -12,7 +12,7 @@ import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilies;
 import Utility.Exception.CycleDetectedException;
-import Utility.Exception.RefToUnSetCell;
+import Utility.Exception.RefToUnSetCellException;
 import expression.api.Expression;
 import jakarta.xml.bind.JAXBException;
 
@@ -91,7 +91,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public void updateCell(String newValue, char col, String row) throws
-            CycleDetectedException, IllegalArgumentException, RefToUnSetCell {
+            CycleDetectedException, IllegalArgumentException, RefToUnSetCellException {
 
        byte[] savedSheetCellState = sheetCell.saveSheetCellState();
 
@@ -109,7 +109,6 @@ public class EngineImpl implements Engine {
         else{
             try {
                 Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
-                Expression oldExpression = targetCell.getEffectiveValue(); // old expression
                 sheetCell.applyCellUpdates(targetCell,newValue, expression);
                 sheetCell.updateVersions(targetCell);
                 sheetCell.performGraphOperations();

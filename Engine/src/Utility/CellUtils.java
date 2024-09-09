@@ -4,9 +4,9 @@ import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
-import Utility.Exception.CellCantBeEvaluated;
-import Utility.Exception.RangeDoesntExist;
-import Utility.Exception.RefToUnSetCell;
+import Utility.Exception.CellCantBeEvaluatedException;
+import Utility.Exception.RangeDoesntExistException;
+import Utility.Exception.RefToUnSetCellException;
 import expression.Operation;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
@@ -19,7 +19,6 @@ import expression.impl.boolFunction.Bool;
 import expression.impl.numFunction.Average;
 import expression.impl.numFunction.Num;
 import expression.impl.numFunction.Sum;
-import expression.impl.stringFunction.Concat;
 import expression.impl.stringFunction.Str;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,7 +37,7 @@ public class CellUtils {
         }
     }
 
-    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCell {// this is a recursive function
+    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCellException {// this is a recursive function
 
         ExpressionParser parser = new ExpressionParserImpl(value);
         boolean removeSpacesBeforeArguments = true;
@@ -50,7 +49,7 @@ public class CellUtils {
                 String trimmedValue = value.trim();
 
                 if (!(value.equals(trimmedValue))) {
-                    throw new CellCantBeEvaluated(targetCell);
+                    throw new CellCantBeEvaluatedException(targetCell);
                 }
             }
             else{
@@ -88,7 +87,7 @@ public class CellUtils {
         else if(operation == Operation.SUM || operation == Operation.AVERAGE){
             Range range = sheetCell.getRange(arguments.getFirst());
             if(range == null){
-                throw new RangeDoesntExist(arguments.getFirst());
+                throw new RangeDoesntExistException(arguments.getFirst());
             }
             range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
 
@@ -102,14 +101,14 @@ public class CellUtils {
         return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
     }
 
-    private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCell {
+    private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCellException {
 
         return new Ref(cellThatAffects.getLocation());
     }
 
 
     public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCell sheetCell, boolean insideMethod)
-            throws RefToUnSetCell {
+            throws RefToUnSetCellException {
 
         List<Expression> expressions = new ArrayList<>();
         for (String arg : arguments) {

@@ -54,7 +54,6 @@ public class SheetConvertorImpl implements SheetConvertor {
         return ourSheet;
     }
 
-
     // Validates ranges within the sheet
     private void validateRanges(List<STLRange> stlRangeList, int numOfRows, int numOfColumns) {
         for (STLRange range : stlRangeList) {

@@ -3,7 +3,6 @@ package expression.impl.variantImpl;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.api.ExpressionVisitor;
 
 public abstract class BinaryExpression implements Expression{
 
@@ -41,9 +40,6 @@ public abstract class BinaryExpression implements Expression{
         rightExpression = newExpression;
     }
 
-    public void accept(ExpressionVisitor visitor) {
-        visitor.visit(this);
-    }
     abstract protected EffectiveValue evaluate(EffectiveValue evaluate, EffectiveValue evaluate2);
 
 }

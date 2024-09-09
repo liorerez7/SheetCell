@@ -1,7 +1,7 @@
 import CoreParts.api.Engine;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.impl.UtilisUI.TerminalSheet;
-import Utility.Exception.CellCantBeEvaluated;
+import Utility.Exception.CellCantBeEvaluatedException;
 import Utility.Exception.CycleDetectedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -123,7 +123,7 @@ public class ComplexExpressionsTest {
             System.out.println("trying to Update A1 with formula {CONCAT,{REF,D2},2}");
             engine.updateCell("{CONCAT,{REF,D2},2}", 'A', "1");
             fail("Expected CellCantBeEvaluated to be thrown");
-        }catch (CellCantBeEvaluated e) {
+        }catch (CellCantBeEvaluatedException e) {
             System.out.println("Caught expected CellCantBeEvaluatedException:");
             System.out.println(e.getMessage());
         }

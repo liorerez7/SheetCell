@@ -1,9 +1,9 @@
 package Utility.Exception;
 
-public class RangeDoesntExist extends RuntimeException {
+public class RangeDoesntExistException extends RuntimeException {
     String rangeName;
 
-    public RangeDoesntExist(String rangeName) {
+    public RangeDoesntExistException(String rangeName) {
         this.rangeName = rangeName;
     }
 

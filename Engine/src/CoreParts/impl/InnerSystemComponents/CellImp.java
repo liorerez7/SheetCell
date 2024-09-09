@@ -3,12 +3,11 @@ package CoreParts.impl.InnerSystemComponents;
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
-import Utility.Exception.AvgWithNoNumericCells;
-import Utility.Exception.CellCantBeEvaluated;
+import Utility.Exception.AvgWithNoNumericCellsException;
+import Utility.Exception.CellCantBeEvaluatedException;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.variantImpl.EffectiveValueImpl;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -34,11 +33,11 @@ public void setActualValue(SheetCellViewOnly sheet) {
     try{
        actualValue = effectiveValue.evaluate(sheet);
     }
-    catch(AvgWithNoNumericCells e){
+    catch(AvgWithNoNumericCellsException e){
         throw e;
     }
     catch (Exception e){
-        throw new CellCantBeEvaluated(this);
+        throw new CellCantBeEvaluatedException(this);
     }
 }
 
@@ -57,6 +56,7 @@ public void setActualValue(EffectiveValue effectiveValue) {
         originalValue = "";
         effectiveValue = null;
     }
+
     public CellImp(CellLocation location, String originalValue) {
         this.location = location;
         this.originalValue = originalValue;

@@ -6,10 +6,10 @@ import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import Utility.CellUtils;
-import Utility.Exception.CellCantBeEvaluated;
+import Utility.Exception.CellCantBeEvaluatedException;
 import Utility.Exception.CycleDetectedException;
-import Utility.Exception.RangeCantBeDeleted;
-import Utility.Exception.RangeDoesntExist;
+import Utility.Exception.RangeCantBeDeletedException;
+import Utility.Exception.RangeDoesntExistException;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
 import expression.api.EffectiveValue;
@@ -150,7 +150,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions() {return versionControlManager.getVersions();}
 
     @Override
-    public void setUpSheet() throws CycleDetectedException, CellCantBeEvaluated {
+    public void setUpSheet() throws CycleDetectedException, CellCantBeEvaluatedException {
         createRefDependencyGraph();
         List<Cell> topologicalOrder = refDependencyGraph.getTopologicalSortOfExpressions();
         topologicalOrder.forEach(cell -> {
@@ -251,7 +251,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public void versionControl() {versionControlManager.versionControl();}
 
     @Override
-    public void performGraphOperations() throws CycleDetectedException, CellCantBeEvaluated {
+    public void performGraphOperations() throws CycleDetectedException, CellCantBeEvaluatedException {
 
         createRefDependencyGraph();
 
@@ -291,7 +291,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 
         if(range == null)
         {
-            throw new RangeDoesntExist(name);
+            throw new RangeDoesntExistException(name);
         }
 
         if(range.canBeDeleted())
@@ -299,7 +299,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
             systemRanges.removeIf(rangeIterator -> range.getRangeName().equals(name));
         }
         else{
-            throw new RangeCantBeDeleted(name, range.getAffectingCellLocations());
+            throw new RangeCantBeDeletedException(name, range.getAffectingCellLocations());
         }
 
     }

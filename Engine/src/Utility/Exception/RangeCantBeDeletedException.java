@@ -5,12 +5,12 @@ import CoreParts.smallParts.CellLocation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RangeCantBeDeleted extends RuntimeException {
+public class RangeCantBeDeletedException extends RuntimeException {
 
     String rangeName;
     Set<CellLocation> cellsThatThisRangeAffects;
 
-    public RangeCantBeDeleted(String RangeName, Set<CellLocation> cellsThatThisRangeAffects) {
+    public RangeCantBeDeletedException(String RangeName, Set<CellLocation> cellsThatThisRangeAffects) {
         this.rangeName = RangeName;
         this.cellsThatThisRangeAffects = cellsThatThisRangeAffects;
     }

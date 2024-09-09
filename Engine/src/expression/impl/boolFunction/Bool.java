@@ -4,7 +4,6 @@ import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.api.ExpressionVisitor;
 import expression.impl.variantImpl.EffectiveValueImpl;
 
 public class Bool implements Expression {
@@ -15,10 +14,8 @@ public class Bool implements Expression {
         this.value = val;
     }
 
-    @Override
-    public void accept(ExpressionVisitor visitor) {
 
-    }
+
 
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) {

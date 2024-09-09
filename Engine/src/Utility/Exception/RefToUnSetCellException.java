@@ -2,12 +2,12 @@ package Utility.Exception;
 
 import CoreParts.api.Cell;
 
-public class RefToUnSetCell extends RuntimeException {
+public class RefToUnSetCellException extends RuntimeException {
 
     private final Cell cell;
 
 
-    public RefToUnSetCell(Cell cell) {
+    public RefToUnSetCellException(Cell cell) {
         this.cell = cell;
     }
 

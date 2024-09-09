@@ -1,14 +1,11 @@
 package expression.impl.stringFunction;
 
-import Utility.Exception.CellCantBeEvaluated;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.impl.variantImpl.BinaryExpression;
 import expression.impl.variantImpl.EffectiveValueImpl;
 import expression.impl.variantImpl.TernaryExpression;
 
-//TODO: ADDING IF EMPTY OR UNDEFINED OR UNKNOWN
 public class Sub  extends TernaryExpression {
 
     public Sub(Expression expression1, Expression expression2, Expression expression3) {
@@ -19,7 +16,7 @@ public class Sub  extends TernaryExpression {
         return "";
     }
 
-    @Override//TODO:not working getting error not of the same type
+    @Override
     protected EffectiveValue evaluate(EffectiveValue source,
                                       EffectiveValue start,
                                       EffectiveValue end) throws IndexOutOfBoundsException {

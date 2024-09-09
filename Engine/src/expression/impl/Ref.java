@@ -6,7 +6,6 @@ import CoreParts.smallParts.CellLocation;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.api.ExpressionVisitor;
 import expression.impl.stringFunction.Str;
 import expression.impl.variantImpl.EffectiveValueImpl;
 
@@ -38,10 +37,6 @@ public class Ref implements Expression {
     @Override
     public String getOperationSign() {
         return "";
-    }
-
-    @Override
-    public void accept(ExpressionVisitor visitor) {
     }
 
     public CellLocation getCellLocation() {

@@ -79,19 +79,22 @@ public class MainController {
     public void initializeGridBasedOnXML(String absolutePath) {
 
         try {
-            engine.readSheetCellFromXML(absolutePath);
+            engine.readSheetCellFromXML(absolutePath); //can throw exception
+
             headerController.FileHasBeenLoaded(absolutePath);
+            Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
+            rangesController.clearAllRanges();
+            model.setCellLabelToProperties(cellLocationLabelMap);
+            model.bindCellLebelToProperties();
+            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+            rangesController.setAllRanges(engine.getSheetCell().getRanges());
+
         } catch (Exception e) {
-            e.printStackTrace();
+            createErrorPopup(e.getMessage(), "Error");
         }
 
-        Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
-        rangesController.clearAllRanges();
-        model.setCellLabelToProperties(cellLocationLabelMap);
-        model.bindCellLebelToProperties();
-        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-        rangesController.setAllRanges(engine.getSheetCell().getRanges());
+
     }
 
     public void updateCell(String text, String newValue) {
@@ -105,20 +108,27 @@ public class MainController {
 
             gridController.showNeighbors(requestedCell);
 
-        } catch (CycleDetectedException e) {
-            createPopUpCircularGrid(engine.getSheetCell(), e.getCycle());
-        } catch (TooManyArgumentsException e) {
-            createErrorPopup(e.getMessage(),"Too Many Arguments Error");
-
-        } catch (UnknownOperationTypeException e) {
-            createErrorPopup(e.getMessage(),"Unknown Operation Type");
-
-        }catch(AvgWithNoNumericCells e) {
-            createErrorPopup(e.getMessage(), "Avg With No Numeric Cells");
+        }catch (CycleDetectedException e) {
+            createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
         }
         catch (Exception e) {
             createErrorPopup(e.getMessage(), "Error");
         }
+//
+//        } catch (CycleDetectedException e) {
+//            createPopUpCircularGrid(engine.getSheetCell(), e.getCycle());
+//        } catch (TooManyArgumentsException e) {
+//            createErrorPopup(e.getMessage(),"Too Many Arguments Error");
+//
+//        } catch (UnknownOperationTypeException e) {
+//            createErrorPopup(e.getMessage(),"Unknown Operation Type");
+//
+//        }catch(AvgWithNoNumericCellsException e) {
+//            createErrorPopup(e.getMessage(), "Avg With No Numeric Cells");
+//        }
+//        catch (Exception e) {
+//            createErrorPopup(e.getMessage(), "Error");
+//        }
     }
 
     public void setEngine(EngineImpl engine) {
@@ -158,7 +168,7 @@ public class MainController {
         // popupStage.show();
     }
 
-    public void createPopUpCircularGrid(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
+    public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
         //popupStage.initModality(Modality.NONE); // Block events to other windows
@@ -242,10 +252,10 @@ public class MainController {
                 engine.deleteRange(name);
                 rangesController.deleteRange(name);
             }
-            catch (RangeCantBeDeleted e) {
+            catch (RangeCantBeDeletedException e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
-            catch (RangeDoesntExist e) {
+            catch (RangeDoesntExistException e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }

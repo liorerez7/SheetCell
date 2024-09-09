@@ -23,7 +23,6 @@ public class RefGraphBuilder implements Serializable {
     public RefGraphBuilder(SheetCellViewOnly sheetCell) {
         this.dependencyGraph = sheetCell.getGraph();
         this.sheetCell = sheetCell;
-        // this.sheetCellImp = sheetCell;
     }
 
     public RefDependencyGraph getDependencyGraph() {
@@ -33,8 +32,6 @@ public class RefGraphBuilder implements Serializable {
     public void processCell(Cell cell) {
 
         dependencyGraph.addVertice(cell);
-
-        //Set<Cell> currentDependencies = dependencyGraph.getDependencies(cell);
 
         String originalValue = cell.getOriginalValue();
 
