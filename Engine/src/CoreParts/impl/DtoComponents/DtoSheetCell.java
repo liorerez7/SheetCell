@@ -17,8 +17,6 @@ public class DtoSheetCell implements SheetCellViewOnly {
     private Map<CellLocation,EffectiveValue> sheetCell = new HashMap<>();
     private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
     private Map<String,List<CellLocation>> ranges = new HashMap<>();
-    private static final int maxRows = 50;
-    private static final int maxCols = 20;
     private String name;
     private int versionNumber;
     private int currentNumberOfRows;
@@ -42,16 +40,8 @@ public class DtoSheetCell implements SheetCellViewOnly {
         });
     }
 
-    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersionToCellsChanges() {
-        return versionToCellsChanges;
-    }
-
     public DtoSheetCell(SheetCell sheetCell, int requestedVersion) {
 
-
-        if (sheetCell.getLatestVersion() < requestedVersion) {
-            throw new IllegalArgumentException("Requested version is not available latest version is " + sheetCell.getLatestVersion());
-        }
         Set<CellLocation> markedLocations = new HashSet<>();
         copyBasicTypes(sheetCell);
         Map<CellLocation, EffectiveValue> sheetCellChanges = sheetCell.getVersions().get(requestedVersion);
@@ -161,6 +151,10 @@ public class DtoSheetCell implements SheetCellViewOnly {
 
     public EffectiveValue getEffectiveValue(CellLocation cellLocation) {
         return sheetCell.get(cellLocation);
+    }
+
+    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersionToCellsChanges() {
+        return versionToCellsChanges;
     }
 
 }

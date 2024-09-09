@@ -19,7 +19,6 @@ public class DtoCell {
     private Set<CellLocation > affectedBy;
     private Set<CellLocation> affectingOn;
 
-
     // Constructor to populate DtoCell from CellImp
     public DtoCell(Cell cell) {
 
@@ -48,7 +47,6 @@ public class DtoCell {
                 .map(Cell::getLocation)
                 .collect(Collectors.toSet());
     }
-
 
     public int getLatestVersion() {
         return version;

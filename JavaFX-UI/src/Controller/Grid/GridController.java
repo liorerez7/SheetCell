@@ -3,30 +3,20 @@ package Controller.Grid;
 
 import Controller.Main.MainController;
 import Controller.Utility.StringParser;
-import CoreParts.api.Cell;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import expression.api.EffectiveValue;
-import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -40,6 +30,7 @@ public class GridController {
     @FXML
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
     NeighborsHandler neighborsHandler;
+    private final static int DeltaExtensionGrid = 2;
 
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
 
@@ -47,8 +38,8 @@ public class GridController {
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
-        int cellWidth = sheetCell.getCellWidth() * 2;
-        int cellLength = sheetCell.getCellLength() * 2;
+        int cellWidth = sheetCell.getCellWidth() * DeltaExtensionGrid;
+        int cellLength = sheetCell.getCellLength() * DeltaExtensionGrid;
 
         clearGrid(grid);
         setupColumnConstraints(grid, numCols, cellWidth);
@@ -64,8 +55,8 @@ public class GridController {
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-        cellWidth = cellWidth * 2;
-        cellLength = cellLength * 2;
+        cellWidth = cellWidth * DeltaExtensionGrid;
+        cellLength = cellLength * DeltaExtensionGrid;
 
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         // Add cells with Label
@@ -100,8 +91,8 @@ public class GridController {
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-        cellWidth = cellWidth * 2;
-        cellLength = cellLength * 2;
+        cellWidth = cellWidth * DeltaExtensionGrid;
+        cellLength = cellLength * DeltaExtensionGrid;
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
 
         for (int row = 1; row <= numRows; row++) {
@@ -173,8 +164,8 @@ public class GridController {
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
-        cellWidth = cellWidth * 10;
-        cellLength = cellLength * 13;
+        cellWidth = cellWidth * DeltaExtensionGrid;
+        cellLength = cellLength * DeltaExtensionGrid;
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
