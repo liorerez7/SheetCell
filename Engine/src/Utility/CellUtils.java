@@ -19,6 +19,7 @@ import expression.impl.boolFunction.Bool;
 import expression.impl.numFunction.Average;
 import expression.impl.numFunction.Num;
 import expression.impl.numFunction.Sum;
+import expression.impl.stringFunction.Concat;
 import expression.impl.stringFunction.Str;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +41,7 @@ public class CellUtils {
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCell {// this is a recursive function
 
         ExpressionParser parser = new ExpressionParserImpl(value);
+        boolean removeSpacesBeforeArguments = true;
 
         if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
 
@@ -71,8 +73,13 @@ public class CellUtils {
             return new Str(value);
         }
 
-        List<String> arguments = parser.getArgumentList();
         Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
+
+        if(operation == Operation.CONCAT){
+            removeSpacesBeforeArguments = false;
+        }
+
+        List<String> arguments = parser.getArgumentList(removeSpacesBeforeArguments);
 
         if (operation == Operation.REF) {
             Cell cellThatAffects = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));

@@ -22,8 +22,8 @@ public class ExpressionParserImpl implements ExpressionParser {
         }
     }
 
-    public List<String> getArgumentList() {
-        return  parseArguments();
+    public List<String> getArgumentList(boolean removeSpacesBeforeArguments) {
+        return  parseArguments(removeSpacesBeforeArguments);
     }
 
     public String getFunctionName() {
@@ -31,9 +31,9 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     @Override
-    public List<String> parseArguments() {
+    public List<String> parseArguments(boolean removeSpacesBeforeArguments) {
         String cellId = removeParanthesesFromString();
-        return splitArguments(cellId).subList(1, splitArguments(cellId).size());
+        return splitArguments(cellId, removeSpacesBeforeArguments).subList(1, splitArguments(cellId, removeSpacesBeforeArguments).size());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     @Override
-    public List<String> splitArguments(String cellId) {
+    public List<String> splitArguments(String cellId, boolean removeSpacesBeforeArguments) {
     List<String> arguments = new ArrayList<>();
     int braceLevel = 0;
     StringBuilder currentArg = new StringBuilder();
@@ -69,7 +69,12 @@ public class ExpressionParserImpl implements ExpressionParser {
         if (c == '}') braceLevel--;
 
         if (c == ',' && braceLevel == 0) {
-            arguments.add(currentArg.toString());
+            if(removeSpacesBeforeArguments){
+                arguments.add(currentArg.toString().trim());
+            }
+            else{
+                arguments.add(currentArg.toString());
+            }
             currentArg.setLength(0);  // Reset currentArg
         } else {
             currentArg.append(c);
@@ -77,7 +82,11 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     if (currentArg.length() > 0) {
-        arguments.add(currentArg.toString());  // Add the last argument
+        if (removeSpacesBeforeArguments) {
+            arguments.add(currentArg.toString().trim());  // Add the last argument
+        } else {
+            arguments.add(currentArg.toString());  // Add the last argument
+        }
     }
 
     return arguments;

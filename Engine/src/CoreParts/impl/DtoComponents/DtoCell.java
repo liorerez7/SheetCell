@@ -23,29 +23,32 @@ public class DtoCell {
     // Constructor to populate DtoCell from CellImp
     public DtoCell(Cell cell) {
 
+        // Assign the original value and latest version from the cell
         this.originalValue = cell.getOriginalValue();
+        this.version = cell.getLatestVersion();
 
-        version = cell.getLatestVersion();
-
-        // Convert the Expression to a string for the DTO
+        // Convert the effective value to string if it's not null
         if (cell.getEffectiveValue() == null) {
             this.effectiveValue = null;
-        }
-        else {
-            //CellUtils.formatDoubleValue(cell.getActualValue());
+        } else {
             this.effectiveValue = cell.getActualValue();
         }
+
         // Convert the CellLocation to DtoLocation
         this.location = cell.getLocation();
 
-        this.affectedBy = cell.getAffectedBy().stream()
+        // Map the affectedBy and affectingOn to their locations using streams
+        this.affectedBy = cell.getAffectedBy()
+                .stream()
                 .map(Cell::getLocation)
                 .collect(Collectors.toSet());
 
-        this.affectingOn = cell.getAffectingOn().stream()
+        this.affectingOn = cell.getAffectingOn()
+                .stream()
                 .map(Cell::getLocation)
                 .collect(Collectors.toSet());
     }
+
 
     public int getLatestVersion() {
         return version;
