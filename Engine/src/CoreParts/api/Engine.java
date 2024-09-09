@@ -18,4 +18,5 @@ public interface Engine {
     void UpdateNewRange(String name, String range) throws IllegalArgumentException;
     List<CellLocation> getRequestedRange(String name);
     void deleteRange(String name);
+    DtoSheetCell sortSheetCell(String range, String args);
 }

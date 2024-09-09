@@ -3,6 +3,7 @@ package Controller.Ranges;
 import expression.impl.stringFunction.Str;
 
 public class RangeStringsData {
+
     String name;
     String range;
 

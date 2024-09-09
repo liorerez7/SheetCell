@@ -5,6 +5,7 @@ import Controller.Grid.GridController;
 import Controller.MenuBar.HeaderController;
 import Controller.Ranges.RangeStringsData;
 import Controller.Ranges.RangesController;
+import Controller.Ranges.SortRowsData;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
@@ -35,21 +36,29 @@ public class MainController {
     @FXML
     private HeaderController headerController;
     @FXML
-    private MenuBar menuBar;
-    @FXML
     private VBox header;
+
+    @FXML
+    private MenuBar menuBar;
+
     @FXML
     private ActionLineController actionLineController;
     @FXML
     private GridPane actionLine;
+
     @FXML
     private GridController gridController;
+
     @FXML
     private CustomizeController customizeController;
     @FXML
-    private StackPane ranges;
+    private VBox customize;
+
     @FXML
     private RangesController rangesController;
+    @FXML
+    private StackPane ranges;
+
 
     private Model model;
     private PopUpWindowsHandler popUpWindowsHandler;
@@ -286,7 +295,48 @@ public class MainController {
         gridController.showAffectedCells(engine.getRequestedRange(rangeName));
     }
 
+    public void sortRowsClick(String range, String args) {
+        try {
+            DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, args);
+            createSortRowsPopUp(dtoSheetCell);
+        }catch (Exception e) {
+            createErrorPopup(e.getMessage(), "Error");
+        }
+    }
 
+    private void createSortRowsPopUp(DtoSheetCell dtoSheetCell) {
+        // Create a new Stage (window) for the popup
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
+        //popupStage.initModality(Modality.NONE); // Block events to other windows
+
+        popupStage.setTitle("Sorted Rows");
+
+        // Create a new GridPane for the popup
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
+        gridController.initializePopupGrid(popupGrid, dtoSheetCell);
+
+        // Create a Scene with the popupGrid
+        Scene popupScene = new Scene(popupGrid);
+        popupStage.setScene(popupScene);
+
+        // Show the popup window
+        popupStage.showAndWait();
+
+        // popupStage.show();
+    }
+
+    public void sortRowsBottomClicked() {
+
+        SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
+        String columns = sortRowsData.getColumnsToSortBy();
+        String range = sortRowsData.getRange();
+        sortRowsClick(range, columns);
+
+    }
 }
 
 

@@ -1,7 +1,7 @@
 package Controller.Main;
 
 import Controller.Ranges.RangeStringsData;
-import expression.impl.Range;
+import Controller.Ranges.SortRowsData;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -89,5 +89,51 @@ public class PopUpWindowsHandler {
         popupStage.setScene(scene);
         popupStage.showAndWait();
         return rangeStringsData;
+    }
+
+    public SortRowsData openSortRowsWindow() {
+
+        SortRowsData sortRowsData = new SortRowsData();
+
+        // Create a new stage (window)
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
+        popupStage.setTitle("Insert sorting parameters");
+
+        // Create a GridPane layout for the popup
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
+        // Create and add the labels and text fields
+        Label rangeForSortingLabel = new Label("Range for sorting:");
+        TextField rangeForSortingField = new TextField();
+        Label columnsSortLabel = new Label("By which columns:");
+        TextField columnsSortField = new TextField();
+
+        gridPane.add(rangeForSortingLabel, 0, 0);
+        gridPane.add(rangeForSortingField, 1, 0);
+        gridPane.add(columnsSortLabel, 0, 1);
+        gridPane.add(columnsSortField, 1, 1);
+
+        // Create and add the submit button
+        Button submitButton = new Button("Submit");
+        gridPane.add(submitButton, 1, 2);
+
+        submitButton.setOnAction(e -> {
+
+
+            sortRowsData.setColumnsToSortBy(columnsSortField.getText());
+            sortRowsData.setRange(rangeForSortingField.getText());
+
+
+            popupStage.close();
+        });
+
+        // Set the scene and show the popup window
+        Scene scene = new Scene(gridPane, 300, 200);
+        popupStage.setScene(scene);
+        popupStage.showAndWait();
+        return sortRowsData;
     }
 }
