@@ -38,16 +38,20 @@ public class SheetConvertorImpl implements SheetConvertor {
         int cellLength = stlSize.getRowsHeightUnits();
 
         List<STLCell> stlCellList = cells.getSTLCell();
-
-        STLRanges stlRanges = sheet.getSTLRanges();
-        List<STLRange> stlRangeList = stlRanges.getSTLRange();
-
-
         checkRowsAndColumns(stlLayout);
 
-        validateRanges(stlRangeList, numOfRows, numOfcoulmns); // implement
+        STLRanges stlRanges = null;
+        Set<Range> ourRanges = null;
 
-        Set<Range> ourRanges = convertSTLRangesToRanges(stlRangeList, numOfRows, numOfcoulmns);  // implement
+        stlRanges = sheet.getSTLRanges();
+
+        if(stlRanges != null)
+        {
+            List<STLRange> stlRangeList = stlRanges.getSTLRange();
+            validateRanges(stlRangeList, numOfRows, numOfcoulmns); // implement
+            ourRanges = convertSTLRangesToRanges(stlRangeList, numOfRows, numOfcoulmns);  // implement
+
+        }
 
         SheetCell ourSheet = new SheetCellImp(numOfRows, numOfcoulmns, sheetName, cellLength, cellWidth, ourRanges);
         convertSTLCellListToCellList(stlCellList, ourSheet);  // Method to convert list of cells

@@ -50,7 +50,10 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         this.currentCellLength = currentCellLength;
         this.currentCellWidth = currentCellWidth;
         versionControlManager = new VersionControlManager(new HashMap<>(), this);
-        this.systemRanges = systemRanges;
+        if(systemRanges != null)
+        {
+            this.systemRanges = systemRanges;
+        }
     }
 
     @Override

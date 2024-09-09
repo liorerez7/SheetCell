@@ -325,17 +325,13 @@ public class EngineImpl implements Engine {
 
                     if(result == 0){
 
-                        // checks now for the same value positions but
-                        // in List<EffectiveValue> col = rows.get(args.get(++iteratorOfArgs).charAt(0));
-                        // if the value is the same, it will continue to the next column and so on and on
-                        //something like :
                         int innerResult = checkOnNextCollumn(rows, args,++iteratorOfArgs,j, j + 1, leftColumn);
+
+                        iteratorOfArgs = 0;
 
                         if (innerResult > 0){
                             swapRows(rows, j, j + 1);
                         }
-                        // maybe use some recursion here until the value is different
-
                     }
                     else{
                         swapRows(rows, j, j + 1);
@@ -347,6 +343,10 @@ public class EngineImpl implements Engine {
 
     private int checkOnNextCollumn(List<List<EffectiveValue>> rows, List<String> args, int iteratorOfArgs, int firstValueRow, int secondValueRow, char leftColumn) {
 
+
+        if(args.size() <= iteratorOfArgs){
+            return 0;
+        }
 
         final int colIndex = Character.toUpperCase(args.get(iteratorOfArgs).charAt(0)) - Character.toUpperCase(leftColumn); // Calculate column index
 
