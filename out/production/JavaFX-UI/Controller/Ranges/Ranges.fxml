@@ -6,25 +6,38 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="ranges" prefHeight="232.0" prefWidth="121.0" styleClass="stack-pane" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
+<StackPane fx:id="ranges" alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="121.0" styleClass="stack-pane" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
    <children>
-      <VBox prefHeight="141.0" prefWidth="68.0" styleClass="UserInterfaceSection">
+      <VBox alignment="CENTER_LEFT" prefHeight="274.0" prefWidth="121.0" styleClass="UserInterfaceSection" StackPane.alignment="TOP_CENTER">
          <children>
-            <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="25.0" prefWidth="190.0" text="add range ">
+            <Button fx:id="filterDataButton" mnemonicParsing="false" onAction="#filterDataClicked" prefWidth="150.0" text="Filter Data">
                <VBox.margin>
-                  <Insets left="10.0" right="15.0" />
+                  <Insets left="5.0" right="5.0" top="20.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="sortRowsButton" mnemonicParsing="false" onAction="#sortRowsClicked" prefWidth="150.0" text="Sort Rows">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="7.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="25.0" prefWidth="150.0" text="add range ">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="7.0" />
                </VBox.margin></Button>
-            <Button fx:id="deleteRangeButton" mnemonicParsing="false" onAction="#deleteRangeClicked" prefHeight="25.0" prefWidth="144.0" text="delete range">
+            <Button fx:id="deleteRangeButton" mnemonicParsing="false" onAction="#deleteRangeClicked" prefHeight="31.0" prefWidth="150.0" text="delete range">
                <VBox.margin>
-                  <Insets left="10.0" right="15.0" top="20.0" />
+                  <Insets left="5.0" top="7.0" />
                </VBox.margin>
             </Button>
             <ComboBox fx:id="SystemRanges" prefWidth="150.0" promptText="Ranges">
                <VBox.margin>
-                  <Insets top="20.0" />
+                  <Insets bottom="7.0" left="5.0" right="5.0" top="7.0" />
                </VBox.margin>
             </ComboBox>
          </children>
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
       </VBox>
    </children>
 </StackPane>

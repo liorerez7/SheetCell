@@ -6,9 +6,13 @@ import Controller.Utility.StringParser;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
+import CoreParts.smallParts.CellLocationFactory;
 import expression.api.EffectiveValue;
+import expression.impl.stringFunction.Str;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -32,9 +36,8 @@ public class GridController {
     NeighborsHandler neighborsHandler;
     private final static int DeltaExtensionGrid = 2;
 
-    public void adjustCellSize(String lengthOrWidth, int toIncreaseOrDecrease, char charOfCol, int numberOfRows) {
 
-    }
+
 
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
 
@@ -44,6 +47,8 @@ public class GridController {
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth() * DeltaExtensionGrid;
         int cellLength = sheetCell.getCellLength() * DeltaExtensionGrid;
+
+
 
         clearGrid(grid);
         setupColumnConstraints(grid, numCols, cellWidth);
@@ -59,8 +64,10 @@ public class GridController {
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
         int cellLength = sheetCell.getCellLength();
+
         cellWidth = cellWidth * DeltaExtensionGrid;
         cellLength = cellLength * DeltaExtensionGrid;
+
 
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         // Add cells with Label
@@ -97,6 +104,8 @@ public class GridController {
         int cellLength = sheetCell.getCellLength();
         cellWidth = cellWidth * DeltaExtensionGrid;
         cellLength = cellLength * DeltaExtensionGrid;
+
+
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
 
         for (int row = 1; row <= numRows; row++) {
@@ -170,6 +179,8 @@ public class GridController {
         int cellLength = sheetCell.getCellLength();
         cellWidth = cellWidth * DeltaExtensionGrid;
         cellLength = cellLength * DeltaExtensionGrid;
+
+
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
@@ -249,4 +260,63 @@ public class GridController {
         neighborsHandler.clearAllHighlights(cellLocationToLabel);
     }
 
+    public void increaseColumnWidthB() {
+        // Get the column index for "B" which is 2 (1-based index)
+        int columnIndex = 3;
+
+        // Retrieve the current column constraints for the GridPane
+       ColumnConstraints columnConstraints = grid.getColumnConstraints().get(columnIndex - 1);
+
+//        // Get the current width
+        double currentPrefWidth = columnConstraints.getPrefWidth();
+        double currentMinWidth = columnConstraints.getMinWidth();
+        double currentMaxWidth = columnConstraints.getMaxWidth();
+//
+        // Increase the width
+        columnConstraints.setPrefWidth(currentPrefWidth + 20);
+        columnConstraints.setMinWidth(currentMinWidth + 20);
+        columnConstraints.setMaxWidth(currentMaxWidth + 20);
+
+        columnConstraints = grid.getColumnConstraints().get(columnIndex - 1);
+        double currentWidth = columnConstraints.getPrefWidth();
+        double newWidth = currentWidth + 70;
+
+        updateColumnHeader(columnIndex, newWidth);
+        updateColumnCells(columnIndex, newWidth);
+
+    }
+
+    private void updateColumnCells(int columnIndex, double newWidth) {
+
+        newWidth -= 60;
+        for (Node node : grid.getChildren()) {
+            if (GridPane.getColumnIndex(node) == columnIndex - 1) {
+                Label label = (Label) node;
+                setLabelSize(label, (int) newWidth, (int) label.getPrefHeight());
+                label.setPadding(Insets.EMPTY); // Remove padding
+                label.setAlignment(Pos.CENTER); // Ensure text alignment
+            }
+        }
+    }
+
+    private void updateColumnHeader(int columnIndex, double newWidth) {
+        // Update the header label for the specific column
+        newWidth -= 60;
+
+        for (Node node : grid.getChildren()) {
+            if (GridPane.getRowIndex(node) == 0 && GridPane.getColumnIndex(node) == columnIndex - 1 ) {
+                Label header = (Label) node;
+                setLabelSize(header, (int) newWidth , (int) header.getPrefHeight());
+                header.setPadding(Insets.EMPTY); // Remove padding
+                header.setAlignment(Pos.CENTER); // Ensure text alignment
+
+            }
+        }
+    }
+
+
+
+
 }
+
+

@@ -57,6 +57,7 @@
     -fx-border-width: 1px;         /* Width of the border around headers */
     -fx-alignment: center;
     -fx-font-weight: bold;
+
 }
 
 /* Style for the cell labels */
@@ -66,6 +67,7 @@
     -fx-border-width: 1px;       /* Width of the border around cells */
     -fx-alignment: center;
 }
+
 .faded {
     -fx-opacity: 0.5;
 }

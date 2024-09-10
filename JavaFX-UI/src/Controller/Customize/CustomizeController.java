@@ -136,22 +136,32 @@ public class CustomizeController {
         Label selectedColumnLabel = columnComboBox.getSelectionModel().getSelectedItem();
         Label selectedRowLabel = rowComboBox.getSelectionModel().getSelectedItem();
 
-        String getColText = selectedColumnLabel.getText();
-        char selectedCol = getColText.charAt(0);
-        int selectedRow = Integer.parseInt(selectedRowLabel.getText());
+
+        String selectedCol = null;
+        String selectedRow = null;
+
+        if(selectedColumnLabel != null)
+        {
+            selectedCol = selectedColumnLabel.getText();
+
+        }
+        if(selectedRowLabel != null)
+        {
+            selectedRow = selectedRowLabel.getText();
+        }
 
         // Identify the source of the event (which button was clicked)
         Object source = event.getSource();
 
         // Call the respective function in MainController, passing the row and column along with the size adjustment
         if (source == lengthMinusButton) {
-            mainController.adjustCellSize("length", -1, selectedCol, selectedRow);  // Decrease length
+            mainController.adjustCellSize("length", -1,selectedRow);  // Decrease length
         } else if (source == lengthPlusButton) {
-            mainController.adjustCellSize("length", 1, selectedCol, selectedRow);   // Increase length
+            mainController.adjustCellSize("length", 1, selectedRow);   // Increase length
         } else if (source == widthMinusButton) {
-            mainController.adjustCellSize("width", -1, selectedCol, selectedRow);   // Decrease width
+            mainController.adjustCellSize("width", -1, selectedCol);   // Decrease width
         } else if (source == widthPlusButton) {
-            mainController.adjustCellSize("width", 1, selectedCol, selectedRow);    // Increase width
+            mainController.adjustCellSize("width", 1, selectedCol);    // Increase width
         }
     }
 
