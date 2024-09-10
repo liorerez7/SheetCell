@@ -1,5 +1,6 @@
 package Controller.Main;
 
+import Controller.Utility.StringParser;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
@@ -53,51 +54,12 @@ public class Model {
             CellLocation cellLocation = CellLocationFactory.fromCellId(label.getId());
             EffectiveValue effectiveValue = sheetCell.getViewSheetCell().get(cellLocation);
 
-            String value = getString(effectiveValue);
+            String value = StringParser.convertValueToLabelText(effectiveValue);
 
             property.set(value);
 
         });
 
-    }
-
-    private String getString(EffectiveValue effectiveValue) {
-        Object objectValue;
-        String value = "";
-
-        if (effectiveValue != null) {
-            objectValue = effectiveValue.getValue();
-
-            if (objectValue instanceof Double) {
-                Double doubleValue = (Double) objectValue;
-
-                // Check if the value is NaN
-                if (doubleValue.isNaN()) {
-                    value = "NaN";
-                }
-                else{
-                    if (doubleValue % 1 == 0) {
-                        value = Integer.toString(doubleValue.intValue());  // Convert to int if no decimal part
-                    }
-                    else {
-                        // Format to 2 decimal places if there are decimals
-                        DecimalFormat df = new DecimalFormat("#.##");
-                        value = df.format(doubleValue);
-                    }
-                }
-            }
-            else {
-                if(objectValue instanceof Boolean) {
-                    Boolean boolValue = (Boolean) objectValue;
-                    value = boolValue ? "TRUE" : "FALSE";
-                }
-                else {
-                    // Just use the object's string value
-                    value = objectValue.toString();
-                }
-            }
-        }
-        return value;
     }
 
     public StringProperty getLatestUpdatedVersionProperty() {

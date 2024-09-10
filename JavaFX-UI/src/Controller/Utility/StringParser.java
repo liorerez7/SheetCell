@@ -2,10 +2,11 @@ package Controller.Utility;
 
 import expression.api.EffectiveValue;
 
+import java.text.DecimalFormat;
+
 public class StringParser {
 
-    public static String convertValueToLabelText(EffectiveValue effectiveValue)
-    {
+    public static String convertValueToLabelText(EffectiveValue effectiveValue) {
         Object objectValue;
         String value = "";
 
@@ -18,13 +19,27 @@ public class StringParser {
                 // Check if the value is NaN
                 if (doubleValue.isNaN()) {
                     value = "NaN";
-                } else {
-                    // Convert the double to an int and then to a string
-                    value = Integer.toString(doubleValue.intValue());
                 }
-            } else {
-                // Just use the object's string value
-                value = objectValue.toString();
+                else{
+                    if (doubleValue % 1 == 0) {
+                        value = Integer.toString(doubleValue.intValue());  // Convert to int if no decimal part
+                    }
+                    else {
+                        // Format to 2 decimal places if there are decimals
+                        DecimalFormat df = new DecimalFormat("#.##");
+                        value = df.format(doubleValue);
+                    }
+                }
+            }
+            else {
+                if(objectValue instanceof Boolean) {
+                    Boolean boolValue = (Boolean) objectValue;
+                    value = boolValue ? "TRUE" : "FALSE";
+                }
+                else {
+                    // Just use the object's string value
+                    value = objectValue.toString();
+                }
             }
         }
         return value;
