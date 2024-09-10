@@ -32,6 +32,10 @@ public class GridController {
     NeighborsHandler neighborsHandler;
     private final static int DeltaExtensionGrid = 2;
 
+    public void adjustCellSize(String lengthOrWidth, int toIncreaseOrDecrease, char charOfCol, int numberOfRows) {
+
+    }
+
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
 
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());

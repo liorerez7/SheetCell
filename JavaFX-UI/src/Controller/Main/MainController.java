@@ -98,6 +98,8 @@ public class MainController {
             model.setPropertiesByDtoSheetCell(engine.getSheetCell());
             model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
             rangesController.setAllRanges(engine.getSheetCell().getRanges());
+            customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
+            customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
 
         } catch (Exception e) {
             createErrorPopup(e.getMessage(), "Error");
@@ -287,6 +289,7 @@ public class MainController {
         gridController.clearAllHighlights();
         gridController.showNeighbors(requestedCell);
         rangesController.resetComboBox();
+        customizeController.resetComboBox();
     }
 
     public void handleRangeClick(String rangeName) {
@@ -359,6 +362,11 @@ public class MainController {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }
+    }
+
+    public void adjustCellSize(String lengthOrWidth, int toIncreaseOrDecrease, char charOfCol, int numberOfRow) {
+
+        gridController.adjustCellSize(lengthOrWidth, toIncreaseOrDecrease, charOfCol, numberOfRow);
     }
 }
 

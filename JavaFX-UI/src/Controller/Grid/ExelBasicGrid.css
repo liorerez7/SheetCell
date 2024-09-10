@@ -28,15 +28,15 @@
 }
 
 .affects-target {
-    -fx-background-color: #FFFF99; /* Light yellow background */
-    -fx-border-color: #FFD700; /* Gold border color */
+    -fx-background-color: #c3eaa3; /* Light yellow background */
+    -fx-border-color: #80e413; /* Gold border color */
     -fx-border-width: 2px;
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
-    -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0); /* Initial glow */
+    /* -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0); /* Initial glow */
 
     /* Pulse animation */
-    -fx-animation: pulse 1.5s infinite;
+    -fx-animation: flash 1s infinite;
 }
 
 /* style.css */

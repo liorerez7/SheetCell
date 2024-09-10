@@ -32,6 +32,20 @@ public class RangesController {
     private StackPane ranges;
 
     @FXML
+    private Button sortRowsButton;
+
+
+    @FXML
+    void filterDataClicked(ActionEvent event) {
+        mainController.filterDataButtonClicked();
+    }
+
+    @FXML
+    void sortRowsClicked(ActionEvent event) {
+        mainController.sortRowsButtonClicked();
+    }
+
+    @FXML
     public void initialize() {
         // Handle rendering for ComboBox items
         SystemRanges.setCellFactory(comboBox -> new ListCell<Label>() {
