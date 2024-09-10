@@ -20,6 +20,7 @@ public class VersionControlManager implements Serializable {
     public void setSheetCell(SheetCellImp sheetCell) {
         this.sheetCell = sheetCell;
     }
+
     public void setVersionToCellsChanges(Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges) {
         this.versionToCellsChanges = versionToCellsChanges;
     }

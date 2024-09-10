@@ -25,7 +25,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,7 +57,6 @@ public class MainController {
     private RangesController rangesController;
     @FXML
     private StackPane ranges;
-
 
     private Model model;
     private PopUpWindowsHandler popUpWindowsHandler;
@@ -334,8 +332,12 @@ public class MainController {
         SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
         String columns = sortRowsData.getColumnsToSortBy();
         String range = sortRowsData.getRange();
-        sortRowsClick(range, columns);
 
+        //if one of them is null means that the user just closed the window without entering anything
+        if(columns != null && range != null)
+        {
+            sortRowsClick(range, columns);
+        }
     }
 }
 

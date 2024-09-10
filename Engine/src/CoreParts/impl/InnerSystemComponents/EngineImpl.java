@@ -10,23 +10,18 @@ import GeneratedClassesEx2.STLSheet;
 import Utility.CellUtils;
 import CoreParts.api.Engine;
 import CoreParts.smallParts.CellLocation;
-import Utility.EngineUtilies;
+import Utility.EngineUtilities;
 import Utility.Exception.CycleDetectedException;
 import Utility.Exception.RefToUnSetCellException;
 import Utility.SheetCellSorter;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.impl.stringFunction.Str;
 import jakarta.xml.bind.JAXBException;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+
 
 public class EngineImpl implements Engine {
 
@@ -75,13 +70,6 @@ public class EngineImpl implements Engine {
             restoreSheetCellState(savedSheetCellState);
             throw new Exception(e.getMessage());
         }
-    }
-
-    private void getSheetFromSTL(String path) throws FileNotFoundException, JAXBException {
-        InputStream in = new FileInputStream(new File(path));
-        STLSheet sheet = EngineUtilies.deserializeFrom(in);
-        SheetConvertor convertor = new SheetConvertorImpl();
-        sheetCell = (SheetCellImp) convertor.convertSheet(sheet);
     }
 
     @Override
@@ -153,6 +141,14 @@ public class EngineImpl implements Engine {
         }
     }
 
+    @Override
+    public DtoSheetCell sortSheetCell(String range, String args) {
+
+        DtoSheetCell dtoSheetCell = getSheetCell();
+
+        return EngineUtilities.sortSheetCell(range, args, dtoSheetCell);
+    }
+
     private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {
         try {
             if (savedSheetCellState != null) {
@@ -188,11 +184,10 @@ public class EngineImpl implements Engine {
         return sheetCell;
     }
 
-    @Override
-    public DtoSheetCell sortSheetCell(String range, String args) {
-
-        DtoSheetCell dtoSheetCell = getSheetCell();
-
-        return sheetSorter.sortSheetCell(range, args, dtoSheetCell);
+    private void getSheetFromSTL(String path) throws FileNotFoundException, JAXBException {
+        InputStream in = new FileInputStream(path);
+        STLSheet sheet = EngineUtilities.deserializeFrom(in);
+        SheetConvertor convertor = new SheetConvertorImpl();
+        sheetCell = convertor.convertSheet(sheet);
     }
 }

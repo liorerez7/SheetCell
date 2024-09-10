@@ -30,8 +30,4 @@ public class CellLocationFactory implements Serializable {
         return CellLocationFactory.fromCellId(cellId);
     }
 
-    public static Map<String, CellLocation>  getCacheCoordiante(){
-        return cachedCoordinates;
-    }
-
 }

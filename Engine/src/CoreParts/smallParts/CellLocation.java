@@ -50,7 +50,6 @@ public class CellLocation implements Serializable { // TODO: Implement the CellL
         return realRow;
     }
 
-
     public char getVisualColumn() {
         return visualColumn;
     }

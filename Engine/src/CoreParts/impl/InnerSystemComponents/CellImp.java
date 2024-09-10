@@ -20,7 +20,7 @@ public class CellImp implements Cell ,Serializable
     private EffectiveValue actualValue = new EffectiveValueImpl(null,null);
     private String originalValue;
     private CellLocation location;
-    private int latesetVersion;
+    private int latestVersion;
     private Set<Cell> affectedBy = new HashSet<>();
     private Set<Cell> affectingOn = new HashSet<>();
 
@@ -134,11 +134,11 @@ public void setActualValue(EffectiveValue effectiveValue) {
 
     @Override
     public void updateVersion(int latestVersion) {
-        latesetVersion = latestVersion;
+        this.latestVersion = latestVersion;
     }
     @Override
     public int getLatestVersion() {
-        return latesetVersion;
+        return latestVersion;
     }
 
 
