@@ -26,25 +26,28 @@
       </GridPane>
    </top>
    <left>
-      <VBox prefHeight="443.0" prefWidth="189.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="443.0" prefWidth="223.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="177.0" prefWidth="202.0">
+            <VBox prefWidth="223.0">
                <children>
                   <fx:include fx:id="customize" source="../Customize/Customize.fxml" />
                </children>
                <VBox.margin>
-                  <Insets top="5.0" />
+                  <Insets bottom="10.0" top="5.0" />
                </VBox.margin>
             </VBox>
-            <VBox prefHeight="245.0" prefWidth="178.0" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER" prefWidth="213.0" VBox.vgrow="ALWAYS">
                <children>
                   <fx:include fx:id="ranges" source="../Ranges/Ranges.fxml" />
                </children>
                <VBox.margin>
-                  <Insets top="20.0" />
+                  <Insets />
                </VBox.margin>
             </VBox>
          </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </VBox>
    </left>
    <center>
