@@ -3,6 +3,7 @@ package CoreParts.impl.InnerSystemComponents;
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
 import CoreParts.api.sheet.SheetCellViewOnly;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import Utility.CellUtils;
@@ -116,11 +117,33 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 
     @Override
     public Map<CellLocation, EffectiveValue> getViewSheetCell() {
-        return Map.of();
+        return new DtoSheetCell(this).getViewSheetCell();
     }
 
     @Override
     public Map<CellLocation, Cell> getSheetCell() {return sheetCell;}
+
+    @Override
+    public Set<String> getUniqueStringsInColumn(String filterColumn) {
+
+        Set<String> uniqueStrings = new HashSet<>();
+
+        if(filterColumn.length() != 1 || !(Character.isLetter(filterColumn.charAt(0)))) {
+            throw new IllegalArgumentException("Invalid column name");
+        }
+
+        char col = filterColumn.toUpperCase().charAt(0);
+
+        getViewSheetCell().forEach((location, effectiveValue) -> {
+            if(location.getVisualColumn() == col) {
+                if(effectiveValue != null)
+                {
+                    uniqueStrings.add(effectiveValue.getValue().toString());
+                }
+            }
+        });
+        return uniqueStrings;
+    }
 
     @Override
     public void updateEffectedByAndOnLists() {

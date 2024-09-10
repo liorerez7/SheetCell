@@ -5,5 +5,4 @@ import GeneratedClassesEx2.STLSheet;
 
 public interface SheetConvertor {
     SheetCell convertSheet(STLSheet sheet);
-    STLSheet convertSheet(SheetCell sheet);
 }

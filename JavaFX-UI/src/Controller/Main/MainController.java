@@ -3,9 +3,10 @@ package Controller.Main;
 import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
 import Controller.MenuBar.HeaderController;
-import Controller.Ranges.RangeStringsData;
+import Controller.Utility.FilterGridData;
+import Controller.Utility.RangeStringsData;
 import Controller.Ranges.RangesController;
-import Controller.Ranges.SortRowsData;
+import Controller.Utility.SortRowsData;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
@@ -28,6 +29,7 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class MainController {
     Engine engine;
@@ -293,15 +295,6 @@ public class MainController {
         gridController.showAffectedCells(engine.getRequestedRange(rangeName));
     }
 
-    public void sortRowsClick(String range, String args) {
-        try {
-            DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, args);
-            createSortRowsPopUp(dtoSheetCell);
-        }catch (Exception e) {
-            createErrorPopup(e.getMessage(), "Error");
-        }
-    }
-
     private void createSortRowsPopUp(DtoSheetCell dtoSheetCell) {
         // Create a new Stage (window) for the popup
         Stage popupStage = new Stage();
@@ -327,7 +320,7 @@ public class MainController {
         // popupStage.show();
     }
 
-    public void sortRowsBottomClicked() {
+    public void sortRowsButtonClicked() {
 
         SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
         String columns = sortRowsData.getColumnsToSortBy();
@@ -336,7 +329,35 @@ public class MainController {
         //if one of them is null means that the user just closed the window without entering anything
         if(columns != null && range != null)
         {
-            sortRowsClick(range, columns);
+            try {
+                DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, columns);
+                createSortRowsPopUp(dtoSheetCell);
+            }catch (Exception e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
+        }
+    }
+
+    public void filterDataButtonClicked() {
+
+        FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
+        String range = filterGridData.getRange();
+        String filterColumn = filterGridData.getColumnsToFilterBy();
+
+        //if one of them is null means that the user just closed the window without entering anything
+        if(range != null && filterColumn != null)
+        {
+            Set<String> stringsInChosenColumn = engine.getUniqueStringsInColumn(filterColumn);
+
+            // gets a filtered string from the user, for example: "banana, 5, true"
+            String filter = popUpWindowsHandler.openFilterDataPopUp(stringsInChosenColumn);
+
+            try {
+                DtoSheetCell filteredDtoSheetCell = engine.filterSheetCell(range, filter);
+                createSortRowsPopUp(filteredDtoSheetCell);
+            }catch (Exception e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
         }
     }
 }

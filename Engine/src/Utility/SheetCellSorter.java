@@ -17,49 +17,18 @@ public class SheetCellSorter {
 
     public static DtoSheetCell sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell) {
 
-        List<CellLocation> cellLocations = parseRange(range);
-        List<List<EffectiveValue>> cols = getRowsFromRange(cellLocations, dtoSheetCell);
+        List<CellLocation> cellLocations = EngineUtilities.parseRange(range);
+        List<List<EffectiveValue>> cols = EngineUtilities.getRowsFromRange(cellLocations, dtoSheetCell);
 
         char leftColumn = cellLocations.get(0).getVisualColumn();
         sortRowsByColumns(cols, args, leftColumn);
-        updateDtoSheetCell(dtoSheetCell, cellLocations, cols, leftColumn);
+        EngineUtilities.updateDtoSheetCell(dtoSheetCell, cellLocations, cols, leftColumn);
 
         return dtoSheetCell;
     }
 
-    private static List<CellLocation> parseRange(String range) {
-        String[] parts = range.split("\\.\\.");
-        CellLocation start = CellLocationFactory.fromCellId(parts[0]);
-        CellLocation end = CellLocationFactory.fromCellId(parts[1]);
-
-        List<CellLocation> locations = new ArrayList<>();
-        for (char col = start.getVisualColumn(); col <= end.getVisualColumn(); col++) {
-            for (int row = Integer.parseInt(start.getVisualRow()); row <= Integer.parseInt(end.getVisualRow()); row++) {
-                locations.add(CellLocationFactory.fromCellId(col, String.valueOf(row)));
-            }
-        }
-        return locations;
-    }
-
-    private static List<List<EffectiveValue>> getRowsFromRange(List<CellLocation> cellLocations, DtoSheetCell dtoSheetCell) {
-        Map<CellLocation, EffectiveValue> sheetData = dtoSheetCell.getViewSheetCell();
-        List<List<EffectiveValue>> rows = new ArrayList<>();
-
-        int length = (int) cellLocations.stream().map(CellLocation::getRealRow).distinct().count();
-        List<EffectiveValue> currentRow = new ArrayList<>();
-
-        for (int i = 0; i < cellLocations.size(); i++) {
-            currentRow.add(sheetData.get(cellLocations.get(i)));
-            if (currentRow.size() == length) {
-                rows.add(new ArrayList<>(currentRow));
-                currentRow.clear();
-            }
-        }
-        return rows;
-    }
-
     private static void sortRowsByColumns(List<List<EffectiveValue>> rows, String arguments, char leftColumn) {
-        List<String> args = extractLetters(arguments);
+        List<String> args = EngineUtilities.extractLetters(arguments);
         int iteratorOfArgs = 0;
         final int colIndex = getColumnIndex(args.get(iteratorOfArgs), leftColumn);
 
@@ -121,53 +90,5 @@ public class SheetCellSorter {
             column.set(indexOfRow1, column.get(indexOfRow2));
             column.set(indexOfRow2, temp);
         }
-    }
-
-    private static Object getNumericValue(EffectiveValue effectiveValue) {
-        if (effectiveValue == null) return null;
-
-        try {
-            Object value = effectiveValue.getValue();
-            if (value instanceof Double) return value;
-        } catch (Exception ignored) {
-            // Ignore non-numeric values
-        }
-        return null;
-    }
-
-    private static void updateDtoSheetCell(DtoSheetCell dtoSheetCell, List<CellLocation> cellLocations, List<List<EffectiveValue>> cols, char leftColumn) {
-
-        int startRowOfSorting;
-
-        for (List<EffectiveValue> col : cols) {
-
-            startRowOfSorting = cellLocations.get(0).getRealRow() + 1;
-
-            for (EffectiveValue value : col) {
-                dtoSheetCell.getViewSheetCell().put(CellLocationFactory.fromCellId(leftColumn, String.valueOf(startRowOfSorting++)), value);
-            }
-
-            leftColumn++;
-        }
-    }
-
-    private static List<String> extractLetters(String input) {
-        if (input == null || input.isEmpty()) {
-            throw new IllegalArgumentException("Input string cannot be null or empty.");
-        }
-
-        String[] elements = input.split(",");
-        List<String> letters = new ArrayList<>();
-
-        for (String element : elements) {
-            element = element.trim();
-            if (element.length() == 1 && Character.isLetter(element.charAt(0))) {
-                letters.add(element);
-            } else if (!element.isEmpty()) {
-                throw new IllegalArgumentException("Invalid element found: " + element);
-            }
-        }
-
-        return letters;
     }
 }

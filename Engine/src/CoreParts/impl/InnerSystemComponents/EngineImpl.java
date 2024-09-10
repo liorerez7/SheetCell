@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 
 public class EngineImpl implements Engine {
@@ -145,8 +146,18 @@ public class EngineImpl implements Engine {
     public DtoSheetCell sortSheetCell(String range, String args) {
 
         DtoSheetCell dtoSheetCell = getSheetCell();
-
         return EngineUtilities.sortSheetCell(range, args, dtoSheetCell);
+    }
+
+    @Override
+    public Set<String> getUniqueStringsInColumn(String filterColumn) {
+        return sheetCell.getUniqueStringsInColumn(filterColumn);
+    }
+
+    @Override
+    public DtoSheetCell filterSheetCell(String range, String filter) {
+        DtoSheetCell dtoSheetCell = getSheetCell();
+        return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell);
     }
 
     private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {

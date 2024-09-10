@@ -3,9 +3,9 @@ package CoreParts.api;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
-import expression.impl.Range;
 
 import java.util.List;
+import java.util.Set;
 
 public interface Engine {
     DtoCell getRequestedCell(String cellId);
@@ -18,5 +18,9 @@ public interface Engine {
     void UpdateNewRange(String name, String range) throws IllegalArgumentException;
     List<CellLocation> getRequestedRange(String name);
     void deleteRange(String name);
-    DtoSheetCell sortSheetCell(String range, String args);
+    DtoSheetCell sortSheetCell(String range, String columnsToSortBy);
+
+    Set<String> getUniqueStringsInColumn(String filterColumn);
+
+    DtoSheetCell filterSheetCell(String range, String filter);
 }

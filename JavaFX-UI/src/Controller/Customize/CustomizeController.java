@@ -19,9 +19,16 @@ public class CustomizeController {
     private VBox customize;
 
     @FXML
-    void sortRowsClicked(ActionEvent event) {
-        mainController.sortRowsBottomClicked();
+    private Button filterDataButton;
 
+    @FXML
+    void filterDataClicked(ActionEvent event) {
+        mainController.filterDataButtonClicked();
+    }
+
+    @FXML
+    void sortRowsClicked(ActionEvent event) {
+        mainController.sortRowsButtonClicked();
     }
 
     public void setMainController(MainController mainController) {

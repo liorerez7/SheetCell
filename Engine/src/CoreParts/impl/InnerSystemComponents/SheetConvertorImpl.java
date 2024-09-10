@@ -113,9 +113,4 @@ public class SheetConvertorImpl implements SheetConvertor {
             ourSheet.setCell(cell.getLocation(), cell);
         }
     }
-
-    @Override
-    public STLSheet convertSheet(SheetCell sheet) {
-        return null;
-    }
 }

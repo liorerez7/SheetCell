@@ -9,5 +9,6 @@
       <Button mnemonicParsing="false" text="1" />
       <Button mnemonicParsing="false" text="2" />
       <Button fx:id="sortRowsButton" mnemonicParsing="false" onAction="#sortRowsClicked" text="Sort Rows" />
+      <Button fx:id="filterDataButton" mnemonicParsing="false" onAction="#filterDataClicked" text="Filter Data" />
    </children>
 </VBox>

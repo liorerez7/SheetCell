@@ -1,4 +1,4 @@
-package Controller.Ranges;
+package Controller.Utility;
 
 public class SortRowsData {
 

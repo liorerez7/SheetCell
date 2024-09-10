@@ -1,6 +1,4 @@
-package Controller.Ranges;
-
-import expression.impl.stringFunction.Str;
+package Controller.Utility;
 
 public class RangeStringsData {
 

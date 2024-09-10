@@ -9,6 +9,7 @@ import expression.impl.Range;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
     int getActiveCellsCount();
@@ -22,4 +23,6 @@ public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
     Cell getCell(CellLocation location);
     RefDependencyGraph getGraph();
     Map<CellLocation, Cell> getSheetCell();
+
+    Set<String> getUniqueStringsInColumn(String filterColumn);
 }
