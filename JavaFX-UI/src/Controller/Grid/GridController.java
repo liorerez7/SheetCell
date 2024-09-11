@@ -265,9 +265,6 @@ public class GridController {
 
 
     public void changingGridConstraints(String RowOrColumn, int increaseOrDecrease) {
-        // Define the min and max thresholds for width and height
-        double minSize = 30;
-        double maxSize = 300;
 
         // Calculate the value to change
         int valueToChange = increaseOrDecrease * CELL_SIZE_CHANGE;
