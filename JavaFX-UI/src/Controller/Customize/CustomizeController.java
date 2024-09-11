@@ -155,13 +155,13 @@ public class CustomizeController {
 
         // Call the respective function in MainController, passing the row and column along with the size adjustment
         if (source == lengthMinusButton) {
-            mainController.adjustCellSize("length", -1,selectedRow);  // Decrease length
+            mainController.adjustCellSize(-1,selectedRow);  // Decrease length
         } else if (source == lengthPlusButton) {
-            mainController.adjustCellSize("length", 1, selectedRow);   // Increase length
+            mainController.adjustCellSize(1, selectedRow);   // Increase length
         } else if (source == widthMinusButton) {
-            mainController.adjustCellSize("width", -1, selectedCol);   // Decrease width
+            mainController.adjustCellSize(-1, selectedCol);   // Decrease width
         } else if (source == widthPlusButton) {
-            mainController.adjustCellSize("width", 1, selectedCol);    // Increase width
+            mainController.adjustCellSize(1, selectedCol);    // Increase width
         }
     }
 

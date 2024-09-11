@@ -364,10 +364,9 @@ public class MainController {
         }
     }
 
-    public void adjustCellSize(String lengthOrWidth, int toIncreaseOrDecrease,  String rowOrCol) {
+    public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
 
-        //gridController.adjustCellSize(lengthOrWidth, toIncreaseOrDecrease, rowOrCol, engine.getSheetCell());
-        gridController.increaseColumnWidthB();
+        gridController.increaseColumnWidthB(rowOrCol,toIncreaseOrDecrease);
     }
 }
 
