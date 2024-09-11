@@ -10,39 +10,46 @@ import javafx.beans.property.*;
 import javafx.scene.control.Label;
 
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Model {
-    private final Map<Label, StringProperty> cellLebalToProperties = new HashMap<>();
+    private final Map<Label, StringProperty> cellLabelToProperties = new HashMap<>();
     private DtoSheetCell sheetCell;
-    private BooleanProperty isCellLebalClicked;
+    private BooleanProperty isCellLabelClicked;
     private StringProperty latestUpdatedVersionProperty;
     private StringProperty originalValueLabelProperty;
     private StringProperty totalVersionsProperty;
+    private BooleanProperty isColumnSelected;
+    private BooleanProperty isRowSelected;
+    private BooleanProperty readingXMLSuccessProperty;
+    private StringProperty cellLocationProperty;
 
 
     Model(DtoSheetCell sheetCell) {
         this.sheetCell = sheetCell;
 
-        isCellLebalClicked = new SimpleBooleanProperty(false);
+        isCellLabelClicked = new SimpleBooleanProperty(false);
         latestUpdatedVersionProperty = new SimpleStringProperty("");
         originalValueLabelProperty = new SimpleStringProperty("");
         totalVersionsProperty = new SimpleStringProperty("");
+        isColumnSelected = new SimpleBooleanProperty(false);
+        isRowSelected = new SimpleBooleanProperty(false);
+        readingXMLSuccessProperty = new SimpleBooleanProperty(false);
+        cellLocationProperty = new SimpleStringProperty("");
     }
 
     public void setCellLabelToProperties(Map<CellLocation,Label> cellLocationLabelMap) {
 
         cellLocationLabelMap.forEach((cellLocation, label) -> {
-            cellLebalToProperties.put(label, new SimpleStringProperty());
+            cellLabelToProperties.put(label, new SimpleStringProperty());
 
         });
 
     }
 
     public void bindCellLebelToProperties() {
-        cellLebalToProperties.forEach((label, property) -> {
+        cellLabelToProperties.forEach((label, property) -> {
             label.textProperty().bind(property);
 
         });
@@ -50,7 +57,7 @@ public class Model {
 
     public void setPropertiesByDtoSheetCell(DtoSheetCell sheetCell) {
         this.sheetCell = sheetCell;
-        cellLebalToProperties.forEach((label, property) -> {
+        cellLabelToProperties.forEach((label, property) -> {
             CellLocation cellLocation = CellLocationFactory.fromCellId(label.getId());
             EffectiveValue effectiveValue = sheetCell.getViewSheetCell().get(cellLocation);
 
@@ -79,15 +86,23 @@ public class Model {
     }
 
     public BooleanProperty getIsCellLebalClickedProperty() {
-        return isCellLebalClicked;
+        return isCellLabelClicked;
     }
 
-    public void setIsCellLebalClicked(boolean isCellLebalClicked) {
-        this.isCellLebalClicked.set(isCellLebalClicked);
+    public void setIsCellLabelClicked(boolean isCellLabelClicked) {
+        this.isCellLabelClicked.set(isCellLabelClicked);
     }
 
     public StringProperty getOriginalValueLabelProperty() {
         return originalValueLabelProperty;
+    }
+
+    public void setCellLocationProperty(String cellLocation) {
+        cellLocationProperty.set(cellLocation);
+    }
+
+    public StringProperty getCellLocationProperty() {
+        return cellLocationProperty;
     }
 
     public void setOriginalValueLabelProperty(DtoCell cell) {
@@ -113,5 +128,29 @@ public class Model {
         }
 
         totalVersionsProperty.set(totalVersions);
+    }
+
+    public void setColumnSelected(boolean b) {
+        this.isColumnSelected.set(b);
+    }
+
+    public void setRowSelected(boolean b) {
+        this.isRowSelected.set(b);
+    }
+
+    public BooleanProperty getIsColumnSelectedProperty() {
+        return isColumnSelected;
+    }
+
+    public BooleanProperty getIsRowSelectedProperty() {
+        return isRowSelected;
+    }
+
+    public void setReadingXMLSuccess(boolean b) {
+        readingXMLSuccessProperty.set(b);
+    }
+
+    public BooleanProperty getReadingXMLSuccess() {
+        return readingXMLSuccessProperty;
     }
 }

@@ -16,6 +16,7 @@ import CoreParts.smallParts.CellLocation;
 import Utility.Exception.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -26,6 +27,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -93,6 +96,7 @@ public class MainController {
             headerController.FileHasBeenLoaded(absolutePath);
             Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
             rangesController.clearAllRanges();
+            model.setReadingXMLSuccess(true);
             model.setCellLabelToProperties(cellLocationLabelMap);
             model.bindCellLebelToProperties();
             model.setPropertiesByDtoSheetCell(engine.getSheetCell());
@@ -104,8 +108,6 @@ public class MainController {
         } catch (Exception e) {
             createErrorPopup(e.getMessage(), "Error");
         }
-
-
     }
 
     public void updateCell(String text, String newValue) {
@@ -282,7 +284,7 @@ public class MainController {
     public void cellClicked(String location) {
 
         DtoCell requestedCell = engine.getRequestedCell(location);
-        model.setIsCellLebalClicked(true);
+        model.setIsCellLabelClicked(true);
         model.setLatestUpdatedVersionProperty(requestedCell);
         model.setOriginalValueLabelProperty(requestedCell);
         actionLineController.updateCssWhenUpdatingCell(location);
@@ -290,6 +292,9 @@ public class MainController {
         gridController.showNeighbors(requestedCell);
         rangesController.resetComboBox();
         customizeController.resetComboBox();
+        model.setColumnSelected(false);
+        model.setRowSelected(false);
+        model.setCellLocationProperty(location);
     }
 
     public void handleRangeClick(String rangeName) {
@@ -367,6 +372,44 @@ public class MainController {
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
 
         gridController.changingGridConstraints(rowOrCol,toIncreaseOrDecrease);
+    }
+
+    public void ColumnSelected() {
+        model.setColumnSelected(true);
+    }
+
+    public void RowSelected() {
+        model.setRowSelected(true);
+    }
+
+    public BooleanProperty getIsColumnSelectedProperty() {
+        return model.getIsColumnSelectedProperty();
+    }
+
+    public BooleanProperty getIsRowSelectedProperty() {
+        return model.getIsRowSelectedProperty();
+    }
+
+    public BooleanProperty getReadingXMLSuccessProperty() {
+        return model.getReadingXMLSuccess();
+    }
+
+    public void changeTextAlignment(String alignment, Label selectedColumnLabel) {
+        gridController.changeTextAlignment(alignment, selectedColumnLabel.getText());
+    }
+
+    public ObservableValue<String> getCellLocationProperty() {
+        return model.getCellLocationProperty();
+    }
+
+    public void changeBackgroundColor(javafx.scene.paint.Color value, String location) {
+        gridController.changeBackgroundTextColor(value, location);
+
+    }
+
+    public void changeTextColor(javafx.scene.paint.Color value, String location) {
+        gridController.changeTextColor(value, location);
+
     }
 }
 

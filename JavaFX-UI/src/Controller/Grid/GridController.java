@@ -6,9 +6,11 @@ import Controller.Utility.StringParser;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
+import CoreParts.smallParts.CellLocationFactory;
 import expression.api.EffectiveValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -326,6 +328,74 @@ public class GridController {
                     setLabelSize(cell, (int) cell.getPrefWidth(), newHeight);
                 }
             }
+        }
+    }
+
+    public void changeTextAlignment(String alignment, String selectedColumnLabel) {
+
+        int selectedColumnIndex = selectedColumnLabel.charAt(0)- 'A' + 1;
+
+        Pos pos = null;
+        alignment = alignment.toLowerCase();
+
+        switch (alignment){
+            case "left":
+                pos = Pos.CENTER_LEFT;
+                break;
+            case "center":
+                pos = Pos.CENTER;
+                break;
+            case "right":
+                pos = Pos.CENTER_RIGHT;
+                break;
+        }
+
+        for (Node node : grid.getChildren()) {
+            Integer colIndex = GridPane.getColumnIndex(node);
+            if (colIndex != null && colIndex == selectedColumnIndex) {
+                if(GridPane.getRowIndex(node) != 0){ // not including the headers
+                    Label cell = (Label) node;
+
+                    cell.setAlignment(pos);
+                }
+            }
+        }
+    }
+
+    public void changeBackgroundTextColor(Color value, String location) {
+
+
+       // Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
+
+        Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
+        if (cell != null) {
+            // Create a new BackgroundFill with the desired color
+            BackgroundFill newBackgroundFill = new BackgroundFill(value, null, null);
+
+            // Get the current background fills (if any)
+            Background currentBackground = cell.getBackground();
+            List<BackgroundFill> currentFills = (currentBackground != null) ? new ArrayList<>(currentBackground.getFills()) : new ArrayList<>();
+
+            // Replace the first fill with the new color, or add the new fill if there are no existing fills
+            if (!currentFills.isEmpty()) {
+                currentFills.set(0, newBackgroundFill);  // Replace the first fill
+            } else {
+                currentFills.add(newBackgroundFill);  // Add the new fill
+            }
+
+            // Create a new Background with the updated fills
+            Background newBackground = new Background(currentFills.toArray(new BackgroundFill[0]));
+
+            // Set the new background to the label
+            cell.setBackground(newBackground);
+        }
+    }
+
+    public void changeTextColor(Color value, String location) {
+        Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
+        if (cell != null) {
+
+            cell.setTextFill(value);
         }
     }
 }

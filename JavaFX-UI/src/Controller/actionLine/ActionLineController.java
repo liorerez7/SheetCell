@@ -57,6 +57,7 @@ public class ActionLineController {
         this.originalValue.getStyleClass().add("normalOpacity");
         cellidLabel.setText(location);
     }
+
     @FXML
     public void clearText(MouseEvent event) {
         newValueText.clear();
@@ -86,6 +87,7 @@ public class ActionLineController {
 
     private void initializeBindings() {
         // Now that mainController is guaranteed to be initialized, you can safely bind properties
+        VersionScroller.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         newValueText.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         lastUpdatedVersion.textProperty().bind(Bindings.concat("Last Version: ", mainController.getVersionProperty()));

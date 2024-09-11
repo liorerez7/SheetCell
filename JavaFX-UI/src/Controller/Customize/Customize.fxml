@@ -5,8 +5,6 @@
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -85,16 +83,12 @@
                </GridPane.margin>
             </Button>
 
-            <!-- Labels for customization -->
-            <Label text="Cell customization" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.rowIndex="6">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Label>
-
             <!-- Text Color -->
-            <Label text="Text Color:" GridPane.rowIndex="8" />
-            <ColorPicker fx:id="textColorPicker" prefHeight="30.0" prefWidth="97.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+            <Label text="Text Color:" GridPane.rowIndex="8">
+               <padding>
+                  <Insets right="2.0" />
+               </padding></Label>
+            <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets left="30.0" />
                </GridPane.margin></ColorPicker>
@@ -102,9 +96,9 @@
             <!-- Background Color -->
             <Label text="Background Color:" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <GridPane.margin>
-                  <Insets right="10.0" />
+                  <Insets right="12.0" />
                </GridPane.margin></Label>
-            <ColorPicker fx:id="backgroundColorPicker" prefHeight="30.0" prefWidth="98.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <GridPane.margin>
                   <Insets left="30.0" />
                </GridPane.margin></ColorPicker>
@@ -115,17 +109,7 @@
                   <Insets right="25.0" />
                </GridPane.margin>
             </Label>
-            <SplitMenuButton mnemonicParsing="false" prefHeight="31.0" prefWidth="144.0" text="Aligment Text" GridPane.columnSpan="2" GridPane.rowIndex="3">
-              <items>
-                <MenuItem mnemonicParsing="false" text="CENTER" />
-                <MenuItem mnemonicParsing="false" text="LEFT" />
-                  <MenuItem mnemonicParsing="false" text="RIGHT" />
-              </items>
-               <GridPane.margin>
-                  <Insets bottom="12.0" right="5.0" />
-               </GridPane.margin>
-            </SplitMenuButton>
-            <Button mnemonicParsing="false" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <font>
                   <Font size="13.0" />
                </font>
@@ -133,7 +117,7 @@
                   <Insets left="90.0" />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
+            <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
                <font>
                   <Font size="13.0" />
                </font>
@@ -141,6 +125,17 @@
                   <Insets left="90.0" />
                </GridPane.margin>
             </Button>
+            <ComboBox fx:id="alignmentComboBox" prefHeight="31.0" prefWidth="145.0" promptText="AlligmentText" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="3.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="cellIdLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+               <GridPane.margin>
+                  <Insets right="25.0" />
+               </GridPane.margin>
+            </Label>
          </children>
       </GridPane>
    </children>
