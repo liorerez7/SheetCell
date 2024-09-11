@@ -164,7 +164,6 @@ public class CustomizeController {
             mainController.adjustCellSize(1, selectedCol);    // Increase width
         }
     }
-
 }
 
 

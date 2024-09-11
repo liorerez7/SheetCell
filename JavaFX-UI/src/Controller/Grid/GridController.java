@@ -37,7 +37,6 @@ public class GridController {
     private final static int CELL_SIZE_CHANGE = 10;
 
 
-
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
 
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
@@ -258,11 +257,6 @@ public class GridController {
     public void clearAllHighlights() {
         neighborsHandler.clearAllHighlights(cellLocationToLabel);
     }
-
-
-
-
-
 
     public void changingGridConstraints(String RowOrColumn, int increaseOrDecrease) {
 
