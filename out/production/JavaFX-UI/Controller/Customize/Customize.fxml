@@ -31,12 +31,14 @@
             <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <!-- Column ComboBox at (0,0) -->
-            <ComboBox fx:id="columnComboBox" promptText="Columns" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <ComboBox fx:id="columnComboBox" prefHeight="31.0" prefWidth="112.0" promptText="Columns" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
                <GridPane.margin>
-                  <Insets bottom="5.0" left="7.0" top="10.0" />
+                  <Insets bottom="5.0" right="35.0" top="10.0" />
                </GridPane.margin>
             </ComboBox>
 
@@ -48,69 +50,88 @@
             </ComboBox>
 
             <!-- Column Width Settings -->
-            <Label text="Width" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="Width:" GridPane.columnIndex="0" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets right="30.0" top="10.0" />
+                  <Insets right="45.0" top="15.0" />
                </GridPane.margin>
             </Label>
             <Button fx:id="widthMinusButton" onAction="#handleSizeChangeClicked" text="-" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets right="2.0" top="10.0" />
+                  <Insets right="2.0" top="15.0" />
                </GridPane.margin>
             </Button>
             <Button fx:id="widthPlusButton" onAction="#handleSizeChangeClicked" text="+" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets left="2.0" top="10.0" />
+                  <Insets left="2.0" top="15.0" />
                </GridPane.margin>
             </Button>
 
             <!-- Row Length Settings -->
-            <Label text="Length" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Label text="Length:" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets left="7.0" right="30.0" top="10.0" />
+                  <Insets left="7.0" right="30.0" top="15.0" />
                </GridPane.margin>
             </Label>
             <Button fx:id="lengthMinusButton" onAction="#handleSizeChangeClicked" text="-" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets right="2.0" top="10.0" />
+                  <Insets right="2.0" top="15.0" />
                </GridPane.margin>
             </Button>
             <Button fx:id="lengthPlusButton" onAction="#handleSizeChangeClicked" text="+" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets left="2.0" top="10.0" />
+                  <Insets left="2.0" top="15.0" />
                </GridPane.margin>
             </Button>
 
-            <!-- Labels for customization -->
-            <Label text="Cell customization" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Label>
-
             <!-- Text Color -->
-            <Label text="Text Color:" GridPane.rowIndex="5" />
-            <ColorPicker fx:id="textColorPicker" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label text="Text Color:" GridPane.rowIndex="8">
+               <padding>
+                  <Insets right="2.0" />
+               </padding></Label>
+            <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+               <GridPane.margin>
+                  <Insets left="30.0" />
+               </GridPane.margin></ColorPicker>
 
             <!-- Background Color -->
-            <Label text="Background Color:" GridPane.columnSpan="2" GridPane.rowIndex="6">
+            <Label text="Background Color:" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <GridPane.margin>
-                  <Insets right="10.0" />
+                  <Insets right="12.0" />
                </GridPane.margin></Label>
-            <ColorPicker fx:id="backgroundColorPicker" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+               <GridPane.margin>
+                  <Insets left="30.0" />
+               </GridPane.margin></ColorPicker>
 
-            <!-- Default Button -->
-            <Button mnemonicParsing="false" text="Default" GridPane.rowIndex="7">
+            <!-- Cell ID -->
+            <Label text="Cell ID:" GridPane.rowIndex="7">
+               <GridPane.margin>
+                  <Insets right="25.0" />
+               </GridPane.margin>
+            </Label>
+            <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <font>
                   <Font size="13.0" />
                </font>
                <GridPane.margin>
-                  <Insets right="10.0" top="5.0" />
+                  <Insets left="90.0" />
                </GridPane.margin>
             </Button>
-
-            <!-- Cell ID -->
-            <Label text="Cell ID:" GridPane.rowIndex="4">
+            <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="90.0" />
+               </GridPane.margin>
+            </Button>
+            <ComboBox fx:id="alignmentComboBox" prefHeight="31.0" prefWidth="145.0" promptText="AlligmentText" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="3.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="cellIdLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets right="25.0" />
                </GridPane.margin>

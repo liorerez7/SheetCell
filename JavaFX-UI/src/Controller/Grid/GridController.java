@@ -365,29 +365,16 @@ public class GridController {
     public void changeBackgroundTextColor(Color value, String location) {
 
 
-       // Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
-
         Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
         if (cell != null) {
-            // Create a new BackgroundFill with the desired color
-            BackgroundFill newBackgroundFill = new BackgroundFill(value, null, null);
+            // Convert the Color object to a CSS-compatible string
+            String colorString = String.format("#%02x%02x%02x",
+                    (int) (value.getRed() * 255),
+                    (int) (value.getGreen() * 255),
+                    (int) (value.getBlue() * 255));
 
-            // Get the current background fills (if any)
-            Background currentBackground = cell.getBackground();
-            List<BackgroundFill> currentFills = (currentBackground != null) ? new ArrayList<>(currentBackground.getFills()) : new ArrayList<>();
-
-            // Replace the first fill with the new color, or add the new fill if there are no existing fills
-            if (!currentFills.isEmpty()) {
-                currentFills.set(0, newBackgroundFill);  // Replace the first fill
-            } else {
-                currentFills.add(newBackgroundFill);  // Add the new fill
-            }
-
-            // Create a new Background with the updated fills
-            Background newBackground = new Background(currentFills.toArray(new BackgroundFill[0]));
-
-            // Set the new background to the label
-            cell.setBackground(newBackground);
+            // Update the inline style to change the background color
+            cell.setStyle("-fx-background-color: " + colorString + ";");
         }
     }
 
