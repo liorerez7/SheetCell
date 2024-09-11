@@ -6,9 +6,7 @@ import Controller.Utility.StringParser;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
 import expression.api.EffectiveValue;
-import expression.impl.stringFunction.Str;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -260,92 +258,183 @@ public class GridController {
         neighborsHandler.clearAllHighlights(cellLocationToLabel);
     }
 
-    public void increaseColumnWidthB(String RowOrColumn, int increaseOrDecrease) {
 
-        int valueToChange = increaseOrDecrease *  10;
-        boolean isRow = false;
-        boolean isColumn = false;
-        int columnIndex = 0;
 
-        char optionalCol = RowOrColumn.charAt(0);
 
-        if((optionalCol >= 'A') && (optionalCol <= 'Z')){
-            isColumn = true;
-            columnIndex = optionalCol - 'A' + 1;
-        }
 
-        if(isColumn){
-            ColumnConstraints columnConstraints = grid.getColumnConstraints().get(columnIndex);
 
-            // Increase both the preferred and minimum width by 10 units
-            double newWidth = columnConstraints.getPrefWidth() + valueToChange;
-            columnConstraints.setPrefWidth(newWidth);
-            columnConstraints.setMinWidth(newWidth);
+    public void changingGridConstraints(String RowOrColumn, int increaseOrDecrease) {
+        // Define the min and max thresholds for width and height
+        double minSize = 30;
+        double maxSize = 300;
 
-            updateColumnHeader(columnIndex, newWidth);
-            updateColumnCells(columnIndex, newWidth);
-        }
-        else{
+        // Calculate the value to change
+        int valueToChange = increaseOrDecrease * 10;
+        boolean isColumn = isColumn(RowOrColumn);
 
-            RowConstraints rowConstraints = grid.getRowConstraints().get(Integer.parseInt(RowOrColumn));
+        int index = isColumn ? RowOrColumn.charAt(0) - 'A' + 1 : Integer.parseInt(RowOrColumn);
 
-            // Increase both the preferred and minimum height by 10 units
-            double newHeight = rowConstraints.getPrefHeight() + valueToChange;
-            rowConstraints.setPrefHeight(newHeight);
-            rowConstraints.setMinHeight(newHeight);
-
-            updateRowHeader(Integer.parseInt(RowOrColumn), newHeight);
-            updateRowCells(Integer.parseInt(RowOrColumn), newHeight);
+        if (isColumn) {
+            updateColumnConstraints(index, valueToChange, minSize, maxSize);
+        } else {
+            updateRowConstraints(index, valueToChange, minSize, maxSize);
         }
     }
 
-    private void updateColumnCells(int columnIndex, double newWidth) {
+    private boolean isColumn(String RowOrColumn) {
+        return RowOrColumn.charAt(0) >= 'A' && RowOrColumn.charAt(0) <= 'Z';
+    }
 
+    private void updateColumnConstraints(int columnIndex, int valueToChange, double minSize, double maxSize) {
+        ColumnConstraints columnConstraint = grid.getColumnConstraints().get(columnIndex);
+        double newWidth = columnConstraint.getPrefWidth() + valueToChange;
+        newWidth = Math.max(minSize, Math.min(newWidth, maxSize));
+        columnConstraint.setPrefWidth(newWidth);
+        columnConstraint.setMinWidth(newWidth);
+        columnConstraint.setMaxWidth(newWidth);
+
+        updateColumnHeadersAndCells(columnIndex, (int) newWidth);
+    }
+
+    private void updateRowConstraints(int rowIndex, int valueToChange, double minSize, double maxSize) {
+        RowConstraints rowConstraint = grid.getRowConstraints().get(rowIndex);
+        double newHeight = rowConstraint.getPrefHeight() + valueToChange;
+        newHeight = Math.max(minSize, Math.min(newHeight, maxSize));
+        rowConstraint.setPrefHeight(newHeight);
+        rowConstraint.setMinHeight(newHeight);
+        rowConstraint.setMaxHeight(newHeight);
+
+        updateRowHeadersAndCells(rowIndex, (int) newHeight);
+    }
+
+    private void updateColumnHeadersAndCells(int columnIndex, int newWidth) {
         for (Node node : grid.getChildren()) {
-            if (GridPane.getColumnIndex(node) == columnIndex) {
-                Label label = (Label) node;
-                setLabelSize(label, (int) newWidth, (int) label.getPrefHeight());
-                label.setPadding(Insets.EMPTY); // Remove padding
-                label.setAlignment(Pos.CENTER); // Ensure text alignment
+            Integer colIndex = GridPane.getColumnIndex(node);
+            if (colIndex != null && colIndex == columnIndex) {
+                if (GridPane.getRowIndex(node) == 0) { // Header row
+                    Label header = (Label) node;
+                    setLabelSize(header, newWidth, (int) header.getPrefHeight());
+                } else { // Data cells
+                    Label cell = (Label) node;
+                    setLabelSize(cell, newWidth, (int) cell.getPrefHeight());
+                }
             }
         }
     }
 
-    private void updateColumnHeader(int columnIndex, double newWidth) {
-        // Update the header label for the specific column
-
+    private void updateRowHeadersAndCells(int rowIndex, int newHeight) {
         for (Node node : grid.getChildren()) {
-            if (GridPane.getRowIndex(node) == 0 && GridPane.getColumnIndex(node) == columnIndex) {
-                Label header = (Label) node;
-                setLabelSize(header, (int) newWidth , (int) header.getPrefHeight());
-                header.setPadding(Insets.EMPTY); // Remove padding
-                header.setAlignment(Pos.CENTER); // Ensure text alignment
+            Integer row = GridPane.getRowIndex(node);
+            if (row != null && row == rowIndex) {
+                if (GridPane.getColumnIndex(node) == 0) { // Header column
+                    Label header = (Label) node;
+                    setLabelSize(header, (int) header.getPrefWidth(), newHeight);
+                } else { // Data cells
+                    Label cell = (Label) node;
+                    setLabelSize(cell, (int) cell.getPrefWidth(), newHeight);
+                }
             }
         }
     }
 
-    private void updateRowCells(int rowIndex, double newHeight) {
-        for (Node node : grid.getChildren()) {
-            if (GridPane.getRowIndex(node) == rowIndex) {
-                Label label = (Label) node;
-                setLabelSize(label, (int) label.getPrefWidth(), (int) newHeight);
-                label.setPadding(Insets.EMPTY); // Remove padding
-                label.setAlignment(Pos.CENTER); // Ensure text alignment
-            }
-        }
-    }
 
-    private void updateRowHeader(int rowIndex, double newHeight) {
-        // Update the header label for the specific row
-        for (Node node : grid.getChildren()) {
-            if (GridPane.getColumnIndex(node) == 0 && GridPane.getRowIndex(node) == rowIndex) {
-                Label header = (Label) node;
-                setLabelSize(header, (int) header.getPrefWidth(), (int) newHeight);
-                header.setPadding(Insets.EMPTY); // Remove padding
-                header.setAlignment(Pos.CENTER); // Ensure text alignment
-            }
-        }
-    }
+
+
+//    public void changingGridConstraints(String RowOrColumn, int increaseOrDecrease) {
+//
+//        // Define the min and max thresholds for width and height
+//        double minSize = 30;
+//        double maxSize = 300; // Example maximum value; adjust as needed
+//
+//        int valueToChange = increaseOrDecrease *  10;
+//        boolean isColumn = false;
+//        int columnIndex = 0;
+//
+//        char optionalCol = RowOrColumn.charAt(0);
+//
+//        if((optionalCol >= 'A') && (optionalCol <= 'Z')){
+//            isColumn = true;
+//            columnIndex = optionalCol - 'A' + 1;
+//        }
+//
+//        if(isColumn){
+//            ColumnConstraints columnConstraints = grid.getColumnConstraints().get(columnIndex);
+//
+//            // Increase both the preferred and minimum width by 10 units
+//            double newWidth = columnConstraints.getPrefWidth() + valueToChange;
+//
+//            newWidth = Math.max(minSize, Math.min(newWidth, maxSize));
+//
+//            columnConstraints.setPrefWidth(newWidth);
+//            columnConstraints.setMinWidth(newWidth);
+//
+//            updateColumnHeader(columnIndex, newWidth);
+//            updateColumnCells(columnIndex, newWidth);
+//        }
+//        else{
+//
+//            RowConstraints rowConstraints = grid.getRowConstraints().get(Integer.parseInt(RowOrColumn));
+//
+//            // Increase both the preferred and minimum height by 10 units
+//            double newHeight = rowConstraints.getPrefHeight() + valueToChange;
+//
+//            newHeight = Math.max(minSize, Math.min(newHeight, maxSize));
+//
+//            rowConstraints.setPrefHeight(newHeight);
+//            rowConstraints.setMinHeight(newHeight);
+//
+//            updateRowHeader(Integer.parseInt(RowOrColumn), newHeight);
+//            updateRowCells(Integer.parseInt(RowOrColumn), newHeight);
+//        }
+//    }
+//
+//    private void updateColumnCells(int columnIndex, double newWidth) {
+//
+//        for (Node node : grid.getChildren()) {
+//            if (GridPane.getColumnIndex(node) == columnIndex) {
+//                Label label = (Label) node;
+//                setLabelSize(label, (int) newWidth, (int) label.getPrefHeight());
+//                label.setPadding(Insets.EMPTY); // Remove padding
+//                label.setAlignment(Pos.CENTER); // Ensure text alignment
+//            }
+//        }
+//    }
+//
+//    private void updateColumnHeader(int columnIndex, double newWidth) {
+//        // Update the header label for the specific column
+//
+//        for (Node node : grid.getChildren()) {
+//            if (GridPane.getRowIndex(node) == 0 && GridPane.getColumnIndex(node) == columnIndex) {
+//                Label header = (Label) node;
+//                setLabelSize(header, (int) newWidth , (int) header.getPrefHeight());
+//                header.setPadding(Insets.EMPTY); // Remove padding
+//                header.setAlignment(Pos.CENTER); // Ensure text alignment
+//            }
+//        }
+//    }
+//
+//    private void updateRowCells(int rowIndex, double newHeight) {
+//        for (Node node : grid.getChildren()) {
+//            if (GridPane.getRowIndex(node) == rowIndex) {
+//                Label label = (Label) node;
+//                setLabelSize(label, (int) label.getPrefWidth(), (int) newHeight);
+//                label.setPadding(Insets.EMPTY); // Remove padding
+//                label.setAlignment(Pos.CENTER); // Ensure text alignment
+//            }
+//        }
+//    }
+//
+//    private void updateRowHeader(int rowIndex, double newHeight) {
+//        // Update the header label for the specific row
+//        for (Node node : grid.getChildren()) {
+//            if (GridPane.getColumnIndex(node) == 0 && GridPane.getRowIndex(node) == rowIndex) {
+//                Label header = (Label) node;
+//                setLabelSize(header, (int) header.getPrefWidth(), (int) newHeight);
+//                header.setPadding(Insets.EMPTY); // Remove padding
+//                header.setAlignment(Pos.CENTER); // Ensure text alignment
+//            }
+//        }
+//    }
 
 }
 

@@ -366,7 +366,7 @@ public class MainController {
 
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
 
-        gridController.increaseColumnWidthB(rowOrCol,toIncreaseOrDecrease);
+        gridController.changingGridConstraints(rowOrCol,toIncreaseOrDecrease);
     }
 }
 
