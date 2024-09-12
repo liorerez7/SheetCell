@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import java.util.*;
 
@@ -30,6 +31,7 @@ public class GridController {
 
     @FXML
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
+    private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = new HashMap<>();
 
     private MainController mainController;
     private NeighborsHandler neighborsHandler;
@@ -74,7 +76,13 @@ public class GridController {
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label();
-                cell.getStyleClass().add("cell-label");
+                //cell.getStyleClass().add("cell-label");
+                CustomCellLabel customCellLabel = new CustomCellLabel(cell);
+                customCellLabel.applyDefaultStyles();
+                customCellLabel.setAlignment(Pos.CENTER);
+                customCellLabel.setTextAlignment(TextAlignment.CENTER);
+                cellLocationToCustomCellLabel.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
+
                 setLabelSize(cell, cellWidth, cellLength);
                 // Bind the Label's textProperty to the EffectiveValue
                 char colChar = (char) ('A' + col - 1);
@@ -111,7 +119,11 @@ public class GridController {
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label();
-                cell.getStyleClass().add("cell-label");
+
+                CustomCellLabel customCellLabel = new CustomCellLabel(cell);
+                customCellLabel.applyDefaultStyles();
+                customCellLabel.setAlignment(Pos.CENTER);
+                customCellLabel.setTextAlignment(TextAlignment.CENTER);
                 setLabelSize(cell, cellWidth, cellLength);
 
                 // Bind the Label's textProperty to the EffectiveValue
@@ -185,7 +197,10 @@ public class GridController {
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label();
-                cell.getStyleClass().add("cell-label");
+                CustomCellLabel customCellLabel = new CustomCellLabel(cell);
+                customCellLabel.applyDefaultStyles();
+                customCellLabel.setAlignment(Pos.CENTER);
+                customCellLabel.setTextAlignment(TextAlignment.CENTER);
                 setLabelSize(cell, cellWidth, cellLength);
 
                 // Bind the Label's textProperty to the EffectiveValue
@@ -249,15 +264,15 @@ public class GridController {
     }
 
     public void showAffectedCells(List<CellLocation> requestedRange) {
-        neighborsHandler.showAffectedCells(requestedRange, cellLocationToLabel);
+        neighborsHandler.showAffectedCells(requestedRange, cellLocationToLabel, cellLocationToCustomCellLabel);
     }
 
     public void showNeighbors(DtoCell cell) {
-        neighborsHandler.showNeighbors(cell, cellLocationToLabel);
+        neighborsHandler.showNeighbors(cell, cellLocationToLabel, cellLocationToCustomCellLabel);
     }
 
     public void clearAllHighlights() {
-        neighborsHandler.clearAllHighlights(cellLocationToLabel);
+        neighborsHandler.clearAllHighlights(cellLocationToLabel, cellLocationToCustomCellLabel);
     }
 
     public void changingGridConstraints(String RowOrColumn, int increaseOrDecrease) {
@@ -357,6 +372,13 @@ public class GridController {
                     Label cell = (Label) node;
 
                     cell.setAlignment(pos);
+                    if (pos == Pos.CENTER) {
+                        cell.setTextAlignment(TextAlignment.CENTER);
+                    } else if (pos == Pos.CENTER_LEFT) {
+                        cell.setTextAlignment(TextAlignment.LEFT);
+                    } else if (pos == Pos.CENTER_RIGHT) {
+                        cell.setTextAlignment(TextAlignment.RIGHT);
+                    }
                 }
             }
         }
@@ -364,26 +386,27 @@ public class GridController {
 
     public void changeBackgroundTextColor(Color value, String location) {
 
-
         Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
-        if (cell != null) {
-            // Convert the Color object to a CSS-compatible string
-            String colorString = String.format("#%02x%02x%02x",
-                    (int) (value.getRed() * 255),
-                    (int) (value.getGreen() * 255),
-                    (int) (value.getBlue() * 255));
+        Pos alignment = cell.getAlignment();
 
-            // Update the inline style to change the background color
-            cell.setStyle("-fx-background-color: " + colorString + ";");
-        }
+        CustomCellLabel customCellLabel = cellLocationToCustomCellLabel.get(CellLocationFactory.fromCellId(location));
+       // CustomCellLabel customCellLabel = new CustomCellLabel(cell);
+        customCellLabel.setBackgroundColor(value);
+        customCellLabel.setAlignment(alignment);
     }
 
     public void changeTextColor(Color value, String location) {
         Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
         if (cell != null) {
-
-            cell.setTextFill(value);
+            CustomCellLabel customCellLabel = cellLocationToCustomCellLabel.get(CellLocationFactory.fromCellId(location));
+            //CustomCellLabel customCellLabel = new CustomCellLabel(cell);
+            customCellLabel.setTextColor(value);
+            //cell.setTextFill(value);
         }
+    }
+
+    public Map<CellLocation, CustomCellLabel> getCellLocationToCustomCellLabel() {
+        return cellLocationToCustomCellLabel;
     }
 }
 

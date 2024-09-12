@@ -1,6 +1,7 @@
 package Controller.Main;
 
 import Controller.Customize.CustomizeController;
+import Controller.Grid.CustomCellLabel;
 import Controller.Grid.GridController;
 import Controller.MenuBar.HeaderController;
 import Controller.Utility.FilterGridData;
