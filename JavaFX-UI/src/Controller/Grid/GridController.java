@@ -71,13 +71,12 @@ public class GridController {
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
 
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
-
+        grid.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Allow the grid to resize dynamically
+        grid.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth() * DELTA_EXTENSION_GRID;
         int cellLength = sheetCell.getCellLength() * DELTA_EXTENSION_GRID;
-
-
 
         clearGrid(grid);
         setupColumnConstraints(grid, numCols, cellWidth);
@@ -128,6 +127,7 @@ public class GridController {
                 grid.add(cell,col, row);
             }
         }
+
         return cellLocationToLabel;
     }
 
@@ -275,7 +275,8 @@ public class GridController {
             ColumnConstraints colConstraints = new ColumnConstraints();
             colConstraints.setMinWidth(cellWidth);
             colConstraints.setPrefWidth(cellWidth);
-            colConstraints.setHgrow(Priority.SOMETIMES);
+
+            colConstraints.setHgrow(Priority.ALWAYS);
             grid.getColumnConstraints().add(colConstraints);
         }
     }
@@ -286,7 +287,7 @@ public class GridController {
             rowConstraints.setMinHeight(cellLength);
             rowConstraints.setPrefHeight(cellLength);
             rowConstraints.setMaxHeight(cellLength);
-            rowConstraints.setVgrow(Priority.SOMETIMES);
+            rowConstraints.setVgrow(Priority.ALWAYS);
             grid.getRowConstraints().add(rowConstraints);
         }
     }
