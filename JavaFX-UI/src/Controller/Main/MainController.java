@@ -15,14 +15,17 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
 import Utility.Exception.*;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -89,26 +92,75 @@ public class MainController {
         popUpWindowsHandler = new PopUpWindowsHandler();
     }
 
+//    public void initializeGridBasedOnXML(String absolutePath) {
+//
+//        try {
+//            engine.readSheetCellFromXML(absolutePath); //can throw exception
+//
+//            headerController.FileHasBeenLoaded(absolutePath);
+//            Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
+//            rangesController.clearAllRanges();
+//            model.setReadingXMLSuccess(true);
+//            model.setCellLabelToProperties(cellLocationLabelMap);
+//            model.bindCellLebelToProperties();
+//            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+//            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+//            rangesController.setAllRanges(engine.getSheetCell().getRanges());
+//            customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
+//            customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+//
+//        } catch (Exception e) {
+//            createErrorPopup(e.getMessage(), "Error");
+//        }
+//    }
+
+
+
     public void initializeGridBasedOnXML(String absolutePath) {
+        ProgressBar progressBar = gridController.getProgressBar();
 
-        try {
-            engine.readSheetCellFromXML(absolutePath); //can throw exception
+        // Create a Task to handle the file loading
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    // Simulate progress over 2 seconds
+                    gridController.hideGrid();
+                    for (int i = 0; i <= 100; i++) {
+                        updateProgress(i, 100);  // Update progress on the Task
+                        Thread.sleep(20);  // Simulate loading time
+                    }
 
-            headerController.FileHasBeenLoaded(absolutePath);
-            Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
-            rangesController.clearAllRanges();
-            model.setReadingXMLSuccess(true);
-            model.setCellLabelToProperties(cellLocationLabelMap);
-            model.bindCellLebelToProperties();
-            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-            rangesController.setAllRanges(engine.getSheetCell().getRanges());
-            customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
-            customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+                    // Load the XML file (this is the actual task)
+                    engine.readSheetCellFromXML(absolutePath); //can throw exception
 
-        } catch (Exception e) {
-            createErrorPopup(e.getMessage(), "Error");
-        }
+                    Platform.runLater(() -> {
+                        // UI updates after loading
+                        headerController.FileHasBeenLoaded(absolutePath);
+                        Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
+                        rangesController.clearAllRanges();
+                        model.setReadingXMLSuccess(true);
+                        model.setCellLabelToProperties(cellLocationLabelMap);
+                        model.bindCellLebelToProperties();
+                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
+                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
+                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+                    });
+                } catch (Exception e) {
+                    gridController.showGrid();
+                    Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+                }
+                return null;
+            }
+        };
+
+        // Bind the progress bar to the task's progress
+        progressBar.progressProperty().bind(task.progressProperty());
+
+        // Run the task in a new thread
+        new Thread(task).start();
     }
 
     public void updateCell(String text, String newValue) {

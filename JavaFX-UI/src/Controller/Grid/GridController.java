@@ -8,11 +8,13 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import expression.api.EffectiveValue;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.animation.KeyFrame;
@@ -39,6 +41,31 @@ public class GridController {
     private final static int MIN_CELL_SIZE = 30;
     private final static int MAX_CELL_SIZE = 300;
     private final static int CELL_SIZE_CHANGE = 10;
+
+
+    private ProgressBar progressBar;
+
+    public ProgressBar getProgressBar() {
+        // Create a new ProgressBar
+        progressBar = new ProgressBar(0);
+        progressBar.setMaxWidth(200);
+        progressBar.setPrefHeight(30);
+
+        // Add some margin to the right
+        GridPane.setMargin(progressBar, new Insets(0, 0, 0, 100));  // 100px to the right
+
+        // Place it in the center of the grid
+        grid.add(progressBar, 0, 0, grid.getColumnCount(), grid.getRowCount()); // Span across the grid
+
+        return progressBar;
+    }
+
+    public void removeProgressBar() {
+        if (progressBar != null) {
+            Platform.runLater(() -> grid.getChildren().remove(progressBar)); // Remove the progress bar from the grid
+            progressBar = null;
+        }
+    }
 
 
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
@@ -223,6 +250,25 @@ public class GridController {
         grid.getRowConstraints().clear();
         grid.getChildren().clear();
     }
+
+    public void hideGrid() {
+        // Hide all children of the grid except the progress bar
+        for (Node child : grid.getChildren()) {
+            if (!(child instanceof ProgressBar)) {
+                child.setVisible(false);
+                child.setManaged(false); // Prevent taking up space in layout
+            }
+        }
+    }
+
+    public void showGrid() {
+        // Show all children of the grid
+        for (Node child : grid.getChildren()) {
+            child.setVisible(true);
+            child.setManaged(true); // Ensure layout space is managed properly
+        }
+    }
+
 
     private void setupColumnConstraints(GridPane grid, int numCols, int cellWidth) {
         for (int i = 0; i < numCols + 1; i++) { // +1 for header column
