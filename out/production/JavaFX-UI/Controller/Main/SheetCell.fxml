@@ -55,6 +55,6 @@
       </VBox>
    </left>
    <center>
-      <fx:include fx:id="grid" source="../Grid/Grid.fxml" BorderPane.alignment="TOP_LEFT" />
+      <fx:include fx:id="gridScroller" source="../Grid/Grid.fxml" BorderPane.alignment="TOP_LEFT" />
    </center>
 </BorderPane>

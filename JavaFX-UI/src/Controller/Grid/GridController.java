@@ -30,7 +30,10 @@ import java.util.*;
 public class GridController {
 
     @FXML
-    private GridPane grid;
+    private ScrollPane gridScroller;  // Use the ScrollPane as a placeholder
+
+    private GridPane grid = new GridPane();
+
 
     @FXML
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
@@ -42,8 +45,6 @@ public class GridController {
     private final static int MIN_CELL_SIZE = 30;
     private final static int MAX_CELL_SIZE = 300;
     private final static int CELL_SIZE_CHANGE = 10;
-
-    private ScrollPane gridScroller;
 
 
     private ProgressBar progressBar;
@@ -63,6 +64,10 @@ public class GridController {
         return progressBar;
     }
 
+    public GridPane getGrid() {
+        return grid;
+    }
+
     public void removeProgressBar() {
         if (progressBar != null) {
             Platform.runLater(() -> grid.getChildren().remove(progressBar)); // Remove the progress bar from the grid
@@ -78,7 +83,6 @@ public class GridController {
         grid.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
 
-
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth() * DELTA_EXTENSION_GRID;
@@ -90,12 +94,15 @@ public class GridController {
         addColumnHeaders(grid, numCols, cellWidth, cellLength);
         addRowHeaders(grid, numRows, cellWidth, cellLength);
 
+        gridScroller.setContent(grid);  // Replace the placeholder content with the dynamically created grid
 
     }
 
     public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         neighborsHandler = new NeighborsHandler();
+
         initializeEmptyGrid(sheetCell,grid);
+
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
@@ -135,7 +142,6 @@ public class GridController {
                 grid.add(cell,col, row);
             }
         }
-
 
         return cellLocationToLabel;
     }
