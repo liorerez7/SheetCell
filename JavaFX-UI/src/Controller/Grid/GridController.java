@@ -47,34 +47,9 @@ public class GridController {
     private final static int CELL_SIZE_CHANGE = 10;
 
 
-    private ProgressBar progressBar;
-
-    public ProgressBar getProgressBar() {
-        // Create a new ProgressBar
-        progressBar = new ProgressBar(0);
-        progressBar.setMaxWidth(200);
-        progressBar.setPrefHeight(30);
-
-        // Add some margin to the right
-        GridPane.setMargin(progressBar, new Insets(0, 0, 0, 100));  // 100px to the right
-
-        // Place it in the center of the grid
-        grid.add(progressBar, 0, 0, grid.getColumnCount(), grid.getRowCount()); // Span across the grid
-
-        return progressBar;
-    }
-
     public GridPane getGrid() {
         return grid;
     }
-
-    public void removeProgressBar() {
-        if (progressBar != null) {
-            Platform.runLater(() -> grid.getChildren().remove(progressBar)); // Remove the progress bar from the grid
-            progressBar = null;
-        }
-    }
-
 
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
 
@@ -323,9 +298,6 @@ public class GridController {
             child.setManaged(true); // Ensure layout space is managed properly
         }
     }
-
-
-
 
     public void showAffectedCells(List<CellLocation> requestedRange) {
         neighborsHandler.showAffectedCells(requestedRange, cellLocationToLabel, cellLocationToCustomCellLabel);

@@ -22,7 +22,7 @@ public class sheetCellApp extends Application {
         mainController.setEngine(new EngineImpl());
 
 
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root, 1200, 750);
         stage.setScene(scene);
         stage.show();
     }

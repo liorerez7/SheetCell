@@ -4,6 +4,7 @@ import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
 import Controller.MenuBar.HeaderController;
 import Controller.Utility.FilterGridData;
+import Controller.Utility.ProgressManager;
 import Controller.Utility.RangeStringsData;
 import Controller.Ranges.RangesController;
 import Controller.Utility.SortRowsData;
@@ -64,8 +65,12 @@ public class MainController {
 
     @FXML
     private CustomizeController customizeController;
+
     @FXML
     private VBox customize;
+
+    @FXML
+    private VBox leftCommands;
 
     @FXML
     private RangesController rangesController;
@@ -74,7 +79,7 @@ public class MainController {
 
     private Model model;
     private PopUpWindowsHandler popUpWindowsHandler;
-
+    private ProgressManager progressManager;
 
     @FXML
     public void initialize() {
@@ -83,6 +88,7 @@ public class MainController {
         actionLineController.setMainController(this);
         gridScrollerController.setMainController(this);
         rangesController.setMainController(this);
+        progressManager = new ProgressManager();
 
         adjustScrollPanePosition();
 
@@ -90,7 +96,7 @@ public class MainController {
 
     private void adjustScrollPanePosition() {
         if (gridScroller != null) {
-            BorderPane.setMargin(gridScroller, new Insets(20, 0, 0, 10)); // Adjust the top margin to position lower
+            BorderPane.setMargin(gridScroller, new Insets(20, 0, 20, 10)); // Adjust the top margin to position lower
         }
     }
 
@@ -109,23 +115,18 @@ public class MainController {
 
     public void initializeGridBasedOnXML(String absolutePath) {
 
+        // Use ProgressManager to get the progress pane
+        StackPane progressPane = progressManager.getProgressPane();
 
-        //ProgressBar progressBar = gridScrollerController.getProgressBar();
+        // Create a new StackPane to wrap the progressPane and manage its position
+        StackPane wrapperPane = new StackPane(progressPane);
+        // Set the margin or positioning on the wrapperPane
+        StackPane.setMargin(progressPane, new Insets(125, 0, 0, 400));  // Adjust these values as needed
 
-        ProgressBar progressBar = new ProgressBar(0);
-        progressBar.setMaxWidth(200);
-        progressBar.setPrefHeight(30);
-
-        // Create a layout to add the ProgressBar, like StackPane or VBox
-        StackPane progressPane = new StackPane(progressBar);
-        progressPane.setPadding(new Insets(10)); // Adjust as needed
-
-        // Add ProgressPane to the main layout, consider a specific position or overlay
+        // Add wrapperPane to the main layout
         if (gridScroller != null) {
-            gridScroller.setContent(progressPane); // Temporarily show progress bar
+            gridScroller.setContent(wrapperPane); // Temporarily show progress bar
         }
-        // Add some margin to the right
-        GridPane.setMargin(progressBar, new Insets(0, 0, 0, 100));  // 100px to the right
 
         // Create a Task to handle the file loading
         Task<Void> task = new Task<Void>() {
@@ -135,7 +136,8 @@ public class MainController {
                     // Simulate progress over 2 seconds
                     gridScrollerController.hideGrid();
                     for (int i = 0; i <= 100; i++) {
-                        updateProgress(i, 100);  // Update progress on the Task
+                        updateProgress(i, 100);
+                        progressManager.updateProgress(i / 100.0);  // Use ProgressManager to update progress
                         Thread.sleep(20);  // Simulate loading time
                     }
 
@@ -159,7 +161,7 @@ public class MainController {
                 } catch (Exception e) {
                     gridScrollerController.showGrid();
                     Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-                }finally {
+                } finally {
                     Platform.runLater(() -> {
                         if (gridScroller != null) {
                             gridScroller.setContent(gridScrollerController.getGrid()); // Restore grid
@@ -171,7 +173,7 @@ public class MainController {
         };
 
         // Bind the progress bar to the task's progress
-        progressBar.progressProperty().bind(task.progressProperty());
+        progressManager.getProgressBar().progressProperty().bind(task.progressProperty());
 
         // Run the task in a new thread
         new Thread(task).start();

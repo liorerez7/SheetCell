@@ -11,6 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.VBox;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -82,7 +84,6 @@ public class RangesController {
             }
         });
     }
-
 
     // Add a new range label to the ComboBox
     public void addRange(List<CellLocation> ranges, String rangeName) {
