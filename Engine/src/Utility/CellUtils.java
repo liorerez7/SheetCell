@@ -37,68 +37,79 @@ public class CellUtils {
         }
     }
 
-    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCellException {// this is a recursive function
-
+    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCellException {
         ExpressionParser parser = new ExpressionParserImpl(value);
         boolean removeSpacesBeforeArguments = true;
 
-        if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
-
-            if (insideMethod) {
-
-                String trimmedValue = value.trim();
-
-                if (!(value.equals(trimmedValue))) {
-                    throw new CellCantBeEvaluatedException(targetCell);
-                }
-            }
-            else{
-                value = value.trim();
-            }
-
-            return new Num(Double.parseDouble(value));
+        // Handle numeric values (base case)
+        if (CellUtils.trySetNumericValue(value)) {
+            return handleNumericValue(value, targetCell, insideMethod);
         }
 
-        if (!parser.isPotentialOperation()) {  // base case: value is a string
-
-            if (!insideMethod) {
-                value = value.trim();  // Trim spaces for ordinary strings
-            }
-
-            if (value.equalsIgnoreCase("True") || value.equalsIgnoreCase("False")) {
-                return new Bool(Boolean.parseBoolean(value.toLowerCase()));  // Parse ignoring case
-            }
-
-            return new Str(value);
+        // Handle string values (base case)
+        if (!parser.isPotentialOperation()) {
+            return handleStringValue(value, insideMethod);
         }
 
-        Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
-
-        if(operation == Operation.CONCAT){
+        // Parse operation
+        Operation operation = Operation.fromString(parser.getFunctionName());
+        if (operation == Operation.CONCAT) {
             removeSpacesBeforeArguments = false;
         }
 
         List<String> arguments = parser.getArgumentList(removeSpacesBeforeArguments);
 
-        if (operation == Operation.REF) {
-            Cell cellThatAffects = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
-            return handleReferenceOperation(cellThatAffects);  //argument(1) = CELL_ID
+        // Handle specific operations
+        switch (operation) {
+            case REF:
+                return handleReferenceOperation(sheetCell, arguments.get(0));
+            case SUM:
+            case AVERAGE:
+                return handleRangeOperation(operation, sheetCell, targetCell, arguments.get(0));
+            default:
+                return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
         }
-        else if(operation == Operation.SUM || operation == Operation.AVERAGE){
-            Range range = sheetCell.getRange(arguments.getFirst());
-            if(range == null){
-                throw new RangeDoesntExistException(arguments.getFirst());
-            }
-            range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
+    }
 
-            if(operation == Operation.SUM){
-                return new Sum(range);
-            }
+    private static Expression handleNumericValue(String value, Cell targetCell, boolean insideMethod) throws CellCantBeEvaluatedException {
+        String trimmedValue = value.trim();
 
-            return new Average(range, targetCell.getLocation().getCellId());
+        if (insideMethod && !value.equals(trimmedValue)) {
+            throw new CellCantBeEvaluatedException(targetCell);
         }
 
-        return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
+        return new Num(Double.parseDouble(trimmedValue));
+    }
+
+    private static Expression handleStringValue(String value, boolean insideMethod) {
+        String trimmedValue = insideMethod ? value : value.trim();
+
+        if (trimmedValue.equalsIgnoreCase("True") || trimmedValue.equalsIgnoreCase("False")) {
+            return new Bool(Boolean.parseBoolean(trimmedValue.toLowerCase()));
+        }
+
+        return new Str(trimmedValue);
+    }
+
+    private static Expression handleReferenceOperation(SheetCell sheetCell, String cellId) {
+        Cell referencedCell = sheetCell.getCell(CellLocationFactory.fromCellId(cellId));
+        return handleReferenceOperation(referencedCell);
+    }
+
+    private static Expression handleRangeOperation(Operation operation, SheetCell sheetCell, Cell targetCell, String rangeId) throws RangeDoesntExistException {
+        Range range = sheetCell.getRange(rangeId);
+
+        if (range == null) {
+            throw new RangeDoesntExistException(rangeId);
+        }
+
+        range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
+
+        if (operation == Operation.SUM) {
+            return new Sum(range);
+        }
+
+        return new Average(range, targetCell.getLocation().getCellId());
     }
 
     private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCellException {
@@ -118,13 +129,6 @@ public class CellUtils {
         return expressions;
     }
 
-    public static void formatDoubleValue(EffectiveValue value) {
-        if (value.getCellType() == ReturnedValueType.NUMERIC) {
-            double numericValue = (double) value.getValue();
-            if (numericValue == Math.floor(numericValue))
-                value.setValue((int)numericValue);
-        }
-    }
 
     public static boolean isWithinBounds(String from, String to, int numOfRows, int numOfColumns) { // Convert from and to into CellLocation objects
         CellLocation startCell = CellLocationFactory.fromCellId(from);
@@ -177,3 +181,72 @@ public class CellUtils {
         return cellLocations;
     }
 }
+
+
+
+
+// TODO: old version, needs to check if the new version is still good after more testing..
+
+//    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCellException {// this is a recursive function
+//
+//        ExpressionParser parser = new ExpressionParserImpl(value);
+//        boolean removeSpacesBeforeArguments = true;
+//
+//        if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
+//
+//            if (insideMethod) {
+//
+//                String trimmedValue = value.trim();
+//
+//                if (!(value.equals(trimmedValue))) {
+//                    throw new CellCantBeEvaluatedException(targetCell);
+//                }
+//            }
+//            else{
+//                value = value.trim();
+//            }
+//
+//            return new Num(Double.parseDouble(value));
+//        }
+//
+//        if (!parser.isPotentialOperation()) {  // base case: value is a string
+//
+//            if (!insideMethod) {
+//                value = value.trim();  // Trim spaces for ordinary strings
+//            }
+//
+//            if (value.equalsIgnoreCase("True") || value.equalsIgnoreCase("False")) {
+//                return new Bool(Boolean.parseBoolean(value.toLowerCase()));  // Parse ignoring case
+//            }
+//
+//            return new Str(value);
+//        }
+//
+//        Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
+//
+//        if(operation == Operation.CONCAT){
+//            removeSpacesBeforeArguments = false;
+//        }
+//
+//        List<String> arguments = parser.getArgumentList(removeSpacesBeforeArguments);
+//
+//        if (operation == Operation.REF) {
+//            Cell cellThatAffects = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
+//            return handleReferenceOperation(cellThatAffects);  //argument(1) = CELL_ID
+//        }
+//        else if(operation == Operation.SUM || operation == Operation.AVERAGE){
+//            Range range = sheetCell.getRange(arguments.getFirst());
+//            if(range == null){
+//                throw new RangeDoesntExistException(arguments.getFirst());
+//            }
+//            range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
+//
+//            if(operation == Operation.SUM){
+//                return new Sum(range);
+//            }
+//
+//            return new Average(range, targetCell.getLocation().getCellId());
+//        }
+//
+//        return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
+//    }

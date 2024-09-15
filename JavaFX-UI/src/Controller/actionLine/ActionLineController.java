@@ -26,21 +26,16 @@ public class ActionLineController {
 
     @FXML private Label lastUpdatedVersion;
 
-
-
-
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         initializeBindings();
         initializeVersionScroller();
     }
 
-
     @FXML
     public void initialize() {
 
     }
-
 
     @FXML
     void UpdateCell(ActionEvent event) {
@@ -49,7 +44,6 @@ public class ActionLineController {
         newValueText.clear();
         mainController.updateCell(cellId , newValue);
     }
-
 
     public void updateCssWhenUpdatingCell(String location) {
         this.originalValue.getStyleClass().remove("faded");
@@ -63,7 +57,6 @@ public class ActionLineController {
         newValueText.clear();
         newValueText.getStyleClass().remove("faded");
     }
-
 
     private void initializeVersionScroller() {
         mainController.getTotalVersionsProperty().addListener((observable, oldValue, newValue) -> {
@@ -84,9 +77,7 @@ public class ActionLineController {
         }
     }
 
-
     private void initializeBindings() {
-        // Now that mainController is guaranteed to be initialized, you can safely bind properties
         VersionScroller.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         newValueText.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
@@ -94,10 +85,7 @@ public class ActionLineController {
         originalValue.textProperty().bind(mainController.getOriginalValueLabelProperty());
     }
 
-
     private void handleVersionClick(int versionNumber) {
-
         mainController.specificVersionClicked(versionNumber);
-
     }
 }

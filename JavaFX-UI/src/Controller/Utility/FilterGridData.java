@@ -1,22 +1,13 @@
 package Controller.Utility;
 
-public class FilterGridData {
-
-    String columnsToFilterBy;
-    String range;
+public class FilterGridData extends BaseRangeData {
+    private String columnsToFilterBy;
 
     public void setColumnsToFilterBy(String columns) {
         this.columnsToFilterBy = columns;
     }
 
-    public void setRange(String range) {
-        this.range = range;
-    }
     public String getColumnsToFilterBy() {
         return columnsToFilterBy;
-    }
-
-    public String getRange() {
-        return range;
     }
 }

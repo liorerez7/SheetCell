@@ -83,6 +83,7 @@ public class RangesController {
         });
     }
 
+
     // Add a new range label to the ComboBox
     public void addRange(List<CellLocation> ranges, String rangeName) {
         // Create the label for the range

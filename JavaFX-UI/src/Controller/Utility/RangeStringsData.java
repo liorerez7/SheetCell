@@ -1,23 +1,13 @@
 package Controller.Utility;
 
-public class RangeStringsData {
-
-    String name;
-    String range;
+public class RangeStringsData extends BaseRangeData {
+    private String name;
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setRange(String range) {
-        this.range = range;
-    }
     public String getName() {
         return name;
     }
-
-    public String getRange() {
-        return range;
-    }
 }
-

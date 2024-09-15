@@ -2,7 +2,6 @@ package Utility;
 
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
 import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.impl.variantImpl.EffectiveValueImpl;

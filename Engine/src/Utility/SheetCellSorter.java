@@ -12,7 +12,6 @@ public class SheetCellSorter {
 
     // Constants
     private static final int NO_SWAP = -1;
-    private static final int SWAP = 1;
     private static final int EQUAL_VALUES = 0;
 
     public static DtoSheetCell sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell) {

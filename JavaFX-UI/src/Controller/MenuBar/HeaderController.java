@@ -17,17 +17,23 @@ public class HeaderController {
 
     @FXML
     private MenuBar menuBar;
+
     @FXML
     private Label path;
+
     @FXML
     private MainController MainController;
+
     private StringProperty pathProperty;
+
     @FXML public void initialize() {
         path.textProperty().bind(pathProperty);
     }
+
     public HeaderController() {
         pathProperty = new SimpleStringProperty("");
     }
+
     public void FileHasBeenLoaded(String absolutePath) {
         pathProperty.setValue(absolutePath);
     }

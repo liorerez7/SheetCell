@@ -193,6 +193,14 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     @Override
     public void updateNewRange(String name, String range) {
         // Split the range string into start and end cell IDs
+
+        for (Range rangeInSystem : systemRanges) {
+            if(rangeInSystem.getRangeName().equals(name))
+            {
+                throw new IllegalArgumentException("Range with the same name already exists");
+            }
+        }
+
         String[] cells = range.split("\\.\\.");
 
         // Validate the range format
@@ -322,7 +330,14 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 
         if(range.canBeDeleted())
         {
-            systemRanges.removeIf(rangeIterator -> range.getRangeName().equals(name));
+
+            for (Range rangeInSystem : systemRanges) {
+                if(rangeInSystem.getRangeName().equals(name))
+                {
+                    systemRanges.remove(rangeInSystem);
+                    break;
+                }
+            }
         }
         else{
             throw new RangeCantBeDeletedException(name, range.getAffectingCellLocations());

@@ -14,9 +14,6 @@ public class Bool implements Expression {
         this.value = val;
     }
 
-
-
-
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) {
         return new EffectiveValueImpl(ReturnedValueType.BOOLEAN, value);

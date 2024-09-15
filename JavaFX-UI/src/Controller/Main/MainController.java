@@ -116,8 +116,6 @@ public class MainController {
 //        }
 //    }
 
-
-
     public void initializeGridBasedOnXML(String absolutePath) {
         ProgressBar progressBar = gridScrollerController.getProgressBar();
 

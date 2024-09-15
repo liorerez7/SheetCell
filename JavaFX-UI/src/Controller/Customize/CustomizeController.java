@@ -8,8 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import java.awt.*;
-
 
 public class CustomizeController {
 
@@ -54,9 +52,11 @@ public class CustomizeController {
     private Label cellIdLabel;
 
     public void setMainController(MainController mainController) {
-
         this.mainController = mainController;
+        setupBindings();
+    }
 
+    private void setupBindings() {
         defaultTextButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         defaultBackgroundTextButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         textColorPicker.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
@@ -73,115 +73,57 @@ public class CustomizeController {
 
     @FXML
     public void initialize() {
-
         initializeAlignmentComboBox();
+        setupColumnComboBox();
+        setupRowComboBox();
+    }
 
-
-        // Set up Column ComboBox (handles labels like A, B, C, etc.)
-        columnComboBox.setCellFactory(comboBox -> new ListCell<Label>() {
+    private void setComboBoxCellFactory(ComboBox<Label> comboBox, String defaultText) {
+        comboBox.setCellFactory(cb -> new ListCell<Label>() {
             @Override
             protected void updateItem(Label item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getText());
-                }
+                setText(empty || item == null ? null : item.getText());
             }
         });
-
-        columnComboBox.setButtonCell(new ListCell<Label>() {
+        comboBox.setButtonCell(new ListCell<Label>() {
             @Override
             protected void updateItem(Label item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Columns");  // Default text when nothing is selected
-                } else {
-                    setText(item.getText());
-                }
+                setText(empty || item == null ? defaultText : item.getText());
             }
         });
-
-        // Set up Row ComboBox (handles labels for row numbers like 1, 2, 3, etc.)
-        rowComboBox.setCellFactory(comboBox -> new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getText());
-                }
-            }
-        });
-
-        rowComboBox.setButtonCell(new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Rows");  // Default text when nothing is selected
-                } else {
-                    setText(item.getText());
-                }
-            }
-        });
-
-
-        columnComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                handleColumnSelection();
-            }
-        });
-
-        rowComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                handleRowSelection();
-            }
-        });
+        comboBox.setPromptText(defaultText);
     }
 
     private void initializeAlignmentComboBox() {
-        // Add alignment options
         alignmentComboBox.getItems().addAll(
                 new Label("CENTER"),
                 new Label("LEFT"),
                 new Label("RIGHT")
         );
-
-        // Set custom cell factory for alignment options in the dropdown
-        alignmentComboBox.setCellFactory(comboBox -> new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getText());
-                }
-            }
-        });
-
-        // Set custom button cell to display prompt text or selected option
-        alignmentComboBox.setButtonCell(new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Alignment Text");  // Default text when nothing is selected
-                } else {
-                    setText(item.getText());
-                }
-            }
-        });
-
-        // Set default prompt text
-        alignmentComboBox.setPromptText("Alignment Text");
-
-        // Add a listener to handle alignment selection
+        setComboBoxCellFactory(alignmentComboBox, "Alignment Text");
         alignmentComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
                 handleTextAlignment(newValue.getText().toLowerCase());
+            }
+        });
+    }
+
+    private void setupColumnComboBox() {
+        setComboBoxCellFactory(columnComboBox, "Columns");
+        columnComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                handleColumnSelection();
+            }
+        });
+    }
+
+    private void setupRowComboBox() {
+        setComboBoxCellFactory(rowComboBox, "Rows");
+        rowComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                handleRowSelection();
             }
         });
     }
@@ -229,37 +171,24 @@ public class CustomizeController {
 
     @FXML
     void handleSizeChangeClicked(ActionEvent event) {
-
-        Label selectedColumnLabel = columnComboBox.getSelectionModel().getSelectedItem();
-        Label selectedRowLabel = rowComboBox.getSelectionModel().getSelectedItem();
-
-
-        String selectedCol = null;
-        String selectedRow = null;
-
-        if(selectedColumnLabel != null)
-        {
-            selectedCol = selectedColumnLabel.getText();
-
-        }
-        if(selectedRowLabel != null)
-        {
-            selectedRow = selectedRowLabel.getText();
-        }
-
-        // Identify the source of the event (which button was clicked)
+        String selectedCol = getSelectedComboBoxText(columnComboBox);
+        String selectedRow = getSelectedComboBoxText(rowComboBox);
         Object source = event.getSource();
 
-        // Call the respective function in MainController, passing the row and column along with the size adjustment
         if (source == lengthMinusButton) {
-            mainController.adjustCellSize(-1,selectedRow);  // Decrease length
+            mainController.adjustCellSize(-1, selectedRow);
         } else if (source == lengthPlusButton) {
-            mainController.adjustCellSize(1, selectedRow);   // Increase length
+            mainController.adjustCellSize(1, selectedRow);
         } else if (source == widthMinusButton) {
-            mainController.adjustCellSize(-1, selectedCol);   // Decrease width
+            mainController.adjustCellSize(-1, selectedCol);
         } else if (source == widthPlusButton) {
-            mainController.adjustCellSize(1, selectedCol);    // Increase width
+            mainController.adjustCellSize(1, selectedCol);
         }
+    }
+
+    private String getSelectedComboBoxText(ComboBox<Label> comboBox) {
+        Label selectedLabel = comboBox.getSelectionModel().getSelectedItem();
+        return selectedLabel != null ? selectedLabel.getText() : null;
     }
 
     @FXML
@@ -293,3 +222,186 @@ public class CustomizeController {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//TODO: previous code, the newer code still needs to go over some testings
+
+
+
+
+
+
+//    @FXML
+//    void handleSizeChangeClicked(ActionEvent event) {
+//
+//        Label selectedColumnLabel = columnComboBox.getSelectionModel().getSelectedItem();
+//        Label selectedRowLabel = rowComboBox.getSelectionModel().getSelectedItem();
+//
+//
+//        String selectedCol = null;
+//        String selectedRow = null;
+//
+//        if(selectedColumnLabel != null)
+//        {
+//            selectedCol = selectedColumnLabel.getText();
+//
+//        }
+//        if(selectedRowLabel != null)
+//        {
+//            selectedRow = selectedRowLabel.getText();
+//        }
+//
+//        // Identify the source of the event (which button was clicked)
+//        Object source = event.getSource();
+//
+//        // Call the respective function in MainController, passing the row and column along with the size adjustment
+//        if (source == lengthMinusButton) {
+//            mainController.adjustCellSize(-1,selectedRow);  // Decrease length
+//        } else if (source == lengthPlusButton) {
+//            mainController.adjustCellSize(1, selectedRow);   // Increase length
+//        } else if (source == widthMinusButton) {
+//            mainController.adjustCellSize(-1, selectedCol);   // Decrease width
+//        } else if (source == widthPlusButton) {
+//            mainController.adjustCellSize(1, selectedCol);    // Increase width
+//        }
+//    }
+
+
+
+
+
+
+
+
+//    @FXML
+//    public void initialize() {
+//
+//        initializeAlignmentComboBox();
+//
+//        // Set up Column ComboBox (handles labels like A, B, C, etc.)
+//        columnComboBox.setCellFactory(comboBox -> new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText(null);
+//                } else {
+//                    setText(item.getText());
+//                }
+//            }
+//        });
+//
+//        columnComboBox.setButtonCell(new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText("Columns");  // Default text when nothing is selected
+//                } else {
+//                    setText(item.getText());
+//                }
+//            }
+//        });
+//
+//        // Set up Row ComboBox (handles labels for row numbers like 1, 2, 3, etc.)
+//        rowComboBox.setCellFactory(comboBox -> new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText(null);
+//                } else {
+//                    setText(item.getText());
+//                }
+//            }
+//        });
+//
+//        rowComboBox.setButtonCell(new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText("Rows");  // Default text when nothing is selected
+//                } else {
+//                    setText(item.getText());
+//                }
+//            }
+//        });
+//
+//
+//        columnComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                handleColumnSelection();
+//            }
+//        });
+//
+//        rowComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                handleRowSelection();
+//            }
+//        });
+//    }
+
+
+
+
+
+//    private void initializeAlignmentComboBox() {
+//        // Add alignment options
+//        alignmentComboBox.getItems().addAll(
+//                new Label("CENTER"),
+//                new Label("LEFT"),
+//                new Label("RIGHT")
+//        );
+//
+//        // Set custom cell factory for alignment options in the dropdown
+//        alignmentComboBox.setCellFactory(comboBox -> new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText(null);
+//                } else {
+//                    setText(item.getText());
+//                }
+//            }
+//        });
+//
+//        // Set custom button cell to display prompt text or selected option
+//        alignmentComboBox.setButtonCell(new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText("Alignment Text");  // Default text when nothing is selected
+//                } else {
+//                    setText(item.getText());
+//                }
+//            }
+//        });
+//
+//        // Set default prompt text
+//        alignmentComboBox.setPromptText("Alignment Text");
+//
+//        // Add a listener to handle alignment selection
+//        alignmentComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                handleTextAlignment(newValue.getText().toLowerCase());
+//            }
+//        });
+//    }
