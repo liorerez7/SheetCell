@@ -251,6 +251,8 @@ public class MainController {
         // popupStage.show();
     }
 
+
+
     public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows

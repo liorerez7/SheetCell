@@ -51,7 +51,7 @@ public class GridController {
         return grid;
     }
 
-    public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid) {
+    public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid, boolean isPopup) {
 
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
         grid.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Allow the grid to resize dynamically
@@ -69,14 +69,15 @@ public class GridController {
         addColumnHeaders(grid, numCols, cellWidth, cellLength);
         addRowHeaders(grid, numRows, cellWidth, cellLength);
 
-        gridScroller.setContent(grid);  // Replace the placeholder content with the dynamically created grid
-
+        if (!isPopup) {
+            gridScroller.setContent(grid);
+        }
     }
 
     public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         neighborsHandler = new NeighborsHandler();
 
-        initializeEmptyGrid(sheetCell,grid);
+        initializeEmptyGrid(sheetCell,grid, false);
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -162,7 +163,8 @@ public class GridController {
     }
 
     public void initializeCirclePopUp(GridPane grid, DtoSheetCell sheetCell, List<CellLocation> neighbors) {
-        initializeEmptyGrid(sheetCell, grid);
+
+        initializeEmptyGrid(sheetCell, grid, true);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
@@ -241,7 +243,8 @@ public class GridController {
     }
 
     public void initializePopupGrid(GridPane grid, DtoSheetCell sheetCell) {
-        initializeEmptyGrid(sheetCell, grid);
+
+        initializeEmptyGrid(sheetCell, grid, true);
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
