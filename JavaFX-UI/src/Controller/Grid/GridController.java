@@ -34,7 +34,6 @@ public class GridController {
 
     private GridPane grid = new GridPane();
 
-
     @FXML
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
     private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = new HashMap<>();
