@@ -6,9 +6,10 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="ranges" alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="121.0" styleClass="stack-pane" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
+
+<StackPane fx:id="ranges" alignment="TOP_RIGHT" styleClass="stack-pane" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="274.0" prefWidth="121.0" styleClass="UserInterfaceSection" StackPane.alignment="TOP_CENTER">
+      <VBox alignment="CENTER_LEFT" styleClass="UserInterfaceSection" StackPane.alignment="TOP_CENTER">
          <children>
             <Button fx:id="filterDataButton" mnemonicParsing="false" onAction="#filterDataClicked" prefWidth="150.0" text="Filter Data">
                <VBox.margin>
@@ -20,10 +21,11 @@
                   <Insets left="5.0" right="5.0" top="7.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="25.0" prefWidth="150.0" text="add range ">
+            <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="25.0" prefWidth="150.0" text="add range">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" top="7.0" />
-               </VBox.margin></Button>
+               </VBox.margin>
+            </Button>
             <Button fx:id="deleteRangeButton" mnemonicParsing="false" onAction="#deleteRangeClicked" prefHeight="31.0" prefWidth="150.0" text="delete range">
                <VBox.margin>
                   <Insets left="5.0" top="7.0" />

@@ -25,16 +25,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import javafx.scene.control.ScrollPane;
 
 
 public class MainController {
@@ -50,14 +51,15 @@ public class MainController {
 
     @FXML
     private ActionLineController actionLineController;
+
     @FXML
     private GridPane actionLine;
 
     @FXML
-    private GridController gridScrollerController;
+    private GridController gridController;
 
     @FXML
-    private ScrollPane gridScroller;
+    private GridPane grid;
 
     @FXML
     private CustomizeController customizeController;
@@ -72,12 +74,13 @@ public class MainController {
     private Model model;
     private PopUpWindowsHandler popUpWindowsHandler;
 
+
     @FXML
     public void initialize() {
         customizeController.setMainController(this);
         headerController.setMainController(this);
         actionLineController.setMainController(this);
-        gridScrollerController.setMainController(this);
+        gridController.setMainController(this);
         rangesController.setMainController(this);
     }
 
@@ -117,7 +120,7 @@ public class MainController {
 //    }
 
     public void initializeGridBasedOnXML(String absolutePath) {
-        ProgressBar progressBar = gridScrollerController.getProgressBar();
+        ProgressBar progressBar = gridController.getProgressBar();
 
         // Create a Task to handle the file loading
         Task<Void> task = new Task<Void>() {
@@ -125,7 +128,7 @@ public class MainController {
             protected Void call() throws Exception {
                 try {
                     // Simulate progress over 2 seconds
-                    gridScrollerController.hideGrid();
+                    gridController.hideGrid();
                     for (int i = 0; i <= 100; i++) {
                         updateProgress(i, 100);  // Update progress on the Task
                         Thread.sleep(20);  // Simulate loading time
@@ -137,7 +140,7 @@ public class MainController {
                     Platform.runLater(() -> {
                         // UI updates after loading
                         headerController.FileHasBeenLoaded(absolutePath);
-                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
+                        Map<CellLocation, Label> cellLocationLabelMap = gridController.initializeGrid(engine.getSheetCell());
                         rangesController.clearAllRanges();
                         model.setReadingXMLSuccess(true);
                         model.setCellLabelToProperties(cellLocationLabelMap);
@@ -149,7 +152,7 @@ public class MainController {
                         customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
                     });
                 } catch (Exception e) {
-                    gridScrollerController.showGrid();
+                    gridController.showGrid();
                     Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
                 }
                 return null;
@@ -172,7 +175,7 @@ public class MainController {
             model.setOriginalValueLabelProperty(requestedCell);
             model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
 
-            gridScrollerController.showNeighbors(requestedCell);
+            gridController.showNeighbors(requestedCell);
 
         }catch (CycleDetectedException e) {
             createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
@@ -222,7 +225,7 @@ public class MainController {
         popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
 
         // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializePopupGrid(popupGrid, dtoSheetCell);
+        gridController.initializePopupGrid(popupGrid, dtoSheetCell);
 
         // Create a Scene with the popupGrid
         Scene popupScene = new Scene(popupGrid);
@@ -246,7 +249,7 @@ public class MainController {
         popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
 
         // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializeCirclePopUp(popupGrid, dtoSheetCell, cycle);
+        gridController.initializeCirclePopUp(popupGrid, dtoSheetCell, cycle);
         // Create a Scene with the popupGrid
         Scene popupScene = new Scene(popupGrid);
         popupStage.setScene(popupScene);
@@ -341,8 +344,8 @@ public class MainController {
         model.setLatestUpdatedVersionProperty(requestedCell);
         model.setOriginalValueLabelProperty(requestedCell);
         actionLineController.updateCssWhenUpdatingCell(location);
-        gridScrollerController.clearAllHighlights();
-        gridScrollerController.showNeighbors(requestedCell);
+        gridController.clearAllHighlights();
+        gridController.showNeighbors(requestedCell);
         rangesController.resetComboBox();
         customizeController.resetComboBox();
         model.setColumnSelected(false);
@@ -352,8 +355,8 @@ public class MainController {
 
     public void handleRangeClick(String rangeName) {
 
-        gridScrollerController.clearAllHighlights();
-        gridScrollerController.showAffectedCells(engine.getRequestedRange(rangeName));
+        gridController.clearAllHighlights();
+        gridController.showAffectedCells(engine.getRequestedRange(rangeName));
     }
 
     private void createSortRowsPopUp(DtoSheetCell dtoSheetCell) {
@@ -369,7 +372,7 @@ public class MainController {
         popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
 
         // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializePopupGrid(popupGrid, dtoSheetCell);
+        gridController.initializePopupGrid(popupGrid, dtoSheetCell);
 
         // Create a Scene with the popupGrid
         Scene popupScene = new Scene(popupGrid);
@@ -424,7 +427,7 @@ public class MainController {
 
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
 
-        gridScrollerController.changingGridConstraints(rowOrCol,toIncreaseOrDecrease);
+        gridController.changingGridConstraints(rowOrCol,toIncreaseOrDecrease);
     }
 
     public void ColumnSelected() {
@@ -448,7 +451,7 @@ public class MainController {
     }
 
     public void changeTextAlignment(String alignment, Label selectedColumnLabel) {
-        gridScrollerController.changeTextAlignment(alignment, selectedColumnLabel.getText());
+        gridController.changeTextAlignment(alignment, selectedColumnLabel.getText());
     }
 
     public ObservableValue<String> getCellLocationProperty() {
@@ -456,12 +459,12 @@ public class MainController {
     }
 
     public void changeBackgroundColor(javafx.scene.paint.Color value, String location) {
-        gridScrollerController.changeBackgroundTextColor(value, location);
+        gridController.changeBackgroundTextColor(value, location);
 
     }
 
     public void changeTextColor(javafx.scene.paint.Color value, String location) {
-        gridScrollerController.changeTextColor(value, location);
+        gridController.changeTextColor(value, location);
 
     }
 }
