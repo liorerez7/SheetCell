@@ -14,6 +14,7 @@ import Utility.EngineUtilities;
 import Utility.Exception.CycleDetectedException;
 import Utility.Exception.RefToUnSetCellException;
 import Utility.SheetCellSorter;
+import Utility.SortContainerData;
 import expression.api.Expression;
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
@@ -143,10 +144,10 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public DtoSheetCell sortSheetCell(String range, String args) {
+    public SortContainerData sortSheetCell(String range, String args) {
 
         DtoSheetCell dtoSheetCell = getSheetCell();
-        return EngineUtilities.sortSheetCell(range, args, dtoSheetCell);
+        return EngineUtilities.sortSheetCelll(range, args, dtoSheetCell);
     }
 
     @Override

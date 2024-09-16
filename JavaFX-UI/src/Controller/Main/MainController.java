@@ -15,6 +15,7 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
 import Utility.Exception.*;
+import Utility.SortContainerData;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -410,12 +411,40 @@ public class MainController {
         if(columns != null && range != null)
         {
             try {
-                DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, columns);
-                createSortRowsPopUp(dtoSheetCell);
+                //DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, columns);
+                SortContainerData sortContainerData = engine.sortSheetCell(range, columns);
+                //createSortRowsPopUp(dtoSheetCell);
+                createSortRowsPopUpp(sortContainerData);
             }catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }
+    }
+
+
+    private void createSortRowsPopUpp(SortContainerData sortContainerData) {
+        // Create a new Stage (window) for the popup
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
+        //popupStage.initModality(Modality.NONE); // Block events to other windows
+
+        popupStage.setTitle("Sorted Rows");
+
+        // Create a new GridPane for the popup
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
+        gridScrollerController.initializeSortPopupGrid(popupGrid, sortContainerData);
+
+        // Create a Scene with the popupGrid
+        Scene popupScene = new Scene(popupGrid);
+        popupStage.setScene(popupScene);
+
+        // Show the popup window
+        popupStage.showAndWait();
+
+        // popupStage.show();
     }
 
     public void filterDataButtonClicked() {
