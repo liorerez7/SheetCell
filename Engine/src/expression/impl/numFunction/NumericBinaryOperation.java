@@ -16,8 +16,7 @@ public abstract class NumericBinaryOperation extends BinaryExpression {
 
     @Override
     protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
-        e1.assertRawType(ReturnedValueType.NUMERIC);
-        e2.assertRawType(ReturnedValueType.NUMERIC);
+
         try {
             Double result = applyOperation((Double) e1.getValue(), (Double) e2.getValue());
             return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
@@ -29,7 +28,10 @@ public abstract class NumericBinaryOperation extends BinaryExpression {
             if (e1.getCellType() == ReturnedValueType.UNKNOWN || e2.getCellType() == ReturnedValueType.UNKNOWN)
                 return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
 
-            throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type Double", e);
+            else{
+                return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
+            }
+
         }
     }
 }

@@ -7,10 +7,7 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import Utility.CellUtils;
-import Utility.Exception.CellCantBeEvaluatedException;
-import Utility.Exception.CycleDetectedException;
-import Utility.Exception.RangeCantBeDeletedException;
-import Utility.Exception.RangeDoesntExistException;
+import Utility.Exception.*;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
 import expression.api.EffectiveValue;
@@ -197,7 +194,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         for (Range rangeInSystem : systemRanges) {
             if(rangeInSystem.getRangeName().equals(name))
             {
-                throw new IllegalArgumentException("Range with the same name already exists");
+                throw new RangeNameAlreadyExistException(name);
             }
         }
 

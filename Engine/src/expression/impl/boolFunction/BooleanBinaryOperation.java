@@ -20,16 +20,6 @@ public abstract class BooleanBinaryOperation<T> extends BinaryExpression {
     @Override
     protected EffectiveValue evaluate(EffectiveValue e1, EffectiveValue e2) {
 
-        if(type == Double.class){
-            e1.assertRawType(ReturnedValueType.NUMERIC);
-            e2.assertRawType(ReturnedValueType.NUMERIC);
-        }
-        else if(type == Boolean.class){
-            e1.assertRawType(ReturnedValueType.BOOLEAN);
-            e2.assertRawType(ReturnedValueType.BOOLEAN);
-
-        }
-
         try {
             Boolean result = applyOperation((T) e1.getValue(), (T) e2.getValue());
             return new EffectiveValueImpl(ReturnedValueType.BOOLEAN, result);

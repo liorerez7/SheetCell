@@ -25,7 +25,7 @@ import javafx.animation.Timeline;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import java.util.*;
-
+import java.util.function.Function;
 
 
 public class GridController {
@@ -85,7 +85,7 @@ public class GridController {
         int cellLength = sheetCell.getCellLength();
 
         cellWidth = cellWidth * DELTA_EXTENSION_GRID;
-        cellLength = cellLength * DELTA_EXTENSION_GRID;
+        cellLength = cellLength * DELTA_EXTENSION_GRID ;
 
 
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
@@ -242,6 +242,56 @@ public class GridController {
         this.mainController = mainController;
     }
 
+
+    public void initializeVersionPopupGrid(GridPane grid, DtoSheetCell sheetCell) {
+
+        initializeEmptyGrid(sheetCell, grid, true);
+
+        int numCols = sheetCell.getNumberOfColumns();
+        int numRows = sheetCell.getNumberOfRows();
+        int cellWidth = sheetCell.getCellWidth();
+        int cellLength = sheetCell.getCellLength();
+        cellWidth = cellWidth * DELTA_EXTENSION_GRID;
+        cellLength = cellLength * DELTA_EXTENSION_GRID;
+
+
+        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
+
+        for (int row = 1; row <= numRows; row++) {
+            for (int col = 1; col <= numCols; col++) {
+
+                char colChar = (char) ('A' + col - 1);
+                String rowString = String.valueOf(row);
+                String location = colChar + rowString;
+                CellLocation cellLocation = CellLocationFactory.fromCellId(location);
+
+
+                Label newCellLabel = new Label();
+                CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
+
+                newCustomCellLabel.applyDefaultStyles();
+                newCustomCellLabel.setBackgroundColor(Color.WHITE);
+                newCustomCellLabel.setTextColor(Color.BLACK);
+                newCustomCellLabel.setAlignment(Pos.CENTER);
+                newCustomCellLabel.setTextAlignment(TextAlignment.CENTER);
+
+
+                setLabelSize(newCellLabel, cellWidth, cellLength);
+
+                // Bind the Label's textProperty to the EffectiveValue
+                newCellLabel.setId(location);
+                EffectiveValue effectiveValue = viewSheetCell.get(cellLocation);
+                if (effectiveValue != null) {
+                    String textForLabel = StringParser.convertValueToLabelText(effectiveValue);
+                    newCellLabel.setText(textForLabel);
+                }
+
+                grid.add(newCellLabel, col, row);
+            }
+        }
+    }
+
+
     public void initializePopupGrid(GridPane grid, DtoSheetCell sheetCell) {
 
         initializeEmptyGrid(sheetCell, grid, true);
@@ -267,10 +317,6 @@ public class GridController {
 
                  Label newCellLabel = new Label();
                  CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
-
-                if (location.equals("B3") || location.equals("C3")) {
-                    System.out.println("location: " + location);
-                }
 
                 newCustomCellLabel.applyDefaultStyles();
                 newCustomCellLabel.setAlignment(cellLocationToCustomCellLabel.get(cellLocation).getAlignment());
@@ -318,15 +364,11 @@ public class GridController {
                 String location = colChar + rowString;
                 CellLocation cellLocation = CellLocationFactory.fromCellId(location);
 
-                if(cellLocation.equals(CellLocationFactory.fromCellId("C3"))){
-                    System.out.println("location: " + location);
-                }
 
                 CellLocation oldCellLocation = sortContainerData.getOldCellLocation(cellLocation);
                 if(oldCellLocation == null){
                     oldCellLocation = cellLocation;
                 }
-
 
                 Label newCellLabel = new Label();
                 CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
@@ -352,6 +394,9 @@ public class GridController {
             }
         }
     }
+
+
+
 
 
 

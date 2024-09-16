@@ -26,7 +26,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -227,33 +226,6 @@ public class MainController {
         return model.getTotalVersionsProperty();
     }
 
-    private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
-        // Create a new Stage (window) for the popup
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
-        //popupStage.initModality(Modality.NONE); // Block events to other windows
-
-        popupStage.setTitle("Version Grid " + versionNumber);
-
-        // Create a new GridPane for the popup
-        GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
-
-        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializePopupGrid(popupGrid, dtoSheetCell);
-
-        // Create a Scene with the popupGrid
-        Scene popupScene = new Scene(popupGrid);
-        popupStage.setScene(popupScene);
-
-        // Show the popup window
-        popupStage.showAndWait();
-
-        // popupStage.show();
-    }
-
-
-
     public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
@@ -320,7 +292,7 @@ public class MainController {
                 engine.UpdateNewRange(name,rangeStringsData.getRange());
                 rangesController.addRange(engine.getRequestedRange(name),name);
             }
-            catch (IllegalArgumentException e) {
+            catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }
@@ -349,11 +321,6 @@ public class MainController {
 
     }
 
-    public void specificVersionClicked(int versionNumber) {
-        DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
-        createPopUpVersionGrid(dtoSheetCell, versionNumber);
-    }
-
     public void cellClicked(String location) {
 
         DtoCell requestedCell = engine.getRequestedCell(location);
@@ -376,20 +343,25 @@ public class MainController {
         gridScrollerController.showAffectedCells(engine.getRequestedRange(rangeName));
     }
 
-    private void createSortRowsPopUp(DtoSheetCell dtoSheetCell) {
+    public void specificVersionClicked(int versionNumber) {
+        DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
+        createPopUpVersionGrid(dtoSheetCell, versionNumber);
+    }
+
+    private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
         // Create a new Stage (window) for the popup
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
         //popupStage.initModality(Modality.NONE); // Block events to other windows
 
-        popupStage.setTitle("Sorted Rows");
+        popupStage.setTitle("Version Grid " + versionNumber);
 
         // Create a new GridPane for the popup
         GridPane popupGrid = new GridPane();
         popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
 
         // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializePopupGrid(popupGrid, dtoSheetCell);
+        gridScrollerController.initializeVersionPopupGrid(popupGrid, dtoSheetCell);
 
         // Create a Scene with the popupGrid
         Scene popupScene = new Scene(popupGrid);
@@ -414,15 +386,14 @@ public class MainController {
                 //DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, columns);
                 SortContainerData sortContainerData = engine.sortSheetCell(range, columns);
                 //createSortRowsPopUp(dtoSheetCell);
-                createSortRowsPopUpp(sortContainerData);
+                createSortGridPopUp(sortContainerData);
             }catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }
     }
 
-
-    private void createSortRowsPopUpp(SortContainerData sortContainerData) {
+    private void createSortGridPopUp(SortContainerData sortContainerData) {
         // Create a new Stage (window) for the popup
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
@@ -463,11 +434,36 @@ public class MainController {
 
             try {
                 DtoSheetCell filteredDtoSheetCell = engine.filterSheetCell(range, filter);
-                createSortRowsPopUp(filteredDtoSheetCell);
+                createFilterGridPopUp(filteredDtoSheetCell);
             }catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }
+    }
+
+    private void createFilterGridPopUp(DtoSheetCell dtoSheetCell) {
+        // Create a new Stage (window) for the popup
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
+        //popupStage.initModality(Modality.NONE); // Block events to other windows
+
+        popupStage.setTitle("Sorted Rows");
+
+        // Create a new GridPane for the popup
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
+        gridScrollerController.initializePopupGrid(popupGrid, dtoSheetCell);
+
+        // Create a Scene with the popupGrid
+        Scene popupScene = new Scene(popupGrid);
+        popupStage.setScene(popupScene);
+
+        // Show the popup window
+        popupStage.showAndWait();
+
+        // popupStage.show();
     }
 
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {

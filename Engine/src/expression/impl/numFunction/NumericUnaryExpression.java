@@ -15,7 +15,7 @@ public abstract class NumericUnaryExpression extends UnaryExpression {
 
     @Override
     protected EffectiveValue evaluate(EffectiveValue evaluate) {
-        evaluate.assertRawType(ReturnedValueType.NUMERIC);
+
         try {
             Double result = applyOperation((Double) evaluate.getValue());
             return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
@@ -28,7 +28,9 @@ public abstract class NumericUnaryExpression extends UnaryExpression {
             if (evaluate.getCellType() == ReturnedValueType.UNKNOWN)
                 return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
 
-            throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type Double", e);
+            else{
+                return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
+            }
         }
     }
 }

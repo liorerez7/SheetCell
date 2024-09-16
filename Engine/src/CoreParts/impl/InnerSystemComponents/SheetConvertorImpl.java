@@ -6,6 +6,7 @@ import CoreParts.api.SheetConvertor;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import GeneratedClassesEx2.*;
+import Utility.Exception.RangeNameAlreadyExistException;
 import expression.impl.Range;
 import expression.impl.Ref;
 import Utility.CellUtils;
@@ -60,6 +61,9 @@ public class SheetConvertorImpl implements SheetConvertor {
 
     // Validates ranges within the sheet
     private void validateRanges(List<STLRange> stlRangeList, int numOfRows, int numOfColumns) {
+
+        Set<String> names = new HashSet<>();
+
         for (STLRange range : stlRangeList) {
             STLBoundaries boundaries = range.getSTLBoundaries();
             String from = boundaries.getFrom();
@@ -68,6 +72,12 @@ public class SheetConvertorImpl implements SheetConvertor {
             if (!CellUtils.isWithinBounds(from, to, numOfRows, numOfColumns)) {
                 throw new IllegalArgumentException("Range boundaries are out of bounds.");
             }
+            if(names.contains(range.getName()))
+            {
+                throw new RangeNameAlreadyExistException(range.getName());
+            }
+
+            names.add(range.getName());
         }
     }
 

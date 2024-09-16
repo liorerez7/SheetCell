@@ -38,6 +38,7 @@ public class CellUtils {
     }
 
     public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCellException {
+
         ExpressionParser parser = new ExpressionParserImpl(value);
         boolean removeSpacesBeforeArguments = true;
 
