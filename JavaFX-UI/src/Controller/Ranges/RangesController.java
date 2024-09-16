@@ -50,49 +50,8 @@ public class RangesController {
 
     @FXML
     public void initialize() {
-        // Handle rendering for ComboBox items
-
         initializeComboBox(SystemRanges, "Ranges");
         setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
-
-//
-//
-//        SystemRanges.setCellFactory(comboBox -> new ListCell<Label>() {
-//
-//            @Override
-//            protected void updateItem(Label item, boolean empty) {
-//                super.updateItem(item, empty);
-//                if (empty || item == null) {
-//                    setText(null); // Hide if null or empty
-//                } else {
-//                    setText(item.getText()); // Display label text
-//                    setTextFill(Color.BLACK); // Set default text color for dropdown items
-//                }
-//            }
-//        });
-//
-//        // Ensure the selected item is displayed correctly
-//        SystemRanges.setButtonCell(new ListCell<Label>() {
-//            @Override
-//            protected void updateItem(Label item, boolean empty) {
-//                super.updateItem(item, empty);
-//                if (empty || item == null) {
-//                    setText("Ranges"); // Default text when nothing is selected
-//                    setTextFill(Color.WHITE); // Set default text color for dropdown items
-//                } else {
-//                    setText(item.getText()); // Display selected label text
-//                }
-//            }
-//        });
-//
-//        // Handle selection event
-//        SystemRanges.setOnAction(event -> {
-//            Label selectedLabel = SystemRanges.getSelectionModel().getSelectedItem();
-//            if (selectedLabel != null) {
-//                handleRangeLabelClick(selectedLabel.getText());
-//            }
-//        });
-
     }
 
 

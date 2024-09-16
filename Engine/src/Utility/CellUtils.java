@@ -181,7 +181,42 @@ public class CellUtils {
 
         return cellLocations;
     }
+
+
+    public static List<Character> processCharString(String input) throws IllegalArgumentException {
+        // Trim and split the input string by commas
+        String[] parts = input.trim().split("\\s*,\\s*");
+
+        // Check if the split resulted in empty parts or incorrect format
+        if (parts.length == 0 || containsEmptyOrInvalidParts(parts)) {
+            throw new IllegalArgumentException("Input format is invalid.");
+        }
+
+        List<Character> result = new ArrayList<>();
+
+        for (String part : parts) {
+            if (part.length() != 1) {
+                throw new IllegalArgumentException("Each part must be a single character.");
+            }
+            // Convert to uppercase
+            result.add(part.toUpperCase().charAt(0));
+        }
+
+        return result;
+    }
+
+    private static boolean containsEmptyOrInvalidParts(String[] parts) {
+        for (String part : parts) {
+            if (part.isEmpty()) {
+                return true; // Empty part found
+            }
+        }
+        return false; // No empty parts found
+    }
 }
+
+
+
 
 
 

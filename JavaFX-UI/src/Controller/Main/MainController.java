@@ -426,12 +426,10 @@ public class MainController {
         //if one of them is null means that the user just closed the window without entering anything
         if(range != null && filterColumn != null)
         {
-            Set<String> stringsInChosenColumn = engine.getUniqueStringsInColumn(filterColumn);
-
-            // gets a filtered string from the user, for example: "banana, 5, true"
-            String filter = popUpWindowsHandler.openFilterDataPopUp(stringsInChosenColumn);
-
             try {
+                Set<String> stringsInChosenColumn = engine.getUniqueStringsInColumn(filterColumn);
+                // gets a filtered string from the user, for example: "banana, 5, true"
+                String filter = popUpWindowsHandler.openFilterDataPopUp(stringsInChosenColumn);
                 DtoSheetCell filteredDtoSheetCell = engine.filterSheetCell(range, filter);
                 createFilterGridPopUp(filteredDtoSheetCell);
             }catch (Exception e) {

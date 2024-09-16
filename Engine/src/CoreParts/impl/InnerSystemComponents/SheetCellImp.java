@@ -123,22 +123,24 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     @Override
     public Set<String> getUniqueStringsInColumn(String filterColumn) {
 
+        List<Character> columns = CellUtils.processCharString(filterColumn);
+
         Set<String> uniqueStrings = new HashSet<>();
 
-        if(filterColumn.length() != 1 || !(Character.isLetter(filterColumn.charAt(0)))) {
-            throw new IllegalArgumentException("Invalid column name");
+        for (Character col : columns) {
+            // Convert column to uppercase for consistent matching
+            char upperCol = Character.toUpperCase(col);
+
+            // Retrieve values from the view sheet and collect unique values
+            getViewSheetCell().forEach((location, effectiveValue) -> {
+                if (location.getVisualColumn() == upperCol) {
+                    if (effectiveValue != null) {
+                        uniqueStrings.add(effectiveValue.getValue().toString());
+                    }
+                }
+            });
         }
 
-        char col = filterColumn.toUpperCase().charAt(0);
-
-        getViewSheetCell().forEach((location, effectiveValue) -> {
-            if(location.getVisualColumn() == col) {
-                if(effectiveValue != null)
-                {
-                    uniqueStrings.add(effectiveValue.getValue().toString());
-                }
-            }
-        });
         return uniqueStrings;
     }
 
