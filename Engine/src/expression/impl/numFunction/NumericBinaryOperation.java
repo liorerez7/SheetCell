@@ -31,7 +31,6 @@ public abstract class NumericBinaryOperation extends BinaryExpression {
             else{
                 return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
             }
-
         }
     }
 }

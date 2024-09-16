@@ -76,7 +76,62 @@ public class CustomizeController {
         initializeAlignmentComboBox();
         setupColumnComboBox();
         setupRowComboBox();
+        initializeComboBoxes();
     }
+
+    private void initializeComboBoxes() {
+        initializeComboBox(columnComboBox, "Columns");
+        initializeComboBox(rowComboBox, "Rows");
+        initializeComboBox(alignmentComboBox, "Alignment Text");
+
+        // Set the header text color to white for all ComboBoxes
+        setComboBoxHeaderTextColor(columnComboBox, Color.WHITE);
+        setComboBoxHeaderTextColor(rowComboBox, Color.WHITE);
+        setComboBoxHeaderTextColor(alignmentComboBox, Color.WHITE);
+    }
+
+    private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
+        comboBox.setCellFactory(cb -> new ListCell<Label>() {
+            @Override
+            protected void updateItem(Label item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getText());
+                    setTextFill(Color.BLACK); // Set default text color for dropdown items
+                }
+            }
+        });
+        comboBox.setButtonCell(new ListCell<Label>() {
+            @Override
+            protected void updateItem(Label item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(defaultText);
+                } else {
+                    setText(item.getText());
+                }
+                setTextFill(Color.WHITE); // Set text color for the ComboBox header
+            }
+        });
+        comboBox.setPromptText(defaultText);
+    }
+
+    private void setComboBoxHeaderTextColor(ComboBox<Label> comboBox, Color color) {
+        TextField textField = (TextField) comboBox.lookup(".text-field");
+        if (textField != null) {
+            textField.setStyle("-fx-text-fill: " + toRgbString(color) + ";");
+        }
+    }
+
+    private String toRgbString(Color color) {
+        return String.format("rgb(%d,%d,%d)", (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+    }
+
+
 
     private void setComboBoxCellFactory(ComboBox<Label> comboBox, String defaultText) {
         comboBox.setCellFactory(cb -> new ListCell<Label>() {

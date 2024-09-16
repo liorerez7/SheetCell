@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.Map;
@@ -50,40 +51,118 @@ public class RangesController {
     @FXML
     public void initialize() {
         // Handle rendering for ComboBox items
-        SystemRanges.setCellFactory(comboBox -> new ListCell<Label>() {
 
+        initializeComboBox(SystemRanges, "Ranges");
+        setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
+
+//
+//
+//        SystemRanges.setCellFactory(comboBox -> new ListCell<Label>() {
+//
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText(null); // Hide if null or empty
+//                } else {
+//                    setText(item.getText()); // Display label text
+//                    setTextFill(Color.BLACK); // Set default text color for dropdown items
+//                }
+//            }
+//        });
+//
+//        // Ensure the selected item is displayed correctly
+//        SystemRanges.setButtonCell(new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setText("Ranges"); // Default text when nothing is selected
+//                    setTextFill(Color.WHITE); // Set default text color for dropdown items
+//                } else {
+//                    setText(item.getText()); // Display selected label text
+//                }
+//            }
+//        });
+//
+//        // Handle selection event
+//        SystemRanges.setOnAction(event -> {
+//            Label selectedLabel = SystemRanges.getSelectionModel().getSelectedItem();
+//            if (selectedLabel != null) {
+//                handleRangeLabelClick(selectedLabel.getText());
+//            }
+//        });
+
+    }
+
+
+    private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
+        comboBox.setCellFactory(cb -> new ListCell<Label>() {
             @Override
             protected void updateItem(Label item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText(null); // Hide if null or empty
+                    setText(null);
                 } else {
-                    setText(item.getText()); // Display label text
+                    setText(item.getText());
+                    setTextFill(Color.BLACK); // Set default text color for dropdown items
                 }
             }
         });
-
-        // Ensure the selected item is displayed correctly
-        SystemRanges.setButtonCell(new ListCell<Label>() {
+        comboBox.setButtonCell(new ListCell<Label>() {
             @Override
             protected void updateItem(Label item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText("Ranges"); // Default text when nothing is selected
+                    setText(defaultText);
                 } else {
-                    setText(item.getText()); // Display selected label text
+                    setText(item.getText());
                 }
+                setTextFill(Color.WHITE); // Set text color for the ComboBox header
             }
         });
-
-        // Handle selection event
         SystemRanges.setOnAction(event -> {
             Label selectedLabel = SystemRanges.getSelectionModel().getSelectedItem();
             if (selectedLabel != null) {
                 handleRangeLabelClick(selectedLabel.getText());
             }
         });
+        comboBox.setPromptText(defaultText);
     }
+
+    private void setComboBoxHeaderTextColor(ComboBox<Label> comboBox, Color color) {
+        TextField textField = (TextField) comboBox.lookup(".text-field");
+        if (textField != null) {
+            textField.setStyle("-fx-text-fill: " + toRgbString(color) + ";");
+        }
+    }
+
+    private String toRgbString(Color color) {
+        return String.format("rgb(%d,%d,%d)", (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Add a new range label to the ComboBox
     public void addRange(List<CellLocation> ranges, String rangeName) {

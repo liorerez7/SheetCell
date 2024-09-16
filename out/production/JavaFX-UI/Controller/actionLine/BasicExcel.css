@@ -20,11 +20,11 @@
 }
 /* Style for modern, clean buttons */
 .ModernButton {
-    -fx-background-color: #0078D4; /* Primary blue color, similar to Excel */
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
     -fx-text-fill: white; /* White text color */
     -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
     -fx-font-size: 14px; /* Suitable font size */
-    -fx-padding: 10px 20px; /* Padding inside the button */
+   /* -fx-padding: 10px 20px; /* Padding inside the button */
     -fx-border-radius: 5px; /* Rounded corners */
     -fx-background-radius: 5px; /* Rounded corners */
     -fx-border-color: transparent; /* No border by default */
@@ -32,6 +32,20 @@
     -fx-cursor: hand; /* Pointer cursor on hover */
     -fx-focus-color: transparent; /* Remove focus border color */
 }
+
+.ModernButton {
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
+    -fx-font-size: 14px; /* Suitable font size */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-border-color: transparent; /* No border by default */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
+    -fx-cursor: hand; /* Pointer cursor on hover */
+    -fx-focus-color: transparent; /* Remove focus border color */
+}
+
 /* Style for button hover effect */
 .ModernButton:hover {
     -fx-background-color: #005a9e; /* Darker blue when hovered */
@@ -39,7 +53,7 @@
 }
 
 /* Style for button pressed effect */
-.ModernButton:pressed {
+.CustomizeButton:pressed {
     -fx-background-color: #004080; /* Even darker blue when pressed */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
 }
@@ -74,4 +88,3 @@
 .normalOpacity {
     -fx-opacity: 1;
 }
-

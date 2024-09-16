@@ -36,14 +36,14 @@
          </rowConstraints>
          <children>
             <!-- Column ComboBox at (0,0) -->
-            <ComboBox fx:id="columnComboBox" prefHeight="31.0" prefWidth="112.0" promptText="Columns" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
+            <ComboBox fx:id="columnComboBox" prefHeight="25.0" prefWidth="91.0" promptText="Columns" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
                <GridPane.margin>
-                  <Insets bottom="5.0" right="35.0" top="10.0" />
+                  <Insets bottom="5.0" right="50.0" top="10.0" />
                </GridPane.margin>
             </ComboBox>
 
             <!-- Row ComboBox at (2,0) -->
-            <ComboBox fx:id="rowComboBox" promptText="Rows" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0">
+            <ComboBox fx:id="rowComboBox" promptText="Rows" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0">
                <GridPane.margin>
                   <Insets bottom="5.0" top="10.0" />
                </GridPane.margin>
@@ -55,12 +55,12 @@
                   <Insets right="45.0" top="15.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="widthMinusButton" onAction="#handleSizeChangeClicked" text="-" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Button fx:id="widthMinusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" text="-" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="2.0" top="15.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="widthPlusButton" onAction="#handleSizeChangeClicked" text="+" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <Button fx:id="widthPlusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" text="+" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="2.0" top="15.0" />
                </GridPane.margin>
@@ -72,12 +72,12 @@
                   <Insets left="7.0" right="30.0" top="15.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="lengthMinusButton" onAction="#handleSizeChangeClicked" text="-" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Button fx:id="lengthMinusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" text="-" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="2.0" top="15.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="lengthPlusButton" onAction="#handleSizeChangeClicked" text="+" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <Button fx:id="lengthPlusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" text="+" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="2.0" top="15.0" />
                </GridPane.margin>
@@ -88,7 +88,7 @@
                <padding>
                   <Insets right="2.0" />
                </padding></Label>
-            <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+            <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets left="30.0" />
                </GridPane.margin></ColorPicker>
@@ -96,11 +96,11 @@
             <!-- Background Color -->
             <Label text="Background Color:" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <GridPane.margin>
-                  <Insets right="12.0" />
+                  <Insets right="14.0" top="5.0" />
                </GridPane.margin></Label>
-            <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" GridPane.rowSpan="2">
                <GridPane.margin>
-                  <Insets left="30.0" />
+                  <Insets bottom="20.0" left="30.0" />
                </GridPane.margin></ColorPicker>
 
             <!-- Cell ID -->
@@ -109,7 +109,15 @@
                   <Insets right="25.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" GridPane.rowSpan="2">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets bottom="20.0" left="90.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
                <font>
                   <Font size="13.0" />
                </font>
@@ -117,15 +125,7 @@
                   <Insets left="90.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
-               <font>
-                  <Font size="13.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets left="90.0" />
-               </GridPane.margin>
-            </Button>
-            <ComboBox fx:id="alignmentComboBox" prefHeight="31.0" prefWidth="145.0" promptText="AlligmentText" GridPane.columnSpan="2" GridPane.rowIndex="3">
+            <ComboBox fx:id="alignmentComboBox" prefHeight="31.0" prefWidth="145.0" promptText="AlligmentText" styleClass="CustomizeButton" stylesheets="@BasicExcel.css" GridPane.columnSpan="2" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="3.0" />
                </GridPane.margin>

@@ -179,7 +179,6 @@ public class MainController {
         new Thread(task).start();
     }
 
-
     public void updateCell(String text, String newValue) {
         try {
             engine.updateCell(newValue, text.charAt(0), text.substring(1));
