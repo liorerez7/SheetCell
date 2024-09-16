@@ -1,46 +1,36 @@
-/* Base style for the ComboBox */
-.combo-box {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-border-width: 1px;
-    -fx-padding: 5px;
-    -fx-font-size: 14px;
-    -fx-font-family: Arial, sans-serif;
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 4px;
-    -fx-border-radius: 4px;
-    -fx-text-fill: #333333;
+.RangeButton {
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
+    -fx-font-size: 12px; /* Suitable font size */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-border-color: transparent; /* No border by default */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
+    -fx-cursor: hand; /* Pointer cursor on hover */
+    -fx-focus-color: transparent; /* Remove focus border color */
 }
 
-/* Style for the ComboBox when focused */
-.combo-box:focused {
-    -fx-border-color: #007bff; /* Blue color for focus */
-    -fx-background-color: #f9f9f9;
+
+
+/* Style for button hover effect */
+
+.RangeButton:hover {
+    -fx-background-color: #005a9e; /* Darker blue when hovered */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
 }
 
-/* Style for the ComboBox button */
-.combo-box .arrow-button {
-    -fx-background-color: #007bff; /* Blue color for the dropdown arrow */
-    -fx-background-radius: 4px;
-    -fx-padding: 5px;
+/* Style for button pressed effect */
+.RangeButton:pressed {
+    -fx-background-color: #004080; /* Even darker blue when pressed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
 }
 
-/* Style for the items in the dropdown list */
-.combo-box .list-cell {
-    -fx-background-color: #ffffff;
-    -fx-padding: 5px;
-    -fx-text-fill: #333333;
-    -fx-font-size: 14px;
+.RangeButton .combo-box {
+    -fx-text-fill: white; /* White text color for ComboBox itself */
 }
 
-/* Style for the hovered items in the dropdown list */
-.combo-box .list-cell:hover {
-    -fx-background-color: #007bff; /* Blue background for hover effect */
-    -fx-text-fill: #ffffff;
-}
-
-/* Style for the selected item in the dropdown list */
-.combo-box .list-cell:focused {
-    -fx-background-color: #0056b3; /* Darker blue for selection */
-    -fx-text-fill: #ffffff;
+/* Apply custom style to the main ComboBox button */
+.RangeButton .combo-box .text-field {
+    -fx-text-fill: white; /* White text for the ComboBox header */
 }
