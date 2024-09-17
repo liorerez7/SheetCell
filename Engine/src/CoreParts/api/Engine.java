@@ -21,7 +21,7 @@ public interface Engine {
     void deleteRange(String name);
     SortContainerData sortSheetCell(String range, String columnsToSortBy);
 
-    Set<String> getUniqueStringsInColumn(String filterColumn);
+    Set<String> getUniqueStringsInColumn(String filterColumn, String range);
 
-    DtoSheetCell filterSheetCell(String range, String filter);
+    DtoSheetCell filterSheetCell(String range, String filter, String filterColumn);
 }

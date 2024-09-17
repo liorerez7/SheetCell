@@ -121,9 +121,11 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public Map<CellLocation, Cell> getSheetCell() {return sheetCell;}
 
     @Override
-    public Set<String> getUniqueStringsInColumn(String filterColumn) {
+    public Set<String> getUniqueStringsInColumn(String filterColumn, String range) {
 
         List<Character> columns = CellUtils.processCharString(filterColumn);
+        int startingRowInRange = range.charAt(1) - '0';
+        int endingRowInRange = range.charAt(5) - '0'; //A3..A5
 
         Set<String> uniqueStrings = new HashSet<>();
 
@@ -133,9 +135,18 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 
             // Retrieve values from the view sheet and collect unique values
             getViewSheetCell().forEach((location, effectiveValue) -> {
-                if (location.getVisualColumn() == upperCol) {
+                if (location.getVisualColumn() == upperCol && location.getRealRow() + 1 >= startingRowInRange && location.getRealRow() + 1 <= endingRowInRange) {
+
                     if (effectiveValue != null) {
-                        uniqueStrings.add(effectiveValue.getValue().toString());
+                        String value = effectiveValue.getValue().toString();
+
+                        try{
+                            double doubleValue = Double.parseDouble(value);
+                            value = CellUtils.formatNumber(doubleValue);
+                        }
+                        catch (NumberFormatException e) {
+                        }
+                        uniqueStrings.add(value);
                     }
                 }
             });

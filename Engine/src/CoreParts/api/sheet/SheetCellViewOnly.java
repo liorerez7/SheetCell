@@ -24,5 +24,5 @@ public interface SheetCellViewOnly extends Serializable, GetSheetMetaData {
     RefDependencyGraph getGraph();
     Map<CellLocation, Cell> getSheetCell();
 
-    Set<String> getUniqueStringsInColumn(String filterColumn);
+    Set<String> getUniqueStringsInColumn(String filterColumn, String range);
 }

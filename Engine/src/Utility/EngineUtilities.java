@@ -32,9 +32,9 @@ public class EngineUtilities {
         return SheetCellSorter.sortSheetCelll(range, args, dtoSheetCell);
     }
 
-    public static DtoSheetCell filterSheetCell(String range, String filter, DtoSheetCell dtoSheetCell) {
+    public static DtoSheetCell filterSheetCell(String range, String filter, DtoSheetCell dtoSheetCell, String filterColumn) {
 
-        return SheetCellFilter.filterSheetCell(range, filter, dtoSheetCell);
+        return SheetCellFilter.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
     }
 
     public static List<String> extractLetters(String input) {

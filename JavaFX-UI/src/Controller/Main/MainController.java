@@ -14,6 +14,7 @@ import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
+import Utility.EngineUtilities;
 import Utility.Exception.*;
 import Utility.SortContainerData;
 import javafx.application.Platform;
@@ -383,32 +384,85 @@ public class MainController {
         popUpWindowsHandler.openSortGridPopUp(sortContainerData, gridScrollerController);
     }
 
-    public void filterDataButtonClicked() {
+//    public void filterDataButtonClicked() {
+//
+//        boolean inputNotFromOptions = true;
+//        FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
+//        String range = filterGridData.getRange();
+//        String filterColumn = filterGridData.getColumnsToFilterBy();
+//
+//        //if one of them is null means that the user just closed the window without entering anything
+//        if(range != null && filterColumn != null)
+//        {
+//            try {
+//                Set<String> stringsInChosenColumn = engine.getUniqueStringsInColumn(filterColumn, range);
+//                // gets a filtered string from the user, for example: "banana, 5, true"
+//                String filter = popUpWindowsHandler.openFilterDataPopUp(stringsInChosenColumn);
+//                List<String> filteredStrings = EngineUtilities.extractLetters(filter);
+//
+//                filteredStrings.forEach(s -> {
+//                    if(!stringsInChosenColumn.contains(s)){
+//                        createErrorPopup( s + " is not in columns you chose", "Error");
+//                        inputNotFromOptions = false;
+//                    }
+//                });
+//
+//                if(inputNotFromOptions) {
+//                    DtoSheetCell dtoSheetCell = engine.filterSheetCell(range, filter, filterColumn);
+//                    createFilterGridPopUp(dtoSheetCell);
+//                }
+//
+//            }catch (Exception e) {
+//                createErrorPopup(e.getMessage(), "Error");
+//            }
+//        }
+//    }
 
+
+    public void filterDataButtonClicked() {
+        boolean inputIsValid = true;
+
+        // Open the filter data window and retrieve user input
         FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
         String range = filterGridData.getRange();
         String filterColumn = filterGridData.getColumnsToFilterBy();
 
-        //if one of them is null means that the user just closed the window without entering anything
-        if(range != null && filterColumn != null)
-        {
+        // Check if the user has provided input (if window wasn't closed without action)
+        if (range != null && filterColumn != null) {
             try {
-                Set<String> stringsInChosenColumn = engine.getUniqueStringsInColumn(filterColumn);
-                // gets a filtered string from the user, for example: "banana, 5, true"
-                String filter = popUpWindowsHandler.openFilterDataPopUp(stringsInChosenColumn);
+                // Fetch unique strings in the selected column within the given range
+                Set<String> columnValues = engine.getUniqueStringsInColumn(filterColumn, range);
 
-                if(!stringsInChosenColumn.contains(filter)){
-                    createErrorPopup("The filter value is not in columns you chose", "Error");
+                // Get user filter input, e.g., "banana, 5, true"
+                String filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
+
+                if(filter == null || filter.isEmpty()) {
                     return;
                 }
 
-                DtoSheetCell filteredDtoSheetCell = engine.filterSheetCell(range, filter);
-                createFilterGridPopUp(filteredDtoSheetCell);
-            }catch (Exception e) {
+                List<String> filteredStrings = EngineUtilities.extractLetters(filter);
+
+                // Validate user input against the available column values
+                for (String input : filteredStrings) {
+                    if (!columnValues.contains(input)) {
+                        createErrorPopup(input + " is not in the column you chose", "Error");
+                        inputIsValid = false;
+                        break;
+                    }
+                }
+
+                // If input is valid, filter the sheet and display the result
+                if (inputIsValid) {
+                    DtoSheetCell filteredSheetCell = engine.filterSheetCell(range, filter, filterColumn);
+                    createFilterGridPopUp(filteredSheetCell);
+                }
+
+            } catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }
     }
+
 
     private void createFilterGridPopUp(DtoSheetCell dtoSheetCell) {
         popUpWindowsHandler.openFilterGridPopUp(dtoSheetCell, gridScrollerController);

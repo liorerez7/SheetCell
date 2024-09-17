@@ -6,20 +6,26 @@ import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.impl.variantImpl.EffectiveValueImpl;
 
-import java.util.List;
+import java.util.*;
 
 public class SheetCellFilter {
 
-    public static DtoSheetCell filterSheetCell(String range, String filter, DtoSheetCell dtoSheetCell) {
+    public static DtoSheetCell filterSheetCell(String range, String filter, DtoSheetCell dtoSheetCell, String filterColumn) {
 
         List<String> filterByStrings = EngineUtilities.extractLetters(filter);
         List<CellLocation> parsedRange = EngineUtilities.parseRange(range);
         List<List<EffectiveValue>> myGrid = EngineUtilities.getRowsFromRange(parsedRange, dtoSheetCell);
+        List<List<EffectiveValue>> copyGrid = EngineUtilities.getRowsFromRange(parsedRange, dtoSheetCell);
+
+        char leftColumn = parsedRange.get(0).getVisualColumn();
+        char colToFilterBy = filterColumn.charAt(0);
+        Set<Integer> numberOfRowsWithFilteredValues = new HashSet<>();
+        Map<Integer, String> rowToFilteredValue = new HashMap<>();
 
         // Iterate over the grid and filter the values
-        for (List<EffectiveValue> gridRow : myGrid) {
-            for (int col = 0; col < gridRow.size(); col++) {
-                EffectiveValue cellValue = gridRow.get(col);
+        for (List<EffectiveValue> gridCol : myGrid) {
+            for (int row = 0; row < gridCol.size(); row++) {
+                EffectiveValue cellValue = gridCol.get(row);
 
                 if (cellValue != null) {
                     Object actualValue = cellValue.getValue();
@@ -27,10 +33,25 @@ public class SheetCellFilter {
 
                     // If the value should not be kept, replace with an empty string
                     if (!shouldKeepValue) {
-                        gridRow.set(col, new EffectiveValueImpl(ReturnedValueType.EMPTY, ""));
+                        gridCol.set(row, new EffectiveValueImpl(ReturnedValueType.EMPTY, ""));
+                    }
+                    else{
+                        numberOfRowsWithFilteredValues.add(row);
+                        rowToFilteredValue.put(row, cellValue.getValue().toString());
                     }
                 }
             }
+        }
+
+        int numberOfCol = 0;
+        for (List<EffectiveValue> gridColCopy : copyGrid) {
+            for (int row = 0; row < copyGrid.size(); row++) {
+                EffectiveValue cellValueCopy = gridColCopy.get(row);
+                if(numberOfRowsWithFilteredValues.contains(row)){
+                   myGrid.get(numberOfCol).set(row, cellValueCopy);
+                }
+            }
+            numberOfCol++;
         }
 
         // Update the dtoSheetCell with the filtered grid

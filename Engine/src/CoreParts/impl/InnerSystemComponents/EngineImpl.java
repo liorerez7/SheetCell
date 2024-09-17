@@ -16,6 +16,7 @@ import Utility.Exception.RefToUnSetCellException;
 import Utility.SheetCellSorter;
 import Utility.SortContainerData;
 import expression.api.Expression;
+import expression.impl.stringFunction.Str;
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
 import java.nio.file.Files;
@@ -151,14 +152,14 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public Set<String> getUniqueStringsInColumn(String filterColumn) {
-        return sheetCell.getUniqueStringsInColumn(filterColumn);
+    public Set<String> getUniqueStringsInColumn(String filterColumn, String range) {
+        return sheetCell.getUniqueStringsInColumn(filterColumn, range);
     }
 
     @Override
-    public DtoSheetCell filterSheetCell(String range, String filter) {
+    public DtoSheetCell filterSheetCell(String range, String filter, String filterColumn) {
         DtoSheetCell dtoSheetCell = getSheetCell();
-        return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell);
+        return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
     }
 
     private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {
