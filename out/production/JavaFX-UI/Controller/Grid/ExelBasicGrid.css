@@ -1,93 +1,45 @@
+.DarkModeBackground {
+    -fx-background-color: #e8f0f6; /* Light gray background color */
+    -fx-padding: 10; /* Padding creates space between the StackPane and the GridPane */
 
+}
+
+/* General Background for the ScrollPane */
+.Background {
+    /*-fx-background-color: #e8f0f6; !* Light gray background for ScrollPane itself *!*/
+    -fx-background-color: #ff0024; /* Light gray background for ScrollPane itself */
+    -fx-padding: 10; /* Optional padding */
+}
+
+/* Targeting the internal viewport of the ScrollPane */
+.ScrollPane .viewport {
+    -fx-background-color: #e8f0f6; /* Same background as ScrollPane */
+}
+
+/* Optional: You can style the ScrollBar as well */
+.ScrollPane .scroll-bar {
+    -fx-background-color: transparent; /* Transparent background for scrollbar */
+}
+
+/* Optional: Customize header and cell styles */
 .header-label {
     -fx-font-weight: bold;
     -fx-alignment: CENTER;
     -fx-text-alignment: CENTER;
-      -fx-background-color: #e4e4e4;
-       -fx-border-color: black;
-       -fx-border-width: 1px;
-       -fx-padding: 0;
-       -fx-margin: 0;
-       /*-fx-pref-width: 100px;  !* Fixed width *!*/
-    /*-fx-pref-height: 30px;  !* Fixed height *!*/
-}
-/* Style for the cell labels */
-.cell-label {
-    -fx-background-color: white;
+    -fx-background-color: #e4e4e4;
     -fx-border-color: black;
     -fx-border-width: 1px;
-    /*-fx-pref-width: 100px;  !* Fixed width *!*/
-    /*-fx-pref-height: 30px;  !* Fixed height *!*/
-    -fx-padding: 5px;  /* Padding to make the clickable area larger */
-    -fx-wrap-text: false;  /* Prevent text wrapping */
-
-
-   /* -fx-text-alignment: center;
-    /*-fx-max-width: 100px;  !* Ensure that max width is also fixed *!*/
-    /*-fx-max-height: 30px;  !* Ensure that max height is also fixed *!*/
-    /*-fx-min-width: 100px;  !* Ensure that min width is also fixed *!*/
-    /*-fx-min-height: 30px;  !* Ensure that min height is also fixed *!*/
+    -fx-padding: 0;
+    -fx-margin: 0;
 }
 
+/*.cell-label {*/
+/*    !*-fx-background-color: white;*!*/
+/*    -fx-background-color: #061fff;*/
+/*    -fx-border-color: black;*/
+/*    -fx-border-width: 1px;*/
+/*    -fx-padding: 5px; !* Padding to make the clickable area larger *!*/
+/*    -fx-wrap-text: false; !* Prevent text wrapping *!*/
+/*}*/
 
-.affects-target {
-    -fx-background-color: #c3eaa3; /* Light yellow background */
-    -fx-border-color: #80e413; /* Gold border color */
-    -fx-border-width: 2px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
-    /* -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0); /* Initial glow */
 
-    /* Pulse animation */
-    -fx-animation: flash 1s infinite;
-}
-
-/* style.css */
-.glow {
-    -fx-background-color: #ff4d4d;  /* Modern red */
-    -fx-border-color: black;
-    -fx-effect: dropshadow(gaussian, #ff1e00, 10, 0.5, 0, 0);
-}
-
-@keyframes pulse {
-    0% {
-        -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0);
-    }
-    50% {
-        -fx-effect: dropshadow(gaussian, #FFD700, 20, 0.7, 0, 0);
-    }
-    100% {
-        -fx-effect: dropshadow(gaussian, #FFD700, 10, 0.5, 0, 0);
-    }
-    0% {
-        opacity: 0;
-        transform: scale(0);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.affected-by-source {
-    -fx-background-color: #ADD8E6; /* Light blue background */
-    -fx-border-color: #1E90FF; /* Dodger blue border color */
-    -fx-border-width: 2px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
-
-    /* Flashing background animation */
-    -fx-animation: flash 1s infinite;
-}
-
-@keyframes flash {
-    0% {
-        -fx-background-color: #ADD8E6; /* Light blue */
-    }
-    50% {
-        -fx-background-color: #87CEFA; /* Lighter blue */
-    }
-    100% {
-        -fx-background-color: #ADD8E6; /* Light blue */
-    }
-}

@@ -52,6 +52,9 @@ public class MainController {
     private MenuBar menuBar;
 
     @FXML
+    private BorderPane mainPane;
+
+    @FXML
     private ActionLineController actionLineController;
 
     @FXML
@@ -80,6 +83,7 @@ public class MainController {
     private Model model;
     private PopUpWindowsHandler popUpWindowsHandler;
     private ProgressManager progressManager;
+    private ThemeColor themeColor = ThemeColor.CLASSIC;
 
     @FXML
     public void initialize() {
@@ -320,6 +324,8 @@ public class MainController {
 
     }
 
+
+
     public void cellClicked(String location) {
 
         DtoCell requestedCell = engine.getRequestedCell(location);
@@ -348,28 +354,9 @@ public class MainController {
     }
 
     private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
-        // Create a new Stage (window) for the popup
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
-        //popupStage.initModality(Modality.NONE); // Block events to other windows
 
-        popupStage.setTitle("Version Grid " + versionNumber);
+        popUpWindowsHandler.openVersionGridPopUp(dtoSheetCell, versionNumber, gridScrollerController);
 
-        // Create a new GridPane for the popup
-        GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
-
-        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializeVersionPopupGrid(popupGrid, dtoSheetCell);
-
-        // Create a Scene with the popupGrid
-        Scene popupScene = new Scene(popupGrid);
-        popupStage.setScene(popupScene);
-
-        // Show the popup window
-        popupStage.showAndWait();
-
-        // popupStage.show();
     }
 
     public void sortRowsButtonClicked() {
@@ -393,28 +380,7 @@ public class MainController {
     }
 
     private void createSortGridPopUp(SortContainerData sortContainerData) {
-        // Create a new Stage (window) for the popup
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
-        //popupStage.initModality(Modality.NONE); // Block events to other windows
-
-        popupStage.setTitle("Sorted Rows");
-
-        // Create a new GridPane for the popup
-        GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
-
-        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializeSortPopupGrid(popupGrid, sortContainerData);
-
-        // Create a Scene with the popupGrid
-        Scene popupScene = new Scene(popupGrid);
-        popupStage.setScene(popupScene);
-
-        // Show the popup window
-        popupStage.showAndWait();
-
-        // popupStage.show();
+        popUpWindowsHandler.openSortGridPopUp(sortContainerData, gridScrollerController);
     }
 
     public void filterDataButtonClicked() {
@@ -430,6 +396,12 @@ public class MainController {
                 Set<String> stringsInChosenColumn = engine.getUniqueStringsInColumn(filterColumn);
                 // gets a filtered string from the user, for example: "banana, 5, true"
                 String filter = popUpWindowsHandler.openFilterDataPopUp(stringsInChosenColumn);
+
+                if(!stringsInChosenColumn.contains(filter)){
+                    createErrorPopup("The filter value is not in columns you chose", "Error");
+                    return;
+                }
+
                 DtoSheetCell filteredDtoSheetCell = engine.filterSheetCell(range, filter);
                 createFilterGridPopUp(filteredDtoSheetCell);
             }catch (Exception e) {
@@ -439,28 +411,7 @@ public class MainController {
     }
 
     private void createFilterGridPopUp(DtoSheetCell dtoSheetCell) {
-        // Create a new Stage (window) for the popup
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
-        //popupStage.initModality(Modality.NONE); // Block events to other windows
-
-        popupStage.setTitle("Sorted Rows");
-
-        // Create a new GridPane for the popup
-        GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
-
-        // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-        gridScrollerController.initializePopupGrid(popupGrid, dtoSheetCell);
-
-        // Create a Scene with the popupGrid
-        Scene popupScene = new Scene(popupGrid);
-        popupStage.setScene(popupScene);
-
-        // Show the popup window
-        popupStage.showAndWait();
-
-        // popupStage.show();
+        popUpWindowsHandler.openFilterGridPopUp(dtoSheetCell, gridScrollerController);
     }
 
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
@@ -504,6 +455,89 @@ public class MainController {
     public void changeTextColor(javafx.scene.paint.Color value, String location) {
         gridScrollerController.changeTextColor(value, location);
 
+    }
+
+    public void closeMenuButtonClicked() {
+        System.exit(0);
+    }
+
+    public void classicDisplayClicked() {
+
+        if(themeColor == ThemeColor.CLASSIC) {
+            return;
+        }
+
+        if(themeColor == ThemeColor.MIDNIGHT) {
+            mainPane.getStyleClass().remove("DarkModeBackground");
+            leftCommands.getStyleClass().remove("DarkModeBackground");
+        }
+        else if(themeColor == ThemeColor.SUNBURST) {
+            mainPane.getStyleClass().remove("SunBurstBackground");
+            leftCommands.getStyleClass().remove("SunBurstBackground");
+        }
+
+        mainPane.getStyleClass().add("Background");
+        leftCommands.getStyleClass().add("Background");
+
+
+        headerController.changeToClassicTheme();
+        rangesController.changeToClassicTheme();
+        actionLineController.changeToClassicTheme();
+        customizeController.changeToClassicTheme();
+
+        themeColor = ThemeColor.CLASSIC;
+    }
+
+    public void sunBurstDisplayClicked() {
+
+        if(themeColor == ThemeColor.SUNBURST) {
+            return;
+        }
+
+        if(themeColor == ThemeColor.MIDNIGHT) {
+            mainPane.getStyleClass().remove("DarkModeBackground");
+            leftCommands.getStyleClass().remove("DarkModeBackground");
+        }
+        else if(themeColor == ThemeColor.CLASSIC) {
+            mainPane.getStyleClass().remove("Background");
+            leftCommands.getStyleClass().remove("Background");
+        }
+
+        mainPane.getStyleClass().add("SunBurstBackground");
+        leftCommands.getStyleClass().add("SunBurstBackground");
+
+        headerController.changeToSunBurstTheme();
+        rangesController.changeToSunBurstTheme();
+        actionLineController.changeToSunBurstTheme();
+        customizeController.changeToSunBurstTheme();
+
+        themeColor = ThemeColor.SUNBURST;
+    }
+
+    public void midNightDisplayClicked() {
+
+        if(themeColor == ThemeColor.MIDNIGHT) {
+            return;
+        }
+
+        if(themeColor == ThemeColor.CLASSIC) {
+            mainPane.getStyleClass().remove("Background");
+            leftCommands.getStyleClass().remove("Background");
+        }
+        else if(themeColor == ThemeColor.SUNBURST) {
+            mainPane.getStyleClass().remove("SunBurstBackground");
+            leftCommands.getStyleClass().remove("SunBurstBackground");
+        }
+
+        mainPane.getStyleClass().add("DarkModeBackground");
+        leftCommands.getStyleClass().add("DarkModeBackground");
+
+        headerController.changeToDarkTheme();
+        actionLineController.changeToDarkTheme();
+        customizeController.changeToDarkTheme();
+        rangesController.changeToDarkTheme();
+
+        themeColor = ThemeColor.MIDNIGHT;
     }
 }
 

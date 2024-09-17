@@ -21,13 +21,6 @@ public class Concat extends BinaryExpression {
     @Override
     protected EffectiveValue evaluate(EffectiveValue evaluate1, EffectiveValue evaluate2) {
 
-        evaluate1.assertRawType(ReturnedValueType.STRING);
-        evaluate2.assertRawType(ReturnedValueType.STRING);
-
-//        if (isUndefined(evaluate1) || isUndefined(evaluate2)) {
-//            return createEffectiveValue(ReturnedValueType.UNDEFINED, "UNDEFINED");
-//        }
-
         try {
             if (isEmptyOrUndefined(evaluate1) || isEmptyOrUndefined(evaluate2)) {
                 return createEffectiveValue(ReturnedValueType.STRING, "UNDEFINED");
@@ -41,8 +34,11 @@ public class Concat extends BinaryExpression {
             if (isUnknown(evaluate1) || isUnknown(evaluate2)) {
                 return createEffectiveValue(ReturnedValueType.UNKNOWN, "UNDEFINED");
             }
+            else{
+                return createEffectiveValue(ReturnedValueType.UNDEFINED, "UNDEFINED");
+            }
 
-            throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type String", e);
+          //  throw new IllegalArgumentException("Invalid type of arguments: Both arguments must be of type String", e);
         }
     }
 

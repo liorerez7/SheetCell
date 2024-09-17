@@ -17,6 +17,8 @@
     -fx-border-radius: 5px; /* Rounded corners for the background */
     -fx-background-radius: 5px; /* Rounded corners for the background */
     -fx-border-color: #CCCCCC; /* Light gray border color */
+    -fx-background-color: white;
+
 }
 /* Style for modern, clean buttons */
 .ModernButton {
@@ -24,7 +26,7 @@
     -fx-text-fill: white; /* White text color */
     -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
     -fx-font-size: 14px; /* Suitable font size */
-   /* -fx-padding: 10px 20px; /* Padding inside the button */
+   /* -fx-padding: 10px 20px; !* Padding inside the button */
     -fx-border-radius: 5px; /* Rounded corners */
     -fx-background-radius: 5px; /* Rounded corners */
     -fx-border-color: transparent; /* No border by default */
@@ -33,18 +35,6 @@
     -fx-focus-color: transparent; /* Remove focus border color */
 }
 
-.ModernButton {
-    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
-    -fx-text-fill: white; /* White text color */
-    -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
-    -fx-font-size: 14px; /* Suitable font size */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-background-radius: 5px; /* Rounded corners */
-    -fx-border-color: transparent; /* No border by default */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
-    -fx-cursor: hand; /* Pointer cursor on hover */
-    -fx-focus-color: transparent; /* Remove focus border color */
-}
 
 /* Style for button hover effect */
 .ModernButton:hover {
@@ -87,4 +77,42 @@
 }
 .normalOpacity {
     -fx-opacity: 1;
+}
+
+/* Style for modern, clean buttons */
+.DarkModernButton {
+    -fx-background-color: rgba(18, 18, 18, 0.66); /* Dark background color */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
+    -fx-font-size: 14px; /* Suitable font size */
+    /* -fx-padding: 10px 20px; !* Padding inside the button */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-border-color: transparent; /* No border by default */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
+    -fx-cursor: hand; /* Pointer cursor on hover */
+    -fx-focus-color: transparent; /* Remove focus border color */
+}
+
+
+/* Style for button hover effect */
+.DarkModernButton:hover {
+    -fx-background-color: #555555;  /* Darker grey on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
+}
+.DarkUserInterfaceSection {
+    -fx-background-color: #CCCCCC;
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-border-radius: 10; /* Rounded corners */
+}
+
+.DarkLabelsOfUserInterfaceSection {
+    -fx-text-fill: #ffffff; /* White text color */
+    -fx-font-family: 'Arial'; /* Modern, clean font */
+    -fx-font-size: 14px; /* Suitable font size */
+    -fx-padding: 5px; /* Padding inside the label */
+    -fx-border-radius: 5px; /* Rounded corners for the background */
+    -fx-background-radius: 5px; /* Rounded corners for the background */
+    -fx-border-color: #CCCCCC; /* Light gray border color */
+    -fx-background-color: #CCCCCC;
 }

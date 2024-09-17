@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <ScrollPane fx:id="mainScrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Main.MainController">
-    <BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" styleClass="Background" stylesheets="@../actionLine/BasicExcel.css">
+    <BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" styleClass="Background" stylesheets="@../CssAdujsments/ExcelCssLayout.css">
         <top>
             <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="121.0" prefWidth="1180.0" BorderPane.alignment="TOP_LEFT">
                 <columnConstraints>
@@ -28,9 +28,9 @@
             </GridPane>
         </top>
         <left>
-            <VBox fx:id="leftCommands" minHeight="636.0" prefHeight="635.0">
+            <VBox fx:id="leftCommands" minHeight="636.0" prefHeight="635.0" styleClass="Background" stylesheets="@../Customize/BasicExcel.css">
                 <children>
-                    <VBox minHeight="400.0" VBox.vgrow="ALWAYS">
+                    <VBox minHeight="345.0" prefHeight="345.0" prefWidth="340.0" VBox.vgrow="ALWAYS">
                         <children>
                             <fx:include fx:id="customize" source="../Customize/Customize.fxml" />
                         </children>
@@ -50,6 +50,12 @@
                         </VBox.margin>
                     </VBox>
                 </children>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+            <BorderPane.margin>
+               <Insets top="10.0" />
+            </BorderPane.margin>
             </VBox>
         </left>
         <center>

@@ -1,5 +1,5 @@
 .menu-bar {
-    -fx-background-color: #f0f0f0;  /* Light grey background */
+    -fx-background-color: white;  /* Light grey background */
     -fx-border-color: #dcdcdc;      /* Slightly darker grey border */
     -fx-border-width: 0 0 1 0;      /* Border only on the bottom */
     -fx-padding: 5px 10px;          /* Padding to space out menu items */
@@ -27,11 +27,11 @@
 }
 
 .menu-item:hover {
-    -fx-background-color: #e0e0e0;  /* Slightly darker grey on hover */
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
 }
 
 .menu-item:focused {
-    -fx-background-color: #cccccc;  /* Even darker grey when focused */
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
 }
 
 .separator {

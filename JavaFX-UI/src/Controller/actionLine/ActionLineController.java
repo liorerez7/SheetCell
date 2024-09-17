@@ -1,6 +1,7 @@
 package Controller.actionLine;
 
 import Controller.Main.MainController;
+import Controller.Utility.Utilies;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,6 +69,8 @@ public class ActionLineController {
 
     private void updateVersionMenuItems(int latestVersion) {
         VersionScroller.getItems().clear();
+        Utilies.setMenuButtonTextColor(VersionScroller, Color.WHITE);
+        VersionScroller.setTextFill(Color.WHITE);
         for (int i = 1; i <= latestVersion; i++) {
             final int versionNumber = i;
             MenuItem menuItem = new MenuItem("Version " + versionNumber);
@@ -88,5 +91,37 @@ public class ActionLineController {
 
     private void handleVersionClick(int versionNumber) {
         mainController.specificVersionClicked(versionNumber);
+    }
+
+
+
+
+    public void changeToDarkTheme() {
+
+        Utilies.setMenuButtonTextColor(VersionScroller, Color.BLACK);
+        VersionScroller.setTextFill(Color.WHITE);
+
+        Utilies.switchStyleClass(VersionScroller, "DarkModernButton", "ModernButton", "SunModernButton");
+        Utilies.switchStyleClass(actionLine, "DarkUserInterfaceSection", "UserInterfaceSection", "SunUserInterfaceSection");
+        Utilies.switchStyleClass(updateCellButton, "DarkModernButton", "SunModernButton", "ModernButton");
+    }
+
+    public void changeToClassicTheme() {
+        Utilies.setMenuButtonTextColor(VersionScroller, Color.BLACK);
+        VersionScroller.setTextFill(Color.WHITE);
+
+        Utilies.switchStyleClass(VersionScroller, "ModernButton", "DarkModernButton", "SunModernButton");
+        Utilies.switchStyleClass(actionLine, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
+        Utilies.switchStyleClass(updateCellButton, "ModernButton", "SunModernButton", "DarkModernButton");
+    }
+
+    public void changeToSunBurstTheme() {
+        Utilies.setMenuButtonTextColor(VersionScroller, Color.BLACK);
+        VersionScroller.setTextFill(Color.BLACK);
+
+        Utilies.switchStyleClass(actionLine, "SunUserInterfaceSection", "UserInterfaceSection", "DarkUserInterfaceSection");
+        Utilies.switchStyleClass(VersionScroller, "SunModernButton", "ModernButton", "DarkModernButton");
+        Utilies.switchStyleClass(updateCellButton, "SunModernButton", "ModernButton", "DarkModernButton");
+
     }
 }

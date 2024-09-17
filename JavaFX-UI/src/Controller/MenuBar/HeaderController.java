@@ -1,12 +1,15 @@
 package Controller.MenuBar;
 
 import Controller.Main.MainController;
+import Controller.Utility.Utilies;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -22,7 +25,19 @@ public class HeaderController {
     private Label path;
 
     @FXML
-    private MainController MainController;
+    private MenuItem classicDisplayButton;
+
+    @FXML
+    private Text pathText;
+
+    @FXML
+    private MenuItem midNightDisplayButton;
+
+    @FXML
+    private MenuItem sunBurstDisplayButton;
+
+    @FXML
+    private MainController mainController;
 
     private StringProperty pathProperty;
 
@@ -39,7 +54,7 @@ public class HeaderController {
     }
 
     public void setMainController(MainController mainController) {
-        this.MainController = mainController;
+        this.mainController = mainController;
     }
 
     @FXML
@@ -52,10 +67,15 @@ public class HeaderController {
 
         // Pass the selected file to the MainController
         if (selectedFile != null) {
-            MainController.initializeGridBasedOnXML(selectedFile.getAbsolutePath());
+            mainController.initializeGridBasedOnXML(selectedFile.getAbsolutePath());
         } else {
             System.out.println("File selection canceled.");
         }
+    }
+
+    @FXML
+    void closeMenuButton(ActionEvent event) {
+        mainController.closeMenuButtonClicked();
     }
 
     public File openXMLFileChooser(Stage stage) {
@@ -75,6 +95,66 @@ public class HeaderController {
         // Show the open file dialog and get the selected file
         return fileChooser.showOpenDialog(stage);
     }
+
+    @FXML
+    void midNightDisplayClicked(ActionEvent event) {
+        mainController.midNightDisplayClicked();
+    }
+    @FXML
+    void sunBurstDisplayClicked(ActionEvent event) {
+        mainController.sunBurstDisplayClicked();
+
+    }
+    @FXML
+    void classicDisplayClicked(ActionEvent event) {
+        mainController.classicDisplayClicked();
+
+    }
+
+    public void changeToDarkTheme() {
+        menuBar.getStylesheets().clear();
+        path.getStylesheets().clear();
+
+
+        Utilies.switchStyleClass(path, "DarkLabelsOfUserInterfaceSection","LabelsOfUserInterfaceSection", "SunLabelsOfUserInterfaceSection");
+
+
+        menuBar.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
+        path.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
+    }
+    public void changeToClassicTheme() {
+        menuBar.getStylesheets().clear();
+        path.getStylesheets().clear();
+
+
+        Utilies.switchStyleClass(path, "LabelsOfUserInterfaceSection","DarkLabelsOfUserInterfaceSection", "SunLabelsOfUserInterfaceSection");
+
+
+        path.getStylesheets().add(getClass().getResource("MenuBar.css").toExternalForm());
+        menuBar.getStylesheets().add(getClass().getResource("MenuBar.css").toExternalForm());
+    }
+
+    public void changeToSunBurstTheme() {
+        menuBar.getStylesheets().clear();
+        path.getStylesheets().clear();
+
+        Utilies.switchStyleClass(path, "SunLabelsOfUserInterfaceSection","DarkLabelsOfUserInterfaceSection", "LabelsOfUserInterfaceSection");
+
+        path.getStylesheets().add(getClass().getResource("sunBurstTheme.css").toExternalForm());
+        menuBar.getStylesheets().add(getClass().getResource("sunBurstTheme.css").toExternalForm());
+    }
+
+//    private void switchStyleClass(Label path, String newStyleClass, String... classesToRemove) {
+//        // Remove any of the classes in the classesToRemove array if they exist
+//        for (String styleClass : classesToRemove) {
+//            if (path.getStyleClass().contains(styleClass)) {
+//                path.getStyleClass().remove(styleClass);
+//            }
+//        }
+//
+//        // Add the new style class
+//        path.getStyleClass().add(newStyleClass); // Add your new class here
+//    }
 }
 
 

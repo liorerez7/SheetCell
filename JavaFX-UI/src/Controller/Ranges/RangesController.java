@@ -1,6 +1,7 @@
 package Controller.Ranges;
 
 import Controller.Main.MainController;
+import Controller.Utility.Utilies;
 import CoreParts.smallParts.CellLocation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +24,9 @@ public class RangesController {
     MainController mainController;
 
     @FXML
+    private Button filterDataButton;
+
+    @FXML
     private ComboBox<Label> SystemRanges;
 
     @FXML
@@ -37,6 +41,9 @@ public class RangesController {
     @FXML
     private Button sortRowsButton;
 
+    @FXML
+    private VBox vBoxContainer;
+
 
     @FXML
     void filterDataClicked(ActionEvent event) {
@@ -49,13 +56,13 @@ public class RangesController {
     }
 
     @FXML
-    public void initialize() {
+    void initialize(){
         initializeComboBox(SystemRanges, "Ranges");
-        setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
+        Utilies.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
     }
 
-
     private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
+
         comboBox.setCellFactory(cb -> new ListCell<Label>() {
             @Override
             protected void updateItem(Label item, boolean empty) {
@@ -89,39 +96,18 @@ public class RangesController {
         comboBox.setPromptText(defaultText);
     }
 
-    private void setComboBoxHeaderTextColor(ComboBox<Label> comboBox, Color color) {
-        TextField textField = (TextField) comboBox.lookup(".text-field");
-        if (textField != null) {
-            textField.setStyle("-fx-text-fill: " + toRgbString(color) + ";");
-        }
-    }
+//    private void setComboBoxHeaderTextColor(ComboBox<Label> comboBox, Color color) {
+//        TextField textField = (TextField) comboBox.lookup(".text-field");
+//        if (textField != null) {
+//            textField.setStyle("-fx-text-fill: " + toRgbString(color) + ";");
+//        }
+//    }
 
     private String toRgbString(Color color) {
         return String.format("rgb(%d,%d,%d)", (int) (color.getRed() * 255),
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Add a new range label to the ComboBox
     public void addRange(List<CellLocation> ranges, String rangeName) {
@@ -153,6 +139,14 @@ public class RangesController {
         mainController.rangeDeleteClicked();
     }
 
+    private void setupBindings() {
+        deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+        filterDataButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+        sortRowsButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+        addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+        SystemRanges.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+    }
+
     @FXML
     void addRangeClicked(ActionEvent event) {
         mainController.rangeAddClicked();
@@ -160,6 +154,8 @@ public class RangesController {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        setupBindings();
+
     }
 
     // Reset the ComboBox to its default state when clicking other cell on grid
@@ -178,6 +174,38 @@ public class RangesController {
     public void setAllRanges(Map<String, List<CellLocation>> ranges) {
         ranges.forEach((rangeName, range) -> addRange(range, rangeName));
     }
-}
 
+    public void changeToDarkTheme() {
+        Utilies.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
+        Utilies.switchStyleClass(vBoxContainer, "DarkUserInterfaceSection", "UserInterfaceSection", "RangeButtonSun");
+        Utilies.switchStyleClass(filterDataButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
+        Utilies.switchStyleClass(addRangeButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
+        Utilies.switchStyleClass(deleteRangeButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
+        Utilies.switchStyleClass(sortRowsButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
+        Utilies.switchStyleClass(SystemRanges, "RangeButtonDark", "RangeButton", "RangeButtonSun");
+    }
+
+    public void changeToClassicTheme() {
+        Utilies.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
+        Utilies.switchStyleClass(vBoxContainer, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
+        Utilies.switchStyleClass(filterDataButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
+        Utilies.switchStyleClass(addRangeButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
+        Utilies.switchStyleClass(deleteRangeButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
+        Utilies.switchStyleClass(sortRowsButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
+        Utilies.switchStyleClass(SystemRanges, "RangeButton", "RangeButtonDark", "RangeButtonSun");
+    }
+
+    public void changeToSunBurstTheme() {
+        Utilies.setComboBoxHeaderTextColor(SystemRanges, Color.BLACK);
+        Utilies.switchStyleClass(vBoxContainer, "SunUserInterfaceSection", "DarkUserInterfaceSection", "UserInterfaceSection");
+        Utilies.switchStyleClass(filterDataButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
+        Utilies.switchStyleClass(addRangeButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
+        Utilies.switchStyleClass(deleteRangeButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
+        Utilies.switchStyleClass(sortRowsButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
+        Utilies.switchStyleClass(SystemRanges, "RangeButtonSun", "RangeButtonDark", "RangeButton");
+    }
+
+
+
+}
 

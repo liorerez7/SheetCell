@@ -1,0 +1,49 @@
+.DarkModeBackground {
+    /*-fx-background-color: rgba(57, 49, 49, 0.56); /* Dark background color */
+    -fx-background-color: rgba(225, 224, 224, 0.66); /* Dark background color */
+
+}
+
+.menu-bar {
+    /*-fx-background-color: rgba(18, 18, 18, 0.66); /* Dark background color */
+    -fx-background-color: #CCCCCC;
+  /*  -fx-border-color: #444444;      /* Slightly lighter border color */
+    -fx-text-fill: #e0e0e0;            /* Light text color */
+   /* -fx-border-width: 1 1 1 1; */
+    -fx-padding: 5px 10px;
+}
+
+.menu-bar .menu {
+    -fx-background-color: rgba(211, 21, 21, 0);
+    -fx-text-fill: #e0e0e0;            /* Light text color */
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+}
+
+.menu-bar .menu:hover {
+    -fx-text-fill: #e0e0e0;            /* Light text color */
+    -fx-background-color: #555555;  /* Darker grey on hover */
+}
+
+.menu-bar .menu:showing {
+    -fx-background-color: #444444;  /* Even darker grey when menu is active */
+}
+
+.menu-item {
+ /*   -fx-background-color: rgba(18, 18, 18, 0.66); /* Dark background color */
+
+    -fx-text-fill: #e0e0e0;         /* Light text color */
+  /*  -fx-padding: 5px 10px; */
+}
+
+.menu-item:hover {
+    -fx-background-color: #555555;  /* Darker grey on hover */
+}
+
+.menu-item:focused {
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
+}
+
+.separator {
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
+}

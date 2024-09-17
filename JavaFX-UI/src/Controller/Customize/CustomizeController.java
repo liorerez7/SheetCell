@@ -1,11 +1,13 @@
 package Controller.Customize;
 
 import Controller.Main.MainController;
+import Controller.Utility.Utilies;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -23,6 +25,9 @@ public class CustomizeController {
 
     @FXML
     private ColorPicker textColorPicker;
+
+    @FXML
+    private GridPane customizeGridPane;
 
     @FXML
     private Button defaultBackgroundTextButton;
@@ -272,6 +277,58 @@ public class CustomizeController {
     @FXML
     void textColorClicked(ActionEvent event) {
         mainController.changeTextColor(textColorPicker.getValue(), cellIdLabel.getText());
+    }
+
+    public void changeToDarkTheme() {
+        // Set text color for ComboBox header and items
+
+        // Switch styles using Utilies method
+        Utilies.switchStyleClass(customizeGridPane, "DarkUserInterfaceSection", "UserInterfaceSection", "SunUserInterfaceSection");
+        Utilies.switchStyleClass(defaultBackgroundTextButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(defaultTextButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(widthMinusButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(widthPlusButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(lengthMinusButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(lengthPlusButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(columnComboBox, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(rowComboBox, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(alignmentComboBox, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(backgroundColorPicker, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(textColorPicker, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+    }
+    public void changeToClassicTheme() {
+        // Set text color for ComboBox header and items
+
+        // Switch styles using Utilies method
+        Utilies.switchStyleClass(customizeGridPane, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
+        Utilies.switchStyleClass(defaultBackgroundTextButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(defaultTextButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(widthMinusButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(widthPlusButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(lengthMinusButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(lengthPlusButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(columnComboBox, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(rowComboBox, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(alignmentComboBox, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(backgroundColorPicker, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+        Utilies.switchStyleClass(textColorPicker, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+    }
+
+
+    public void changeToSunBurstTheme() {
+        // Switch styles using Utilies method
+        Utilies.switchStyleClass(customizeGridPane, "SunUserInterfaceSection", "DarkUserInterfaceSection", "UserInterfaceSection");
+        Utilies.switchStyleClass(defaultBackgroundTextButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(defaultTextButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(widthMinusButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(widthPlusButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(lengthMinusButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(lengthPlusButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(columnComboBox, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(rowComboBox, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(alignmentComboBox, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(backgroundColorPicker, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+        Utilies.switchStyleClass(textColorPicker, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
     }
 
 }

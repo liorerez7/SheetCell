@@ -291,7 +291,6 @@ public class GridController {
         }
     }
 
-
     public void initializePopupGrid(GridPane grid, DtoSheetCell sheetCell) {
 
         initializeEmptyGrid(sheetCell, grid, true);

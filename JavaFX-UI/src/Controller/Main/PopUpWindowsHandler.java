@@ -1,8 +1,11 @@
 package Controller.Main;
 
+import Controller.Grid.GridController;
 import Controller.Utility.FilterGridData;
 import Controller.Utility.RangeStringsData;
 import Controller.Utility.SortRowsData;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
+import Utility.SortContainerData;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -14,55 +17,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class PopUpWindowsHandler {
-
-    public RangeStringsData openAddRangeWindow() {
-        // Create a new stage (window)
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-        popupStage.setTitle("Insert Range");
-
-        // Create a GridPane layout for the popup
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-
-        // Create and add the labels and text fields
-        Label nameLabel = new Label("Range Name:");
-        TextField nameField = new TextField();
-        Label rangeLabel = new Label("Range:");
-        TextField rangeField = new TextField();
-
-        gridPane.add(nameLabel, 0, 0);
-        gridPane.add(nameField, 1, 0);
-        gridPane.add(rangeLabel, 0, 1);
-        gridPane.add(rangeField, 1, 1);
-
-        // Create and add the submit button
-        Button submitButton = new Button("Submit");
-        gridPane.add(submitButton, 1, 2);
-        RangeStringsData rangeStringsData = new RangeStringsData();
-        submitButton.setOnAction(e -> {
-            String rangeName = nameField.getText();
-            String range = rangeField.getText();
-            // Handle the submission of the range name and range here
-            // For now, we just close the popup
-            rangeStringsData.setRange(range);
-            rangeStringsData.setName(rangeName);
-            popupStage.close();
-        });
-        // Set the scene and show the popup window
-        Scene scene = new Scene(gridPane, 300, 200);
-        popupStage.setScene(scene);
-        popupStage.showAndWait();
-        return rangeStringsData;
-    }
 
     public RangeStringsData openDeleteRangeWindow() {
 
@@ -101,6 +59,57 @@ public class PopUpWindowsHandler {
         return rangeStringsData;
     }
 
+    public RangeStringsData openAddRangeWindow() {
+        // Create a new stage (window)
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
+        popupStage.setTitle("Insert Range");
+
+        // Create a GridPane layout for the popup
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
+        // Create and add the labels and text fields for Range-From and Range-To
+        Label nameLabel = new Label("Range Name:");
+        TextField nameField = new TextField();
+        Label rangeFromLabel = new Label("Range-From (example, A2):");
+        TextField rangeFromField = new TextField();
+        Label rangeToLabel = new Label("Range-To (example, C5):");
+        TextField rangeToField = new TextField();
+
+        // Add the elements to the grid
+        gridPane.add(nameLabel, 0, 0);
+        gridPane.add(nameField, 1, 0);
+        gridPane.add(rangeFromLabel, 0, 1);
+        gridPane.add(rangeFromField, 1, 1);
+        gridPane.add(rangeToLabel, 0, 2);
+        gridPane.add(rangeToField, 1, 2);
+
+        // Create and add the submit button
+        Button submitButton = new Button("Submit");
+        gridPane.add(submitButton, 1, 3);
+        RangeStringsData rangeStringsData = new RangeStringsData();
+        submitButton.setOnAction(e -> {
+            String rangeName = nameField.getText();
+            String rangeFrom = rangeFromField.getText();
+            String rangeTo = rangeToField.getText();
+            String range = rangeFrom + ".." + rangeTo; // Combine Range-From and Range-To into a single range
+
+            // Set the data in the RangeStringsData object
+            rangeStringsData.setRange(range);
+            rangeStringsData.setName(rangeName);
+
+            popupStage.close();
+        });
+
+        // Set the scene and show the popup window
+        Scene scene = new Scene(gridPane, 350, 150);
+        popupStage.setScene(scene);
+        popupStage.showAndWait();
+        return rangeStringsData;
+    }
+
     public SortRowsData openSortRowsWindow() {
 
         SortRowsData sortRowsData = new SortRowsData();
@@ -115,33 +124,43 @@ public class PopUpWindowsHandler {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        // Create and add the labels and text fields
-        Label rangeForSortingLabel = new Label("Range for sorting:");
-        TextField rangeForSortingField = new TextField();
+        // Create and add the labels and text fields for Range-From and Range-To
+        Label rangeFromLabel = new Label("Range-From (example, A2):");
+        TextField rangeFromField = new TextField();
+        Label rangeToLabel = new Label("Range-To (example, C5):");
+        TextField rangeToField = new TextField();
+
         Label columnsSortLabel = new Label("By which columns:");
         TextField columnsSortField = new TextField();
 
-        gridPane.add(rangeForSortingLabel, 0, 0);
-        gridPane.add(rangeForSortingField, 1, 0);
-        gridPane.add(columnsSortLabel, 0, 1);
-        gridPane.add(columnsSortField, 1, 1);
+        // Add the elements to the grid
+        gridPane.add(rangeFromLabel, 0, 0);
+        gridPane.add(rangeFromField, 1, 0);
+        gridPane.add(rangeToLabel, 0, 1);
+        gridPane.add(rangeToField, 1, 1);
+        gridPane.add(columnsSortLabel, 0, 2);
+        gridPane.add(columnsSortField, 1, 2);
 
         // Create and add the submit button
         Button submitButton = new Button("Submit");
-        gridPane.add(submitButton, 1, 2);
+        gridPane.add(submitButton, 1, 3);
 
         submitButton.setOnAction(e -> {
 
+            // Combine Range-From and Range-To into the range format (e.g., "A2..C5")
+            String rangeFrom = rangeFromField.getText();
+            String rangeTo = rangeToField.getText();
+            String range = rangeFrom + ".." + rangeTo;
 
+            // Set the data in the SortRowsData object
+            sortRowsData.setRange(range);
             sortRowsData.setColumnsToSortBy(columnsSortField.getText());
-            sortRowsData.setRange(rangeForSortingField.getText());
-
 
             popupStage.close();
         });
 
         // Set the scene and show the popup window
-        Scene scene = new Scene(gridPane, 300, 200);
+        Scene scene = new Scene(gridPane, 350, 150);
         popupStage.setScene(scene);
         popupStage.showAndWait();
         return sortRowsData;
@@ -149,51 +168,56 @@ public class PopUpWindowsHandler {
 
     public FilterGridData openFilterDataWindow() {
 
-            Stage popupStage = new Stage();
-            popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-            popupStage.setTitle("Insert range for filtering");
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
+        popupStage.setTitle("Insert range for filtering");
 
-            // Create a GridPane layout for the popup
-            GridPane gridPane = new GridPane();
-            gridPane.setHgap(10);
-            gridPane.setVgap(10);
+        // Create a GridPane layout for the popup
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
 
-            // Create and add the labels and text fields
-            Label rangeForFilteringLabel = new Label("Range for filtering:");
-            TextField rangeForFilteringField = new TextField();
-            Label columnSortLabel = new Label("By which column:");
-            TextField columnSortField = new TextField();
+        // Create and add the labels and text fields for Range-From and Range-To
+        Label rangeFromLabel = new Label("Range-From (example, A2):");
+        TextField rangeFromField = new TextField();
+        Label rangeToLabel = new Label("Range-To (example, C5):");
+        TextField rangeToField = new TextField();
 
+        Label columnSortLabel = new Label("By which column:");
+        TextField columnSortField = new TextField();
 
-            gridPane.add(rangeForFilteringLabel, 0, 0);
-            gridPane.add(rangeForFilteringField, 1, 0);
-            gridPane.add(columnSortLabel, 0, 1);
-            gridPane.add(columnSortField, 1, 1);
+        // Add the elements to the grid
+        gridPane.add(rangeFromLabel, 0, 0);
+        gridPane.add(rangeFromField, 1, 0);
+        gridPane.add(rangeToLabel, 0, 1);
+        gridPane.add(rangeToField, 1, 1);
+        gridPane.add(columnSortLabel, 0, 2);
+        gridPane.add(columnSortField, 1, 2);
 
+        // Create and add the submit button
+        Button submitButton = new Button("Submit");
+        gridPane.add(submitButton, 1, 3);
+        FilterGridData filterGridData = new FilterGridData();
+        submitButton.setOnAction(e -> {
 
-            // Create and add the submit button
-            Button submitButton = new Button("Submit");
-            gridPane.add(submitButton, 1, 2);
-            FilterGridData filterGridData = new FilterGridData();
-            submitButton.setOnAction(e -> {
+            String rangeFrom = rangeFromField.getText();
+            String rangeTo = rangeToField.getText();
+            String range = rangeFrom + ".." + rangeTo; // Combine Range-From and Range-To into the range format
 
-                String range = rangeForFilteringField.getText();
-                String column = columnSortField.getText();
+            String column = columnSortField.getText();
 
-                // Handle the submission of the range name and range here
-                // For now, we just close the popup
-                filterGridData.setRange(range);
-                filterGridData.setColumnsToFilterBy(column);
-                popupStage.close();
-            });
-            // Set the scene and show the popup window
-            Scene scene = new Scene(gridPane, 300, 100);
-            popupStage.setScene(scene);
-            popupStage.showAndWait();
-            return filterGridData;
+            // Handle the submission of the range name and column here
+            filterGridData.setRange(range);  // Store the combined range
+            filterGridData.setColumnsToFilterBy(column);
+            popupStage.close();
+        });
 
+        // Set the scene and show the popup window
+        Scene scene = new Scene(gridPane, 350, 150);
+        popupStage.setScene(scene);
+        popupStage.showAndWait();
+        return filterGridData;
     }
-
 
     public String openFilterDataPopUp(Set<String> stringsInChosenColumn) {
         Stage popupStage = new Stage();
@@ -254,52 +278,44 @@ public class PopUpWindowsHandler {
         return stringToFilterBy.get(0); // Return the first entered value
     }
 
-//    public String openFilterDataPopUp(Set<String> stringsInChosenColumn) {
-//        Stage popupStage = new Stage();
-//        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-//        popupStage.setTitle("Insert filter values");
-//
-//        // Create a GridPane layout for the popup
-//        GridPane gridPane = new GridPane();
-//        gridPane.setHgap(10);
-//        gridPane.setVgap(10);
-//
-//
-//        // Calculate the required width based on the size of the string set
-//        double baseWidth = 400; // Base width for window
-//        double additionalWidth = Math.min(stringsInChosenColumn.size() * 30, 400); // Extra width depends on the number of items
-//        double windowWidth = baseWidth + additionalWidth;
-//
-//        double windowHeight = 100;
-//
-//        // Create and add the labels and text fields
-//        Label filterValueLabel = new Label("Enter values to filter (comma-separated):" + stringsInChosenColumn);
-//        TextField filterValueField = new TextField();
-//
-//        gridPane.add(filterValueLabel, 0, 0);
-//        gridPane.add(filterValueField, 1, 0);
-//
-//        // Create and add the submit button
-//        Button submitButton = new Button("Submit");
-//        gridPane.add(submitButton, 1, 1);
-//
-//        List<String> stringToFilterBy = new ArrayList<>();
-//
-//
-//        submitButton.setOnAction(e -> {
-//            stringToFilterBy.add(filterValueField.getText()); // Capture the text from the field
-//            popupStage.close();
-//        });
-//
-//        // Set the scene and show the popup window
-//        Scene scene = new Scene(gridPane, windowWidth, windowHeight);
-//        popupStage.setScene(scene);
-//        popupStage.showAndWait();
-//
-//        if(stringToFilterBy.isEmpty()) {
-//            return null;
-//        }
-//
-//        return stringToFilterBy.getFirst();
-//    }
+    // Helper method to create a popup grid
+    private void openGridPopUp(String title, GridController gridScrollerController,
+                               Consumer<GridPane> gridInitializer) {
+
+        // Create a new Stage (window) for the popup
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
+        popupStage.setTitle(title);
+
+        // Create a new GridPane for the popup
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        // Initialize the grid
+        gridInitializer.accept(popupGrid);
+
+        // Create a Scene with the popupGrid
+        Scene popupScene = new Scene(popupGrid);
+        popupStage.setScene(popupScene);
+
+        // Show the popup window
+        popupStage.showAndWait();
+    }
+
+    // Refactored methods
+    public void openFilterGridPopUp(DtoSheetCell dtoSheetCell, GridController gridScrollerController) {
+        openGridPopUp("Filter Grid", gridScrollerController,
+                popupGrid -> gridScrollerController.initializePopupGrid(popupGrid, dtoSheetCell));
+    }
+
+    public void openSortGridPopUp(SortContainerData sortContainerData, GridController gridScrollerController) {
+        openGridPopUp("Sorted Rows", gridScrollerController,
+                popupGrid -> gridScrollerController.initializeSortPopupGrid(popupGrid, sortContainerData));
+    }
+
+    public void openVersionGridPopUp(DtoSheetCell dtoSheetCell, int versionNumber, GridController gridScrollerController) {
+        openGridPopUp("Version Grid " + versionNumber, gridScrollerController,
+                popupGrid -> gridScrollerController.initializeVersionPopupGrid(popupGrid, dtoSheetCell));
+    }
+
 }

@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="ranges" alignment="TOP_RIGHT" styleClass="stack-pane" stylesheets="@../actionLine/BasicExcel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
+<StackPane fx:id="ranges" alignment="TOP_RIGHT" styleClass="stack-pane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Ranges.RangesController">
    <children>
-      <VBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" minHeight="210.0" minWidth="290.0" prefHeight="210.0" prefWidth="340.0" styleClass="UserInterfaceSection" StackPane.alignment="CENTER_LEFT">
+      <VBox fx:id="vBoxContainer" alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" minHeight="210.0" minWidth="290.0" prefHeight="210.0" prefWidth="340.0" styleClass="UserInterfaceSection" StackPane.alignment="CENTER_LEFT">
          <children>
             <Button fx:id="filterDataButton" mnemonicParsing="false" onAction="#filterDataClicked" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="Filter Data">
                <VBox.margin>
@@ -31,14 +31,10 @@
                   <Insets left="5.0" top="7.0" />
                </VBox.margin>
             </Button>
-            <ComboBox fx:id="SystemRanges" prefWidth="150.0" promptText="Ranges" styleClass="RangeButton">
+            <ComboBox fx:id="SystemRanges" prefWidth="150.0" promptText="Ranges" styleClass="RangeButton" stylesheets="@Ranges.css">
                <VBox.margin>
                   <Insets bottom="7.0" left="5.0" right="5.0" top="7.0" />
                </VBox.margin>
-               <stylesheets>
-                  <URL value="@Ranges.css" />
-                  <URL value="@Ranges.css" />
-               </stylesheets>
             </ComboBox>
          </children>
          <StackPane.margin>
@@ -46,4 +42,8 @@
          </StackPane.margin>
       </VBox>
    </children>
+   <stylesheets>
+      <URL value="@../actionLine/BasicExcel.css" />
+      <URL value="@../CssAdujsments/ExcelCssLayout.css" />
+   </stylesheets>
 </StackPane>
