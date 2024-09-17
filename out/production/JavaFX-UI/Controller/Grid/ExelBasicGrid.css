@@ -6,8 +6,7 @@
 
 /* General Background for the ScrollPane */
 .Background {
-    /*-fx-background-color: #e8f0f6; !* Light gray background for ScrollPane itself *!*/
-    -fx-background-color: #ff0024; /* Light gray background for ScrollPane itself */
+    -fx-background-color: #e8f0f6; /* Light gray background for ScrollPane itself */
     -fx-padding: 10; /* Optional padding */
 }
 
