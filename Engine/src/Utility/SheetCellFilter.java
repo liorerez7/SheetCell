@@ -16,9 +16,12 @@ public class SheetCellFilter {
         List<CellLocation> parsedRange = EngineUtilities.parseRange(range);
         List<List<EffectiveValue>> myGrid = EngineUtilities.getRowsFromRange(parsedRange, dtoSheetCell);
         List<List<EffectiveValue>> copyGrid = EngineUtilities.getRowsFromRange(parsedRange, dtoSheetCell);
+        List<List<EffectiveValueContainer>> copyGridd = EngineUtilities.getRowsFromRangee(parsedRange, dtoSheetCell);
+
 
         char leftColumn = parsedRange.get(0).getVisualColumn();
         char colToFilterBy = filterColumn.charAt(0);
+
         Set<Integer> numberOfRowsWithFilteredValues = new HashSet<>();
         Map<Integer, String> rowToFilteredValue = new HashMap<>();
 
@@ -54,10 +57,43 @@ public class SheetCellFilter {
             numberOfCol++;
         }
 
+
+        moveNonEmptyValuesToFront(myGrid);
+
+
+
         // Update the dtoSheetCell with the filtered grid
         EngineUtilities.updateDtoSheetCell(dtoSheetCell, parsedRange, myGrid, parsedRange.getFirst().getVisualColumn());
 
         return dtoSheetCell;
+    }
+
+    private static void moveNonEmptyValuesToFront(List<List<EffectiveValue>> myGrid) {
+        // Iterate over each column in the grid
+        for (List<EffectiveValue> column : myGrid) {
+            // Create a new list to store the non-empty values
+            List<EffectiveValue> nonEmptyValues = new ArrayList<>();
+
+            // Collect all non-empty values in the current column
+            for (EffectiveValue value : column) {
+                if (value != null && !(value.getValue() == "" || value.getCellType() == ReturnedValueType.EMPTY)) {
+                    nonEmptyValues.add(value);
+                }
+            }
+
+            // Fill the column starting from the top with non-empty values
+            int row = 0;
+            for (EffectiveValue nonEmptyValue : nonEmptyValues) {
+                column.set(row, nonEmptyValue);
+                row++;
+            }
+
+            // Fill the remaining rows with empty values
+            while (row < column.size()) {
+                column.set(row, new EffectiveValueImpl(ReturnedValueType.EMPTY, ""));
+                row++;
+            }
+        }
     }
 
     private static boolean shouldKeepCellValue(Object value, List<String> filterByStrings) {

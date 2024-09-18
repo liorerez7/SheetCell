@@ -16,7 +16,6 @@ import Utility.Exception.RefToUnSetCellException;
 import Utility.SheetCellSorter;
 import Utility.SortContainerData;
 import expression.api.Expression;
-import expression.impl.stringFunction.Str;
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
 import java.nio.file.Files;
@@ -148,7 +147,7 @@ public class EngineImpl implements Engine {
     public SortContainerData sortSheetCell(String range, String args) {
 
         DtoSheetCell dtoSheetCell = getSheetCell();
-        return EngineUtilities.sortSheetCelll(range, args, dtoSheetCell);
+        return EngineUtilities.sortSheetCell(range, args, dtoSheetCell);
     }
 
     @Override

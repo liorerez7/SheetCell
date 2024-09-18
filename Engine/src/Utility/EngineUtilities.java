@@ -22,14 +22,10 @@ public class EngineUtilities {
         return (STLSheet) u.unmarshal(in);
     }
 
-    public static DtoSheetCell sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell){
+
+    public static SortContainerData sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell){
 
         return SheetCellSorter.sortSheetCell(range, args, dtoSheetCell);
-    }
-
-    public static SortContainerData sortSheetCelll(String range, String args, DtoSheetCell dtoSheetCell){
-
-        return SheetCellSorter.sortSheetCelll(range, args, dtoSheetCell);
     }
 
     public static DtoSheetCell filterSheetCell(String range, String filter, DtoSheetCell dtoSheetCell, String filterColumn) {

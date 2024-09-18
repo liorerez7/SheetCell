@@ -431,18 +431,17 @@ public class MainController {
         if (range != null && filterColumn != null) {
             try {
                 // Fetch unique strings in the selected column within the given range
-                Set<String> columnValues = engine.getUniqueStringsInColumn(filterColumn, range);
+                Set<String> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
 
                 // Get user filter input, e.g., "banana, 5, true"
-                String filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
+                String filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
 
                 if(filter == null || filter.isEmpty()) {
                     return;
                 }
 
                 List<String> filteredStrings = EngineUtilities.extractLetters(filter);
-
-                // Validate user input against the available column values
+                // bigger testing to check for every char that all the given stings are in it
                 for (String input : filteredStrings) {
                     if (!columnValues.contains(input)) {
                         createErrorPopup(input + " is not in the column you chose", "Error");
@@ -453,7 +452,7 @@ public class MainController {
 
                 // If input is valid, filter the sheet and display the result
                 if (inputIsValid) {
-                    DtoSheetCell filteredSheetCell = engine.filterSheetCell(range, filter, filterColumn);
+                    DtoSheetCell filteredSheetCell = engine.filterSheetCell(range, filter, filterColumn); // instead of filter&filterColumn will be : map<char,string>
                     createFilterGridPopUp(filteredSheetCell);
                 }
 
