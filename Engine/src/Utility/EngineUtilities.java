@@ -8,10 +8,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class EngineUtilities {
@@ -22,15 +19,9 @@ public class EngineUtilities {
         return (STLSheet) u.unmarshal(in);
     }
 
-
-    public static SortContainerData sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell){
+    public static DtoContainerData sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell){
 
         return SheetCellSorter.sortSheetCell(range, args, dtoSheetCell);
-    }
-
-    public static DtoSheetCell filterSheetCell(String range, String filter, DtoSheetCell dtoSheetCell, String filterColumn) {
-
-        return SheetCellFilter.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
     }
 
     public static List<String> extractLetters(String input) {
@@ -49,23 +40,7 @@ public class EngineUtilities {
         return letters;
     }
 
-    public static void updateDtoSheetCell(DtoSheetCell dtoSheetCell, List<CellLocation> cellLocations, List<List<EffectiveValue>> cols, char leftColumn) {
-
-        int startRowOfSorting;
-
-        for (List<EffectiveValue> col : cols) {
-
-            startRowOfSorting = cellLocations.get(0).getRealRow() + 1;
-
-            for (EffectiveValue value : col) {
-                dtoSheetCell.getViewSheetCell().put(CellLocationFactory.fromCellId(leftColumn, String.valueOf(startRowOfSorting++)), value);
-            }
-
-            leftColumn++;
-        }
-    }
-
-    public static void updateDtoSheetCelll(DtoSheetCell dtoSheetCell, List<CellLocation> cellLocations, List<List<EffectiveValueContainer>> cols, char leftColumn) {
+    public static void updateDtoSheetCell(DtoSheetCell dtoSheetCell, List<CellLocation> cellLocations, List<List<EffectiveValueContainer>> cols, char leftColumn) {
 
         int startRowOfSorting;
 
@@ -74,6 +49,7 @@ public class EngineUtilities {
             startRowOfSorting = cellLocations.get(0).getRealRow() + 1;
 
             for (EffectiveValueContainer valueContainer : col) {
+
                 EffectiveValue value = valueContainer.getEffectiveValue();
                 dtoSheetCell.getViewSheetCell().put(CellLocationFactory.fromCellId(leftColumn, String.valueOf(startRowOfSorting++)), value);
             }
@@ -81,8 +57,6 @@ public class EngineUtilities {
             leftColumn++;
         }
     }
-
-
 
     public static List<CellLocation> parseRange(String range) {
         String[] parts = range.split("\\.\\.");
@@ -98,25 +72,7 @@ public class EngineUtilities {
         return locations;
     }
 
-    public static List<List<EffectiveValue>> getRowsFromRange(List<CellLocation> cellLocations, DtoSheetCell dtoSheetCell) {
-
-        Map<CellLocation, EffectiveValue> sheetData = dtoSheetCell.getViewSheetCell();
-        List<List<EffectiveValue>> rows = new ArrayList<>();
-
-        int length = (int) cellLocations.stream().map(CellLocation::getRealRow).distinct().count();
-        List<EffectiveValue> currentRow = new ArrayList<>();
-
-        for (int i = 0; i < cellLocations.size(); i++) {
-            currentRow.add(sheetData.get(cellLocations.get(i)));
-            if (currentRow.size() == length) {
-                rows.add(new ArrayList<>(currentRow));
-                currentRow.clear();
-            }
-        }
-        return rows;
-    }
-
-    public static List<List<EffectiveValueContainer>> getRowsFromRangee(List<CellLocation> cellLocations, DtoSheetCell dtoSheetCell) {
+    public static List<List<EffectiveValueContainer>> getRowsFromRange(List<CellLocation> cellLocations, DtoSheetCell dtoSheetCell) {
 
         Map<CellLocation, EffectiveValue> sheetData = dtoSheetCell.getViewSheetCell();
         List<List<EffectiveValueContainer>> rows = new ArrayList<>();
@@ -137,21 +93,44 @@ public class EngineUtilities {
         return rows;
     }
 
+    public static List<List<EffectiveValueContainer>> getRealRowsFromRange(List<CellLocation> cellLocations, DtoSheetCell dtoSheetCell) {
 
-//    public static Map<CellLocation, CellLocation> getOldCellLocationToAfterSortCellLocation(List<List<EffectiveValueContainer>> newCols, char leftColumn, int upperRow) {
-//
-//
-//        // newCols is an double array that can be from (0,0) to (3,4) for example
-//        // but the true locations that it represent can be calculated by the leftColumn and upperRow
-//        // for example if leftColumn is 'C' and upperRow is 3 then the first cell in the newCols is (C,3)
-//        // and the second cell is (C,4) and so on untill we get to the next column
-//        // my goal is to go over the newCols and create a map that will map the old cell location to the new cell location
-//        // the old cellLocation reachable by doing this:
-//        // newCols.get(0).get(0).getCellLocation(); // and in our example that will be the old cellLocation of (C,3)
-//
-//    }
+        Map<CellLocation, EffectiveValue> sheetData = dtoSheetCell.getViewSheetCell();
+        List<List<EffectiveValueContainer>> rows = new ArrayList<>();
 
-    public static Map<CellLocation, CellLocation> getOldCellLocationToAfterSortCellLocationn(List<List<EffectiveValueContainer>> newCols, char leftColumn, int upperRow) {
+        // Sort the cell locations by row and column
+        cellLocations.sort(Comparator.comparing(CellLocation::getRealRow).thenComparing(CellLocation::getRealColumn));
+
+        List<EffectiveValueContainer> currentRow = new ArrayList<>();
+        int currentRowNumber = -1;
+
+        for (CellLocation cellLocation : cellLocations) {
+            int rowNumber = cellLocation.getRealRow();
+
+            // If we're on a new row, save the previous one and start a new one
+            if (rowNumber != currentRowNumber) {
+                if (!currentRow.isEmpty()) {
+                    rows.add(new ArrayList<>(currentRow));
+                    currentRow.clear();
+                }
+                currentRowNumber = rowNumber;
+            }
+
+            // Add the EffectiveValueContainer to the current row
+            EffectiveValue effectiveValue = sheetData.get(cellLocation);
+            currentRow.add(new EffectiveValueContainer(effectiveValue, cellLocation));
+        }
+
+        // Add the last row after the loop
+        if (!currentRow.isEmpty()) {
+            rows.add(new ArrayList<>(currentRow));
+        }
+
+        return rows;
+    }
+
+
+    public static Map<CellLocation, CellLocation> getOldCellLocationToAfterSortCellLocation(List<List<EffectiveValueContainer>> newCols, char leftColumn, int upperRow, boolean reverse) {
 
         Map<CellLocation, CellLocation> oldToNewLocationMap = new HashMap<>();
 
@@ -171,13 +150,56 @@ public class EngineUtilities {
                 // Create the new CellLocation
                 CellLocation newLocation = CellLocationFactory.fromCellId(newColumn, newRowAsString);
 
-                // Map old location to new location
-              //  oldToNewLocationMap.put(oldLocation, newLocation);
-                oldToNewLocationMap.put(newLocation, oldLocation);
+                if(reverse) {
+                    oldToNewLocationMap.put(oldLocation, newLocation);
+                }else{
+                    oldToNewLocationMap.put(newLocation, oldLocation);
+                }
 
             }
         }
 
         return oldToNewLocationMap;
+    }
+
+    public static DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter, DtoSheetCell dtoSheetCell, String filterColumn) {
+
+            return SheetCellFilter.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
+    }
+
+    public static void updateDtoSheetCellFilter(DtoSheetCell dtoSheetCell,
+                                                List<CellLocation> cellLocations, List<List<EffectiveValueContainer>> cols, char leftColumn , Map<CellLocation, CellLocation> oldCellLocationToAfterSortCellLocation, Map<CellLocation, CellLocation> newCellLocationToAfterSortCellLocation) {
+
+        int startRowOfSorting;
+        char firstColumn = 'A';
+        int row = 1;
+
+
+        dtoSheetCell.getViewSheetCell().clear();
+
+        for (List<EffectiveValueContainer> col : cols) {
+
+            row = 1;
+            //startRowOfSorting = cellLocations.get(0).getRealRow() + 1;
+
+            for (EffectiveValueContainer valueContainer : col) {
+
+                CellLocation CellLocationInGrid = CellLocationFactory.fromCellId(firstColumn, String.valueOf(row));
+                CellLocation currentCellLocation = valueContainer.getCellLocation();
+
+                EffectiveValue value = valueContainer.getEffectiveValue();
+                cols.get(firstColumn - 'A').set(row - 1, new EffectiveValueContainer(value, CellLocationInGrid));
+
+                CellLocation targetCellLocationToDelete = newCellLocationToAfterSortCellLocation.get(currentCellLocation);
+
+
+                oldCellLocationToAfterSortCellLocation.remove(targetCellLocationToDelete);
+                oldCellLocationToAfterSortCellLocation.put(CellLocationInGrid, currentCellLocation);
+                dtoSheetCell.getViewSheetCell().put(CellLocationFactory.fromCellId(firstColumn, String.valueOf(row)), value);
+                row++;
+            }
+
+            firstColumn++;
+        }
     }
 }

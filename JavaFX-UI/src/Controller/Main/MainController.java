@@ -16,7 +16,8 @@ import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
 import Utility.EngineUtilities;
 import Utility.Exception.*;
-import Utility.SortContainerData;
+import Utility.DtoContainerData;
+import expression.impl.stringFunction.Str;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -371,17 +372,17 @@ public class MainController {
         {
             try {
                 //DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, columns);
-                SortContainerData sortContainerData = engine.sortSheetCell(range, columns);
+                DtoContainerData dtoContainerData = engine.sortSheetCell(range, columns);
                 //createSortRowsPopUp(dtoSheetCell);
-                createSortGridPopUp(sortContainerData);
+                createSortGridPopUp(dtoContainerData);
             }catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
         }
     }
 
-    private void createSortGridPopUp(SortContainerData sortContainerData) {
-        popUpWindowsHandler.openSortGridPopUp(sortContainerData, gridScrollerController);
+    private void createSortGridPopUp(DtoContainerData dtoContainerData) {
+        popUpWindowsHandler.openSortGridPopUp(dtoContainerData, gridScrollerController);
     }
 
 //    public void filterDataButtonClicked() {
@@ -420,6 +421,7 @@ public class MainController {
 
 
     public void filterDataButtonClicked() {
+
         boolean inputIsValid = true;
 
         // Open the filter data window and retrieve user input
@@ -431,41 +433,51 @@ public class MainController {
         if (range != null && filterColumn != null) {
             try {
                 // Fetch unique strings in the selected column within the given range
-                Set<String> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
+                Map<Character, Set<String>> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
 
-                // Get user filter input, e.g., "banana, 5, true"
-                String filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
+                Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
 
-                if(filter == null || filter.isEmpty()) {
+
+                if (filter == null || filter.isEmpty()) {
                     return;
                 }
 
-                List<String> filteredStrings = EngineUtilities.extractLetters(filter);
-                // bigger testing to check for every char that all the given stings are in it
-                for (String input : filteredStrings) {
-                    if (!columnValues.contains(input)) {
-                        createErrorPopup(input + " is not in the column you chose", "Error");
-                        inputIsValid = false;
-                        break;
-                    }
-                }
+//                List<String> filteredStrings = EngineUtilities.extractLetters(filter);
+//                // bigger testing to check for every char that all the given stings are in it
+//                for (String input : filteredStrings) {
+//                      if (!columnValues.contains(input)) {
+//                    createErrorPopup(input + " is not in the column you chose", "Error");
+//                    inputIsValid = false;
+//                    break;
+//                }
 
-                // If input is valid, filter the sheet and display the result
+
+                // }
+
+
                 if (inputIsValid) {
-                    DtoSheetCell filteredSheetCell = engine.filterSheetCell(range, filter, filterColumn); // instead of filter&filterColumn will be : map<char,string>
-                    createFilterGridPopUp(filteredSheetCell);
+                     DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter, filterColumn); // instead of filter&filterColumn will be : map<char,string>
+
+                    //createFilterGridPopUp(filteredSheetCell);
+                    createFilterGridPopUpp(filteredSheetCell);
                 }
 
             } catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
+            // }
         }
     }
 
+    private void createFilterGridPopUpp(DtoContainerData filteredSheetCell) {
+        popUpWindowsHandler.openFilterGridPopUp(filteredSheetCell, gridScrollerController);
 
-    private void createFilterGridPopUp(DtoSheetCell dtoSheetCell) {
-        popUpWindowsHandler.openFilterGridPopUp(dtoSheetCell, gridScrollerController);
     }
+
+
+//    private void createFilterGridPopUp(DtoSheetCell dtoSheetCell) {
+//        popUpWindowsHandler.openFilterGridPopUp(dtoSheetCell, gridScrollerController);
+//    }
 
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
 

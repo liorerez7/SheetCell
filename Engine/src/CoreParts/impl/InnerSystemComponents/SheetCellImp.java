@@ -121,8 +121,9 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public Map<CellLocation, Cell> getSheetCell() {return sheetCell;}
 
     @Override
-    public Set<String> getUniqueStringsInColumn(String filterColumn, String range) {
+    public Map<Character,Set<String>> getUniqueStringsInColumn(String filterColumn, String range) {
 
+        Map<Character,Set<String>> columnToUniqueStrings = new HashMap<>();
         List<Character> columns = CellUtils.processCharString(filterColumn);
         int startingRowInRange = range.charAt(1) - '0';
         int endingRowInRange = range.charAt(5) - '0'; //A3..A5
@@ -150,9 +151,12 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
                     }
                 }
             });
+            Set<String> copy = Set.copyOf(uniqueStrings);
+            columnToUniqueStrings.put(upperCol, copy);
+            uniqueStrings.clear();
         }
 
-        return uniqueStrings;
+        return columnToUniqueStrings;
     }
 
     @Override

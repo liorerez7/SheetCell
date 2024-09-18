@@ -32,20 +32,20 @@ public class SheetCellSorter {
         return EQUAL_VALUES; //meaning they are not comparable
     }
 
-    public static SortContainerData sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell) {
+    public static DtoContainerData sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell) {
 
         List<CellLocation> cellLocations = EngineUtilities.parseRange(range);
-        List<List<EffectiveValueContainer>> newCols = EngineUtilities.getRowsFromRangee(cellLocations, dtoSheetCell);
+        List<List<EffectiveValueContainer>> newCols = EngineUtilities.getRowsFromRange(cellLocations, dtoSheetCell);
 
         char leftColumn = cellLocations.get(0).getVisualColumn();
         int upperRow = cellLocations.get(0).getRealRow();
 
 
         sortRowsByColumns(newCols, args, leftColumn, upperRow);
-        Map<CellLocation,CellLocation> oldCellLocationToAfterSortCellLocation = EngineUtilities.getOldCellLocationToAfterSortCellLocationn(newCols, leftColumn, upperRow);
-        EngineUtilities.updateDtoSheetCelll(dtoSheetCell, cellLocations, newCols, leftColumn);
+        Map<CellLocation,CellLocation> oldCellLocationToAfterSortCellLocation = EngineUtilities.getOldCellLocationToAfterSortCellLocation(newCols, leftColumn, upperRow, false);
+        EngineUtilities.updateDtoSheetCell(dtoSheetCell, cellLocations, newCols, leftColumn);
 
-        return new SortContainerData(dtoSheetCell, oldCellLocationToAfterSortCellLocation);
+        return new DtoContainerData(dtoSheetCell, oldCellLocationToAfterSortCellLocation);
     }
 
     private static void sortRowsByColumns(List<List<EffectiveValueContainer>> rows, String arguments, char leftColumn, int upperRow) {

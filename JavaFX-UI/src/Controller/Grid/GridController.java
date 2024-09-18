@@ -7,9 +7,8 @@ import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
-import Utility.SortContainerData;
+import Utility.DtoContainerData;
 import expression.api.EffectiveValue;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,7 +24,6 @@ import javafx.animation.Timeline;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import java.util.*;
-import java.util.function.Function;
 
 
 public class GridController {
@@ -51,15 +49,15 @@ public class GridController {
         return grid;
     }
 
-    public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid, boolean isPopup) {
+    public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid, boolean isPopup, int numRows , int numCols) {
 
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
         grid.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Allow the grid to resize dynamically
         grid.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
 
-        int numCols = sheetCell.getNumberOfColumns();
-        int numRows = sheetCell.getNumberOfRows();
+//        int numCols = sheetCell.getNumberOfColumns();
+//        int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth() * DELTA_EXTENSION_GRID;
         int cellLength = sheetCell.getCellLength() * DELTA_EXTENSION_GRID;
 
@@ -77,7 +75,7 @@ public class GridController {
     public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         neighborsHandler = new NeighborsHandler();
 
-        initializeEmptyGrid(sheetCell,grid, false);
+        initializeEmptyGrid(sheetCell,grid, false, sheetCell.getNumberOfRows(), sheetCell.getNumberOfColumns());
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -164,7 +162,7 @@ public class GridController {
 
     public void initializeCirclePopUp(GridPane grid, DtoSheetCell sheetCell, List<CellLocation> neighbors) {
 
-        initializeEmptyGrid(sheetCell, grid, true);
+        initializeEmptyGrid(sheetCell, grid, true, sheetCell.getNumberOfRows(), sheetCell.getNumberOfColumns());
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
@@ -242,10 +240,9 @@ public class GridController {
         this.mainController = mainController;
     }
 
-
     public void initializeVersionPopupGrid(GridPane grid, DtoSheetCell sheetCell) {
 
-        initializeEmptyGrid(sheetCell, grid, true);
+        initializeEmptyGrid(sheetCell, grid, true, sheetCell.getNumberOfRows(), sheetCell.getNumberOfColumns());
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -291,59 +288,11 @@ public class GridController {
         }
     }
 
-    public void initializePopupGrid(GridPane grid, DtoSheetCell sheetCell) {
+    public void initializeSortPopupGrid(GridPane grid, DtoContainerData dtoContainerData) {
 
-        initializeEmptyGrid(sheetCell, grid, true);
+        DtoSheetCell sheetCell = dtoContainerData.getDtoSheetCell();
 
-        int numCols = sheetCell.getNumberOfColumns();
-        int numRows = sheetCell.getNumberOfRows();
-        int cellWidth = sheetCell.getCellWidth();
-        int cellLength = sheetCell.getCellLength();
-        cellWidth = cellWidth * DELTA_EXTENSION_GRID;
-        cellLength = cellLength * DELTA_EXTENSION_GRID;
-
-
-        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
-
-        for (int row = 1; row <= numRows; row++) {
-            for (int col = 1; col <= numCols; col++) {
-
-                char colChar = (char) ('A' + col - 1);
-                String rowString = String.valueOf(row);
-                String location = colChar + rowString;
-                CellLocation cellLocation = CellLocationFactory.fromCellId(location);
-
-
-                 Label newCellLabel = new Label();
-                 CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
-
-                newCustomCellLabel.applyDefaultStyles();
-                newCustomCellLabel.setAlignment(cellLocationToCustomCellLabel.get(cellLocation).getAlignment());
-                newCustomCellLabel.setTextAlignment(cellLocationToCustomCellLabel.get(cellLocation).getTextAlignment());
-                newCustomCellLabel.setBackgroundColor(cellLocationToCustomCellLabel.get(cellLocation).getBackgroundColor());
-                newCustomCellLabel.setTextColor(cellLocationToCustomCellLabel.get(cellLocation).getTextColor());
-
-
-                setLabelSize(newCellLabel, cellWidth, cellLength);
-
-                // Bind the Label's textProperty to the EffectiveValue
-                newCellLabel.setId(location);
-                EffectiveValue effectiveValue = viewSheetCell.get(cellLocation);
-                if (effectiveValue != null) {
-                    String textForLabel = StringParser.convertValueToLabelText(effectiveValue);
-                    newCellLabel.setText(textForLabel);
-                }
-
-                grid.add(newCellLabel, col, row);
-            }
-        }
-    }
-
-    public void initializeSortPopupGrid(GridPane grid, SortContainerData sortContainerData) {
-
-        DtoSheetCell sheetCell = sortContainerData.getDtoSheetCell();
-
-        initializeEmptyGrid(sheetCell, grid, true);
+        initializeEmptyGrid(sheetCell, grid, true, sheetCell.getNumberOfRows(), sheetCell.getNumberOfColumns());
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -364,7 +313,7 @@ public class GridController {
                 CellLocation cellLocation = CellLocationFactory.fromCellId(location);
 
 
-                CellLocation oldCellLocation = sortContainerData.getOldCellLocation(cellLocation);
+                CellLocation oldCellLocation = dtoContainerData.getOldCellLocation(cellLocation);
                 if(oldCellLocation == null){
                     oldCellLocation = cellLocation;
                 }
@@ -393,11 +342,6 @@ public class GridController {
             }
         }
     }
-
-
-
-
-
 
     private void clearGrid(GridPane grid) {
         grid.getColumnConstraints().clear();
@@ -570,6 +514,63 @@ public class GridController {
 
     public Map<CellLocation, CustomCellLabel> getCellLocationToCustomCellLabel() {
         return cellLocationToCustomCellLabel;
+    }
+
+    public void initializeFilterPopupGrid(GridPane grid, DtoContainerData dtoContainerData) {
+
+        int numCols = dtoContainerData.getNumberOfColumns();
+        int numRows = dtoContainerData.getNumberOfRows();
+
+        DtoSheetCell sheetCell = dtoContainerData.getDtoSheetCell();
+
+        initializeEmptyGrid(sheetCell, grid, true, numCols, numRows);
+
+        int cellWidth = sheetCell.getCellWidth();
+        int cellLength = sheetCell.getCellLength();
+        cellWidth = cellWidth * DELTA_EXTENSION_GRID;
+        cellLength = cellLength * DELTA_EXTENSION_GRID;
+
+
+        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
+
+        for (int row = 1; row <= numRows; row++) {
+            for (int col = 1; col <= numCols; col++) {
+
+                char colChar = (char) ('A' + col - 1);
+                String rowString = String.valueOf(row);
+                String location = colChar + rowString;
+                CellLocation cellLocation = CellLocationFactory.fromCellId(location);
+
+
+                CellLocation oldCellLocation = dtoContainerData.getOldCellLocation(cellLocation);
+                if(oldCellLocation == null){
+                    oldCellLocation = cellLocation;
+                }
+
+                Label newCellLabel = new Label();
+                CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
+
+                newCustomCellLabel.applyDefaultStyles();
+                if(cellLocationToCustomCellLabel.get(oldCellLocation) != null){
+                    newCustomCellLabel.setAlignment(cellLocationToCustomCellLabel.get(oldCellLocation).getAlignment());
+                    newCustomCellLabel.setTextAlignment(cellLocationToCustomCellLabel.get(oldCellLocation).getTextAlignment());
+                    newCustomCellLabel.setBackgroundColor(cellLocationToCustomCellLabel.get(oldCellLocation).getBackgroundColor());
+                    newCustomCellLabel.setTextColor(cellLocationToCustomCellLabel.get(oldCellLocation).getTextColor());
+                }
+
+                setLabelSize(newCellLabel, cellWidth, cellLength);
+
+                // Bind the Label's textProperty to the EffectiveValue
+                newCellLabel.setId(location);
+                EffectiveValue effectiveValue = viewSheetCell.get(cellLocation);
+                if (effectiveValue != null) {
+                    String textForLabel = StringParser.convertValueToLabelText(effectiveValue);
+                    newCellLabel.setText(textForLabel);
+                }
+
+                grid.add(newCellLabel, col, row);
+            }
+        }
     }
 }
 

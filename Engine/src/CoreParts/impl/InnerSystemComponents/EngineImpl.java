@@ -14,7 +14,7 @@ import Utility.EngineUtilities;
 import Utility.Exception.CycleDetectedException;
 import Utility.Exception.RefToUnSetCellException;
 import Utility.SheetCellSorter;
-import Utility.SortContainerData;
+import Utility.DtoContainerData;
 import expression.api.Expression;
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -144,21 +145,23 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public SortContainerData sortSheetCell(String range, String args) {
+    public DtoContainerData sortSheetCell(String range, String args) {
 
         DtoSheetCell dtoSheetCell = getSheetCell();
         return EngineUtilities.sortSheetCell(range, args, dtoSheetCell);
     }
 
     @Override
-    public Set<String> getUniqueStringsInColumn(String filterColumn, String range) {
+    public Map<Character,Set<String>> getUniqueStringsInColumn(String filterColumn, String range) {
         return sheetCell.getUniqueStringsInColumn(filterColumn, range);
     }
 
     @Override
-    public DtoSheetCell filterSheetCell(String range, String filter, String filterColumn) {
+    public DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter, String filterColumn) {
         DtoSheetCell dtoSheetCell = getSheetCell();
         return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
+
+        //return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
     }
 
     private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {

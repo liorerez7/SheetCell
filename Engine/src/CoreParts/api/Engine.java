@@ -3,9 +3,10 @@ package CoreParts.api;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
-import Utility.SortContainerData;
+import Utility.DtoContainerData;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface Engine {
@@ -19,9 +20,9 @@ public interface Engine {
     void UpdateNewRange(String name, String range) throws IllegalArgumentException;
     List<CellLocation> getRequestedRange(String name);
     void deleteRange(String name);
-    SortContainerData sortSheetCell(String range, String columnsToSortBy);
+    DtoContainerData sortSheetCell(String range, String columnsToSortBy);
 
-    Set<String> getUniqueStringsInColumn(String filterColumn, String range);
+    Map<Character,Set<String>> getUniqueStringsInColumn(String filterColumn, String range);
 
-    DtoSheetCell filterSheetCell(String range, String filter, String filterColumn);
+    DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter, String filterColumn);
 }
