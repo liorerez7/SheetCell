@@ -15,6 +15,11 @@ public interface Engine {
     DtoSheetCell getSheetCell(int versionNumber);
     void readSheetCellFromXML(String path) throws Exception;
     void updateCell(String newValue, char col, String row) throws Exception;
+
+    void saveCurrentSheetCellState();
+
+    void restoreSheetCellState();
+
     void save(String path) throws Exception;
     void load(String path) throws Exception;
     void UpdateNewRange(String name, String range) throws IllegalArgumentException;

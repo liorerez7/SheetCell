@@ -8,6 +8,7 @@ import Controller.Utility.*;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
+import CoreParts.api.sheet.SheetCell;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
@@ -21,10 +22,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -151,7 +154,7 @@ public class MainController {
                     rangesController.clearAllRanges();
                     model.setReadingXMLSuccess(true);
                     model.setCellLabelToProperties(cellLocationLabelMap);
-                    model.bindCellLebelToProperties();
+                    model.bindCellLabelToProperties();
                     model.setPropertiesByDtoSheetCell(engine.getSheetCell());
                     model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
                     rangesController.setAllRanges(engine.getSheetCell().getRanges());
@@ -180,37 +183,22 @@ public class MainController {
     }
 
     public void updateCell(String text, String newValue) {
-    try {
-        engine.updateCell(newValue, text.charAt(0), text.substring(1));
-        DtoCell requestedCell = engine.getRequestedCell(text);
-        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-        model.setLatestUpdatedVersionProperty(requestedCell);
-        model.setOriginalValueLabelProperty(requestedCell);
-        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+        try {
+            engine.updateCell(newValue, text.charAt(0), text.substring(1));
+            DtoCell requestedCell = engine.getRequestedCell(text);
+            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+            model.setLatestUpdatedVersionProperty(requestedCell);
+            model.setOriginalValueLabelProperty(requestedCell);
+            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
 
-        gridScrollerController.showNeighbors(requestedCell);
+            gridScrollerController.showNeighbors(requestedCell);
 
-    }catch (CycleDetectedException e) {
-        createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
-    }
-    catch (Exception e) {
-        createErrorPopup(e.getMessage(), "Error");
-    }
-    //
-    //        } catch (CycleDetectedException e) {
-    //            createPopUpCircularGrid(engine.getSheetCell(), e.getCycle());
-    //        } catch (TooManyArgumentsException e) {
-    //            createErrorPopup(e.getMessage(),"Too Many Arguments Error");
-    //
-    //        } catch (UnknownOperationTypeException e) {
-    //            createErrorPopup(e.getMessage(),"Unknown Operation Type");
-    //
-    //        }catch(AvgWithNoNumericCellsException e) {
-    //            createErrorPopup(e.getMessage(), "Avg With No Numeric Cells");
-    //        }
-    //        catch (Exception e) {
-    //            createErrorPopup(e.getMessage(), "Error");
-    //        }
+        }catch (CycleDetectedException e) {
+            createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
+        }
+        catch (Exception e) {
+            createErrorPopup(e.getMessage(), "Error");
+        }
     }
 
     public void setEngine(EngineImpl engine) {
@@ -542,11 +530,45 @@ public class MainController {
     themeColor = ThemeColor.MIDNIGHT;
     }
 
+
     public void runtimeAnalysisClicked() {
-        // TODO:
+
+        // Step 1: Fetch runtime analysis data
         RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
 
-        popUpWindowsHandler.openRunTimeAnalysisGridPopUp(engine.getSheetCell(), gridScrollerController);
+        // Save current state of the sheet cell
+        engine.saveCurrentSheetCellState();
+
+        // Step 2: Fetch sheet cell data and cell value
+        DtoSheetCell sheetCellRunTime = engine.getSheetCell();
+        DtoCell dtoCell = engine.getRequestedCell(runTimeAnalysisData.getCellId());
+
+        // Extract necessary values from runtimeAnalysisData
+        String cellId = runTimeAnalysisData.getCellId().toUpperCase();
+        int startingValue = runTimeAnalysisData.getStartingValue();
+        int endingValue = runTimeAnalysisData.getEndingValue();
+        int stepValue = runTimeAnalysisData.getStepValue();
+        String currentValue = dtoCell.getEffectiveValue().getValue().toString();
+
+        double currentVal = startingValue;  // Default to starting value
+        try {
+            currentVal = Double.parseDouble(currentValue);
+            if (currentVal < startingValue || currentVal > endingValue) {
+                currentVal = startingValue;  // Out of range, reset to starting value
+            }
+        } catch (Exception e) {
+            createErrorPopup("Cell value must be a number", "Error");
+            return;
+        }
+
+        char col = cellId.charAt(0);
+        String row = cellId.substring(1);
+
+        // Step 3: Call the PopUpWindowsHandler to handle UI logic
+        popUpWindowsHandler.showRuntimeAnalysisPopup(sheetCellRunTime, startingValue, endingValue, stepValue, currentVal, col, row, engine, model, gridScrollerController);
+
+        // Step 4: Restore previous state of the sheet cell after closing the popup
+        engine.restoreSheetCellState();
     }
 
 }

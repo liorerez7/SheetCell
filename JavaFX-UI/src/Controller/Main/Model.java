@@ -14,7 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Model {
+
     private final Map<Label, StringProperty> cellLabelToProperties = new HashMap<>();
+
     private DtoSheetCell sheetCell;
     private BooleanProperty isCellLabelClicked;
     private StringProperty latestUpdatedVersionProperty;
@@ -39,6 +41,40 @@ public class Model {
         cellLocationProperty = new SimpleStringProperty("");
     }
 
+    private DtoSheetCell runTimeAnalysisSheetCell;
+    private final Map<Label, StringProperty> cellLocationToPropertiesRunTimeAnalysis = new HashMap<>();
+
+
+    public void bindCellLabelToPropertiesRunTimeAnalysis () {
+        cellLocationToPropertiesRunTimeAnalysis.forEach((label, property) -> {
+            label.textProperty().bind(property);
+
+        });
+    }
+
+    public void setPropertiesByDtoSheetCellRunTimeAnalsys(DtoSheetCell sheetCell) {
+        this.runTimeAnalysisSheetCell = sheetCell;
+        cellLocationToPropertiesRunTimeAnalysis.forEach((label, property) -> {
+            CellLocation cellLocation = CellLocationFactory.fromCellId(label.getId());
+            EffectiveValue effectiveValue = sheetCell.getViewSheetCell().get(cellLocation);
+
+            String value = StringParser.convertValueToLabelText(effectiveValue);
+
+            property.set(value);
+
+        });
+    }
+
+    public void setCellLabelToPropertiesRunTimeAnalysis(Map<CellLocation,Label> cellLocationLabelMap) {
+
+        cellLocationLabelMap.forEach((cellLocation, label) -> {
+            cellLocationToPropertiesRunTimeAnalysis.put(label, new SimpleStringProperty());
+
+        });
+
+    }
+
+
     public void setCellLabelToProperties(Map<CellLocation,Label> cellLocationLabelMap) {
 
         cellLocationLabelMap.forEach((cellLocation, label) -> {
@@ -48,7 +84,7 @@ public class Model {
 
     }
 
-    public void bindCellLebelToProperties() {
+    public void bindCellLabelToProperties() {
         cellLabelToProperties.forEach((label, property) -> {
             label.textProperty().bind(property);
 
@@ -66,8 +102,8 @@ public class Model {
             property.set(value);
 
         });
-
     }
+
 
     public StringProperty getLatestUpdatedVersionProperty() {
         return latestUpdatedVersionProperty;

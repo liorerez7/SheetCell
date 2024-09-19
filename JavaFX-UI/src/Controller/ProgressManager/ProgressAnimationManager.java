@@ -51,11 +51,17 @@ public class ProgressAnimationManager {
         layout = new VBox(10, progressPane, welcomeLabel, cancelButton);
         layout.setAlignment(Pos.CENTER);  // Center the elements vertically and horizontally
 
-        // Set margin for the progress pane
-        VBox.setMargin(progressPane, new Insets(125, 0, 0, 400));  // Adjust margins as needed
+        // Add padding to push everything to the right and down
+        layout.setPadding(new Insets(100, 40, 30, 450));  // Top, Right, Bottom, Left
+
+        // Adjust margins to align elements correctly
+        VBox.setMargin(progressPane, new Insets(0, 0, 10, 0));  // Space between the progress bar and welcome label
+        VBox.setMargin(welcomeLabel, new Insets(0, 0, 10, 0));  // Space between the welcome label and the cancel button
 
         return layout;
     }
+
+
 
     public void cancelAnimation() {
         timeline.stop();

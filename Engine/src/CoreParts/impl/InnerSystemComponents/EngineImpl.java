@@ -30,6 +30,7 @@ public class EngineImpl implements Engine {
 
     private SheetCell sheetCell;
     private final SheetCellSorter sheetSorter = new SheetCellSorter();
+    private byte[] savedSheetCellState;
 
     public EngineImpl() {
         sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0, null);
@@ -119,6 +120,16 @@ public class EngineImpl implements Engine {
                 throw e;
             }
         }
+    }
+
+    @Override
+    public void saveCurrentSheetCellState() {
+        savedSheetCellState = sheetCell.saveSheetCellState();
+    }
+
+    @Override
+    public void restoreSheetCellState() {
+        restoreSheetCellState(savedSheetCellState);
     }
 
     @Override

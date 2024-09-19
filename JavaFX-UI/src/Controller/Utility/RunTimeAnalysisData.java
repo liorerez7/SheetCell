@@ -5,11 +5,13 @@ public class RunTimeAnalysisData {
     private String cellId;
     private int startingValue;
     private int endingValue;
+    private int stepValue;
 
-    public RunTimeAnalysisData(String cellId, int startingValue, int endingValue) {
+    public RunTimeAnalysisData(String cellId, int startingValue, int endingValue, int stepValue) {
         this.cellId = cellId;
         this.startingValue = startingValue;
         this.endingValue = endingValue;
+        this.stepValue = stepValue;
     }
 
     public String getCellId() {
@@ -34,6 +36,14 @@ public class RunTimeAnalysisData {
 
     public void setEndingValue(int endingValue) {
         this.endingValue = endingValue;
+    }
+
+    public int getStepValue() {
+        return stepValue;
+    }
+
+    public void setStepValue(int stepValue) {
+        this.stepValue = stepValue;
     }
 
 
