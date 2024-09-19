@@ -77,7 +77,6 @@ public class SheetCellSorter {
                 }
             }
         }
-        System.out.println("Sorted by: " + arguments);
     }
 
     private static void swapRows(List<List<EffectiveValueContainer>> rows, int indexOfRow1, int indexOfRow2) {

@@ -9,10 +9,7 @@ import Utility.DtoContainerData;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -218,155 +215,6 @@ public class PopUpWindowsHandler {
         return filterGridData;
     }
 
-
-
-//        public String openFilterDataPopUp(Set<String> stringsInChosenColumn) {
-//        Stage popupStage = new Stage();
-//        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-//        popupStage.setTitle("Insert filter values");
-//
-//        // Create a GridPane layout for the popup
-//        GridPane gridPane = new GridPane();
-//        gridPane.setHgap(10);
-//        gridPane.setVgap(10);
-//
-//        // Set column constraints for centering the button
-//        ColumnConstraints column1 = new ColumnConstraints();
-//        column1.setHgrow(Priority.ALWAYS);
-//        column1.setHalignment(HPos.CENTER);
-//
-//        ColumnConstraints column2 = new ColumnConstraints();
-//        column2.setHgrow(Priority.ALWAYS);
-//        column2.setHalignment(HPos.CENTER);
-//
-//        gridPane.getColumnConstraints().addAll(column1, column2);
-//
-//        // Calculate the required width based on the size of the string set
-//        double baseWidth = 420; // Base width for window
-//        double additionalWidth = Math.min(stringsInChosenColumn.size() * 30, 400); // Extra width depends on the number of items
-//        double windowWidth = baseWidth + additionalWidth;
-//        double windowHeight = 100; // Adjust the height to accommodate the button positioning
-//
-//        // Create and add the labels and text fields
-//        Label filterValueLabel = new Label("Enter values to filter (comma-separated): " + stringsInChosenColumn);
-//        TextField filterValueField = new TextField();
-//
-//        gridPane.add(filterValueLabel, 0, 0);
-//        gridPane.add(filterValueField, 1, 0);
-//
-//        // Create and add the submit button
-//        Button submitButton = new Button("Submit");
-//        gridPane.add(submitButton, 0, 1, 2, 1); // Span the button across two columns
-//        GridPane.setHalignment(submitButton, HPos.CENTER); // Center the button horizontally
-//        GridPane.setMargin(filterValueField, new Insets(0, 10, 0, 0)); // Right margin of 20 pixels
-//
-//        List<String> stringToFilterBy = new ArrayList<>();
-//
-//        submitButton.setOnAction(e -> {
-//            stringToFilterBy.add(filterValueField.getText()); // Capture the text from the field
-//            popupStage.close();
-//        });
-//
-//        // Set the scene and show the popup window
-//        Scene scene = new Scene(gridPane, windowWidth, windowHeight);
-//        popupStage.setScene(scene);
-//        popupStage.showAndWait();
-//
-//        if (stringToFilterBy.isEmpty()) {
-//            return null;
-//        }
-//
-//        return stringToFilterBy.get(0); // Return the first entered value
-//    }
-
-
-//    public Map<Character, Set<String>> openFilterDataPopUp(Map<Character, Set<String>> stringsInChosenColumn) {
-//        // Create a new Map to store the user's selected values
-//        Map<Character, Set<String>> selectedValues = new HashMap<>();
-//
-//        // Create a new stage for the popup
-//        Stage popupStage = new Stage();
-//        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-//        popupStage.setTitle("Filter Data");
-//
-//        // Create a GridPane layout for the popup
-//        GridPane gridPane = new GridPane();
-//        gridPane.setHgap(10);
-//        gridPane.setVgap(10);
-//
-//        // Create column constraints for centering
-//        ColumnConstraints column1 = new ColumnConstraints();
-//        column1.setHgrow(Priority.ALWAYS);
-//        column1.setHalignment(HPos.CENTER);
-//
-//        ColumnConstraints column2 = new ColumnConstraints();
-//        column2.setHgrow(Priority.ALWAYS);
-//        column2.setHalignment(HPos.CENTER);
-//
-//        gridPane.getColumnConstraints().addAll(column1, column2);
-//
-//        // Iterate over the input map and create checkboxes for each unique value in the chosen column
-//        int rowIndex = 0;
-//        for (Map.Entry<Character, Set<String>> entry : stringsInChosenColumn.entrySet()) {
-//            Character column = entry.getKey();
-//            Set<String> uniqueValues = entry.getValue();
-//
-//            // Add a label for the column
-//            Label columnLabel = new Label("Column: " + column);
-//            gridPane.add(columnLabel, 0, rowIndex);
-//
-//            // Create a VBox to hold checkboxes for unique values in this column
-//            VBox checkBoxContainer = new VBox(5);
-//
-//            // Set to store selected values for this column
-//            Set<String> selectedStrings = new HashSet<>();
-//
-//            // Create a checkbox for each unique value
-//            for (String value : uniqueValues) {
-//                CheckBox checkBox = new CheckBox(value);
-//
-//                // Add an event listener to the checkbox to track selections
-//                checkBox.setOnAction(e -> {
-//                    if (checkBox.isSelected()) {
-//                        selectedStrings.add(value); // Add selected value
-//                    } else {
-//                        selectedStrings.remove(value); // Remove deselected value
-//                    }
-//                });
-//
-//                // Add checkbox to the VBox
-//                checkBoxContainer.getChildren().add(checkBox);
-//            }
-//
-//            // Add the VBox of checkboxes to the GridPane
-//            gridPane.add(checkBoxContainer, 1, rowIndex);
-//
-//            // Add the selected values for this column to the final map on submit
-//            selectedValues.put(column, selectedStrings);
-//
-//            rowIndex++; // Move to the next row for the next column
-//        }
-//
-//        // Create and add the submit button
-//        Button submitButton = new Button("Submit");
-//        gridPane.add(submitButton, 0, rowIndex, 2, 1); // Span the button across two columns
-//        GridPane.setHalignment(submitButton, HPos.CENTER);
-//
-//        // Close the popup when the submit button is clicked
-//        submitButton.setOnAction(e -> {
-//            popupStage.close();
-//        });
-//
-//        // Set the scene and show the popup window
-//        Scene scene = new Scene(gridPane, 500, 400); // Adjust window size as needed
-//        popupStage.setScene(scene);
-//        popupStage.showAndWait();
-//
-//        // Return the map of selected values
-//        return selectedValues;
-//    }
-
-
     public Map<Character, Set<String>> openFilterDataPopUp(Map<Character, Set<String>> stringsInChosenColumn) {
         // Create a new Map to store the user's selected values
         Map<Character, Set<String>> selectedValues = new HashMap<>();
@@ -455,10 +303,6 @@ public class PopUpWindowsHandler {
         return selectedValues;
     }
 
-
-
-
-
     // Helper method to create a popup grid
     private void openGridPopUp(String title, GridController gridScrollerController,
                                Consumer<GridPane> gridInitializer) {
@@ -475,8 +319,13 @@ public class PopUpWindowsHandler {
         // Initialize the grid
         gridInitializer.accept(popupGrid);
 
-        // Create a Scene with the popupGrid
-        Scene popupScene = new Scene(popupGrid);
+        // Wrap the GridPane inside a ScrollPane
+        ScrollPane gridScrollPane = new ScrollPane(popupGrid);
+        gridScrollPane.setFitToWidth(true);  // Optionally allow the ScrollPane to fit the grid's width
+        gridScrollPane.setFitToHeight(true); // Optionally allow the ScrollPane to fit the grid's height
+
+        // Create a Scene with the ScrollPane
+        Scene popupScene = new Scene(gridScrollPane); // Use ScrollPane instead of GridPane
         popupStage.setScene(popupScene);
 
         // Show the popup window

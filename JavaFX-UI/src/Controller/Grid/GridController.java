@@ -126,7 +126,7 @@ public class GridController {
             colConstraints.setMinWidth(cellWidth);
             colConstraints.setPrefWidth(cellWidth);
 
-            colConstraints.setHgrow(Priority.ALWAYS);
+            colConstraints.setHgrow(Priority.NEVER);
             grid.getColumnConstraints().add(colConstraints);
         }
     }
