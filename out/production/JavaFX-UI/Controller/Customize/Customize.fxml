@@ -84,32 +84,32 @@
             </Button>
 
             <!-- Text Color -->
-            <Label text="Text Color:" GridPane.rowIndex="8">
+            <Label text="Text Color:" GridPane.rowIndex="6">
                <padding>
                   <Insets right="2.0" />
                </padding></Label>
-            <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" styleClass="CustomizeButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+            <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" styleClass="CustomizeButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets left="30.0" />
                </GridPane.margin></ColorPicker>
 
             <!-- Background Color -->
-            <Label text="Background Color:" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <Label text="Background Color:" GridPane.columnSpan="2" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets right="14.0" top="5.0" />
                </GridPane.margin></Label>
-            <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" styleClass="CustomizeButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" GridPane.rowSpan="2">
+            <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" styleClass="CustomizeButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.rowSpan="2">
                <GridPane.margin>
                   <Insets bottom="20.0" left="30.0" />
                </GridPane.margin></ColorPicker>
 
             <!-- Cell ID -->
-            <Label text="Cell ID:" GridPane.rowIndex="7">
+            <Label text="Cell ID:" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets right="25.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" GridPane.rowSpan="2">
+            <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.rowSpan="2">
                <font>
                   <Font size="13.0" />
                </font>
@@ -117,7 +117,7 @@
                   <Insets bottom="20.0" left="90.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
+            <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
                <font>
                   <Font size="13.0" />
                </font>
@@ -131,11 +131,19 @@
                </GridPane.margin>
             </ComboBox>
             <Label GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label fx:id="cellIdLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+            <Label fx:id="cellIdLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets right="25.0" />
                </GridPane.margin>
             </Label>
+            <Button fx:id="runtimeButton" mnemonicParsing="false" onAction="#runtimeAnalysisClicked" styleClass="ModernButton" text="Runtime Analysis" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="20.0" />
+               </GridPane.margin>
+            </Button>
          </children>
       </GridPane>
    </children>

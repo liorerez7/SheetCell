@@ -54,6 +54,9 @@ public class CustomizeController {
     private ComboBox<Label> alignmentComboBox; // New ComboBox for text alignment
 
     @FXML
+    private Button runtimeButton;
+
+    @FXML
     private Label cellIdLabel;
 
     public void setMainController(MainController mainController) {
@@ -74,6 +77,7 @@ public class CustomizeController {
         lengthMinusButton.disableProperty().bind(mainController.getIsRowSelectedProperty().not());
         alignmentComboBox.disableProperty().bind(mainController.getIsColumnSelectedProperty().not());
         cellIdLabel.textProperty().bind(mainController.getCellLocationProperty());
+        runtimeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
     }
 
     @FXML
@@ -136,7 +140,10 @@ public class CustomizeController {
                 (int) (color.getBlue() * 255));
     }
 
-
+    @FXML
+    void runtimeAnalysisClicked(ActionEvent event) {
+        mainController.runtimeAnalysisClicked();
+    }
 
     private void setComboBoxCellFactory(ComboBox<Label> comboBox, String defaultText) {
         comboBox.setCellFactory(cb -> new ListCell<Label>() {
@@ -284,6 +291,7 @@ public class CustomizeController {
 
         // Switch styles using Utilies method
         Utilies.switchStyleClass(customizeGridPane, "DarkUserInterfaceSection", "UserInterfaceSection", "SunUserInterfaceSection");
+
         Utilies.switchStyleClass(defaultBackgroundTextButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
         Utilies.switchStyleClass(defaultTextButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
         Utilies.switchStyleClass(widthMinusButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
@@ -295,6 +303,8 @@ public class CustomizeController {
         Utilies.switchStyleClass(alignmentComboBox, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
         Utilies.switchStyleClass(backgroundColorPicker, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
         Utilies.switchStyleClass(textColorPicker, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
+
+        Utilies.switchStyleClass(runtimeButton, "DarkModernButton", "ModernButton", "SunModernButton");
     }
     public void changeToClassicTheme() {
         // Set text color for ComboBox header and items
@@ -312,6 +322,8 @@ public class CustomizeController {
         Utilies.switchStyleClass(alignmentComboBox, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
         Utilies.switchStyleClass(backgroundColorPicker, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
         Utilies.switchStyleClass(textColorPicker, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
+
+        Utilies.switchStyleClass(runtimeButton, "ModernButton", "DarkModernButton", "SunModernButton");
     }
 
 
@@ -329,6 +341,8 @@ public class CustomizeController {
         Utilies.switchStyleClass(alignmentComboBox, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
         Utilies.switchStyleClass(backgroundColorPicker, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
         Utilies.switchStyleClass(textColorPicker, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
+
+        Utilies.switchStyleClass(runtimeButton, "SunModernButton", "DarkModernButton", "ModernButton");
     }
 
 }

@@ -4,11 +4,8 @@ import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
 import Controller.MenuBar.HeaderController;
 import Controller.ProgressManager.ProgressAnimationManager;
-import Controller.Utility.FilterGridData;
-import Controller.Utility.ProgressManager;
-import Controller.Utility.RangeStringsData;
+import Controller.Utility.*;
 import Controller.Ranges.RangesController;
-import Controller.Utility.SortRowsData;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
@@ -346,14 +343,16 @@ public class MainController {
     }
 
     public void specificVersionClicked(int versionNumber) {
-    DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
-    createPopUpVersionGrid(dtoSheetCell, versionNumber);
+        DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
+        popUpWindowsHandler.openVersionGridPopUp(dtoSheetCell, versionNumber, gridScrollerController);
+
+       // createPopUpVersionGrid(dtoSheetCell, versionNumber);
     }
 
-    private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
-
-    popUpWindowsHandler.openVersionGridPopUp(dtoSheetCell, versionNumber, gridScrollerController);
-    }
+//    private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
+//
+//    popUpWindowsHandler.openVersionGridPopUp(dtoSheetCell, versionNumber, gridScrollerController);
+//    }
 
     public void sortRowsButtonClicked() {
 
@@ -542,7 +541,15 @@ public class MainController {
 
     themeColor = ThemeColor.MIDNIGHT;
     }
+
+    public void runtimeAnalysisClicked() {
+        // TODO:
+        RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
+
+        popUpWindowsHandler.openRunTimeAnalysisGridPopUp(engine.getSheetCell(), gridScrollerController);
     }
+
+}
 
 
 
