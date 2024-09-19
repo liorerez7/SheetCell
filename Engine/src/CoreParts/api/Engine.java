@@ -24,5 +24,5 @@ public interface Engine {
 
     Map<Character,Set<String>> getUniqueStringsInColumn(String filterColumn, String range);
 
-    DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter, String filterColumn);
+    DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter);
 }

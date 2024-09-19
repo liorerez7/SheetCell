@@ -35,7 +35,7 @@ public class SheetCellSorter {
     public static DtoContainerData sortSheetCell(String range, String args, DtoSheetCell dtoSheetCell) {
 
         List<CellLocation> cellLocations = EngineUtilities.parseRange(range);
-        List<List<EffectiveValueContainer>> newCols = EngineUtilities.getRowsFromRange(cellLocations, dtoSheetCell);
+        List<List<EffectiveValueContainer>> newCols = EngineUtilities.getRangeGridAsColsFromRange(cellLocations, dtoSheetCell);
 
         char leftColumn = cellLocations.get(0).getVisualColumn();
         int upperRow = cellLocations.get(0).getRealRow();

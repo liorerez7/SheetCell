@@ -157,11 +157,9 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter, String filterColumn) {
+    public DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter) {
         DtoSheetCell dtoSheetCell = getSheetCell();
-        return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
-
-        //return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell, filterColumn);
+        return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell);
     }
 
     private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {

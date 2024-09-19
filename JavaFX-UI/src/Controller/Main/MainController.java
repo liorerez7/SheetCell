@@ -456,7 +456,7 @@ public class MainController {
 
 
                 if (inputIsValid) {
-                     DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter, filterColumn); // instead of filter&filterColumn will be : map<char,string>
+                     DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter); // instead of filter&filterColumn will be : map<char,string>
 
                     //createFilterGridPopUp(filteredSheetCell);
                     createFilterGridPopUpp(filteredSheetCell);
