@@ -23,6 +23,11 @@ public class CustomizeController {
     @FXML
     private ComboBox<Label> rowComboBox;     // Using Label for rows
 
+
+    @FXML
+    private Button makeGraphButton;
+
+
     @FXML
     private ColorPicker textColorPicker;
 
@@ -58,6 +63,12 @@ public class CustomizeController {
 
     @FXML
     private Label cellIdLabel;
+
+    @FXML
+    private MenuItem linearGraphButton;
+
+    @FXML
+    private MenuItem ChartGraphButton;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -132,6 +143,11 @@ public class CustomizeController {
         if (textField != null) {
             textField.setStyle("-fx-text-fill: " + toRgbString(color) + ";");
         }
+    }
+
+    @FXML
+    void makeGraphClicked(ActionEvent event) {
+        //mainController.makeGraphClicked();
     }
 
     private String toRgbString(Color color) {
@@ -343,6 +359,17 @@ public class CustomizeController {
         Utilies.switchStyleClass(textColorPicker, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
 
         Utilies.switchStyleClass(runtimeButton, "SunModernButton", "DarkModernButton", "ModernButton");
+    }
+
+
+    @FXML
+    void ChartGraphClicked(ActionEvent event) {
+
+        mainController.ChartGraphClicked();
+    }
+    @FXML
+    void linearGraphClicked(ActionEvent event) {
+        mainController.linearGraphClicked();
     }
 
 }

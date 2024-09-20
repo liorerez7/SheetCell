@@ -28,6 +28,8 @@ public interface Engine {
     DtoContainerData sortSheetCell(String range, String columnsToSortBy);
 
     Map<Character,Set<String>> getUniqueStringsInColumn(String filterColumn, String range);
+    Map<Character,Set<String>> getUniqueStringsInColumn(List<Character> columnsForXYaxis, boolean isChartGraph);
+
 
     DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter);
 }

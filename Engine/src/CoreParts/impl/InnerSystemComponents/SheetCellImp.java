@@ -159,6 +159,53 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         return columnToUniqueStrings;
     }
 
+    public Map<Character,Set<String>> getUniqueStringsInColumn(List<Character> columns, boolean isChartGraph){
+
+        Map<Character,Set<String>> columnToUniqueStrings = new HashMap<>();
+
+        Set<String> uniqueStrings = new HashSet<>();
+
+        for (Character col : columns) {
+            // Convert column to uppercase for consistent matching
+            char upperCol = Character.toUpperCase(col);
+
+            // Retrieve values from the view sheet and collect unique values
+            getViewSheetCell().forEach((location, effectiveValue) -> {
+                if (location.getVisualColumn() == upperCol ) {
+
+                    if (effectiveValue != null) {
+                        String value = effectiveValue.getValue().toString();
+                        if(isChartGraph){
+                            try{
+                                double doubleValue = Double.parseDouble(value);
+                                value = CellUtils.formatNumber(doubleValue);
+                            }
+                            catch (NumberFormatException e) {
+                            }
+                            uniqueStrings.add(value);
+                        }
+                        else {
+                            try {
+                                double doubleValue = Double.parseDouble(value);
+                                value = CellUtils.formatNumber(doubleValue);
+                                uniqueStrings.add(value);
+
+                            } catch (NumberFormatException e) {
+                            }
+                        }
+
+                    }
+                }
+            });
+            Set<String> copy = Set.copyOf(uniqueStrings);
+            columnToUniqueStrings.put(upperCol, copy);
+            uniqueStrings.clear();
+        }
+
+        return columnToUniqueStrings;
+    }
+
+
     @Override
     public void updateEffectedByAndOnLists() {
         Map<Cell,Set<Cell>> adjacencyList= refDependencyGraph.getadjacencyList();

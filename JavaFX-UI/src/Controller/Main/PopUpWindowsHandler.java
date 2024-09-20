@@ -9,16 +9,21 @@ import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import Utility.DtoContainerData;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class PopUpWindowsHandler {
 
@@ -376,7 +381,7 @@ public class PopUpWindowsHandler {
         popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
 
         // Initialize the grid
-        Map<CellLocation,Label> cellLocationLabelMap = gridScrollerController.initializeRunTimeAnalysisPopupGrid(popupGrid, dtoSheetCell);
+        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeRunTimeAnalysisPopupGrid(popupGrid, dtoSheetCell);
 
 
         // Create a VBox to hold the Cell ID label, slider, and the current value label
@@ -404,8 +409,8 @@ public class PopUpWindowsHandler {
         valueSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             // Calculate the nearest multiple of stepValue
             int newValue = (int) Math.round(newVal.doubleValue() / stepValue) * stepValue;
-            if(newValue > endingValue) {
-                newValue-= stepValue;
+            if (newValue > endingValue) {
+                newValue -= stepValue;
             }
             valueSlider.setValue(newValue);  // Update slider to snap to the nearest stepValue
             valueLabel.setText("Value: " + newValue);
@@ -542,9 +547,9 @@ public class PopUpWindowsHandler {
         valueSlider.setBlockIncrement(stepValue);
         valueSlider.setMajorTickUnit(stepValue);
 
-        if((endingValue - startingValue) / stepValue - 1 > 5){
+        if ((endingValue - startingValue) / stepValue - 1 > 5) {
             valueSlider.setMinorTickCount((endingValue - startingValue) / stepValue - 1);
-        }else{
+        } else {
             valueSlider.setMinorTickCount(5);
         }
         valueSlider.setSnapToTicks(true);
@@ -595,7 +600,408 @@ public class PopUpWindowsHandler {
         // Show the popup window
         popupStage.showAndWait();
     }
+
+    public List<String> openGraphWindow(){
+
+        List<String > data = new ArrayList<>();
+
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
+        popupStage.setTitle("Insert columns for graph's X and Y axis");
+
+        // Create a GridPane layout for the popup
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
+        // Create and add the labels and text fields for Range-From and Range-To
+        Label XaxisFromLabel = new Label("column for X axis:");
+        TextField XaxisFromField = new TextField();
+        Label YaxisToLabel = new Label("column for Y axis:");
+        TextField YaxisToField = new TextField();
+        Label xTitle = new Label("X Axis Title:");
+        TextField xTitleField = new TextField();
+        Label yTitle = new Label("Y Axis Title:");
+        TextField yTitleField = new TextField();
+
+        // Add the elements to the grid
+        gridPane.add(XaxisFromLabel, 0, 0);
+        gridPane.add(XaxisFromField, 1, 0);
+        gridPane.add(YaxisToLabel, 0, 1);
+        gridPane.add(YaxisToField, 1, 1);
+        gridPane.add(xTitle, 0, 2);
+        gridPane.add(xTitleField, 1, 2);
+        gridPane.add(yTitle, 0, 3);
+        gridPane.add(yTitleField, 1, 3);
+
+        // Create and add the submit button
+        Button submitButton = new Button("Submit");
+        gridPane.add(submitButton, 1, 4);
+
+        submitButton.setOnAction(e -> {
+
+            String Xaxis = XaxisFromField.getText();
+            String Yaxis = YaxisToField.getText();
+            String xTitle1 = xTitleField.getText();
+            String yTitle1 = yTitleField.getText();
+
+            // Handle the submission of the range name and column here
+            data.add(Xaxis.toUpperCase());
+            data.add(Yaxis.toUpperCase());
+            data.add(xTitle1);
+            data.add(yTitle1);
+            popupStage.close();
+        });
+
+        // Set the scene and show the popup window
+        Scene scene = new Scene(gridPane, 500, 200);
+        popupStage.setScene(scene);
+        popupStage.showAndWait();
+        return data;
+    }
+
+//    public void openGraphPopUp(char xAxis, String xTitle, String yTitle, Map<Character, List<String>> columnsForXYaxis, boolean isBarChart) {
+//
+//        char yAxis = ' ';
+//
+//        // Extract X axis data from the Map
+//        List<String> xAxisListAsString = columnsForXYaxis.get(xAxis);
+//        List<String> yAxisListAsString = new ArrayList<>();
+//
+//        // Variable to store Y axis data
+//        for (Map.Entry<Character, List<String>> entry : columnsForXYaxis.entrySet()) {
+//            if (entry.getKey() != xAxis) {
+//                yAxis = entry.getKey();
+//                yAxisListAsString = entry.getValue();
+//                break;  // Assume only one Y axis column exists, so break after finding it
+//            }
+//        }
+//
+//        // Ensure both X and Y lists have the same size (optional check)
+//        if (xAxisListAsString.size() != yAxisListAsString.size()) {
+//            throw new IllegalArgumentException("X and Y axis data sets must be of equal size.");
+//        }
+//
+//        // Prepare the Y axis values
+//        List<Number> yAxisList = yAxisListAsString.stream()
+//                .map(Integer::parseInt)  // Convert String to Integer
+//                .collect(Collectors.toList());
+//
+//        // Call the method to create and display the graph popup
+//        showGraphPopup(xAxisListAsString, yAxisList, xTitle, yTitle, isBarChart);
+//    }
+//
+//    private void showGraphPopup(List<String> xValues, List<Number> yValues, String xTitle, String yTitle, boolean isColumnChart) {
+//        // Create Y-axis as NumberAxis
+//        NumberAxis yAxis = new NumberAxis();
+//        yAxis.setLabel(yTitle);
+//
+//        if (isColumnChart) {
+//            // For Column Chart, use CategoryAxis for X-axis
+//            CategoryAxis xAxis = new CategoryAxis();
+//            xAxis.setLabel(xTitle);
+//
+//            // Create a BarChart (Column Chart)
+//            BarChart<String, Number> columnChart = new BarChart<>(xAxis, yAxis);
+//            columnChart.setTitle("Column Chart");
+//
+//            // Create a data series and populate it with the given X and Y values
+//            XYChart.Series<String, Number> series = new XYChart.Series<>();
+//            series.setName("Data Series");
+//
+//            for (int i = 0; i < xValues.size(); i++) {
+//                series.getData().add(new XYChart.Data<>(xValues.get(i), yValues.get(i)));
+//            }
+//
+//            // Add the series to the column chart
+//            columnChart.getData().add(series);
+//
+//            // Create a scene with the chart
+//            javafx.scene.Scene scene = new javafx.scene.Scene(columnChart, 800, 600);
+//
+//            // Create a new stage (popup window)
+//            Stage popupStage = new Stage();
+//            popupStage.setTitle("Column Chart Popup");
+//            popupStage.setScene(scene);
+//
+//            // Show the popup stage
+//            popupStage.show();
+//
+//        } else {
+//            // For Line Chart, use NumberAxis for both X and Y axes
+//            NumberAxis xAxis = new NumberAxis();
+//            xAxis.setLabel(xTitle);
+//
+//            // Create a LineChart
+//            LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+//            lineChart.setTitle("Line Chart");
+//
+//            // Create a data series and populate it with the given X and Y values
+//            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+//            series.setName("Data Series");
+//
+//            for (int i = 0; i < yValues.size(); i++) {
+//                series.getData().add(new XYChart.Data<>(Integer.parseInt(xValues.get(i)), yValues.get(i))); // Assuming xValues are numeric for Line Chart
+//            }
+//
+//            // Add the series to the line chart
+//            lineChart.getData().add(series);
+//
+//            // Create a scene with the chart
+//            javafx.scene.Scene scene = new javafx.scene.Scene(lineChart, 800, 600);
+//
+//            // Create a new stage (popup window)
+//            Stage popupStage = new Stage();
+//            popupStage.setTitle("Line Chart Popup");
+//            popupStage.setScene(scene);
+//
+//            // Show the popup stage
+//            popupStage.show();
+//        }
+//    }
+
+    public void openGraphPopUp(char xAxis, String xTitle, String yTitle, Map<Character, List<String>> columnsForXYaxis, boolean isBarChart) {
+
+        char yAxis = ' ';
+
+        // Extract X axis data from the Map
+        List<String> xAxisListAsString = columnsForXYaxis.get(xAxis);
+        List<String> yAxisListAsString = new ArrayList<>();
+
+        // Variable to store Y axis data
+        for (Map.Entry<Character, List<String>> entry : columnsForXYaxis.entrySet()) {
+            if (entry.getKey() != xAxis) {
+                yAxis = entry.getKey();
+                yAxisListAsString = entry.getValue();
+                break;  // Assume only one Y axis column exists, so break after finding it
+            }
+        }
+
+        // Ensure both X and Y lists have the same size (optional check)
+        if (xAxisListAsString.size() != yAxisListAsString.size()) {
+            throw new IllegalArgumentException("X and Y axis data sets must be of equal size.");
+        }
+
+        // Prepare the Y axis values as Doubles
+        List<Double> yAxisList = yAxisListAsString.stream()
+                .map(Double::parseDouble)  // Convert String to Double
+                .collect(Collectors.toList());
+
+        // Call the method to create and display the graph popup
+        showGraphPopup(xAxisListAsString, yAxisList, xTitle, yTitle, isBarChart);
+    }
+
+    private void showGraphPopup(List<String> xValues, List<Double> yValues, String xTitle, String yTitle, boolean isColumnChart) {
+        // Create Y-axis as NumberAxis
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel(yTitle);
+
+        if (isColumnChart) {
+            // For Column Chart, use CategoryAxis for X-axis
+            CategoryAxis xAxis = new CategoryAxis();
+            xAxis.setLabel(xTitle);
+
+            // Create a BarChart (Column Chart)
+            BarChart<String, Number> columnChart = new BarChart<>(xAxis, yAxis);
+            columnChart.setTitle("Column Chart");
+
+            // Create a data series and populate it with the given X and Y values
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName("Data Series");
+
+            // Define colors for different bars
+            Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.PURPLE};
+
+            for (int i = 0; i < xValues.size(); i++) {
+                final int index = i; // Create a final variable to capture the current index
+                XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(xValues.get(i), yValues.get(i));
+                dataPoint.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                    if (newNode != null) {
+                        newNode.setStyle("-fx-background-color: " + toHexString(colors[index % colors.length]) + ";");
+                    }
+                });
+                series.getData().add(dataPoint);
+            }
+
+            // Add the series to the column chart
+            columnChart.getData().add(series);
+
+            // Create a scene with the chart
+            javafx.scene.Scene scene = new javafx.scene.Scene(columnChart, 800, 600);
+
+            // Create a new stage (popup window)
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Column Chart Popup");
+            popupStage.setScene(scene);
+
+            // Show the popup stage
+            popupStage.show();
+
+        } else {
+            // For Line Chart, use NumberAxis for both X and Y axes
+            NumberAxis xAxis = new NumberAxis();
+            xAxis.setLabel(xTitle);
+
+            // Create a LineChart
+            LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+            lineChart.setTitle("Line Chart");
+
+            // Create a data series and populate it with the given X and Y values
+            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+            series.setName("Data Series");
+
+            for (int i = 0; i < yValues.size(); i++) {
+                series.getData().add(new XYChart.Data<>(Double.parseDouble(xValues.get(i)), yValues.get(i)));
+            }
+
+            // Add the series to the line chart
+            lineChart.getData().add(series);
+
+            // Create a scene with the chart
+            javafx.scene.Scene scene = new javafx.scene.Scene(lineChart, 800, 600);
+
+            // Create a new stage (popup window)
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Line Chart Popup");
+            popupStage.setScene(scene);
+
+            // Show the popup stage
+            popupStage.show();
+        }
+    }
+
+    // Helper method to convert Color to hex string
+    private String toHexString(Color color) {
+        return String.format("#%02x%02x%02x",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+    }
+
+
+
+
+
+    public Map<Character, List<String>> openFilterDataWithOrderPopUp(char xAxis, char yAxis, String xTitle, String yTitle, Map<Character, Set<String>> stringsInChosenColumn) {
+        // Create a new Map to store the user's selected values
+        Map<Character, List<String>> selectedValues = new HashMap<>();
+
+        // Create a new stage for the popup
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
+        popupStage.setTitle("Filter Data with Order");
+
+        // Create a GridPane layout for the popup
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(10));
+
+        // Create column constraints for centering
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setHgrow(Priority.ALWAYS);
+        column1.setHalignment(HPos.CENTER);
+
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setHgrow(Priority.ALWAYS);
+        column2.setHalignment(HPos.CENTER);
+
+        gridPane.getColumnConstraints().addAll(column1, column2);
+
+        // To keep track of current selection order
+        List<String> selectedXValues = new ArrayList<>();
+        List<String> selectedYValues = new ArrayList<>();
+
+        // Track the current pair index
+        int rowIndex = 0;
+
+        // Add title labels
+        Label xAxisLabel = new Label("X-Axis: " + xTitle);
+        Label yAxisLabel = new Label("Y-Axis: " + yTitle);
+        gridPane.add(xAxisLabel, 0, rowIndex);
+        gridPane.add(yAxisLabel, 1, rowIndex);
+        rowIndex++;
+
+        // Get the initial values for X and Y
+        List<String> xValues = new ArrayList<>(stringsInChosenColumn.get(xAxis));
+        List<String> yValues = new ArrayList<>(stringsInChosenColumn.get(yAxis));
+
+        // Create ComboBoxes for X and Y values
+        for (int i = 0; i < Math.min(xValues.size(), yValues.size()); i++) {
+            ComboBox<String> xComboBox = new ComboBox<>();
+            ComboBox<String> yComboBox = new ComboBox<>();
+
+            // Populate ComboBoxes with available values
+            xComboBox.getItems().addAll(xValues);
+            yComboBox.getItems().addAll(yValues);
+
+            // Add to grid
+            gridPane.add(xComboBox, 0, rowIndex);
+            gridPane.add(yComboBox, 1, rowIndex);
+
+            // Add listeners to remove selected values from other ComboBoxes for X-axis
+            xComboBox.setOnAction(e -> {
+                String selectedX = xComboBox.getSelectionModel().getSelectedItem();
+                if (!selectedXValues.contains(selectedX)) {
+                    selectedXValues.add(selectedX);
+                    xComboBox.setDisable(true); // Disable the comboBox after selection
+                    // Remove selected X value from all other X ComboBoxes
+                    for (Node node : gridPane.getChildren()) {
+                        if (node instanceof ComboBox && GridPane.getColumnIndex(node) == 0) { // Only X-axis ComboBoxes
+                            ComboBox<?> otherComboBox = (ComboBox<?>) node;
+                            if (otherComboBox != xComboBox) {
+                                otherComboBox.getItems().remove(selectedX);
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Add listeners to remove selected values from other ComboBoxes for Y-axis
+            yComboBox.setOnAction(e -> {
+                String selectedY = yComboBox.getSelectionModel().getSelectedItem();
+                if (!selectedYValues.contains(selectedY)) {
+                    selectedYValues.add(selectedY);
+                    yComboBox.setDisable(true); // Disable the comboBox after selection
+                    // Remove selected Y value from all other Y ComboBoxes
+                    for (Node node : gridPane.getChildren()) {
+                        if (node instanceof ComboBox && GridPane.getColumnIndex(node) == 1) { // Only Y-axis ComboBoxes
+                            ComboBox<?> otherComboBox = (ComboBox<?>) node;
+                            if (otherComboBox != yComboBox) {
+                                otherComboBox.getItems().remove(selectedY);
+                            }
+                        }
+                    }
+                }
+            });
+
+            rowIndex++;
+        }
+
+        // Create and add the submit button
+        Button submitButton = new Button("Submit");
+        gridPane.add(submitButton, 0, rowIndex, 2, 1); // Span the button across two columns
+        GridPane.setHalignment(submitButton, HPos.CENTER);
+
+        // Close the popup when the submit button is clicked and store the selections
+        submitButton.setOnAction(e -> {
+            selectedValues.put(xAxis, selectedXValues);
+            selectedValues.put(yAxis, selectedYValues);
+            popupStage.close();
+        });
+
+        // Set the scene and show the popup window
+        Scene scene = new Scene(gridPane, 500, 400); // Adjust window size as needed
+        popupStage.setScene(scene);
+        popupStage.showAndWait();
+
+        // Return the map of selected values
+        return selectedValues;
+    }
 }
+
+
+
 
 
 

@@ -168,6 +168,11 @@ public class EngineImpl implements Engine {
     }
 
     @Override
+    public Map<Character,Set<String>> getUniqueStringsInColumn(List<Character> columnsForXYaxis, boolean isChartGraph){
+        return sheetCell.getUniqueStringsInColumn(columnsForXYaxis, isChartGraph);
+    }
+
+    @Override
     public DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter) {
         DtoSheetCell dtoSheetCell = getSheetCell();
         return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell);

@@ -34,10 +34,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.*;
 
 
 public class MainController {
@@ -116,7 +114,6 @@ public class MainController {
         model = new Model(null);
         popUpWindowsHandler = new PopUpWindowsHandler();
     }
-
 
     public void initializeGridBasedOnXML(String absolutePath) {
 
@@ -337,11 +334,6 @@ public class MainController {
        // createPopUpVersionGrid(dtoSheetCell, versionNumber);
     }
 
-//    private void createPopUpVersionGrid(DtoSheetCell dtoSheetCell, int versionNumber) {
-//
-//    popUpWindowsHandler.openVersionGridPopUp(dtoSheetCell, versionNumber, gridScrollerController);
-//    }
-
     public void sortRowsButtonClicked() {
 
     SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
@@ -530,7 +522,6 @@ public class MainController {
     themeColor = ThemeColor.MIDNIGHT;
     }
 
-
     public void runtimeAnalysisClicked() {
 
         // Step 1: Fetch runtime analysis data
@@ -571,6 +562,47 @@ public class MainController {
         engine.restoreSheetCellState();
     }
 
+    public void makeGraphClicked(boolean isChartGraph) {
+
+
+
+          List<String> columnsForXYaxis = popUpWindowsHandler.openGraphWindow();
+
+          char xAxis = columnsForXYaxis.get(0).charAt(0);
+          char yAxis = columnsForXYaxis.get(1).charAt(0);
+
+          List<Character> columns = new ArrayList<>();
+            columns.add(xAxis);
+            columns.add(yAxis);
+
+          String xTitle = columnsForXYaxis.get(2);
+          String yTitle = columnsForXYaxis.get(3);
+
+          if(columnsForXYaxis != null && columnsForXYaxis.size() == 4 ){
+              try {
+                  Map<Character,Set<String>> columnsXYaxisToStrings = engine.getUniqueStringsInColumn(columns, isChartGraph);
+                  Map<Character,List<String>> filteredColumnsXYaxisToStrings = popUpWindowsHandler.openFilterDataWithOrderPopUp(xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
+                    if(filteredColumnsXYaxisToStrings != null) {
+
+                        popUpWindowsHandler.openGraphPopUp(xAxis, xTitle, yTitle, filteredColumnsXYaxisToStrings, isChartGraph);
+                    }
+
+              } catch (Exception e) {
+                  createErrorPopup(e.getMessage(), "Error");
+              }
+          }
+
+
+
+    }
+
+    public void ChartGraphClicked() {
+        makeGraphClicked(true);
+    }
+
+    public void linearGraphClicked() {
+        makeGraphClicked(false);
+    }
 }
 
 
