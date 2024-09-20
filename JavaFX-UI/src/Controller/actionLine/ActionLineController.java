@@ -98,7 +98,7 @@ public class ActionLineController {
 
     public void changeToDarkTheme() {
 
-        Utilies.setMenuButtonTextColor(VersionScroller, Color.BLACK);
+        Utilies.setMenuButtonTextColor(VersionScroller, Color.WHITE);
         VersionScroller.setTextFill(Color.WHITE);
 
         Utilies.switchStyleClass(VersionScroller, "DarkModernButton", "ModernButton", "SunModernButton");
@@ -107,7 +107,7 @@ public class ActionLineController {
     }
 
     public void changeToClassicTheme() {
-        Utilies.setMenuButtonTextColor(VersionScroller, Color.BLACK);
+        Utilies.setMenuButtonTextColor(VersionScroller, Color.WHITE);
         VersionScroller.setTextFill(Color.WHITE);
 
         Utilies.switchStyleClass(VersionScroller, "ModernButton", "DarkModernButton", "SunModernButton");
