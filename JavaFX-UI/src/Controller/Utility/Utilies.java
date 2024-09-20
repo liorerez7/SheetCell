@@ -52,13 +52,13 @@ public class Utilies {
         menuButton.setStyle("-fx-text-fill: " + toHexString(color) + ";");
 
         // Get the skin of the MenuButton to access the items
-        MenuButtonSkin skin = (MenuButtonSkin) menuButton.getSkin();
-        if (skin != null) {
-            for (MenuItem menuItem : menuButton.getItems()) {
-                // Customize each MenuItem to set the text color
-                menuItem.setStyle("-fx-text-fill: " + toHexString(color) + ";");
-            }
-        }
+//        MenuButtonSkin skin = (MenuButtonSkin) menuButton.getSkin();
+//        if (skin != null) {
+//            for (MenuItem menuItem : menuButton.getItems()) {
+//                // Customize each MenuItem to set the text color
+//                menuItem.setStyle("-fx-text-fill: " + toHexString(color) + ";");
+//            }
+//        }
     }
 
     // Helper method to convert Color to Hex String

@@ -157,6 +157,7 @@ public class MainController {
                     rangesController.setAllRanges(engine.getSheetCell().getRanges());
                     customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
                     customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+                    customizeController.changeToClassicTheme();
                 });
             } catch (Exception e) {
                 gridScrollerController.showGrid();
@@ -564,8 +565,6 @@ public class MainController {
 
     public void makeGraphClicked(boolean isChartGraph) {
 
-
-
           List<String> columnsForXYaxis = popUpWindowsHandler.openGraphWindow();
 
           char xAxis = columnsForXYaxis.get(0).charAt(0);
@@ -591,9 +590,6 @@ public class MainController {
                   createErrorPopup(e.getMessage(), "Error");
               }
           }
-
-
-
     }
 
     public void ChartGraphClicked() {

@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -136,7 +138,7 @@
                   <Insets right="25.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="runtimeButton" mnemonicParsing="false" onAction="#runtimeAnalysisClicked" styleClass="ModernButton" text="Runtime Analysis" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <Button fx:id="runtimeButton" mnemonicParsing="false" onAction="#runtimeAnalysisClicked" styleClass="ModernButton" text="Runtime Analysis" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <font>
                   <Font size="13.0" />
                </font>
@@ -144,6 +146,12 @@
                   <Insets right="20.0" />
                </GridPane.margin>
             </Button>
+            <MenuButton fx:id="makeGraphButton" mnemonicParsing="false" styleClass="ModernButton" text="Make graph" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
+              <items>
+                  <MenuItem fx:id="linearGraphButton" mnemonicParsing="false" onAction="#linearGraphClicked" text="Linear graph" />
+                  <MenuItem fx:id="ChartGraphButton" mnemonicParsing="false" onAction="#ChartGraphClicked" text="barChart" />
+              </items>
+            </MenuButton>
          </children>
       </GridPane>
    </children>

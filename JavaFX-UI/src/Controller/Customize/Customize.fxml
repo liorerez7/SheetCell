@@ -146,12 +146,7 @@
                   <Insets right="20.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="makeGraphButton" mnemonicParsing="false" onAction="#makeGraphClicked" styleClass="ModernButton" text="Make graph" GridPane.columnSpan="2" GridPane.rowIndex="10">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Button>
-            <MenuButton mnemonicParsing="false" styleClass="ModernButton" text="Make graph" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <MenuButton fx:id="makeGraphButton" mnemonicParsing="false" styleClass="ModernButton" text="Make graph" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
               <items>
                   <MenuItem fx:id="linearGraphButton" mnemonicParsing="false" onAction="#linearGraphClicked" text="Linear graph" />
                   <MenuItem fx:id="ChartGraphButton" mnemonicParsing="false" onAction="#ChartGraphClicked" text="barChart" />
