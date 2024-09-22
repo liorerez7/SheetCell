@@ -105,24 +105,17 @@ public class EngineImpl implements Engine {
 
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
-//        if (newValue.isEmpty()) {
-//            sheetCell.updateVersions(targetCell);
-//            sheetCell.versionControl();
-//            sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
-        //} else {
+        try {
+            Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
+            sheetCell.applyCellUpdates(targetCell, newValue, expression);
+            sheetCell.updateVersions(targetCell);
+            sheetCell.performGraphOperations();
+            sheetCell.versionControl();
 
-            try {
-                Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
-                sheetCell.applyCellUpdates(targetCell, newValue, expression);
-                sheetCell.updateVersions(targetCell);
-                sheetCell.performGraphOperations();
-                sheetCell.versionControl();
-
-            } catch (Exception e) {
-                restoreSheetCellState(savedSheetCellState);
-                throw e;
-            }
-       // }
+        } catch (Exception e) {
+            restoreSheetCellState(savedSheetCellState);
+            throw e;
+        }
     }
 
     @Override

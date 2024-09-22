@@ -300,9 +300,7 @@ public class CustomizeController {
     }
 
     public void changeToDarkTheme() {
-        // Set text color for ComboBox header and items
 
-        // Switch styles using Utilies method
         Utilies.switchStyleClass(customizeGridPane, "DarkUserInterfaceSection", "UserInterfaceSection", "SunUserInterfaceSection");
 
         Utilies.switchStyleClass(defaultBackgroundTextButton, "DarkCustomizeButton", "CustomizeButton", "SunCustomizeButton");
@@ -320,13 +318,10 @@ public class CustomizeController {
         Utilies.switchStyleClass(runtimeButton, "DarkModernButton", "ModernButton", "SunModernButton");
         Utilies.switchStyleClass(makeGraphButton, "DarkModernButton", "ModernButton", "SunModernButton");
 
-        Utilies.setMenuButtonTextColor(makeGraphButton, Color.WHITE);
-        makeGraphButton.setTextFill(Color.WHITE);
+        adjustTextButtonColor(Color.WHITE);
     }
     public void changeToClassicTheme() {
-        // Set text color for ComboBox header and items
 
-        // Switch styles using Utilies method
         Utilies.switchStyleClass(customizeGridPane, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
         Utilies.switchStyleClass(defaultBackgroundTextButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
         Utilies.switchStyleClass(defaultTextButton, "CustomizeButton", "DarkCustomizeButton", "SunCustomizeButton");
@@ -343,13 +338,13 @@ public class CustomizeController {
         Utilies.switchStyleClass(runtimeButton, "ModernButton", "DarkModernButton", "SunModernButton");
         Utilies.switchStyleClass(makeGraphButton, "ModernButton", "DarkModernButton", "SunModernButton");
 
-        Utilies.setMenuButtonTextColor(makeGraphButton, Color.WHITE);
-        makeGraphButton.setTextFill(Color.WHITE);
+
+        adjustTextButtonColor(Color.WHITE);
     }
 
 
     public void changeToSunBurstTheme() {
-        // Switch styles using Utilies method
+
         Utilies.switchStyleClass(customizeGridPane, "SunUserInterfaceSection", "DarkUserInterfaceSection", "UserInterfaceSection");
         Utilies.switchStyleClass(defaultBackgroundTextButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
         Utilies.switchStyleClass(defaultTextButton, "SunCustomizeButton", "DarkCustomizeButton", "CustomizeButton");
@@ -366,10 +361,13 @@ public class CustomizeController {
         Utilies.switchStyleClass(runtimeButton, "SunModernButton", "DarkModernButton", "ModernButton");
         Utilies.switchStyleClass(makeGraphButton, "SunModernButton", "DarkModernButton", "ModernButton");
 
-        Utilies.setMenuButtonTextColor(makeGraphButton, Color.BLACK);
-        makeGraphButton.setTextFill(Color.BLACK);
+        adjustTextButtonColor(Color.BLACK);
     }
 
+    public void adjustTextButtonColor(Color color){
+        Utilies.setMenuButtonTextColor(makeGraphButton, color);
+        makeGraphButton.setTextFill(color);
+    }
 
     @FXML
     void ChartGraphClicked(ActionEvent event) {

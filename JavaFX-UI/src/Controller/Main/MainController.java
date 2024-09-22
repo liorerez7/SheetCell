@@ -8,7 +8,6 @@ import Controller.Utility.*;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
-import CoreParts.api.sheet.SheetCell;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
@@ -22,18 +21,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+
 
 import java.util.*;
 
@@ -78,10 +73,10 @@ public class MainController {
     @FXML
     private StackPane ranges;
 
-    private Model model;
-    private PopUpWindowsHandler popUpWindowsHandler;
+    private final Model model;
+    private final PopUpWindowsHandler popUpWindowsHandler;
+    private final ThemeManager themeManager;
     private ProgressManager progressManager;
-    private ThemeColor themeColor = ThemeColor.CLASSIC;
 
     @FXML
     public void initialize() {
@@ -93,7 +88,6 @@ public class MainController {
         progressManager = new ProgressManager();
 
         adjustScrollPanePosition();
-
     }
 
     private void adjustScrollPanePosition() {
@@ -113,71 +107,72 @@ public class MainController {
     public MainController() {
         model = new Model(null);
         popUpWindowsHandler = new PopUpWindowsHandler();
+        themeManager = new ThemeManager(mainPane, leftCommands);
     }
 
     public void initializeGridBasedOnXML(String absolutePath) {
 
-    // Create a new instance of ProgressAnimationManager
-    ProgressAnimationManager progressAnimationManager = new ProgressAnimationManager(progressManager);
+        // Create a new instance of ProgressAnimationManager
+        ProgressAnimationManager progressAnimationManager = new ProgressAnimationManager(progressManager);
 
-    // Get the VBox layout that contains the progressPane, welcomeLabel, and cancelButton
-    VBox layout = progressAnimationManager.createProgressAnimationLayout();
+        // Get the VBox layout that contains the progressPane, welcomeLabel, and cancelButton
+        VBox layout = progressAnimationManager.createProgressAnimationLayout();
 
-    // Set the VBox layout as the content of the gridScroller
-    if (gridScroller != null) {
-        gridScroller.setContent(layout); // Temporarily show progress bar, label, and cancel button
-    }
-
-    // Create a Task to handle the file loading
-    Task<Void> task = new Task<Void>() {
-        @Override
-        protected Void call() throws Exception {
-            try {
-                // Simulate progress over 2 seconds
-                gridScrollerController.hideGrid();
-                for (int i = 0; i <= 100; i++) {
-                    updateProgress(i, 100);
-                    progressAnimationManager.updateProgress(i / 100.0);  // Update progress via ProgressAnimationManager
-                    Thread.sleep(20);  // Simulate loading time
-                }
-
-                // Load the XML file (this is the actual task)
-                engine.readSheetCellFromXML(absolutePath); //can throw exception
-
-                Platform.runLater(() -> {
-                    // UI updates after loading
-                    headerController.FileHasBeenLoaded(absolutePath);
-                    Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
-                    rangesController.clearAllRanges();
-                    model.setReadingXMLSuccess(true);
-                    model.setCellLabelToProperties(cellLocationLabelMap);
-                    model.bindCellLabelToProperties();
-                    model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-                    model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-                    rangesController.setAllRanges(engine.getSheetCell().getRanges());
-                    customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
-                    customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
-                    customizeController.changeToClassicTheme();
-                });
-            } catch (Exception e) {
-                gridScrollerController.showGrid();
-                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-            } finally {
-                Platform.runLater(() -> {
-                    if (gridScroller != null) {
-                        gridScroller.setContent(gridScrollerController.getGrid()); // Restore grid
-                    }
-                });
-            }
-            return null;
+        // Set the VBox layout as the content of the gridScroller
+        if (gridScroller != null) {
+            gridScroller.setContent(layout); // Temporarily show progress bar, label, and cancel button
         }
-    };
 
-    // Bind the progress bar to the task's progress
-    progressManager.getProgressBar().progressProperty().bind(task.progressProperty());
+        // Create a Task to handle the file loading
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    // Simulate progress over 2 seconds
+                    gridScrollerController.hideGrid();
+                    for (int i = 0; i <= 100; i++) {
+                        updateProgress(i, 100);
+                        progressAnimationManager.updateProgress(i / 100.0);  // Update progress via ProgressAnimationManager
+                        Thread.sleep(20);  // Simulate loading time
+                    }
 
-    // Run the task in a new thread
-    new Thread(task).start();
+                    // Load the XML file (this is the actual task)
+                    engine.readSheetCellFromXML(absolutePath); //can throw exception
+
+                    Platform.runLater(() -> {
+                        // UI updates after loading
+                        headerController.FileHasBeenLoaded(absolutePath);
+                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
+                        rangesController.clearAllRanges();
+                        model.setReadingXMLSuccess(true);
+                        model.setCellLabelToProperties(cellLocationLabelMap);
+                        model.bindCellLabelToProperties();
+                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
+                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
+                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+                        themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+                    });
+                } catch (Exception e) {
+                    gridScrollerController.showGrid();
+                    Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+                } finally {
+                    Platform.runLater(() -> {
+                        if (gridScroller != null) {
+                            gridScroller.setContent(gridScrollerController.getGrid()); // Restore grid
+                        }
+                    });
+                }
+                return null;
+            }
+        };
+
+        // Bind the progress bar to the task's progress
+        progressManager.getProgressBar().progressProperty().bind(task.progressProperty());
+
+        // Run the task in a new thread
+        new Thread(task).start();
     }
 
     public void updateCell(String text, String newValue) {
@@ -200,159 +195,97 @@ public class MainController {
     }
 
     public void setEngine(EngineImpl engine) {
-    this.engine = engine;
+        this.engine = engine;
     }
 
     public StringProperty getOriginalValueLabelProperty() {
-    return model.getOriginalValueLabelProperty();
+        return model.getOriginalValueLabelProperty();
     }
 
     public StringProperty getTotalVersionsProperty() {
-    return model.getTotalVersionsProperty();
+        return model.getTotalVersionsProperty();
     }
 
     public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
-    Stage popupStage = new Stage();
-    popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
-    //popupStage.initModality(Modality.NONE); // Block events to other windows
-
-    popupStage.setTitle("circularDependency error");
-
-    // Create a new GridPane for the popup
-    GridPane popupGrid = new GridPane();
-    popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
-
-    // Initialize the grid with the DtoSheetCell (using a similar method as initializeGrid)
-    gridScrollerController.initializeCirclePopUp(popupGrid, dtoSheetCell, cycle);
-    // Create a Scene with the popupGrid
-    Scene popupScene = new Scene(popupGrid);
-    popupStage.setScene(popupScene);
-
-    // Show the popup window
-    popupStage.showAndWait();
-
+        popUpWindowsHandler.createErrorPopUpCircularDependency(dtoSheetCell, gridScrollerController, cycle);
     }
 
     public void createErrorPopup(String message, String title) {
-    // Create a new Stage for the popup
-    Stage popupStage = new Stage();
-    popupStage.setTitle(title);
-    // Create a Label and set the message
-    Label messageLabel = new Label(message);
-    messageLabel.setWrapText(true); // Enable text wrapping to adjust size
-    messageLabel.setPadding(new Insets(10)); // Add some padding around the text
-    // Create a layout and add the Label
-    StackPane layout = new StackPane();
-    layout.getChildren().add(messageLabel);
-
-    // Create the Scene with the layout
-    Scene scene = new Scene(layout);
-
-    // Set the scene on the popup stage
-    popupStage.setScene(scene);
-
-    // Calculate and set the size of the popup based on the content
-    scene.widthProperty().addListener((obs, oldVal, newVal) -> {
-        popupStage.sizeToScene(); // Adjust the size of the popup based on the content
-    });
-    scene.heightProperty().addListener((obs, oldVal, newVal) -> {
-        popupStage.sizeToScene(); // Adjust the size of the popup based on the content
-    });
-    // Set modality to block input to other windows while this popup is open
-    popupStage.initModality(Modality.APPLICATION_MODAL);
-    scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ErrorPopup.css")).toExternalForm());
-    messageLabel.getStyleClass().add("popup-label");
-    layout.getStyleClass().add("popup-container");
-    // Show the popup
-    popupStage.show();
+        popUpWindowsHandler.createErrorPopup(message, title);
     }
 
     public void rangeAddClicked() {
-
-    RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
-    String name = rangeStringsData.getName();
-    if(name != null) //in case when just shutting the window without entering anything
-    {
-        try {
-            engine.UpdateNewRange(name,rangeStringsData.getRange());
-            rangesController.addRange(engine.getRequestedRange(name),name);
+        RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
+        String name = rangeStringsData.getName();
+        if(name != null) //in case when just shutting the window without entering anything
+        {
+            try {
+                engine.UpdateNewRange(name,rangeStringsData.getRange());
+                rangesController.addRange(engine.getRequestedRange(name),name);
+            }
+            catch (Exception e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
         }
-        catch (Exception e) {
-            createErrorPopup(e.getMessage(), "Error");
-        }
-    }
     }
 
     public void rangeDeleteClicked() {
 
+        RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow();
+        String name = rangeStringsData.getName();
 
-    RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow();
-    String name = rangeStringsData.getName();
-
-    if(name != null) //in case when just shutting the window without entering anything
-    {
-        try {
-            engine.deleteRange(name);
-            rangesController.deleteRange(name);
+        if (name != null) //in case when just shutting the window without entering anything
+        {
+            try {
+                engine.deleteRange(name);
+                rangesController.deleteRange(name);
+            } catch (Exception e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
         }
-        catch (RangeCantBeDeletedException e) {
-            createErrorPopup(e.getMessage(), "Error");
-        }
-        catch (RangeDoesntExistException e) {
-            createErrorPopup(e.getMessage(), "Error");
-        }
-    }
-
-
     }
 
     public void cellClicked(String location) {
 
-    DtoCell requestedCell = engine.getRequestedCell(location);
-    model.setIsCellLabelClicked(true);
-    model.setLatestUpdatedVersionProperty(requestedCell);
-    model.setOriginalValueLabelProperty(requestedCell);
-    actionLineController.updateCssWhenUpdatingCell(location);
-    gridScrollerController.clearAllHighlights();
-    gridScrollerController.showNeighbors(requestedCell);
-    rangesController.resetComboBox();
-    customizeController.resetComboBox();
-    model.setColumnSelected(false);
-    model.setRowSelected(false);
-    model.setCellLocationProperty(location);
+        DtoCell requestedCell = engine.getRequestedCell(location);
+        model.setIsCellLabelClicked(true);
+        model.setLatestUpdatedVersionProperty(requestedCell);
+        model.setOriginalValueLabelProperty(requestedCell);
+        actionLineController.updateCssWhenUpdatingCell(location);
+        gridScrollerController.clearAllHighlights();
+        gridScrollerController.showNeighbors(requestedCell);
+        rangesController.resetComboBox();
+        customizeController.resetComboBox();
+        model.setColumnSelected(false);
+        model.setRowSelected(false);
+        model.setCellLocationProperty(location);
     }
 
     public void handleRangeClick(String rangeName) {
-
-    gridScrollerController.clearAllHighlights();
-    gridScrollerController.showAffectedCells(engine.getRequestedRange(rangeName));
+        gridScrollerController.clearAllHighlights();
+        gridScrollerController.showAffectedCells(engine.getRequestedRange(rangeName));
     }
 
     public void specificVersionClicked(int versionNumber) {
-        DtoSheetCell dtoSheetCell = engine.getSheetCell(versionNumber);
-        popUpWindowsHandler.openVersionGridPopUp(dtoSheetCell, versionNumber, gridScrollerController);
-
-       // createPopUpVersionGrid(dtoSheetCell, versionNumber);
+        popUpWindowsHandler.openVersionGridPopUp(engine.getSheetCell(versionNumber), versionNumber, gridScrollerController);
     }
 
     public void sortRowsButtonClicked() {
 
-    SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
-    String columns = sortRowsData.getColumnsToSortBy();
-    String range = sortRowsData.getRange();
+        SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
+        String columns = sortRowsData.getColumnsToSortBy();
+        String range = sortRowsData.getRange();
 
-    //if one of them is null means that the user just closed the window without entering anything
-    if(columns != null && range != null)
-    {
-        try {
-            //DtoSheetCell dtoSheetCell = engine.sortSheetCell(range, columns);
-            DtoContainerData dtoContainerData = engine.sortSheetCell(range, columns);
-            //createSortRowsPopUp(dtoSheetCell);
-            createSortGridPopUp(dtoContainerData);
-        }catch (Exception e) {
-            createErrorPopup(e.getMessage(), "Error");
+        //if one of them is null means that the user just closed the window without entering anything
+        if(columns != null && range != null)
+        {
+            try {
+                DtoContainerData dtoContainerData = engine.sortSheetCell(range, columns);
+                createSortGridPopUp(dtoContainerData);
+            }catch (Exception e) {
+                createErrorPopup(e.getMessage(), "Error");
+            }
         }
-    }
     }
 
     private void createSortGridPopUp(DtoContainerData dtoContainerData) {
@@ -361,65 +294,63 @@ public class MainController {
 
     public void filterDataButtonClicked() {
 
-    boolean inputIsValid = true;
+        boolean inputIsValid = true;
 
-    // Open the filter data window and retrieve user input
-    FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
-    String range = filterGridData.getRange();
-    String filterColumn = filterGridData.getColumnsToFilterBy();
+        // Open the filter data window and retrieve user input
+        FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
+        String range = filterGridData.getRange();
+        String filterColumn = filterGridData.getColumnsToFilterBy();
 
-    // Check if the user has provided input (if window wasn't closed without action)
-    if (range != null && filterColumn != null) {
-        try {
-            // Fetch unique strings in the selected column within the given range
-            Map<Character, Set<String>> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
+        // Check if the user has provided input (if window wasn't closed without action)
+        if (range != null && filterColumn != null) {
+            try {
+                // Fetch unique strings in the selected column within the given range
+                Map<Character, Set<String>> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
 
-            Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
+                Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
 
 
-            if (filter == null || filter.isEmpty()) {
-                return;
+                if (filter == null || filter.isEmpty()) {
+                    return;
+                }
+
+                if (inputIsValid) {
+                    DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter);
+                    createFilterGridPopUpp(filteredSheetCell);
+                }
+
+            } catch (Exception e) {
+                createErrorPopup(e.getMessage(), "Error");
             }
-
-            if (inputIsValid) {
-                DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter);
-                createFilterGridPopUpp(filteredSheetCell);
-            }
-
-        } catch (Exception e) {
-            createErrorPopup(e.getMessage(), "Error");
         }
-    }
     }
 
     private void createFilterGridPopUpp(DtoContainerData filteredSheetCell) {
-    popUpWindowsHandler.openFilterGridPopUp(filteredSheetCell, gridScrollerController);
-
+        popUpWindowsHandler.openFilterGridPopUp(filteredSheetCell, gridScrollerController);
     }
 
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
-
-    gridScrollerController.changingGridConstraints(rowOrCol,toIncreaseOrDecrease);
+        gridScrollerController.changingGridConstraints(rowOrCol,toIncreaseOrDecrease);
     }
 
     public void ColumnSelected() {
-    model.setColumnSelected(true);
+        model.setColumnSelected(true);
     }
 
     public void RowSelected() {
-    model.setRowSelected(true);
+        model.setRowSelected(true);
     }
 
     public BooleanProperty getIsColumnSelectedProperty() {
-    return model.getIsColumnSelectedProperty();
+        return model.getIsColumnSelectedProperty();
     }
 
     public BooleanProperty getIsRowSelectedProperty() {
-    return model.getIsRowSelectedProperty();
+        return model.getIsRowSelectedProperty();
     }
 
     public BooleanProperty getReadingXMLSuccessProperty() {
-    return model.getReadingXMLSuccess();
+        return model.getReadingXMLSuccess();
     }
 
     public void changeTextAlignment(String alignment, Label selectedColumnLabel) {
@@ -427,100 +358,49 @@ public class MainController {
     }
 
     public ObservableValue<String> getCellLocationProperty() {
-    return model.getCellLocationProperty();
+        return model.getCellLocationProperty();
     }
 
     public void changeBackgroundColor(javafx.scene.paint.Color value, String location) {
-    gridScrollerController.changeBackgroundTextColor(value, location);
-
+        gridScrollerController.changeBackgroundTextColor(value, location);
     }
 
     public void changeTextColor(javafx.scene.paint.Color value, String location) {
-    gridScrollerController.changeTextColor(value, location);
-
+        gridScrollerController.changeTextColor(value, location);
     }
 
     public void closeMenuButtonClicked() {
-    System.exit(0);
+        System.exit(0);
     }
 
     public void classicDisplayClicked() {
-
-    if(themeColor == ThemeColor.CLASSIC) {
-        return;
-    }
-
-    if(themeColor == ThemeColor.MIDNIGHT) {
-        mainPane.getStyleClass().remove("DarkModeBackground");
-        leftCommands.getStyleClass().remove("DarkModeBackground");
-    }
-    else if(themeColor == ThemeColor.SUNBURST) {
-        mainPane.getStyleClass().remove("SunBurstBackground");
-        leftCommands.getStyleClass().remove("SunBurstBackground");
-    }
-
-    mainPane.getStyleClass().add("Background");
-    leftCommands.getStyleClass().add("Background");
-
-
-    headerController.changeToClassicTheme();
-    rangesController.changeToClassicTheme();
-    actionLineController.changeToClassicTheme();
-    customizeController.changeToClassicTheme();
-
-    themeColor = ThemeColor.CLASSIC;
+        applyTheme(() -> themeManager.classicDisplayClicked(
+                headerController::changeToClassicTheme,
+                rangesController::changeToClassicTheme,
+                actionLineController::changeToClassicTheme,
+                customizeController::changeToClassicTheme));
     }
 
     public void sunBurstDisplayClicked() {
-
-    if(themeColor == ThemeColor.SUNBURST) {
-        return;
-    }
-
-    if(themeColor == ThemeColor.MIDNIGHT) {
-        mainPane.getStyleClass().remove("DarkModeBackground");
-        leftCommands.getStyleClass().remove("DarkModeBackground");
-    }
-    else if(themeColor == ThemeColor.CLASSIC) {
-        mainPane.getStyleClass().remove("Background");
-        leftCommands.getStyleClass().remove("Background");
-    }
-
-    mainPane.getStyleClass().add("SunBurstBackground");
-    leftCommands.getStyleClass().add("SunBurstBackground");
-
-    headerController.changeToSunBurstTheme();
-    rangesController.changeToSunBurstTheme();
-    actionLineController.changeToSunBurstTheme();
-    customizeController.changeToSunBurstTheme();
-
-    themeColor = ThemeColor.SUNBURST;
+        applyTheme(() -> themeManager.sunBurstDisplayClicked(
+                headerController::changeToSunBurstTheme,
+                rangesController::changeToSunBurstTheme,
+                actionLineController::changeToSunBurstTheme,
+                customizeController::changeToSunBurstTheme));
     }
 
     public void midNightDisplayClicked() {
-
-    if(themeColor == ThemeColor.MIDNIGHT) {
-    return;
+        applyTheme(() -> themeManager.midNightDisplayClicked(
+                headerController::changeToDarkTheme,
+                rangesController::changeToDarkTheme,
+                actionLineController::changeToDarkTheme,
+                customizeController::changeToDarkTheme));
     }
 
-    if(themeColor == ThemeColor.CLASSIC) {
-    mainPane.getStyleClass().remove("Background");
-    leftCommands.getStyleClass().remove("Background");
-    }
-    else if(themeColor == ThemeColor.SUNBURST) {
-    mainPane.getStyleClass().remove("SunBurstBackground");
-    leftCommands.getStyleClass().remove("SunBurstBackground");
-    }
-
-    mainPane.getStyleClass().add("DarkModeBackground");
-    leftCommands.getStyleClass().add("DarkModeBackground");
-
-    headerController.changeToDarkTheme();
-    actionLineController.changeToDarkTheme();
-    customizeController.changeToDarkTheme();
-    rangesController.changeToDarkTheme();
-
-    themeColor = ThemeColor.MIDNIGHT;
+    private void applyTheme(Runnable themeMethod) {
+        themeManager.setMainPaneStyleClass(mainPane);
+        themeManager.setLeftCommandsStyleClass(leftCommands);
+        themeMethod.run();
     }
 
     public void runtimeAnalysisClicked() {
@@ -600,93 +480,3 @@ public class MainController {
         makeGraphClicked(false);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public void initializeGridBasedOnXML(String absolutePath) {
-//
-//        // Use ProgressManager to get the progress pane
-//        StackPane progressPane = progressManager.getProgressPane();
-//
-//        // Create a new StackPane to wrap the progressPane and manage its position
-//        StackPane wrapperPane = new StackPane(progressPane);
-//        // Set the margin or positioning on the wrapperPane
-//        StackPane.setMargin(progressPane, new Insets(125, 0, 0, 400));  // Adjust these values as needed
-//
-//        // Add wrapperPane to the main layout
-//        if (gridScroller != null) {
-//            gridScroller.setContent(wrapperPane); // Temporarily show progress bar
-//        }
-//
-//        // Create a Task to handle the file loading
-//        Task<Void> task = new Task<Void>() {
-//            @Override
-//            protected Void call() throws Exception {
-//                try {
-//                    // Simulate progress over 2 seconds
-//                    gridScrollerController.hideGrid();
-//                    for (int i = 0; i <= 100; i++) {
-//                        updateProgress(i, 100);
-//                        progressManager.updateProgress(i / 100.0);  // Use ProgressManager to update progress
-//                        Thread.sleep(20);  // Simulate loading time
-//                    }
-//
-//                    // Load the XML file (this is the actual task)
-//                    engine.readSheetCellFromXML(absolutePath); //can throw exception
-//
-//                    Platform.runLater(() -> {
-//                        // UI updates after loading
-//                        headerController.FileHasBeenLoaded(absolutePath);
-//                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
-//                        rangesController.clearAllRanges();
-//                        model.setReadingXMLSuccess(true);
-//                        model.setCellLabelToProperties(cellLocationLabelMap);
-//                        model.bindCellLebelToProperties();
-//                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-//                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-//                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
-//                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
-//                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
-//                    });
-//                } catch (Exception e) {
-//                    gridScrollerController.showGrid();
-//                    Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-//                } finally {
-//                    Platform.runLater(() -> {
-//                        if (gridScroller != null) {
-//                            gridScroller.setContent(gridScrollerController.getGrid()); // Restore grid
-//                        }
-//                    });
-//                }
-//                return null;
-//            }
-//        };
-//
-//        // Bind the progress bar to the task's progress
-//        progressManager.getProgressBar().progressProperty().bind(task.progressProperty());
-//
-//        // Run the task in a new thread
-//        new Thread(task).start();
-//    }

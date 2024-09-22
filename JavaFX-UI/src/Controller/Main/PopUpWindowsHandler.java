@@ -27,6 +27,62 @@ import java.util.stream.Collectors;
 
 public class PopUpWindowsHandler {
 
+
+    public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell,GridController gridScrollerController ,List<CellLocation> cycle) {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle("Circular Dependency Error");
+
+        // Create a new GridPane and initialize it with data
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        // Initialize the grid with the DtoSheetCell and cycle
+        // Assuming gridScrollerController is accessible in this context
+        gridScrollerController.initializeCirclePopUp(popupGrid, dtoSheetCell, cycle);
+
+        // Wrap the grid with a ScrollPane
+        ScrollPane scrollPane = new ScrollPane(popupGrid);
+
+        // Create a Scene and show the popup
+        Scene popupScene = new Scene(scrollPane);
+        popupStage.setScene(popupScene);
+        popupStage.showAndWait();
+    }
+
+    public void createErrorPopup(String message, String title) {
+        Stage popupStage = new Stage();
+        popupStage.setTitle(title);
+
+        // Create a Label with the error message
+        Label messageLabel = new Label(message);
+        messageLabel.setWrapText(true); // Enable text wrapping
+        messageLabel.setPadding(new Insets(10));
+
+        // Create a layout and add the Label
+        StackPane layout = new StackPane();
+        layout.getChildren().add(messageLabel);
+
+        // Wrap the layout with a ScrollPane
+        ScrollPane scrollPane = new ScrollPane(layout);
+
+        // Create the Scene with the ScrollPane
+        Scene scene = new Scene(scrollPane);
+
+        // Adjust size based on content
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> popupStage.sizeToScene());
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> popupStage.sizeToScene());
+
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ErrorPopup.css")).toExternalForm());
+        messageLabel.getStyleClass().add("popup-label");
+        layout.getStyleClass().add("popup-container");
+
+        // Set the scene and modality
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+
     public RangeStringsData openDeleteRangeWindow() {
 
         Stage popupStage = new Stage();
@@ -362,87 +418,6 @@ public class PopUpWindowsHandler {
                 popupGrid -> gridScrollerController.initializeVersionPopupGrid(popupGrid, dtoSheetCell));
     }
 
-    public void openRunTimeAnalysisGridPopUp(DtoSheetCell dtoSheetCell, GridController gridScrollerController, RunTimeAnalysisData runTimeAnalysisData) {
-        openRunTimeGridPopUp(dtoSheetCell, gridScrollerController, runTimeAnalysisData);
-    }
-
-
-    private void openRunTimeGridPopUp(DtoSheetCell dtoSheetCell, GridController gridScrollerController, RunTimeAnalysisData runTimeAnalysisData) {
-
-        String title = "Run Time Analysis";
-
-        // Create a new Stage (window) for the popup
-        String cellId = runTimeAnalysisData.getCellId();
-        int startingValue = runTimeAnalysisData.getStartingValue();
-        int endingValue = runTimeAnalysisData.getEndingValue();
-        int stepValue = runTimeAnalysisData.getStepValue();
-
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block events to other windows
-        popupStage.setTitle(title);
-
-        // Create a new GridPane for the popup
-        GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
-
-        // Initialize the grid
-        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeRunTimeAnalysisPopupGrid(popupGrid, dtoSheetCell);
-
-
-        // Create a VBox to hold the Cell ID label, slider, and the current value label
-        VBox sliderBox = new VBox(10);
-        sliderBox.setAlignment(Pos.CENTER);  // Center the elements vertically
-
-        // Create a Label for the Cell ID above the Slider
-        Label cellIdLabel = new Label("Cell ID: " + cellId);
-        cellIdLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"); // Customize label style
-
-        // Create a Slider with dynamic range and step values
-        Slider valueSlider = new Slider(startingValue, endingValue, startingValue);
-        valueSlider.setBlockIncrement(stepValue);
-        valueSlider.setMajorTickUnit(stepValue);
-        valueSlider.setMinorTickCount((endingValue - startingValue) / stepValue - 1); // Adjust minor ticks
-        valueSlider.setSnapToTicks(true); // Ensure the slider snaps to ticks
-        valueSlider.setShowTickMarks(true);  // Show tick marks on the slider
-        valueSlider.setShowTickLabels(true); // Show numbers on the slider
-
-        // Create a Label below the Slider to display the current value
-        Label valueLabel = new Label("Value: " + startingValue);
-        valueLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #000000;"); // Customize label style
-
-        // Add a listener to the slider to update the label as the slider moves
-        valueSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            // Calculate the nearest multiple of stepValue
-            int newValue = (int) Math.round(newVal.doubleValue() / stepValue) * stepValue;
-            if (newValue > endingValue) {
-                newValue -= stepValue;
-            }
-            valueSlider.setValue(newValue);  // Update slider to snap to the nearest stepValue
-            valueLabel.setText("Value: " + newValue);
-        });
-
-        // Add the Cell ID Label, Slider, and Value Label to the VBox
-        sliderBox.getChildren().addAll(cellIdLabel, valueSlider, valueLabel);
-
-        // Create a VBox to hold both the grid and the sliderBox, so they scroll together
-        VBox contentBox = new VBox(10, popupGrid, sliderBox);
-        contentBox.setAlignment(Pos.CENTER_LEFT);
-        contentBox.setPadding(new Insets(10)); // Add padding around content
-
-        // Wrap the content (grid and sliderBox) inside a ScrollPane
-        ScrollPane contentScrollPane = new ScrollPane(contentBox);
-        contentScrollPane.setFitToWidth(true);
-        contentScrollPane.setFitToHeight(true);
-
-        // Create a Scene with the ScrollPane (containing both the grid and slider)
-        Scene popupScene = new Scene(contentScrollPane);
-        popupStage.setScene(popupScene);
-
-        // Show the popup window
-        popupStage.showAndWait();
-    }
-
-
     public RunTimeAnalysisData openRunTimeAnalysisWindow() {
 
         RunTimeAnalysisData runTimeAnalysisData = new RunTimeAnalysisData("", 0, 0, 0);
@@ -665,105 +640,6 @@ public class PopUpWindowsHandler {
         return data;
     }
 
-//    public void openGraphPopUp(char xAxis, String xTitle, String yTitle, Map<Character, List<String>> columnsForXYaxis, boolean isBarChart) {
-//
-//        char yAxis = ' ';
-//
-//        // Extract X axis data from the Map
-//        List<String> xAxisListAsString = columnsForXYaxis.get(xAxis);
-//        List<String> yAxisListAsString = new ArrayList<>();
-//
-//        // Variable to store Y axis data
-//        for (Map.Entry<Character, List<String>> entry : columnsForXYaxis.entrySet()) {
-//            if (entry.getKey() != xAxis) {
-//                yAxis = entry.getKey();
-//                yAxisListAsString = entry.getValue();
-//                break;  // Assume only one Y axis column exists, so break after finding it
-//            }
-//        }
-//
-//        // Ensure both X and Y lists have the same size (optional check)
-//        if (xAxisListAsString.size() != yAxisListAsString.size()) {
-//            throw new IllegalArgumentException("X and Y axis data sets must be of equal size.");
-//        }
-//
-//        // Prepare the Y axis values
-//        List<Number> yAxisList = yAxisListAsString.stream()
-//                .map(Integer::parseInt)  // Convert String to Integer
-//                .collect(Collectors.toList());
-//
-//        // Call the method to create and display the graph popup
-//        showGraphPopup(xAxisListAsString, yAxisList, xTitle, yTitle, isBarChart);
-//    }
-//
-//    private void showGraphPopup(List<String> xValues, List<Number> yValues, String xTitle, String yTitle, boolean isColumnChart) {
-//        // Create Y-axis as NumberAxis
-//        NumberAxis yAxis = new NumberAxis();
-//        yAxis.setLabel(yTitle);
-//
-//        if (isColumnChart) {
-//            // For Column Chart, use CategoryAxis for X-axis
-//            CategoryAxis xAxis = new CategoryAxis();
-//            xAxis.setLabel(xTitle);
-//
-//            // Create a BarChart (Column Chart)
-//            BarChart<String, Number> columnChart = new BarChart<>(xAxis, yAxis);
-//            columnChart.setTitle("Column Chart");
-//
-//            // Create a data series and populate it with the given X and Y values
-//            XYChart.Series<String, Number> series = new XYChart.Series<>();
-//            series.setName("Data Series");
-//
-//            for (int i = 0; i < xValues.size(); i++) {
-//                series.getData().add(new XYChart.Data<>(xValues.get(i), yValues.get(i)));
-//            }
-//
-//            // Add the series to the column chart
-//            columnChart.getData().add(series);
-//
-//            // Create a scene with the chart
-//            javafx.scene.Scene scene = new javafx.scene.Scene(columnChart, 800, 600);
-//
-//            // Create a new stage (popup window)
-//            Stage popupStage = new Stage();
-//            popupStage.setTitle("Column Chart Popup");
-//            popupStage.setScene(scene);
-//
-//            // Show the popup stage
-//            popupStage.show();
-//
-//        } else {
-//            // For Line Chart, use NumberAxis for both X and Y axes
-//            NumberAxis xAxis = new NumberAxis();
-//            xAxis.setLabel(xTitle);
-//
-//            // Create a LineChart
-//            LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
-//            lineChart.setTitle("Line Chart");
-//
-//            // Create a data series and populate it with the given X and Y values
-//            XYChart.Series<Number, Number> series = new XYChart.Series<>();
-//            series.setName("Data Series");
-//
-//            for (int i = 0; i < yValues.size(); i++) {
-//                series.getData().add(new XYChart.Data<>(Integer.parseInt(xValues.get(i)), yValues.get(i))); // Assuming xValues are numeric for Line Chart
-//            }
-//
-//            // Add the series to the line chart
-//            lineChart.getData().add(series);
-//
-//            // Create a scene with the chart
-//            javafx.scene.Scene scene = new javafx.scene.Scene(lineChart, 800, 600);
-//
-//            // Create a new stage (popup window)
-//            Stage popupStage = new Stage();
-//            popupStage.setTitle("Line Chart Popup");
-//            popupStage.setScene(scene);
-//
-//            // Show the popup stage
-//            popupStage.show();
-//        }
-//    }
 
     public void openGraphPopUp(char xAxis, String xTitle, String yTitle, Map<Character, List<String>> columnsForXYaxis, boolean isBarChart) {
 
@@ -882,10 +758,6 @@ public class PopUpWindowsHandler {
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
     }
-
-
-
-
 
     public Map<Character, List<String>> openFilterDataWithOrderPopUp(char xAxis, char yAxis, String xTitle, String yTitle, Map<Character, Set<String>> stringsInChosenColumn) {
         // Create a new Map to store the user's selected values
