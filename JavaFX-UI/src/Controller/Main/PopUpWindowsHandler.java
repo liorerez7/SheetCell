@@ -269,6 +269,11 @@ public class PopUpWindowsHandler {
 
             // Create a checkbox for each unique value
             for (String value : uniqueValues) {
+
+                if(value.equals("")){
+                    continue;
+                }
+
                 CheckBox checkBox = new CheckBox(value);
 
                 // Add an event listener to the checkbox to track selections

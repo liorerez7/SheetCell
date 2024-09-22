@@ -15,7 +15,9 @@ import Utility.Exception.CycleDetectedException;
 import Utility.Exception.RefToUnSetCellException;
 import Utility.SheetCellSorter;
 import Utility.DtoContainerData;
+import expression.api.EffectiveValue;
 import expression.api.Expression;
+import expression.impl.variantImpl.EffectiveValueImpl;
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
 import java.nio.file.Files;
@@ -103,11 +105,12 @@ public class EngineImpl implements Engine {
 
         Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
 
-        if (newValue.isEmpty()) {
-            sheetCell.updateVersions(targetCell);
-            sheetCell.versionControl();
-            sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
-        } else {
+//        if (newValue.isEmpty()) {
+//            sheetCell.updateVersions(targetCell);
+//            sheetCell.versionControl();
+//            sheetCell.removeCell(CellLocationFactory.fromCellId(col, row));
+        //} else {
+
             try {
                 Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
                 sheetCell.applyCellUpdates(targetCell, newValue, expression);
@@ -119,7 +122,7 @@ public class EngineImpl implements Engine {
                 restoreSheetCellState(savedSheetCellState);
                 throw e;
             }
-        }
+       // }
     }
 
     @Override

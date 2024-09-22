@@ -44,6 +44,9 @@ public class ActionLineController {
         String newValue = newValueText.getText();
         String cellId = cellidLabel.getText();
         newValueText.clear();
+        if(newValue.equals("ActionLine")) {
+            newValue = "";
+        }
         mainController.updateCell(cellId , newValue);
     }
 

@@ -47,4 +47,8 @@ public class Range implements Serializable {
     public boolean canBeDeleted() {
         return cellsThatThisRangeAffects.isEmpty();
     }
+
+    public void removeAffectedFromThisRangeCellLocation(CellLocation cellLocation) {
+        cellsThatThisRangeAffects.remove(cellLocation);
+    }
 }

@@ -50,5 +50,8 @@ public class Average implements Expression {
         return "";
     }
 
+    public Range getRange(){
+        return range;
+    }
 }
 

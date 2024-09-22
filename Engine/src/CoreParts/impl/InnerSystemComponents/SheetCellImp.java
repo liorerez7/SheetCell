@@ -10,10 +10,14 @@ import Utility.CellUtils;
 import Utility.Exception.*;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
+import expression.ReturnedValueType;
 import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.Range;
 import expression.impl.Ref;
+import expression.impl.numFunction.Average;
+import expression.impl.numFunction.Sum;
+import expression.impl.variantImpl.EffectiveValueImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -375,8 +379,29 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     public void applyCellUpdates(Cell targetCell, String newValue, Expression expression)
     {
         targetCell.setOriginalValue(newValue);
-        targetCell.setEffectiveValue(expression);
-        targetCell.setActualValue(this);
+        if(newValue.isEmpty()){
+
+            targetCell.setActualValue(new EffectiveValueImpl(ReturnedValueType.EMPTY, ""));
+            String className = targetCell.getEffectiveValue().getClass().getSimpleName();
+            String sumClassName = Sum.class.getSimpleName();
+            String avgClassName = Average.class.getSimpleName();
+
+            if(className.equals(sumClassName)){
+                Sum sumExpression = (Sum) targetCell.getEffectiveValue();
+                sumExpression.getRange().removeAffectedFromThisRangeCellLocation(targetCell.getLocation());
+            }
+
+            if(className.equals(avgClassName)) {
+                Average averageExpression = (Average) targetCell.getEffectiveValue();
+                averageExpression.getRange().removeAffectedFromThisRangeCellLocation(targetCell.getLocation());
+            }
+
+            targetCell.setEffectiveValue(expression);
+        }
+        else{
+            targetCell.setEffectiveValue(expression);
+            targetCell.setActualValue(this);
+        }
     }
 
     @Override

@@ -15,7 +15,6 @@ public class Sum implements Expression {
     Range range;
 
     public Sum(Range range) {
-
         this.range = range;
     }
 
@@ -43,6 +42,9 @@ public class Sum implements Expression {
         return "";
     }
 
+    public Range getRange(){
+        return range;
+    }
 }
 
 
