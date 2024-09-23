@@ -1,0 +1,118 @@
+/* Style for the StackPane */
+.Background {
+    -fx-background-color: #ebebeb; /* Light gray background color */
+    -fx-padding: 10; /* Padding creates space between the StackPane and the GridPane */
+}
+
+.UserInterfaceSection {
+    -fx-background-color: #ffffff; /* Keep the GridPane background white */
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-border-radius: 10; /* Rounded corners */
+}
+.LabelsOfUserInterfaceSection {
+    -fx-text-fill: #000000; /* White text color */
+    -fx-font-family: 'Arial'; /* Modern, clean font */
+    -fx-font-size: 14px; /* Suitable font size */
+    -fx-padding: 5px; /* Padding inside the label */
+    -fx-border-radius: 5px; /* Rounded corners for the background */
+    -fx-background-radius: 5px; /* Rounded corners for the background */
+    -fx-border-color: #CCCCCC; /* Light gray border color */
+    -fx-background-color: white;
+
+}
+/* Style for modern, clean buttons */
+.ModernButton {
+    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
+    -fx-font-size: 14px; /* Suitable font size */
+   /* -fx-padding: 10px 20px; !* Padding inside the button */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-border-color: transparent; /* No border by default */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
+    -fx-cursor: hand; /* Pointer cursor on hover */
+    -fx-focus-color: transparent; /* Remove focus border color */
+}
+
+
+/* Style for button hover effect */
+.ModernButton:hover {
+    -fx-background-color: #005a9e; /* Darker blue when hovered */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
+}
+
+/* Style for button pressed effect */
+.CustomizeButton:pressed {
+    -fx-background-color: #004080; /* Even darker blue when pressed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
+}
+/* Style for the GridPane */
+.grid {
+    -fx-border-color: black; /* Color of the grid lines */
+    -fx-border-width: 1px;   /* Width of the grid lines */
+    -fx-padding: 0;          /* No padding around the grid */
+}
+
+/* Style for the header labels */
+.header-label {
+    -fx-background-color: #E0E0E0; /* Light gray background for headers */
+    -fx-border-color: black;       /* Color of the border around headers */
+    -fx-border-width: 1px;         /* Width of the border around headers */
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+
+}
+
+/* Style for the cell labels */
+.cell-label {
+    -fx-background-color: white; /* White background for cells */
+    -fx-border-color: black;     /* Color of the border around cells */
+    -fx-border-width: 1px;       /* Width of the border around cells */
+    -fx-alignment: center;
+}
+
+.faded {
+    -fx-opacity: 0.5;
+}
+.normalOpacity {
+    -fx-opacity: 1;
+}
+
+/* Style for modern, clean buttons */
+.DarkModernButton {
+    -fx-background-color: rgba(18, 18, 18, 0.66); /* Dark background color */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
+    -fx-font-size: 14px; /* Suitable font size */
+    /* -fx-padding: 10px 20px; !* Padding inside the button */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-border-color: transparent; /* No border by default */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
+    -fx-cursor: hand; /* Pointer cursor on hover */
+    -fx-focus-color: transparent; /* Remove focus border color */
+}
+
+
+/* Style for button hover effect */
+.DarkModernButton:hover {
+    -fx-background-color: #555555;  /* Darker grey on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
+}
+.DarkUserInterfaceSection {
+    -fx-background-color: #CCCCCC;
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-border-radius: 10; /* Rounded corners */
+}
+
+.DarkLabelsOfUserInterfaceSection {
+    -fx-text-fill: #ffffff; /* White text color */
+    -fx-font-family: 'Arial'; /* Modern, clean font */
+    -fx-font-size: 14px; /* Suitable font size */
+    -fx-padding: 5px; /* Padding inside the label */
+    -fx-border-radius: 5px; /* Rounded corners for the background */
+    -fx-background-radius: 5px; /* Rounded corners for the background */
+    -fx-border-color: #CCCCCC; /* Light gray border color */
+    -fx-background-color: #CCCCCC;
+}

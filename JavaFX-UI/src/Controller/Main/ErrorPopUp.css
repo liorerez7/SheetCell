@@ -1,0 +1,23 @@
+.popup-container {
+    -fx-background-color: #fff5f5; /* Light pink background for a cool effect */
+    -fx-border-color: #ffcccc; /* Light pink border for a soft look */
+    -fx-border-width: 2px; /* Slightly thicker border for better visibility */
+    -fx-border-radius: 8px; /* Rounded corners for a softer appearance */
+    -fx-background-radius: 8px; /* Rounded corners for the background */
+    -fx-padding: 20px; /* More padding around the content for a spacious feel */
+    -fx-font-size: 16px; /* Slightly larger font size */
+    -fx-font-family: 'Verdana', sans-serif; /* Modern font family */
+    -fx-text-fill: #cc0000; /* Dark red text color for emphasis */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 15, 0.5, 0, 0); /* Drop shadow effect */
+}
+
+.popup-label {
+    -fx-background-color: #ffffff; /* White background for the label */
+    -fx-text-fill: #cc0000; /* Dark red text color for consistency */
+    -fx-padding: 15px; /* Padding inside the label */
+    -fx-font-size: 16px; /* Larger font size for the label */
+    -fx-font-family: 'Verdana', sans-serif; /* Modern font family */
+    -fx-border-radius: 5px; /* Rounded corners for the label */
+    -fx-background-radius: 5px; /* Rounded corners for the background of the label */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 0); /* Subtle drop shadow effect */
+}

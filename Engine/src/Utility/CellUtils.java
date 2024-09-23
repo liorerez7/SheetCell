@@ -1,24 +1,33 @@
 package Utility;
 
-import CoreParts.impl.CellImp;
-import CoreParts.impl.SheetCellImp;
-import CoreParts.interfaces.Cell;
-import CoreParts.interfaces.SheetCell;
+import CoreParts.api.Cell;
+import CoreParts.api.sheet.SheetCell;
 import CoreParts.smallParts.CellLocation;
-import expressions.Expression;
-import expressions.Operation;
-import expressions.impl.BinaryExpression;
-import expressions.impl.UnaryExpression;
-import expressions.impl.numFunction.Num;
-import expressions.impl.stringFunction.Str;
-
+import CoreParts.smallParts.CellLocationFactory;
+import Utility.Exception.CellCantBeEvaluatedException;
+import Utility.Exception.RangeDoesntExistException;
+import Utility.Exception.RefToUnSetCellException;
+import expression.Operation;
+import expression.ReturnedValueType;
+import expression.api.EffectiveValue;
+import expression.api.Expression;
+import expression.api.processing.ExpressionParser;
+import expression.impl.Processing.ExpressionParserImpl;
+import expression.impl.Range;
+import expression.impl.Ref;
+import expression.impl.boolFunction.Bool;
+import expression.impl.numFunction.Average;
+import expression.impl.numFunction.Num;
+import expression.impl.numFunction.Sum;
+import expression.impl.stringFunction.Str;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 
 public class CellUtils {
-
+    
     public static boolean trySetNumericValue(String value) {
         try {
             Double numericValue = Double.parseDouble(value);
@@ -28,168 +37,260 @@ public class CellUtils {
         }
     }
 
-    public static List<String> processFunction(String newValue) {
-            return getCellAsStringRepresention(newValue);
-    }
+    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCellException {
 
-    public static boolean isPotentialOperation(String newValue) // TODO : implement function
-    {
-        if (newValue.startsWith("{") && newValue.endsWith("}")) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+        ExpressionParser parser = new ExpressionParserImpl(value);
+        boolean removeSpacesBeforeArguments = true;
 
-
-    public static String extractFunctionName(String input) {
-        String content = input.substring(1, input.length() - 1).trim();
-        // Split the content by comma or space
-        String[] parts = content.split("[, ]");
-
-        if (parts.length > 0) {
-            return parts[0]; // The function name is the first part
+        // Handle numeric values (base case)
+        if (CellUtils.trySetNumericValue(value)) {
+            return handleNumericValue(value, targetCell, insideMethod);
         }
 
-        throw new IllegalArgumentException("Invalid function format");
-    }
-
-    public static String removeParantecesFromString(String input){
-        return input.substring(1, input.length() - 1).trim();
-    }
-
-
-    private static List<String> getCellAsStringRepresention(String newValue) {
-        List<String> cells = new ArrayList<>();
-        String content = newValue.substring(1, newValue.length() - 1).trim();
-        // Split the content by space
-        String[] parts = content.split(" ");
-        for (int i = 1; i < parts.length; i++) {
-            cells.add(parts[i]);
+        // Handle string values (base case)
+        if (!parser.isPotentialOperation()) {
+            return handleStringValue(value, insideMethod);
         }
-        return cells;
-    }
 
-    public  static void checkIfCellsAreOfSameType(List<CellImp> cells) {
-        Class clazz = cells.get(0).getEffectiveValue().getClass();
-        for (CellImp cell : cells) {
-            if (cell.getEffectiveValue().getClass() != clazz) {
-                throw new IllegalArgumentException("Cells are not of the same type");
-            }
+        // Parse operation
+        Operation operation = Operation.fromString(parser.getFunctionName());
+        if (operation == Operation.CONCAT) {
+            removeSpacesBeforeArguments = false;
+        }
+
+        List<String> arguments = parser.getArgumentList(removeSpacesBeforeArguments);
+
+        // Handle specific operations
+        switch (operation) {
+            case REF:
+                return handleReferenceOperation(sheetCell, arguments.get(0));
+            case SUM:
+            case AVERAGE:
+                return handleRangeOperation(operation, sheetCell, targetCell, arguments.get(0));
+            default:
+                return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
         }
     }
 
-    public static List<String> splitArguments(String content) {
-        List<String> arguments = new ArrayList<>();
-        int braceLevel = 0;
-        StringBuilder currentArg = new StringBuilder();
+    private static Expression handleNumericValue(String value, Cell targetCell, boolean insideMethod) throws CellCantBeEvaluatedException {
+        String trimmedValue = value.trim();
 
-        for (char c : content.toCharArray()) {
-            if (c == '{') braceLevel++;
-            if (c == '}') braceLevel--;
-
-            if (c == ',' && braceLevel == 0) {
-                arguments.add(currentArg.toString().trim());
-                currentArg.setLength(0);  // Reset currentArg
-            } else {
-                currentArg.append(c);
-            }
+        if (insideMethod && !value.equals(trimmedValue)) {
+            throw new CellCantBeEvaluatedException(targetCell);
         }
 
-        if (currentArg.length() > 0) {
-            arguments.add(currentArg.toString().trim());  // Add the last argument
-        }
-
-        return arguments;
+        return new Num(Double.parseDouble(trimmedValue));
     }
 
-    public static Expression processExpressionRec(String value, Cell targetCell, SheetCellImp sheetCell) {// this is a recursive function
-        if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
-            return new Num(Double.parseDouble(value));
+    private static Expression handleStringValue(String value, boolean insideMethod) {
+        String trimmedValue = insideMethod ? value : value.trim();
+
+        if (trimmedValue.equalsIgnoreCase("True") || trimmedValue.equalsIgnoreCase("False")) {
+            return new Bool(Boolean.parseBoolean(trimmedValue.toLowerCase()));
         }
 
-        if (!CellUtils.isPotentialOperation(value)) {  // base case: value is a string
-            return new Str(value);
-        }
-
-        List<String> arguments = parseArguments(value);
-        Operation operation = Operation.fromString(arguments.get(0)); // argument(0) = FUNCION_NAME
-
-        if (operation == Operation.REF) {
-            Cell cellThatBeenEffected = sheetCell.getCell(CellLocation.fromCellId(arguments.get(1)));
-            return handleReferenceOperation(cellThatBeenEffected,targetCell);//argument(1) = CELL_ID
-        }
-
-        return operation.calculate(processArguments(arguments.subList(1, arguments.size()), targetCell, sheetCell));
+        return new Str(trimmedValue);
     }
 
-    private static List<String> parseArguments(String value) {
-        String cellId = CellUtils.removeParantecesFromString(value);
-        return CellUtils.splitArguments(cellId);//for example Plus 5 6
+    private static Expression handleReferenceOperation(SheetCell sheetCell, String cellId) {
+        Cell referencedCell = sheetCell.getCell(CellLocationFactory.fromCellId(cellId));
+        return handleReferenceOperation(referencedCell);
     }
 
-    private static Expression handleReferenceOperation(Cell cellThatBeenEffected, Cell cellThatAffects) {
-        validateCircularDependency(cellThatBeenEffected, cellThatAffects);
+    private static Expression handleRangeOperation(Operation operation, SheetCell sheetCell, Cell targetCell, String rangeId) throws RangeDoesntExistException {
+        Range range = sheetCell.getRange(rangeId);
 
-        if (cellThatBeenEffected.getEffectiveValue() == null) {
-            throw new IllegalArgumentException("Invalid expression: cell referenced before being set");
+        if (range == null) {
+            throw new RangeDoesntExistException(rangeId);
         }
 
-        return cellThatBeenEffected.getEffectiveValue();
-    }
+        range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
 
-    public static void validateCircularDependency(Cell cell, Cell targetCell) {
-        if (cell.isCellAffectedBy(targetCell)==false) {
-            targetCell.addCellToAffectedBy(cell);
-            cell.addCellToAffectingOn(targetCell);
-        } else {
-            throw new IllegalArgumentException("Invalid expression: circular dependency");
+        if (operation == Operation.SUM) {
+            return new Sum(range);
         }
+
+        return new Average(range, targetCell.getLocation().getCellId());
     }
 
-    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCellImp sheetCell) {
+    private static Expression handleReferenceOperation(Cell cellThatAffects) throws RefToUnSetCellException {
+
+        return new Ref(cellThatAffects.getLocation());
+    }
+
+
+    public static List<Expression> processArguments(List<String> arguments, Cell targetCell, SheetCell sheetCell, boolean insideMethod)
+            throws RefToUnSetCellException {
+
         List<Expression> expressions = new ArrayList<>();
         for (String arg : arguments) {
-            expressions.add(processExpressionRec(arg.trim(), targetCell, sheetCell));
+
+            expressions.add(processExpressionRec(arg, targetCell, sheetCell, insideMethod));
         }
         return expressions;
     }
 
-    public static void recalculateCellsHelper(Expression expTree, Expression toFind, Expression newValue) {
-        if (expTree instanceof Num || expTree instanceof Str) {  // base case: value is a number
-            return;
+
+    public static boolean isWithinBounds(String from, String to, int numOfRows, int numOfColumns) { // Convert from and to into CellLocation objects
+        CellLocation startCell = CellLocationFactory.fromCellId(from);
+        CellLocation endCell = CellLocationFactory.fromCellId(to);
+
+        // Get the column and row indices for the start and end cells
+        char startCol = startCell.getVisualColumn();
+        char endCol = endCell.getVisualColumn();
+        int startRow = Integer.parseInt(startCell.getVisualRow());
+        int endRow = Integer.parseInt(endCell.getVisualRow());
+
+        // Convert the columns to indices (A = 1, B = 2, etc.)
+        int startColIndex = startCol - 'A' + 1;
+        int endColIndex = endCol - 'A' + 1;
+
+        // Check if the range is within the bounds of the grid
+        return startRow >= 1 && endRow <= numOfRows && startColIndex >= 1 && endColIndex <= numOfColumns;
+    }
+
+    public static Set<CellLocation> getCellsInRange(String from, String to, int numOfRows, int numOfColumns) {
+        Set<CellLocation> cellLocations = new HashSet<>();
+
+        // Convert from and to into CellLocation objects
+        CellLocation startCell = CellLocationFactory.fromCellId(from);
+        CellLocation endCell = CellLocationFactory.fromCellId(to);
+
+        // Get the column and row indices for the start and end cells
+        char startCol = startCell.getVisualColumn();
+        char endCol = endCell.getVisualColumn();
+        int startRow = Integer.parseInt(startCell.getVisualRow());
+        int endRow = Integer.parseInt(endCell.getVisualRow());
+
+        // Ensure the columns and rows are in the correct order
+        if (startCol > endCol || startRow > endRow) {
+            throw new IllegalArgumentException("Invalid range: start cell must be before end cell.");
         }
 
-        if (expTree instanceof BinaryExpression) {
-            BinaryExpression expTree1 = (BinaryExpression) expTree;
-
-            if (expTree1.getExpressionLeft() == toFind) {
-                expTree1.setExpressionLeft(newValue);
-            } else if (expTree1.getExpressionRight() == toFind) {
-                expTree1.setExpressionRight(newValue);
-            } else {
-
-                recalculateCellsHelper(expTree1.getExpressionLeft(), toFind, newValue);
-                recalculateCellsHelper(expTree1.getExpressionRight(), toFind, newValue);
+        // Loop through the columns and rows to generate all CellLocations in the range
+        for (char col = startCol; col <= endCol; col++) {
+            for (int row = startRow; row <= endRow; row++) {
+                // Check if the cell is within the grid bounds
+                if (row <= numOfRows && (col - 'A' + 1) <= numOfColumns) {
+                    String cellId = col + Integer.toString(row);
+                    CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
+                    cellLocations.add(cellLocation);
+                }
             }
-        } else if (expTree instanceof UnaryExpression) {
-            UnaryExpression expTree1 = (UnaryExpression) expTree;
-            if (expTree1.getExpression() == toFind)
-                expTree1.setExpression(newValue);
-            else
-                recalculateCellsHelper(expTree1.getExpression(), toFind, newValue);
         }
-        //TODO: ADD TRINARY EXPRESSION
-    }
-    public static void recalculateCellsRec(Cell targetCell, Expression oldExpression) {
-        for (Cell cell : targetCell.getAffectingOn()) {
 
-            Expression effectiveValue = cell.getEffectiveValue();
-            recalculateCellsHelper(effectiveValue, oldExpression, targetCell.getEffectiveValue());
-        }
+        return cellLocations;
     }
 
 
+    public static List<Character> processCharString(String input) throws IllegalArgumentException {
+        // Trim and split the input string by commas
+        String[] parts = input.trim().split("\\s*,\\s*");
+
+        // Check if the split resulted in empty parts or incorrect format
+        if (parts.length == 0 || containsEmptyOrInvalidParts(parts)) {
+            throw new IllegalArgumentException("Input format is invalid.");
+        }
+
+        List<Character> result = new ArrayList<>();
+
+        for (String part : parts) {
+            if (part.length() != 1) {
+                throw new IllegalArgumentException("Each part must be a single character.");
+            }
+            // Convert to uppercase
+            result.add(part.toUpperCase().charAt(0));
+        }
+
+        return result;
+    }
+
+    private static boolean containsEmptyOrInvalidParts(String[] parts) {
+        for (String part : parts) {
+            if (part.isEmpty()) {
+                return true; // Empty part found
+            }
+        }
+        return false; // No empty parts found
+    }
+
+    public static String formatNumber(double num) {
+        if (num % 1 == 0) {  // Check if num is an integer (no decimal part)
+            return String.format("%d", (int) num);  // Print as integer
+        } else {
+            return String.format("%.2f", num);  // Print as double with 2 decimal places
+        }
+    }
 }
 
+
+
+
+
+
+
+// TODO: old version, needs to check if the new version is still good after more testing..
+
+//    public static Expression processExpressionRec(String value, Cell targetCell, SheetCell sheetCell, boolean insideMethod) throws RefToUnSetCellException {// this is a recursive function
+//
+//        ExpressionParser parser = new ExpressionParserImpl(value);
+//        boolean removeSpacesBeforeArguments = true;
+//
+//        if (CellUtils.trySetNumericValue(value)) {  // base case: value is a number
+//
+//            if (insideMethod) {
+//
+//                String trimmedValue = value.trim();
+//
+//                if (!(value.equals(trimmedValue))) {
+//                    throw new CellCantBeEvaluatedException(targetCell);
+//                }
+//            }
+//            else{
+//                value = value.trim();
+//            }
+//
+//            return new Num(Double.parseDouble(value));
+//        }
+//
+//        if (!parser.isPotentialOperation()) {  // base case: value is a string
+//
+//            if (!insideMethod) {
+//                value = value.trim();  // Trim spaces for ordinary strings
+//            }
+//
+//            if (value.equalsIgnoreCase("True") || value.equalsIgnoreCase("False")) {
+//                return new Bool(Boolean.parseBoolean(value.toLowerCase()));  // Parse ignoring case
+//            }
+//
+//            return new Str(value);
+//        }
+//
+//        Operation operation = Operation.fromString(parser.getFunctionName());// argument(0) = FUNCION_NAME
+//
+//        if(operation == Operation.CONCAT){
+//            removeSpacesBeforeArguments = false;
+//        }
+//
+//        List<String> arguments = parser.getArgumentList(removeSpacesBeforeArguments);
+//
+//        if (operation == Operation.REF) {
+//            Cell cellThatAffects = sheetCell.getCell(CellLocationFactory.fromCellId(arguments.getFirst()));
+//            return handleReferenceOperation(cellThatAffects);  //argument(1) = CELL_ID
+//        }
+//        else if(operation == Operation.SUM || operation == Operation.AVERAGE){
+//            Range range = sheetCell.getRange(arguments.getFirst());
+//            if(range == null){
+//                throw new RangeDoesntExistException(arguments.getFirst());
+//            }
+//            range.addAffectedFromThisRangeCellLocation(targetCell.getLocation());
+//
+//            if(operation == Operation.SUM){
+//                return new Sum(range);
+//            }
+//
+//            return new Average(range, targetCell.getLocation().getCellId());
+//        }
+//
+//        return operation.calculate(processArguments(arguments, targetCell, sheetCell, true));
+//    }

@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ex2Generated">
+    <output-path>$PROJECT_DIR$/out/artifacts/ex2Generated</output-path>
+    <root id="archive" name="ex2Generated.jar">
+      <element id="module-output" name="Generated1.1" />
+      <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-jxc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-xjc.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-core.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-impl.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/angus-activation.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jakarta.xml.bind-api.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jakarta.activation-api.jar" />
+    </root>
+  </artifact>
+</component>
