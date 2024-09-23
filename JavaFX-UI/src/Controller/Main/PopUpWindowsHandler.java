@@ -35,7 +35,10 @@ public class PopUpWindowsHandler {
 
         // Create a new GridPane and initialize it with data
         GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        //popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+        popupGrid.getStylesheets().add("Controller/Grid/ExelBasicGrid.css");
+
 
         // Initialize the grid with the DtoSheetCell and cycle
         // Assuming gridScrollerController is accessible in this context
@@ -73,7 +76,10 @@ public class PopUpWindowsHandler {
         scene.widthProperty().addListener((obs, oldVal, newVal) -> popupStage.sizeToScene());
         scene.heightProperty().addListener((obs, oldVal, newVal) -> popupStage.sizeToScene());
 
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ErrorPopup.css")).toExternalForm());
+        scene.getStylesheets().add("Controller/Main/ErrorPopUp.css");
+
+
+        //scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ErrorPopup.css")).toExternalForm());
         messageLabel.getStyleClass().add("popup-label");
         layout.getStyleClass().add("popup-container");
 
@@ -384,7 +390,9 @@ public class PopUpWindowsHandler {
 
         // Create a new GridPane for the popup
         GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+        popupGrid.getStylesheets().add("Controller/Grid/ExelBasicGrid.css");
+
+        //popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
 
         // Initialize the grid
         gridInitializer.accept(popupGrid);
@@ -506,7 +514,9 @@ public class PopUpWindowsHandler {
 
         // Create a new GridPane for the popup
         GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
+
+        popupGrid.getStylesheets().add("Controller/Grid/ExelBasicGrid.css");
+        //popupGrid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../Grid/ExelBasicGrid.css")).toExternalForm());
 
         // Initialize the grid and bind the model to the grid's labels
         Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime);
