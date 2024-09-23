@@ -7,7 +7,6 @@ This is a desktop application developed in Java using JavaFX that simulates a sp
 ## Features
 
 - **Spreadsheet Interface**: Intuitive grid layout for data entry and manipulation.
-- **Two-Factor Authentication**: Secure access with an optional two-factor authentication setup.
 - **Cell Operations**: 
   - Update cell values.
   - Retrieve and display neighbors of selected cells.
@@ -36,7 +35,6 @@ This is a desktop application developed in Java using JavaFX that simulates a sp
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/your-repository.git
-   cd your-repository
+1. Download the "DownloadToRun" folder 
+2. Click on the run.bat file
+3. Have fun!
