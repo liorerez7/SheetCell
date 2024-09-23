@@ -113,11 +113,15 @@ public class SheetCellFilter {
                 // Ensure column index is within bounds of the current row
                 if (colIndex < currentRow.size()) {
                     EffectiveValueContainer cellContainer = currentRow.get(colIndex);
-                    if(cellContainer == null || cellContainer.getEffectiveValue() == null){
-                        continue;
+
+                    String cellValue = "";
+
+                    if(!(cellContainer == null || cellContainer.getEffectiveValue() == null)){
+                        //continue;
+                        cellValue = cellContainer.getEffectiveValue().getValue().toString();
+
                     }
 
-                    String cellValue = cellContainer.getEffectiveValue().getValue().toString();
                     try{
                         double doubleValue = Double.parseDouble(cellValue);
                         cellValue = CellUtils.formatNumber(doubleValue);
