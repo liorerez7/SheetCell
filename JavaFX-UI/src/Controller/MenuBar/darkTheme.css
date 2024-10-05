@@ -11,6 +11,8 @@
     -fx-text-fill: #e0e0e0;            /* Light text color */
    /* -fx-border-width: 1 1 1 1; */
     -fx-padding: 5px 10px;
+    -fx-font-weight: bold;
+
 }
 
 .menu-bar .menu {

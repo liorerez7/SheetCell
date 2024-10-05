@@ -32,4 +32,6 @@ public interface Engine {
 
 
     DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter);
+
+    Set<String> getAllRangeNames();
 }

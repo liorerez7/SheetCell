@@ -90,26 +90,6 @@ public class CustomCellLabel {
     }
 
     // Helper method to update background color with layers
-//    private void updateBackground() {
-//
-//        if (backgroundLayers.length > 0) {
-//            StringBuilder style = new StringBuilder("-fx-background-color: ");
-//            for (Color layer : backgroundLayers) {
-//                style.append(toRgbString(layer)).append(", ");
-//            }
-//            style.append(toRgbString(backgroundColor)).append(";");
-//            label.setStyle(style.toString());
-//        } else if (backgroundColor != null) {
-//            label.setStyle("-fx-background-color: " + toRgbString(backgroundColor) + ";"
-//            +"-fx-border-color: black; " +
-//                            "-fx-border-width: 1px; " +
-//                            "-fx-padding: 5px; " +
-//                            "-fx-wrap-text: false; "
-//                    );
-//        }
-//    }
-
-    // Helper method to update background color with layers
     private void updateBackground() {
         if (backgroundLayers.length > 0) {
             StringBuilder style = new StringBuilder("-fx-background-color: ");
@@ -176,6 +156,28 @@ public class CustomCellLabel {
                         "-fx-padding: 5px; " +
                         "-fx-wrap-text: false; "
         );
+    }
+
+    public void setBorderColor(Color colorChoiceForBorder, boolean mouseHasEntered) {
+        String color = toRgbString(colorChoiceForBorder);
+
+        // Get the existing style to avoid overwriting it
+        String currentStyle = label.getStyle();
+
+        // Check if the style already contains a border color
+        String updatedStyle = currentStyle.replaceAll("-fx-border-color: [^;]+;", ""); // Remove existing border color
+        updatedStyle = updatedStyle.replaceAll("-fx-border-width: [^;]+;", "");       // Remove existing border width
+
+        if (mouseHasEntered) {
+            // Add the new border color and stronger border width
+            updatedStyle += "-fx-border-color: " + color + "; -fx-border-width: 2px;";
+        } else {
+            // Reset to the default border color and width
+            updatedStyle += "-fx-border-color: " + color + "; -fx-border-width: 1px;";
+        }
+
+        // Apply the updated style, preserving background and other styles
+        label.setStyle(updatedStyle);
     }
 }
 

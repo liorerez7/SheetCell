@@ -52,8 +52,10 @@ public class GridController {
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid, boolean isPopup) {
 
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
-        grid.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Allow the grid to resize dynamically
+        grid.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         grid.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        grid.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
 
 
         int numCols = sheetCell.getNumberOfColumns();
@@ -111,6 +113,9 @@ public class GridController {
                     String textForLabel = StringParser.convertValueToLabelText(effectiveValue);
                     cell.setText(textForLabel);
                 }
+
+                cell.setOnMouseEntered(event -> onCellMouseEntered(cell.getId()));
+                cell.setOnMouseExited(event -> onCellMouseExited(cell.getId()));  // Use MOUSE_EXITED to reset border color
                 cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
                 cellLocationToLabel.put(location, cell);
                 grid.add(cell,col, row);
@@ -119,6 +124,8 @@ public class GridController {
 
         return cellLocationToLabel;
     }
+
+
 
     private void setupColumnConstraints(GridPane grid, int numCols, int cellWidth) {
         for (int i = 0; i < numCols + 1; i++) { // +1 for header column
@@ -234,6 +241,16 @@ public class GridController {
 
     private void onCellClicked(String location) {
         mainController.cellClicked(location);
+    }
+
+    private void onCellMouseEntered(String location) {
+        CustomCellLabel customCellLabel = cellLocationToCustomCellLabel.get(CellLocationFactory.fromCellId(location));
+        customCellLabel.setBorderColor(Color.RED, true);  // Use a brighter, stronger green
+    }
+
+    private void onCellMouseExited(String id) {
+        CustomCellLabel customCellLabel = cellLocationToCustomCellLabel.get(CellLocationFactory.fromCellId(id));
+        customCellLabel.setBorderColor(Color.BLACK, false);
     }
 
     public void setMainController(MainController mainController) {

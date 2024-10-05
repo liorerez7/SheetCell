@@ -110,6 +110,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
     -fx-cursor: hand; /* Pointer cursor on hover */
     -fx-focus-color: transparent; /* Remove focus border color */
+    -fx-font-weight: bold;
 }
 
 
@@ -206,14 +207,16 @@
     -fx-background-color: rgba(18, 18, 18, 0.66); /* Dark background color */
     -fx-text-fill: white; /* White text color */
     -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
-    -fx-font-size: 12px; /* Suitable font size */
+    -fx-font-size: 11px; /* Suitable font size */
     -fx-border-radius: 5px; /* Rounded corners */
     -fx-background-radius: 5px; /* Rounded corners */
     -fx-border-color: transparent; /* No border by default */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
     -fx-cursor: hand; /* Pointer cursor on hover */
     -fx-focus-color: transparent; /* Remove focus border color */
+    -fx-font-weight: bold;
 }
+
 
 
 /* Style for button hover effect */
@@ -381,6 +384,7 @@
     -fx-text-fill: #333333;            /* Dark grey text color */
     -fx-font-size: 14px;               /* Font size */
     -fx-padding: 5px 10px;             /* Padding inside menu items */
+
 }
 
 .Dark-menu-bar .menu:hover {

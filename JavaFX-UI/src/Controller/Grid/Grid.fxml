@@ -3,4 +3,4 @@
 <?import javafx.scene.control.ScrollPane?>
 
 
-<ScrollPane fx:id="gridScroller" stylesheets="@../CssAdujsments/ExcelCssLayout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Grid.GridController" />
+<ScrollPane fx:id="gridScroller" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../CssAdujsments/ExcelCssLayout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Grid.GridController" />

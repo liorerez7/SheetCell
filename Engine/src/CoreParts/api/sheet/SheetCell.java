@@ -22,4 +22,6 @@ public interface SheetCell extends
     Range getRange(String rangeName);
 
     void deleteRange(String name);
+
+    Set<String> getAllRangeNames();
 }

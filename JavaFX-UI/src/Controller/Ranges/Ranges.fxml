@@ -21,20 +21,26 @@
                   <Insets left="5.0" right="5.0" top="7.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="25.0" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="add range">
+            <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="25.0" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="Add range">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" top="7.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteRangeButton" mnemonicParsing="false" onAction="#deleteRangeClicked" prefHeight="31.0" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="delete range">
+            <Button fx:id="deleteRangeButton" mnemonicParsing="false" onAction="#deleteRangeClicked" prefHeight="31.0" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="Delete range">
                <VBox.margin>
                   <Insets left="5.0" top="7.0" />
                </VBox.margin>
+               <padding>
+                  <Insets left="9.0" />
+               </padding>
             </Button>
             <ComboBox fx:id="SystemRanges" prefWidth="150.0" promptText="Ranges" styleClass="RangeButton" stylesheets="@Ranges.css">
                <VBox.margin>
                   <Insets bottom="7.0" left="5.0" right="5.0" top="7.0" />
                </VBox.margin>
+               <padding>
+                  <Insets left="36.0" />
+               </padding>
             </ComboBox>
          </children>
          <StackPane.margin>

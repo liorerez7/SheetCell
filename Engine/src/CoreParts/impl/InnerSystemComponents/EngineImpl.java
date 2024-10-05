@@ -215,4 +215,9 @@ public class EngineImpl implements Engine {
         SheetConvertor convertor = new SheetConvertorImpl();
         sheetCell = convertor.convertSheet(sheet);
     }
+
+    @Override
+    public Set<String> getAllRangeNames() {
+        return sheetCell.getAllRangeNames();
+    }
 }
