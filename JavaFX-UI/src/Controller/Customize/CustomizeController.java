@@ -367,6 +367,8 @@ public class CustomizeController {
     public void adjustTextButtonColor(Color color){
         Utilies.setMenuButtonTextColor(makeGraphButton, color);
         makeGraphButton.setTextFill(color);
+        Utilies.setComboBoxHeaderTextColor(columnComboBox, color);
+        Utilies.setComboBoxHeaderTextColor(rowComboBox, color);
     }
 
     @FXML

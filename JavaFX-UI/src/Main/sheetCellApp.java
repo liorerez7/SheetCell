@@ -20,7 +20,7 @@ public class sheetCellApp extends Application {
         mainController.setEngine(new EngineImpl());
 
 
-        Scene scene = new Scene(root, 1550, 770);
+        Scene scene = new Scene(root, 1515, 770);
         stage.setScene(scene);
         stage.show();
     }

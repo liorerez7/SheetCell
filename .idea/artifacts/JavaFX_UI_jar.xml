@@ -4,7 +4,7 @@
     <root id="archive" name="JavaFX-UI.jar">
       <element id="module-output" name="JavaFX-UI" />
       <element id="module-output" name="Engine" />
-      <element id="module-output" name="Generated1.1" />
+      <element id="module-output" name="GeneratedClasses" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../javaFX/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx-swt.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../javaFX/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.web.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../javaFX/openjfx-22.0.2_windows-x64_bin-sdk/javafx-sdk-22.0.2/lib/javafx.base.jar" path-in-jar="/" />

@@ -231,7 +231,8 @@ public class MainController {
 
     public void rangeDeleteClicked() {
 
-        RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow();
+        Set<String> rangeNames = engine.getAllRangeNames();
+        RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
         String name = rangeStringsData.getName();
 
         if (name != null) //in case when just shutting the window without entering anything
@@ -302,19 +303,18 @@ public class MainController {
         String filterColumn = filterGridData.getColumnsToFilterBy();
 
         // Check if the user has provided input (if window wasn't closed without action)
-        if (range != null && filterColumn != null) {
+        if (range != null && filterColumn != null && !(filterColumn.isEmpty())) {
             try {
                 // Fetch unique strings in the selected column within the given range
                 Map<Character, Set<String>> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
 
                 Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
 
+                boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
 
-                if (filter == null || filter.isEmpty()) {
-                    return;
-                }
 
-                if (inputIsValid) {
+
+                if (inputIsValid && !isFilterEmpty) {
                     DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter);
                     createFilterGridPopUpp(filteredSheetCell);
                 }
@@ -407,6 +407,10 @@ public class MainController {
 
         // Step 1: Fetch runtime analysis data
         RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
+
+        if(runTimeAnalysisData.getCellId().isEmpty()) {
+            return;
+        }
 
         // Save current state of the sheet cell
         engine.saveCurrentSheetCellState();

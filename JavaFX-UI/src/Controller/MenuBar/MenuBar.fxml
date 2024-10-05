@@ -28,7 +28,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <AnchorPane prefHeight="71.0" prefWidth="204.0">
+      <AnchorPane maxWidth="1.7976931348623157E308" prefHeight="71.0" prefWidth="204.0">
          <children>
             <Text fx:id="pathText" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Path:" AnchorPane.bottomAnchor="5.666666666666664" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="8.0" />
             <Label fx:id="path" layoutX="52.0" layoutY="5.0" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="400.0" styleClass="LabelsOfUserInterfaceSection" AnchorPane.topAnchor="1.0" />

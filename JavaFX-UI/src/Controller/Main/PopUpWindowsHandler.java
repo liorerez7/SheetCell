@@ -89,8 +89,45 @@ public class PopUpWindowsHandler {
         popupStage.show();
     }
 
-    public RangeStringsData openDeleteRangeWindow() {
+//    public RangeStringsData openDeleteRangeWindow() {
+//
+//        Stage popupStage = new Stage();
+//        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
+//        popupStage.setTitle("Insert range to delete");
+//
+//        // Create a GridPane layout for the popup
+//        GridPane gridPane = new GridPane();
+//        gridPane.setHgap(10);
+//        gridPane.setVgap(10);
+//
+//        // Create and add the labels and text fields
+//        Label nameLabel = new Label("Range Name:");
+//        TextField nameField = new TextField();
+//
+//        gridPane.add(nameLabel, 0, 0);
+//        gridPane.add(nameField, 1, 0);
+//
+//        // Create and add the submit button
+//        Button submitButton = new Button("Submit");
+//        gridPane.add(submitButton, 1, 2);
+//        RangeStringsData rangeStringsData = new RangeStringsData();
+//        submitButton.setOnAction(e -> {
+//            String rangeName = nameField.getText();
+//            // Handle the submission of the range name and range here
+//            // For now, we just close the popup
+//            rangeStringsData.setName(rangeName);
+//            rangeStringsData.setRange(null);
+//            popupStage.close();
+//        });
+//        // Set the scene and show the popup window
+//        Scene scene = new Scene(gridPane, 300, 200);
+//        popupStage.setScene(scene);
+//        popupStage.showAndWait();
+//        return rangeStringsData;
+//    }
 
+
+    public RangeStringsData openDeleteRangeWindow(Set<String> rangeNames) {
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
         popupStage.setTitle("Insert range to delete");
@@ -100,31 +137,40 @@ public class PopUpWindowsHandler {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        // Create and add the labels and text fields
-        Label nameLabel = new Label("Range Name:");
-        TextField nameField = new TextField();
+        // Create and add the label and ComboBox
+        Label nameLabel = new Label("Select Range:");
+        ComboBox<String> rangeComboBox = new ComboBox<>();
+        rangeComboBox.getItems().addAll(rangeNames); // Add range names to ComboBox
 
         gridPane.add(nameLabel, 0, 0);
-        gridPane.add(nameField, 1, 0);
+        gridPane.add(rangeComboBox, 1, 0);
 
         // Create and add the submit button
         Button submitButton = new Button("Submit");
         gridPane.add(submitButton, 1, 2);
+
         RangeStringsData rangeStringsData = new RangeStringsData();
         submitButton.setOnAction(e -> {
-            String rangeName = nameField.getText();
-            // Handle the submission of the range name and range here
-            // For now, we just close the popup
-            rangeStringsData.setName(rangeName);
-            rangeStringsData.setRange(null);
-            popupStage.close();
+            String selectedRangeName = rangeComboBox.getValue();
+            // Handle the submission of the selected range name
+            if (selectedRangeName != null) {
+                rangeStringsData.setName(selectedRangeName);
+                rangeStringsData.setRange(null); // Assuming you still want to set this to null
+                popupStage.close();
+            } else {
+                // Optionally, handle the case when no selection is made
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a range to delete.", ButtonType.OK);
+                alert.showAndWait();
+            }
         });
+
         // Set the scene and show the popup window
         Scene scene = new Scene(gridPane, 300, 200);
         popupStage.setScene(scene);
         popupStage.showAndWait();
         return rangeStringsData;
     }
+
 
     public RangeStringsData openAddRangeWindow() {
         // Create a new stage (window)
@@ -178,7 +224,6 @@ public class PopUpWindowsHandler {
     }
 
     public SortRowsData openSortRowsWindow() {
-
         SortRowsData sortRowsData = new SortRowsData();
 
         // Create a new stage (window)
@@ -197,37 +242,117 @@ public class PopUpWindowsHandler {
         Label rangeToLabel = new Label("Range-To (example, C5):");
         TextField rangeToField = new TextField();
 
-        Label columnsSortLabel = new Label("By which columns:");
-        TextField columnsSortField = new TextField();
+        // Label for columns selection
+        Label columnsSortLabel = new Label("Select columns to sort by:");
+
+        // ComboBox for selecting columns (initially empty)
+        ComboBox<String> columnsComboBox = new ComboBox<>();
+        columnsComboBox.setPromptText("Select a column");
+
+        // ListView to display selected columns in order
+        ListView<String> selectedColumnsListView = new ListView<>();
+        selectedColumnsListView.setPrefHeight(100); // Set a preferred height for the ListView
+
+        // Button to add selected column
+        Button addColumnButton = new Button("Add Column");
+
+        // Button to remove selected column
+        Button removeColumnButton = new Button("Remove Column");
+
+        // Button to finalize the range
+        Button finalizeRangeButton = new Button("Finalize Range");
 
         // Add the elements to the grid
         gridPane.add(rangeFromLabel, 0, 0);
         gridPane.add(rangeFromField, 1, 0);
         gridPane.add(rangeToLabel, 0, 1);
         gridPane.add(rangeToField, 1, 1);
-        gridPane.add(columnsSortLabel, 0, 2);
-        gridPane.add(columnsSortField, 1, 2);
+        gridPane.add(finalizeRangeButton, 0, 2, 2, 1); // Place the Finalize button
+        gridPane.add(columnsSortLabel, 0, 3);
+        gridPane.add(columnsComboBox, 1, 3);
+        gridPane.add(addColumnButton, 1, 4);
+        gridPane.add(selectedColumnsListView, 1, 5);
+        gridPane.add(removeColumnButton, 1, 6);
 
-        // Create and add the submit button
+        // Create and add the submit button, initially disabled
         Button submitButton = new Button("Submit");
-        gridPane.add(submitButton, 1, 3);
+        submitButton.setDisable(true); // Initially disabled
+        GridPane.setMargin(submitButton, new Insets(10)); // Add margin around the submit button
+        gridPane.add(submitButton, 1, 7);
+
+        // Disable all elements initially except for the Finalize button
+        columnsComboBox.setDisable(true);
+        addColumnButton.setDisable(true);
+        removeColumnButton.setDisable(true);
+        submitButton.setDisable(true);
+
+        // Handle clicking the Finalize button
+        finalizeRangeButton.setOnAction(e -> {
+            // Get the range values
+            String rangeFrom = rangeFromField.getText().trim();
+            String rangeTo = rangeToField.getText().trim();
+
+            rangeTo = rangeTo.toUpperCase();
+            rangeFrom = rangeFrom.toUpperCase();
+
+            // Extract columns from the range (e.g., A2 to C7)
+            String startColumn = rangeFrom.substring(0, 1); // Get the starting column letter (e.g., A)
+            String endColumn = rangeTo.substring(0, 1); // Get the ending column letter (e.g., C)
+
+            // Populate the combo box with the range columns
+            columnsComboBox.getItems().clear();
+            for (char c = startColumn.charAt(0); c <= endColumn.charAt(0); c++) {
+                columnsComboBox.getItems().add(String.valueOf(c));
+            }
+
+            // Enable combo box and buttons after filling the range
+            columnsComboBox.setDisable(false);
+            addColumnButton.setDisable(false);
+            removeColumnButton.setDisable(false);
+            submitButton.setDisable(true); // Ensure submit is disabled until a column is added
+        });
+
+        // Handle adding columns to the ListView
+        addColumnButton.setOnAction(e -> {
+            String selectedColumn = columnsComboBox.getSelectionModel().getSelectedItem();
+            if (selectedColumn != null && !selectedColumnsListView.getItems().contains(selectedColumn)) {
+                selectedColumnsListView.getItems().add(selectedColumn);
+                columnsComboBox.getSelectionModel().clearSelection(); // Clear the selection
+                // Enable the submit button if at least one column is selected
+                submitButton.setDisable(selectedColumnsListView.getItems().isEmpty());
+            }
+        });
+
+        // Handle removing selected columns from the ListView
+        removeColumnButton.setOnAction(e -> {
+            String selectedItem = selectedColumnsListView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                selectedColumnsListView.getItems().remove(selectedItem);
+                // Disable the submit button if no columns are left
+                submitButton.setDisable(selectedColumnsListView.getItems().isEmpty());
+            }
+        });
 
         submitButton.setOnAction(e -> {
-
-            // Combine Range-From and Range-To into the range format (e.g., "A2..C5")
+            // Get the range values
             String rangeFrom = rangeFromField.getText();
             String rangeTo = rangeToField.getText();
-            String range = rangeFrom + ".." + rangeTo;
+            String range = rangeFrom + ".." + rangeTo; // Combine Range-From and Range-To into the range format
 
-            // Set the data in the SortRowsData object
-            sortRowsData.setRange(range);
-            sortRowsData.setColumnsToSortBy(columnsSortField.getText());
+            // Collect the selected columns from ListView
+            List<String> selectedColumns = selectedColumnsListView.getItems();
 
+            // Join selected columns into "A,C,B" format based on their order
+            String columns = String.join(",", selectedColumns);
+
+            // Handle the submission of the range and selected columns
+            sortRowsData.setRange(range);  // Store the combined range
+            sortRowsData.setColumnsToSortBy(columns); // Store the selected columns
             popupStage.close();
         });
 
         // Set the scene and show the popup window
-        Scene scene = new Scene(gridPane, 350, 150);
+        Scene scene = new Scene(gridPane, 500, 400); // Adjusted size for ListView
         popupStage.setScene(scene);
         popupStage.showAndWait();
         return sortRowsData;
@@ -250,8 +375,8 @@ public class PopUpWindowsHandler {
         Label rangeToLabel = new Label("Range-To (example, C5):");
         TextField rangeToField = new TextField();
 
-        Label columnSortLabel = new Label("By which columns:");
-        TextField columnSortField = new TextField();
+        Label columnSortLabel = new Label("Columns to filter by:");
+        HBox checkBoxContainer = new HBox(10); // Container for dynamic checkboxes
 
         // Add the elements to the grid
         gridPane.add(rangeFromLabel, 0, 0);
@@ -259,28 +384,67 @@ public class PopUpWindowsHandler {
         gridPane.add(rangeToLabel, 0, 1);
         gridPane.add(rangeToField, 1, 1);
         gridPane.add(columnSortLabel, 0, 2);
-        gridPane.add(columnSortField, 1, 2);
+        gridPane.add(checkBoxContainer, 1, 2); // Empty at first, will be populated later
 
-        // Create and add the submit button
+        // Create and add the submit button, initially disabled
         Button submitButton = new Button("Submit");
-        gridPane.add(submitButton, 1, 3);
-        FilterGridData filterGridData = new FilterGridData();
-        submitButton.setOnAction(e -> {
+        submitButton.setDisable(true); // Initially disabled
+        gridPane.add(submitButton, 1, 4);
 
+        // Button to dynamically generate checkboxes
+        Button chooseColumnsButton = new Button("Choose Columns");
+        gridPane.add(chooseColumnsButton, 1, 3);
+
+        FilterGridData filterGridData = new FilterGridData();
+
+        chooseColumnsButton.setOnAction(e -> {
+            String rangeFrom = rangeFromField.getText();
+            String rangeTo = rangeToField.getText();
+
+            // Extract column letters from the Range-From and Range-To (e.g., A from A2, C from C5)
+            char startColumn = rangeFrom.charAt(0); // Assuming format like A2
+            char endColumn = rangeTo.charAt(0); // Assuming format like C5
+
+            // Clear any previously generated checkboxes
+            checkBoxContainer.getChildren().clear();
+
+            // Create checkboxes dynamically for each column from startColumn to endColumn
+            for (char col = startColumn; col <= endColumn; col++) {
+                CheckBox checkBox = new CheckBox(String.valueOf(col));
+                checkBoxContainer.getChildren().add(checkBox);
+            }
+
+            // Enable the submit button after columns are chosen
+            submitButton.setDisable(false);
+        });
+
+        submitButton.setOnAction(e -> {
+            // Get the range values
             String rangeFrom = rangeFromField.getText();
             String rangeTo = rangeToField.getText();
             String range = rangeFrom + ".." + rangeTo; // Combine Range-From and Range-To into the range format
 
-            String column = columnSortField.getText();
+            // Collect the selected columns from dynamically generated checkboxes
+            List<String> selectedColumns = new ArrayList<>();
+            for (Node node : checkBoxContainer.getChildren()) {
+                if (node instanceof CheckBox) {
+                    CheckBox checkBox = (CheckBox) node;
+                    if (checkBox.isSelected()) {
+                        selectedColumns.add(checkBox.getText());
+                    }
+                }
+            }
 
-            // Handle the submission of the range name and column here
+            String column = String.join(",", selectedColumns); // Join selected columns into "A,C,D" format
+
+            // Handle the submission of the range and selected columns
             filterGridData.setRange(range);  // Store the combined range
-            filterGridData.setColumnsToFilterBy(column);
+            filterGridData.setColumnsToFilterBy(column); // Store the selected columns
             popupStage.close();
         });
 
         // Set the scene and show the popup window
-        Scene scene = new Scene(gridPane, 350, 150);
+        Scene scene = new Scene(gridPane, 400, 200); // Adjusted size for checkboxes
         popupStage.setScene(scene);
         popupStage.showAndWait();
         return filterGridData;
@@ -649,7 +813,6 @@ public class PopUpWindowsHandler {
         popupStage.showAndWait();
         return data;
     }
-
 
     public void openGraphPopUp(char xAxis, String xTitle, String yTitle, Map<Character, List<String>> columnsForXYaxis, boolean isBarChart) {
 

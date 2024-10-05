@@ -201,6 +201,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
                     }
                 }
             });
+
             Set<String> copy = Set.copyOf(uniqueStrings);
             columnToUniqueStrings.put(upperCol, copy);
             uniqueStrings.clear();
@@ -431,5 +432,12 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
 
     }
 
-
+    @Override
+    public Set<String> getAllRangeNames() {
+        Set<String> rangeNames = new HashSet<>();
+        for (Range range : systemRanges) {
+            rangeNames.add(range.getRangeName());
+        }
+        return rangeNames;
+    }
 }

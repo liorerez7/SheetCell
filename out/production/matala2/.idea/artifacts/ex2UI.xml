@@ -19,7 +19,7 @@
       <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/angus-activation.jar" />
       <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jakarta.xml.bind-api.jar" />
       <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jakarta.activation-api.jar" />
-      <element id="module-output" name="Generated1.1" />
+      <element id="module-output" name="GeneratedClasses" />
     </root>
   </artifact>
 </component>
