@@ -17,6 +17,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#closeMenuButton" text="Close" />
                   <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="load XML" />
+                  <MenuItem mnemonicParsing="false" onAction="#backToMenuClicked" text="backToMenu" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Display Mode">

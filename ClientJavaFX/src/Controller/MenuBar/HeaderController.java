@@ -59,7 +59,7 @@ public class HeaderController {
 
     @FXML
     void backToMenuClicked(ActionEvent event) {
-        mainController.backToMenuClicked();
+        mainController.showLoginScreen();
     }
 
     @FXML

@@ -60,15 +60,16 @@ public class sheetCellApp extends Application {
         this.stage = stage;
 
         // Load the main application screen FXML and controller
-        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/Controller/Main/SheetCell.fxml"));
+        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource(MainController.MAIN_APP_PAGE_FXML_RESOURCE_LOCATION));
         mainAppRoot = mainLoader.load();
         mainController = mainLoader.getController();
         mainController.setStage(stage);
         mainController.setEngine(new EngineImpl());
         mainController.setApp(this);
 
+
         // Load the login screen FXML and controller
-        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/Controller/login/login.fxml"));
+        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource(MainController.LOGIN_PAGE_FXML_RESOURCE_LOCATION));
         loginRoot = loginLoader.load();
         LoginController loginController = loginLoader.getController();
         loginController.setMainController(mainController);
