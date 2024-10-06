@@ -58,6 +58,11 @@ public class HeaderController {
     }
 
     @FXML
+    void backToMenuClicked(ActionEvent event) {
+        mainController.backToMenuClicked();
+    }
+
+    @FXML
     void openFileChooser(ActionEvent event) {
         // Retrieve the current stage
         Stage stage = (Stage) menuBar.getScene().getWindow();

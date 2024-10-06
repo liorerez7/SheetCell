@@ -13,6 +13,7 @@ import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
+import Main.sheetCellApp;
 import Utility.Exception.*;
 import Utility.DtoContainerData;
 import javafx.application.Platform;
@@ -63,7 +64,10 @@ public class MainController implements Closeable {
 
 
 
-    Engine engine;
+    private Engine engine;
+    private Stage stage;
+    private sheetCellApp app;  // Reference to the main application
+
 
 
     @FXML
@@ -110,10 +114,13 @@ public class MainController implements Closeable {
     private final ThemeManager themeManager;
     private ProgressManager progressManager;
     // Reference to the stage
-    private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setApp(sheetCellApp app) {
+        this.app = app;
     }
 
     @FXML
@@ -530,59 +537,87 @@ public class MainController implements Closeable {
 
     }
 
+//    // Method to show the login screen
+//    public void showLoginScreen() {
+//        try {
+//            FXMLLoader fxmlLoader = new FXMLLoader();
+//            URL loginPageUrl = getClass().getResource(LOGIN_PAGE_FXML_RESOURCE_LOCATION);
+//            fxmlLoader.setLocation(loginPageUrl);
+//            Parent loginRoot = fxmlLoader.load();
+//
+//            // Get the LoginController and set reference to MainController
+//            LoginController loginController = fxmlLoader.getController();
+//            loginController.setMainController(this);
+//
+//            if (stage.getScene() == null) {
+//                Scene scene = new Scene(loginRoot);  // Create a new scene with loginRoot as the root
+//                stage.setScene(scene);               // Set the scene on the stage
+//            } else {
+//                // If the scene is already initialized, just set the root to the login page
+//                stage.getScene().setRoot(loginRoot);
+//            }
+//
+//            stage.show();  // Ensure the stage is displayed
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    // Method to show the main application screen after successful login
+//    public void showMainAppScreen() {
+//
+//        mainPane.getChildren().clear();
+//        mainPane.getChildren().add(this); // not working because except to Node
+//
+//    }
+
+
     // Method to show the login screen
     public void showLoginScreen() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            URL loginPageUrl = getClass().getResource(LOGIN_PAGE_FXML_RESOURCE_LOCATION);
-            fxmlLoader.setLocation(loginPageUrl);
-            Parent loginRoot = fxmlLoader.load();
-
-            // Get the LoginController and set reference to MainController
-            LoginController loginController = fxmlLoader.getController();
-            loginController.setMainController(this);
-
-            if (stage.getScene() == null) {
-                Scene scene = new Scene(loginRoot);  // Create a new scene with loginRoot as the root
-                stage.setScene(scene);               // Set the scene on the stage
-            } else {
-                // If the scene is already initialized, just set the root to the login page
-                stage.getScene().setRoot(loginRoot);
-            }
-
-            stage.show();  // Ensure the stage is displayed
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (app != null) {
+            app.showLoginScreen();  // Switch to login screen using the app reference
         }
     }
 
     // Method to show the main application screen after successful login
     public void showMainAppScreen() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            URL mainAppPageUrl = getClass().getResource(MAIN_APP_PAGE_FXML_RESOURCE_LOCATION);
-            fxmlLoader.setLocation(mainAppPageUrl);
-            Parent mainAppRoot = fxmlLoader.load();
+        if (app != null) {
+            app.showMainAppScreen();  // Switch to main app screen using the app reference
+        }
+    }
 
-            // Set the scene to the main application screen
-            if (stage.getScene() == null) {
-                Scene scene = new Scene(mainAppRoot);  // Create a new scene with mainAppRoot as the root
-                stage.setScene(scene);                  // Set the scene on the stage
-            } else {
-                // If the scene is already initialized, just set the root to the main application page
-                stage.getScene().setRoot(mainAppRoot);
-            }
-
-            // Any additional setup for MainController if needed
-            MainController mainController = fxmlLoader.getController(); // Get the controller for the main app
-            mainController.setEngine(new EngineImpl());  // Example setup, customize as needed
-            mainController.setStage(stage);               // Set the stage reference for the main controller
-
-            stage.show();  // Ensure the stage is displayed
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void backToMenuClicked() {
+        if (app != null) {
+            app.showLoginScreen();
         }
     }
 }
+
+
+
+//        try {
+//            FXMLLoader fxmlLoader = new FXMLLoader();
+//            URL mainAppPageUrl = getClass().getResource(MAIN_APP_PAGE_FXML_RESOURCE_LOCATION);
+//            fxmlLoader.setLocation(mainAppPageUrl);
+//            Parent mainAppRoot = fxmlLoader.load();
+//
+//            // Set the scene to the main application screen
+//            if (stage.getScene() == null) {
+//                Scene scene = new Scene(mainAppRoot);  // Create a new scene with mainAppRoot as the root
+//                stage.setScene(scene);                  // Set the scene on the stage
+//            } else {
+//                // If the scene is already initialized, just set the root to the main application page
+//                stage.getScene().setRoot(mainAppRoot);
+//            }
+//
+//            // Any additional setup for MainController if needed
+//            MainController mainController = fxmlLoader.getController(); // Get the controller for the main app
+//            mainController.setEngine(new EngineImpl());  // Example setup, customize as needed
+//            mainController.setStage(stage);               // Set the stage reference for the main controller
+//
+//            stage.show();  // Ensure the stage is displayed
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
