@@ -65,8 +65,6 @@ public class MainController implements Closeable {
 
     Engine engine;
 
-    private GridPane loginComponent;
-    private LoginController logicController;
 
     @FXML
     private HeaderController headerController;
@@ -587,7 +585,4 @@ public class MainController implements Closeable {
             e.printStackTrace();
         }
     }
-
-
-
 }
