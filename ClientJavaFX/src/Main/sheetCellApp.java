@@ -39,6 +39,7 @@
 
 package Main;
 
+import Controller.HttpUtility.Constants;
 import Controller.Main.MainController;
 import Controller.login.LoginController;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
@@ -60,7 +61,7 @@ public class sheetCellApp extends Application {
         this.stage = stage;
 
         // Load the main application screen FXML and controller
-        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource(MainController.MAIN_APP_PAGE_FXML_RESOURCE_LOCATION));
+        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource(Constants.MAIN_APP_PAGE_FXML_RESOURCE_LOCATION));
         mainAppRoot = mainLoader.load();
         mainController = mainLoader.getController();
         mainController.setStage(stage);
@@ -69,7 +70,7 @@ public class sheetCellApp extends Application {
 
 
         // Load the login screen FXML and controller
-        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource(MainController.LOGIN_PAGE_FXML_RESOURCE_LOCATION));
+        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource(Constants.LOGIN_PAGE_FXML_RESOURCE_LOCATION));
         loginRoot = loginLoader.load();
         LoginController loginController = loginLoader.getController();
         loginController.setMainController(mainController);

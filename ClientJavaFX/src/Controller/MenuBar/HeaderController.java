@@ -1,7 +1,7 @@
 package Controller.MenuBar;
 
 import Controller.Main.MainController;
-import Controller.Utility.Utilies;
+import Controller.JavaFXUtility.Utilies;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;

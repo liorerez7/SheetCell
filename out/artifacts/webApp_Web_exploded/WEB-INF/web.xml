@@ -8,6 +8,10 @@
         <servlet-class>chat.servlets.LoginServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>InitSheetCellServlet</servlet-name>
+        <servlet-class>chat.servlets.InitSheetCellServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LoginShortResponseServlet</servlet-name>
         <servlet-class>chat.servlets.LightweightLoginServlet</servlet-class>
     </servlet>
@@ -16,7 +20,15 @@
         <url-pattern>/pages/signup/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>InitSheetCellServlet</servlet-name>
+        <url-pattern>/xmlAddress</url-pattern>
+        <url-pattern>/sheetCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>LoginShortResponseServlet</servlet-name>
         <url-pattern>/loginShortResponse</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>chat.servlets.AppContextListener</listener-class>
+    </listener>
 </web-app>

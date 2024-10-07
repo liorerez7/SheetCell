@@ -1,4 +1,4 @@
-package Controller.Utility;
+package Controller.JavaFXUtility;
 
 import expression.api.EffectiveValue;
 

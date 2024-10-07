@@ -1,5 +1,7 @@
 package chat.servlets;
 
+import CoreParts.api.Engine;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import chat.utils.SessionUtils;
@@ -21,6 +23,8 @@ public class LightweightLoginServlet extends HttpServlet {
 
         String usernameFromSession = SessionUtils.getUsername(request);
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
+
+
 
         if (usernameFromSession == null) { //user is not logged in yet
 

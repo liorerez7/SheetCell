@@ -1,4 +1,4 @@
-package Controller.Utility;
+package Controller.JavaFXUtility;
 
 public class RangeStringsData extends BaseRangeData {
     private String name;

@@ -1,4 +1,4 @@
-package Controller.Utility;
+package Controller.JavaFXUtility;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.ProgressBar;

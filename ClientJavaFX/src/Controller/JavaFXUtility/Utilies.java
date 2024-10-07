@@ -1,4 +1,4 @@
-package Controller.Utility;
+package Controller.JavaFXUtility;
 
 import javafx.scene.Node;
 import javafx.scene.control.*;

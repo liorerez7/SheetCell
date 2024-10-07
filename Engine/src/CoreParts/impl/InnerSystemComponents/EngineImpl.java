@@ -31,7 +31,6 @@ import java.util.Set;
 public class EngineImpl implements Engine {
 
     private SheetCell sheetCell;
-    private final SheetCellSorter sheetSorter = new SheetCellSorter();
     private byte[] savedSheetCellState;
 
     public EngineImpl() {

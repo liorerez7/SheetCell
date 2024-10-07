@@ -1,15 +1,14 @@
 package Controller.Main;
 
 import Controller.Grid.GridController;
-import Controller.Utility.FilterGridData;
-import Controller.Utility.RangeStringsData;
-import Controller.Utility.RunTimeAnalysisData;
-import Controller.Utility.SortRowsData;
+import Controller.JavaFXUtility.FilterGridData;
+import Controller.JavaFXUtility.RangeStringsData;
+import Controller.JavaFXUtility.RunTimeAnalysisData;
+import Controller.JavaFXUtility.SortRowsData;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import Utility.DtoContainerData;
-import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

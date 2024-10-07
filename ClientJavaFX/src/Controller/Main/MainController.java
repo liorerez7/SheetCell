@@ -2,12 +2,14 @@ package Controller.Main;
 
 import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
+import Controller.HttpUtility.Constants;
+import Controller.HttpUtility.HttpRequestManager;
+import Controller.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
 import Controller.ProgressManager.ProgressAnimationManager;
-import Controller.Utility.*;
+import Controller.JavaFXUtility.*;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
-import Controller.login.LoginController;
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
@@ -22,53 +24,29 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 
 public class MainController implements Closeable {
 
 
-    public final static String LINE_SEPARATOR = System.getProperty("line.separator");
-
-
-    // fxml locations
-    public final static String MAIN_APP_PAGE_FXML_RESOURCE_LOCATION = "/Controller/Main/SheetCell.fxml";
-    public final static String LOGIN_PAGE_FXML_RESOURCE_LOCATION = "/Controller/login/login.fxml";
-
-    // Server resources locations
-    public final static String BASE_DOMAIN = "localhost";
-    private final static String BASE_URL = "http://" + BASE_DOMAIN + ":8080";
-    private final static String CONTEXT_PATH = "/webApp_Web_exploded";
-    private final static String FULL_SERVER_PATH = BASE_URL + CONTEXT_PATH;
-
-    public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/loginShortResponse";
-    public final static String USERS_LIST = FULL_SERVER_PATH + "/userslist";
-    public final static String LOGOUT = FULL_SERVER_PATH + "/chat/logout";
-    public final static String SEND_CHAT_LINE = FULL_SERVER_PATH + "/pages/chatroom/sendChat";
-    public final static String CHAT_LINES_LIST = FULL_SERVER_PATH + "/chat";
-
-
-
-
     private Engine engine;
     private Stage stage;
     private sheetCellApp app;  // Reference to the main application
-
-
 
     @FXML
     private HeaderController headerController;
@@ -181,24 +159,76 @@ public class MainController implements Closeable {
                         Thread.sleep(20);  // Simulate loading time
                     }
 
-                    // Load the XML file (this is the actual task)
-                    engine.readSheetCellFromXML(absolutePath); //can throw exception
+                    Map<String, String> params = new HashMap<>();
+                    params.put("xmlAddress", absolutePath);
 
-                    Platform.runLater(() -> {
-                        // UI updates after loading
-                        headerController.FileHasBeenLoaded(absolutePath);
-                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
-                        rangesController.clearAllRanges();
-                        model.setReadingXMLSuccess(true);
-                        model.setCellLabelToProperties(cellLocationLabelMap);
-                        model.bindCellLabelToProperties();
-                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
-                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
-                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
-                        themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+                    HttpRequestManager.sendPostRequest(Constants.INIT_SHEET_CELL_ENDPOINT, params, new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
+                        }
+
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            if (response.isSuccessful()) {
+
+                                HttpRequestManager.sendGetRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
+                                    @Override
+                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                        Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
+                                    }
+
+                                    @Override
+                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                        if (response.isSuccessful()) {
+                                            String sheetCellAsJson = response.body().string();
+                                            DtoSheetCell dtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                                            int latestVer = dtoSheetCell.getLatestVersion();
+
+                                            Platform.runLater(() -> {
+                                            });
+                                        }
+                                    }
+
+                                });
+
+                                Platform.runLater(() -> {
+                                        headerController.FileHasBeenLoaded(absolutePath);
+                                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
+                                        rangesController.clearAllRanges();
+                                        model.setReadingXMLSuccess(true);
+                                        model.setCellLabelToProperties(cellLocationLabelMap);
+                                        model.bindCellLabelToProperties();
+                                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+                                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+                                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
+                                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
+                                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+                                        themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+                                });
+                            } else {
+                                Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
+                            }
+                        }
                     });
+                    // Load the XML file (this is the actual task)
+                    //engine.readSheetCellFromXML(absolutePath); //can throw exception
+
+//                    Platform.runLater(() -> {
+//                        // UI updates after loading
+//                        headerController.FileHasBeenLoaded(absolutePath);
+//                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
+//                        rangesController.clearAllRanges();
+//                        model.setReadingXMLSuccess(true);
+//                        model.setCellLabelToProperties(cellLocationLabelMap);
+//                        model.bindCellLabelToProperties();
+//                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+//                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+//                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
+//                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
+//                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+//                        themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+//                    });
                 } catch (Exception e) {
                     gridScrollerController.showGrid();
                     Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));

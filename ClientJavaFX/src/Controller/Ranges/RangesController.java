@@ -1,16 +1,12 @@
 package Controller.Ranges;
 
 import Controller.Main.MainController;
-import Controller.Utility.Utilies;
+import Controller.JavaFXUtility.Utilies;
 import CoreParts.smallParts.CellLocation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;

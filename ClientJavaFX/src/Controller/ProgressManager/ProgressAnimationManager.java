@@ -1,6 +1,6 @@
 package Controller.ProgressManager;
 
-import Controller.Utility.ProgressManager;
+import Controller.JavaFXUtility.ProgressManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

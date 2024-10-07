@@ -11,8 +11,6 @@ public interface EffectiveValue extends Serializable {
     ReturnedValueType getCellType();
     Object getValue();
     void setValue(Object value);
-    void setType(ReturnedValueType returnedValueType);
-    void assertRawType(ReturnedValueType returnedValueType);
 }
 
 
