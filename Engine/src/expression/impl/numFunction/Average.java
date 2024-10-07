@@ -3,11 +3,10 @@ package expression.impl.numFunction;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import Utility.Exception.AvgWithNoNumericCellsException;
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.Range;
 import expression.impl.Ref;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.util.Set;
 
@@ -42,7 +41,7 @@ public class Average implements Expression {
             throw new AvgWithNoNumericCellsException(cellId);
         }
 
-        return new EffectiveValueImpl(ReturnedValueType.NUMERIC, sum/numberOfNumericCells);
+        return new EffectiveValue(ReturnedValueType.NUMERIC, sum/numberOfNumericCells);
     }
 
     @Override

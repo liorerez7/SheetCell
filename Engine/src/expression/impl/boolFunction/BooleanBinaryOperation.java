@@ -1,10 +1,9 @@
 package expression.impl.boolFunction;
 
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.variantImpl.BinaryExpression;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 public abstract class BooleanBinaryOperation<T> extends BinaryExpression {
 
@@ -22,10 +21,10 @@ public abstract class BooleanBinaryOperation<T> extends BinaryExpression {
 
         try {
             Boolean result = applyOperation((T) e1.getValue(), (T) e2.getValue());
-            return new EffectiveValueImpl(ReturnedValueType.BOOLEAN, result);
+            return new EffectiveValue(ReturnedValueType.BOOLEAN, result);
         } catch (ClassCastException e)
         {
-            return new EffectiveValueImpl(ReturnedValueType.BOOLEAN,"UNDEFINED");
+            return new EffectiveValue(ReturnedValueType.BOOLEAN,"UNDEFINED");
         }
     }
 }

@@ -4,10 +4,9 @@ import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.stringFunction.Str;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 
 public class Ref implements Expression {
@@ -23,7 +22,7 @@ public class Ref implements Expression {
         if(cell.getEffectiveValue()==null)
         {
             cell.setEffectiveValue(new Str(""));
-            EffectiveValue value = new EffectiveValueImpl(ReturnedValueType.EMPTY,"");
+            EffectiveValue value = new EffectiveValue(ReturnedValueType.EMPTY,"");
             cell.setActualValue(value);
 
            // cell.setActualValue(sheet);
@@ -31,7 +30,7 @@ public class Ref implements Expression {
         }
 
         EffectiveValue res = sheet.getCell(location).getActualValue();
-        EffectiveValue newRes = new EffectiveValueImpl(ReturnedValueType.UNKNOWN,res.getValue());
+        EffectiveValue newRes = new EffectiveValue(ReturnedValueType.UNKNOWN,res.getValue());
         return newRes;
     }
     @Override

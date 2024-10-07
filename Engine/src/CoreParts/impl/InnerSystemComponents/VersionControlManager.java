@@ -2,7 +2,8 @@ package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
+
 
 import java.io.*;
 import java.util.HashMap;

@@ -1,9 +1,8 @@
 package expression.impl;
 
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 import expression.impl.variantImpl.TernaryExpression;
 
 public class If extends TernaryExpression {
@@ -29,7 +28,7 @@ public class If extends TernaryExpression {
                 return evaluate3;
             }
         }catch (Exception e){
-            return new EffectiveValueImpl(ReturnedValueType.BOOLEAN, "UNDIFINED");
+            return new EffectiveValue(ReturnedValueType.BOOLEAN, "UNDIFINED");
         }
     }
 

@@ -1,7 +1,6 @@
 package expression.impl.variantImpl;
 
 import CoreParts.api.sheet.SheetCellViewOnly;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
 
 public abstract class UnaryExpression implements Expression {

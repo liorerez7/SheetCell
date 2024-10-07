@@ -4,7 +4,7 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import expression.ReturnedValueType;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.util.*;
 
@@ -34,7 +34,7 @@ public class SheetCellFilter {
 
             // Fill the remaining rows with empty values
             while (row < column.size()) {
-                column.set(row, new EffectiveValueContainer(new EffectiveValueImpl(ReturnedValueType.EMPTY, ""), CellLocationFactory.fromCellId('Z', "10")));
+                column.set(row, new EffectiveValueContainer(new EffectiveValue(ReturnedValueType.EMPTY, ""), CellLocationFactory.fromCellId('Z', "10")));
                 row++;
             }
         }
@@ -144,7 +144,7 @@ public class SheetCellFilter {
             if (!shouldKeepRow) {
                 for (int col = 0; col < currentRow.size(); col++) {
                     currentRow.set(col, new EffectiveValueContainer(
-                            new EffectiveValueImpl(ReturnedValueType.EMPTY, ""),
+                            new EffectiveValue(ReturnedValueType.EMPTY, ""),
                             CellLocationFactory.fromCellId('Z', "10"))); // Dummy cell location
                 }
             }

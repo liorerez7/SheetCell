@@ -2,7 +2,7 @@ package CoreParts.api.sheet;
 
 import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
 import java.util.Map;
 
 public interface VersionControl {

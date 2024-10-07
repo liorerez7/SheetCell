@@ -3,10 +3,10 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import GeneratedClassesEx2.STLSheet;
-import expression.api.EffectiveValue;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import expression.impl.variantImpl.EffectiveValue;
 import java.io.InputStream;
 import java.util.*;
 

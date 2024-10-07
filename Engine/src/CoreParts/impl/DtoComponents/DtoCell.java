@@ -3,8 +3,8 @@ package CoreParts.impl.DtoComponents;
 import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
 import Utility.CellUtils;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
+import expression.impl.variantImpl.EffectiveValue;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
 import java.util.Objects;

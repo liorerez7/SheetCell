@@ -1,6 +1,6 @@
 package Controller.JavaFXUtility;
 
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.text.DecimalFormat;
 

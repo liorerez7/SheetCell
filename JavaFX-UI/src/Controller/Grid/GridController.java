@@ -8,7 +8,7 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
 import Utility.DtoContainerData;
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

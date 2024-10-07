@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class CellLocation implements Serializable { // TODO: Implement the CellLocation interface maybe change name to Location.
-    private static final long serialVersionUID = 1L; // Add serialVersionUID
+    //private static final long serialVersionUID = 1L; // Add serialVersionUID
     private char visualColumn;
     private String visualRow;
     private int realRow;
@@ -41,6 +41,21 @@ public class CellLocation implements Serializable { // TODO: Implement the CellL
         return Objects.hash(visualColumn, visualRow);
     }
 
+
+//    @Override
+//    public String toString() {
+//        return "CellLocation{" +
+//                "visualColumn=" + visualColumn +
+//                ", visualRow='" + visualRow + '\'' +
+//                ", realRow=" + realRow +
+//                ", realColumn=" + realColumn +
+//                '}';
+//    }
+
+    @Override
+    public String toString() {
+        return String.format("%c%s", visualColumn, visualRow);
+    }
 
     public int getRealColumn() {
         return realColumn;

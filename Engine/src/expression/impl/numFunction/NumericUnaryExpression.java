@@ -1,9 +1,9 @@
 package expression.impl.numFunction;
 
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
+
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 import expression.impl.variantImpl.UnaryExpression;
 
 public abstract class NumericUnaryExpression extends UnaryExpression {
@@ -18,18 +18,18 @@ public abstract class NumericUnaryExpression extends UnaryExpression {
 
         try {
             Double result = applyOperation((Double) evaluate.getValue());
-            return new EffectiveValueImpl(ReturnedValueType.NUMERIC, result);
+            return new EffectiveValue(ReturnedValueType.NUMERIC, result);
 
         } catch (ClassCastException e)
         {
             if(evaluate.getCellType() == ReturnedValueType.EMPTY)
-                return new EffectiveValueImpl(ReturnedValueType.EMPTY,"");
+                return new EffectiveValue(ReturnedValueType.EMPTY,"");
 
             if (evaluate.getCellType() == ReturnedValueType.UNKNOWN)
-                return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
+                return new EffectiveValue(ReturnedValueType.UNKNOWN, Double.NaN);
 
             else{
-                return new EffectiveValueImpl(ReturnedValueType.UNKNOWN, Double.NaN);
+                return new EffectiveValue(ReturnedValueType.UNKNOWN, Double.NaN);
             }
         }
     }

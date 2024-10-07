@@ -1,8 +1,34 @@
 package util;
 
+import Controller.HttpUtility.jsonDeSerialzableClasses.CellLocationMapDeserializer;
+import Controller.HttpUtility.jsonDeSerialzableClasses.CellLocationMapSerializer;
+import Controller.HttpUtility.jsonDeSerialzableClasses.DtoSheetCellDeserializer;
+import Controller.HttpUtility.jsonDeSerialzableClasses.DtoSheetCellSerializer;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
+import CoreParts.smallParts.CellLocation;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import expression.ReturnedValueType;
+import expression.impl.variantImpl.EffectiveValue;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 
 public class Constants {
+
+    // GSON instance
+    public final static Gson GSON_INSTANCE = new GsonBuilder()
+            .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {
+            }.getType(), new CellLocationMapSerializer())
+            .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {
+            }.getType(), new CellLocationMapDeserializer())
+            .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellSerializer())
+            .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellDeserializer())
+            .setPrettyPrinting()
+            .create();
+
 
     // global constants
     public final static String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -27,6 +53,5 @@ public class Constants {
     public final static String SEND_CHAT_LINE = FULL_SERVER_PATH + "/pages/chatroom/sendChat";
     public final static String CHAT_LINES_LIST = FULL_SERVER_PATH + "/chat";
 
-    // GSON instance
-    public final static Gson GSON_INSTANCE = new Gson();
+
 }

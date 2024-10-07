@@ -3,8 +3,8 @@ package CoreParts.api.sheet;
 import CoreParts.api.Cell;
 import CoreParts.smallParts.CellLocation;
 import Utility.RefDependencyGraph;
-import expression.api.EffectiveValue;
 import expression.impl.Range;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.io.Serializable;
 import java.util.List;

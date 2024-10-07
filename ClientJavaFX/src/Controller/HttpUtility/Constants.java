@@ -1,6 +1,14 @@
 package Controller.HttpUtility;
 
+import Controller.HttpUtility.jsonDeSerialzableClasses.*;
+import CoreParts.impl.DtoComponents.DtoSheetCell;
+import CoreParts.smallParts.CellLocation;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import expression.impl.variantImpl.EffectiveValue;
+
+import java.util.Map;
 
 public class Constants {
 
@@ -25,5 +33,13 @@ public class Constants {
     public static final String GET_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/sheetCell";
 
     // GSON instance
-    public final static Gson GSON_INSTANCE = new Gson();
+    public final static Gson GSON_INSTANCE = new GsonBuilder()
+            .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {}.getType(), new CellLocationMapSerializer())
+            .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {}.getType(), new CellLocationMapDeserializer())
+            .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellSerializer())
+            .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellDeserializer())
+            .setPrettyPrinting()
+            .create();
+
+    //public final static Gson GSON_INSTANCE = new Gson();
 }

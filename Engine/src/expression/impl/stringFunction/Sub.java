@@ -1,9 +1,8 @@
 package expression.impl.stringFunction;
 
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 import expression.impl.variantImpl.TernaryExpression;
 
 public class Sub  extends TernaryExpression {
@@ -34,10 +33,10 @@ public class Sub  extends TernaryExpression {
         // Check for invalid ranges
         if (startInt < 0 || startInt >= sourceValue.length() ||
                 endInt < 0 || endInt > sourceValue.length() || startInt > endInt) {
-            return new EffectiveValueImpl(ReturnedValueType.UNDEFINED, "UNDEFINED");
+            return new EffectiveValue(ReturnedValueType.UNDEFINED, "UNDEFINED");
         }
 
         String result = sourceValue.substring(startInt,endInt);
-        return new EffectiveValueImpl(ReturnedValueType.STRING,result);
+        return new EffectiveValue(ReturnedValueType.STRING,result);
     }
 }

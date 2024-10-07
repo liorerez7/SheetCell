@@ -11,13 +11,13 @@ import Utility.Exception.*;
 import Utility.RefDependencyGraph;
 import Utility.RefGraphBuilder;
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.Range;
 import expression.impl.Ref;
 import expression.impl.numFunction.Average;
 import expression.impl.numFunction.Sum;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -382,7 +382,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         targetCell.setOriginalValue(newValue);
         if(newValue.isEmpty()){
 
-            targetCell.setActualValue(new EffectiveValueImpl(ReturnedValueType.EMPTY, ""));
+            targetCell.setActualValue(new EffectiveValue(ReturnedValueType.EMPTY, ""));
             String className = targetCell.getEffectiveValue().getClass().getSimpleName();
             String sumClassName = Sum.class.getSimpleName();
             String avgClassName = Average.class.getSimpleName();

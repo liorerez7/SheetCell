@@ -4,6 +4,7 @@ import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
 import Controller.HttpUtility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
+import Controller.HttpUtility.jsonDeSerialzableClasses.*;
 import Controller.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
 import Controller.ProgressManager.ProgressAnimationManager;
@@ -18,6 +19,13 @@ import CoreParts.smallParts.CellLocation;
 import Main.sheetCellApp;
 import Utility.Exception.*;
 import Utility.DtoContainerData;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import expression.ReturnedValueType;
+import expression.impl.stringFunction.Str;
+import expression.impl.variantImpl.EffectiveValue;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -38,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 
@@ -170,6 +179,7 @@ public class MainController implements Closeable {
 
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
                             if (response.isSuccessful()) {
 
                                 HttpRequestManager.sendGetRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
@@ -181,54 +191,42 @@ public class MainController implements Closeable {
                                     @Override
                                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                         if (response.isSuccessful()) {
+
                                             String sheetCellAsJson = response.body().string();
-                                            DtoSheetCell dtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-                                            int latestVer = dtoSheetCell.getLatestVersion();
+
+
+                                            DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                                            System.out.println(newDtoSheetCell.getRanges().get("grades").get(0));
+                                            int latestVersion = newDtoSheetCell.getLatestVersion();
+                                            Map<String, List<CellLocation>> ranges = newDtoSheetCell.getRanges();
+                                            int numberOfColumns = newDtoSheetCell.getNumberOfColumns();
+                                            int numberOfRows = newDtoSheetCell.getNumberOfRows();
 
                                             Platform.runLater(() -> {
+                                                headerController.FileHasBeenLoaded(absolutePath);
+                                                Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
+                                                rangesController.clearAllRanges();
+                                                model.setReadingXMLSuccess(true);
+                                                model.setCellLabelToProperties(cellLocationLabelMap);
+                                                model.bindCellLabelToProperties();
+                                                model.setPropertiesByDtoSheetCell(newDtoSheetCell);
+                                                model.setTotalVersionsProperty(latestVersion);
+                                                rangesController.setAllRanges(ranges);
+                                                customizeController.loadAllColData(numberOfColumns);
+                                                customizeController.loadAllRowData(numberOfRows);
+                                                themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+
                                             });
                                         }
                                     }
-
                                 });
-
-                                Platform.runLater(() -> {
-                                        headerController.FileHasBeenLoaded(absolutePath);
-                                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
-                                        rangesController.clearAllRanges();
-                                        model.setReadingXMLSuccess(true);
-                                        model.setCellLabelToProperties(cellLocationLabelMap);
-                                        model.bindCellLabelToProperties();
-                                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-                                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-                                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
-                                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
-                                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
-                                        themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
-                                });
-                            } else {
+                            }
+                            else {
                                 Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
                             }
                         }
                     });
-                    // Load the XML file (this is the actual task)
-                    //engine.readSheetCellFromXML(absolutePath); //can throw exception
 
-//                    Platform.runLater(() -> {
-//                        // UI updates after loading
-//                        headerController.FileHasBeenLoaded(absolutePath);
-//                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
-//                        rangesController.clearAllRanges();
-//                        model.setReadingXMLSuccess(true);
-//                        model.setCellLabelToProperties(cellLocationLabelMap);
-//                        model.bindCellLabelToProperties();
-//                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-//                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-//                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
-//                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
-//                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
-//                        themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
-//                    });
                 } catch (Exception e) {
                     gridScrollerController.showGrid();
                     Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));

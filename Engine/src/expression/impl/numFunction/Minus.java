@@ -1,9 +1,6 @@
 package expression.impl.numFunction;
-import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
+
 import expression.api.Expression;
-import expression.impl.variantImpl.BinaryExpression;
-import expression.impl.variantImpl.EffectiveValueImpl;
 
 public class Minus extends NumericBinaryOperation {
     @Override

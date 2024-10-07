@@ -5,7 +5,7 @@ import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import CoreParts.smallParts.CellLocationFactory;
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
 import javafx.beans.property.*;
 import javafx.scene.control.Label;
 

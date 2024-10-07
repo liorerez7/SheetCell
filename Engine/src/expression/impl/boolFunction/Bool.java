@@ -2,9 +2,8 @@ package expression.impl.boolFunction;
 
 import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 public class Bool implements Expression {
 
@@ -16,7 +15,7 @@ public class Bool implements Expression {
 
     @Override
     public EffectiveValue evaluate(SheetCellViewOnly sheet) {
-        return new EffectiveValueImpl(ReturnedValueType.BOOLEAN, value);
+        return new EffectiveValue(ReturnedValueType.BOOLEAN, value);
     }
 
     @Override

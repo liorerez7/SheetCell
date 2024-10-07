@@ -1,7 +1,6 @@
 
 package expression.impl.boolFunction;
 
-import expression.api.EffectiveValue;
 import expression.api.Expression;
 
 public class Bigger extends BooleanBinaryOperation<Double> {

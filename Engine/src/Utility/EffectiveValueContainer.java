@@ -1,7 +1,7 @@
 package Utility;
 
 import CoreParts.smallParts.CellLocation;
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
 
 public class EffectiveValueContainer {
 

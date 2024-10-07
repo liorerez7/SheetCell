@@ -5,9 +5,8 @@ import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.smallParts.CellLocation;
 import Utility.Exception.AvgWithNoNumericCellsException;
 import Utility.Exception.CellCantBeEvaluatedException;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -17,7 +16,7 @@ public class CellImp implements Cell ,Serializable
 {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Expression effectiveValue;
-    private EffectiveValue actualValue = new EffectiveValueImpl(null,null);
+    private EffectiveValue actualValue = new EffectiveValue(null,null);
     private String originalValue;
     private CellLocation location;
     private int latestVersion;

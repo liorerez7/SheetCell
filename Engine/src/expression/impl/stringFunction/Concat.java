@@ -1,10 +1,9 @@
 package expression.impl.stringFunction;
 
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.variantImpl.BinaryExpression;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 public class Concat extends BinaryExpression {
 
@@ -60,7 +59,7 @@ public class Concat extends BinaryExpression {
     }
 
     private EffectiveValue createEffectiveValue(ReturnedValueType type, String value) {
-        return new EffectiveValueImpl(type, value);
+        return new EffectiveValue(type, value);
     }
 }
 

@@ -2,7 +2,7 @@ package Utility;
 
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
-import expression.api.EffectiveValue;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.util.List;
 import java.util.Map;

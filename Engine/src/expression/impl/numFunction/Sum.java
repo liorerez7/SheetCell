@@ -2,11 +2,10 @@ package expression.impl.numFunction;
 
 import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.ReturnedValueType;
-import expression.api.EffectiveValue;
 import expression.api.Expression;
 import expression.impl.Range;
 import expression.impl.Ref;
-import expression.impl.variantImpl.EffectiveValueImpl;
+import expression.impl.variantImpl.EffectiveValue;
 
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class Sum implements Expression {
             }
         }
 
-        return new EffectiveValueImpl(ReturnedValueType.NUMERIC, sum);
+        return new EffectiveValue(ReturnedValueType.NUMERIC, sum);
     }
 
 
