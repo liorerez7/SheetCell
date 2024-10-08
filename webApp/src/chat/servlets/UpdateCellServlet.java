@@ -1,35 +1,29 @@
 package chat.servlets;
 
 import CoreParts.api.Engine;
-import CoreParts.impl.DtoComponents.DtoSheetCell;
-import CoreParts.smallParts.CellLocation;
+import CoreParts.impl.DtoComponents.DtoCell;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
-import chat.utils.jsonSerializableClasses.CellLocationMapSerializer;
-import chat.utils.jsonSerializableClasses.DtoSheetCellSerializer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import expression.impl.variantImpl.EffectiveValue;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-public class InitSheetCellServlet extends HttpServlet {
+public class UpdateCellServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String xmlAddress = request.getParameter("xmlAddress");
+        String cellValue = request.getParameter("newValue");
+        char columnOfCell = request.getParameter("colLocation").charAt(0);
+        String row = request.getParameter("rowLocation");
 
         Engine engine = ServletUtils.getEngine(getServletContext());
 
         try{
-            engine.readSheetCellFromXML(xmlAddress);
+            engine.updateCell(cellValue, columnOfCell, row);
         }
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_CONFLICT);
@@ -41,17 +35,16 @@ public class InitSheetCellServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         Engine engine = ServletUtils.getEngine(getServletContext());
-        DtoSheetCell dtoSheetCell = engine.getSheetCell();
+        String cellLocation = request.getParameter("cellLocation");
 
+        DtoCell dtoCell = engine.getRequestedCell(cellLocation);
+        String dtoCellAsJson = Constants.GSON_INSTANCE.toJson(dtoCell);
         PrintWriter out = response.getWriter();
-        String jsonResponse = Constants.GSON_INSTANCE.toJson(dtoSheetCell);
-        out.print(jsonResponse);
+        out.print(dtoCellAsJson);
         out.flush();
-
     }
 }

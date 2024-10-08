@@ -12,12 +12,24 @@
         <servlet-class>chat.servlets.InitSheetCellServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>UpdateCellServlet</servlet-name>
+        <servlet-class>chat.servlets.UpdateCellServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LoginShortResponseServlet</servlet-name>
         <servlet-class>chat.servlets.LightweightLoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCellServlet</servlet-name>
+        <url-pattern>/updateCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCellServlet</servlet-name>
+        <url-pattern>/requestedCell</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>InitSheetCellServlet</servlet-name>

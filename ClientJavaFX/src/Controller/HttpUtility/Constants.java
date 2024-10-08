@@ -31,12 +31,14 @@ public class Constants {
     public final static String CHAT_LINES_LIST = FULL_SERVER_PATH + "/chat";
     public final static String INIT_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/xmlAddress";
     public static final String GET_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/sheetCell";
+    public static final String UPDATE_CELL_ENDPOINT = FULL_SERVER_PATH + "/updateCell";
+    public static final String GET_REQUESTED_CELL_ENDPOINT = FULL_SERVER_PATH + "/requestedCell";
+
+
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new GsonBuilder()
-            .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {}.getType(), new CellLocationMapSerializer())
             .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {}.getType(), new CellLocationMapDeserializer())
-            .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellSerializer())
             .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellDeserializer())
             .setPrettyPrinting()
             .create();

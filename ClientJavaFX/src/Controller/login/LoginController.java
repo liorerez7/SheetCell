@@ -1,5 +1,6 @@
 package Controller.login;
 
+import Controller.HttpUtility.Constants;
 import Controller.Main.MainController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,8 +15,7 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-import util.Constants;
-import util.http.HttpClientUtil;
+import Controller.HttpUtility.http.HttpClientUtil;
 
 import java.io.IOException;
 

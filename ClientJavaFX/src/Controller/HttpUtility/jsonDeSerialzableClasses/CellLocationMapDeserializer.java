@@ -8,28 +8,6 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-//public class CellLocationMapDeserializer implements JsonDeserializer<Map<CellLocation, EffectiveValue>> {
-//    @Override
-//    public Map<CellLocation, EffectiveValue> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-//        Map<CellLocation, EffectiveValue> map = new HashMap<>();
-//        JsonObject jsonObject = json.getAsJsonObject();
-//
-//        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-//            // Convert the key back to a CellLocation (assumes keys are in "B5" format)
-//            String key = entry.getKey();
-//            char visualColumn = key.charAt(0);
-//            String visualRow = key.substring(1);
-//            CellLocation cellLocation = new CellLocation(visualColumn, visualRow);
-//
-//            // Deserialize the value as EffectiveValue
-//            EffectiveValue value = context.deserialize(entry.getValue(), EffectiveValue.class);
-//            map.put(cellLocation, value);
-//        }
-//
-//        return map;
-//    }
-//}
-
 public class CellLocationMapDeserializer implements JsonDeserializer<Map<CellLocation, EffectiveValue>> {
     @Override
     public Map<CellLocation, EffectiveValue> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

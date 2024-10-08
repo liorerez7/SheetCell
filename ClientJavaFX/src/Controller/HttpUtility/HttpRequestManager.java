@@ -2,6 +2,7 @@ package Controller.HttpUtility;
 
 import okhttp3.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class HttpRequestManager {
@@ -42,6 +43,34 @@ public class HttpRequestManager {
                 .build();
 
         client.newCall(request).enqueue(callback);
+    }
+
+    public static Response sendPostRequestSync(String url, Map<String, String> params) throws IOException {
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            formBuilder.add(entry.getKey(), entry.getValue());
+        }
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBuilder.build())
+                .build();
+
+        return client.newCall(request).execute();
+    }
+
+    public static Response sendGetRequestSync(String url, Map<String, String> params) throws IOException {
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            httpBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+        }
+
+        Request request = new Request.Builder()
+                .url(httpBuilder.build())
+                .get()
+                .build();
+
+        return client.newCall(request).execute();
     }
 }
 

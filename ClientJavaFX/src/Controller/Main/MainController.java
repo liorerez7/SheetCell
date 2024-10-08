@@ -48,6 +48,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 
 public class MainController implements Closeable {
@@ -248,26 +249,162 @@ public class MainController implements Closeable {
         new Thread(task).start();
     }
 
+//    public void updateCell(String text, String newValue) {
+//
+//        final DtoSheetCell[] newDtoSheetCell = new DtoSheetCell[1];
+//        final int[] latestVersion = new int[1];
+//
+//        try {
+//            Map<String, String> params = new HashMap<>();
+//            params.put("newValue", newValue);
+//            params.put("colLocation", text.charAt(0) + "");
+//            params.put("rowLocation", text.substring(1));
+//
+//
+//
+//            HttpRequestManager.sendPostRequest(Constants.UPDATE_CELL_ENDPOINT, params, new Callback() {
+//                @Override
+//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                    Platform.runLater(() -> createErrorPopup("Failed to update cell: " + e.getMessage(), "Error"));
+//                }
+//
+//                @Override
+//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                }
+//            });
+//
+//
+//            HttpRequestManager.sendGetRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
+//
+//                @Override
+//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                    Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
+//                }
+//
+//                @Override
+//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//
+//                    Platform.runLater(() -> {
+//                        if (response.isSuccessful()) {
+//                            String sheetCellAsJson = null;
+//                            try {
+//                                sheetCellAsJson = response.body().string();
+//                            } catch (IOException e) {
+//                                throw new RuntimeException(e);
+//                            }
+//                            newDtoSheetCell[0] = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+//                            latestVersion[0] = newDtoSheetCell[0].getLatestVersion();
+//                        }
+//                    });
+//                }
+//            });
+//
+//
+//            Map<String, String> paramsForRequestedCell = new HashMap<>();
+//            paramsForRequestedCell.put("cellLocation", text);
+//            HttpRequestManager.sendGetRequest(Constants.GET_REQUESTED_CELL_ENDPOINT, paramsForRequestedCell, new Callback() {
+//
+//                @Override
+//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                    Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
+//                }
+//                @Override
+//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                    Platform.runLater(() -> {
+//                        try {
+//                            String dtoCellAsJson = response.body().string();
+//                            DtoCell dtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
+//                            dtoCell.getAffectedBy();
+//
+//                            model.setPropertiesByDtoSheetCell(newDtoSheetCell[0]);
+//                            model.setLatestUpdatedVersionProperty(dtoCell);
+//                            model.setOriginalValueLabelProperty(dtoCell);
+//                            model.setTotalVersionsProperty(latestVersion[0]);
+//                            gridScrollerController.showNeighbors(dtoCell);
+//
+//                        } catch (IOException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    });
+//                }
+//            });
+//
+//
+//            //engine.updateCell(newValue, text.charAt(0), text.substring(1));
+////            DtoCell requestedCell = engine.getRequestedCell(text);
+////            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+////            model.setLatestUpdatedVersionProperty(requestedCell);
+////            model.setOriginalValueLabelProperty(requestedCell);
+////            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+////
+////            gridScrollerController.showNeighbors(requestedCell);
+//
+//
+//
+//        }catch (CycleDetectedException e) {
+//            createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
+//        }
+//        catch (Exception e) {
+//            createErrorPopup(e.getMessage(), "Error");
+//        }
+//    }
+
+
     public void updateCell(String text, String newValue) {
-        try {
-            engine.updateCell(newValue, text.charAt(0), text.substring(1));
-            DtoCell requestedCell = engine.getRequestedCell(text);
-            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-            model.setLatestUpdatedVersionProperty(requestedCell);
-            model.setOriginalValueLabelProperty(requestedCell);
-            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
 
-            gridScrollerController.showNeighbors(requestedCell);
+        CompletableFuture.runAsync(() -> {
+            try {
+                Map<String, String> params = new HashMap<>();
+                params.put("newValue", newValue);
+                params.put("colLocation", text.charAt(0) + "");
+                params.put("rowLocation", text.substring(1));
 
+                // Send POST request synchronously
+                Response postResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, params);
+                if (!postResponse.isSuccessful()) {
+                    Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
+                    return;
+                }
 
+                // Send GET request to fetch the sheet cell synchronously
+                Response sheetCellResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>());
+                if (!sheetCellResponse.isSuccessful()) {
+                    Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
+                    return;
+                }
 
-        }catch (CycleDetectedException e) {
-            createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
-        }
-        catch (Exception e) {
-            createErrorPopup(e.getMessage(), "Error");
-        }
+                String sheetCellAsJson = sheetCellResponse.body().string();
+                DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                int latestVersion = newDtoSheetCell.getLatestVersion();
+
+                // Send GET request to fetch the requested cell synchronously
+                Map<String, String> paramsForRequestedCell = new HashMap<>();
+                paramsForRequestedCell.put("cellLocation", text);
+                Response requestedCellResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_REQUESTED_CELL_ENDPOINT, paramsForRequestedCell);
+
+                if (!requestedCellResponse.isSuccessful()) {
+                    Platform.runLater(() -> createErrorPopup("Failed to load requested cell", "Error"));
+                    return;
+                }
+
+                String dtoCellAsJson = requestedCellResponse.body().string();
+                DtoCell dtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
+
+                // Update the UI on the JavaFX Application Thread
+                Platform.runLater(() -> {
+                    model.setPropertiesByDtoSheetCell(newDtoSheetCell);
+                    model.setLatestUpdatedVersionProperty(dtoCell);
+                    model.setOriginalValueLabelProperty(dtoCell);
+                    model.setTotalVersionsProperty(latestVersion);
+                    gridScrollerController.showNeighbors(dtoCell);
+                });
+
+            } catch (IOException e) {
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            }
+        });
     }
+
 
     public void setEngine(EngineImpl engine) {
         this.engine = engine;
