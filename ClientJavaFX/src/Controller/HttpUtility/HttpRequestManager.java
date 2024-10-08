@@ -10,7 +10,7 @@ public class HttpRequestManager {
 
     private static final OkHttpClient client = new OkHttpClient();
 
-    public static void sendGetRequest(String endpoint, Map<String, String> params, Callback callback) {
+    public static void sendGetRequestASyncWithCallBack(String endpoint, Map<String, String> params, Callback callback) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(endpoint).newBuilder();
 
         // Add query parameters
@@ -27,7 +27,7 @@ public class HttpRequestManager {
         client.newCall(request).enqueue(callback);
     }
 
-    public static void sendPostRequest(String endpoint, Map<String, String> params, Callback callback) {
+    public static void sendPostRequestASyncWithCallBack(String endpoint, Map<String, String> params, Callback callback) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(endpoint).newBuilder();
 
         // Add query parameters

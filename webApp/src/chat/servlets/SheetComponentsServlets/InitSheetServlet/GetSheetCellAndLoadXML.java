@@ -1,25 +1,17 @@
-package chat.servlets;
+package chat.servlets.SheetComponentsServlets.InitSheetServlet;
 
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
-import CoreParts.smallParts.CellLocation;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
-import chat.utils.jsonSerializableClasses.CellLocationMapSerializer;
-import chat.utils.jsonSerializableClasses.DtoSheetCellSerializer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import expression.impl.variantImpl.EffectiveValue;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
-public class InitSheetCellServlet extends HttpServlet {
+public class GetSheetCellAndLoadXML extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -44,14 +36,25 @@ public class InitSheetCellServlet extends HttpServlet {
 
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+        String versionNumber = request.getParameter("versionNumber");
 
         Engine engine = ServletUtils.getEngine(getServletContext());
-        DtoSheetCell dtoSheetCell = engine.getSheetCell();
 
-        PrintWriter out = response.getWriter();
-        String jsonResponse = Constants.GSON_INSTANCE.toJson(dtoSheetCell);
-        out.print(jsonResponse);
-        out.flush();
+        if(versionNumber == null){
 
+            DtoSheetCell dtoSheetCell = engine.getSheetCell();
+            PrintWriter out = response.getWriter();
+            String jsonResponse = Constants.GSON_INSTANCE.toJson(dtoSheetCell);
+            out.print(jsonResponse);
+            out.flush();
+        }
+        else {
+            int version = Integer.parseInt(versionNumber);
+            DtoSheetCell dtoSheetCell = engine.getSheetCell(version);
+            PrintWriter out = response.getWriter();
+            String jsonResponse = Constants.GSON_INSTANCE.toJson(dtoSheetCell);
+            out.print(jsonResponse);
+            out.flush();
+        }
     }
 }

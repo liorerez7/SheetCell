@@ -2,7 +2,9 @@ package chat.constants;
 
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
+import Utility.DtoContainerData;
 import chat.utils.jsonSerializableClasses.CellLocationMapSerializer;
+import chat.utils.jsonSerializableClasses.DtoContainerDataSerializer;
 import chat.utils.jsonSerializableClasses.DtoSheetCellSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +25,7 @@ public class Constants {
     public final static Gson GSON_INSTANCE = new GsonBuilder()
             .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {}.getType(), new CellLocationMapSerializer())
             .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellSerializer())
+            .registerTypeAdapter(DtoContainerData.class, new DtoContainerDataSerializer())
             .setPrettyPrinting()
             .create();
 }

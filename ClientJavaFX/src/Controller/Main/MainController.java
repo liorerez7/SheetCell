@@ -4,11 +4,9 @@ import Controller.Customize.CustomizeController;
 import Controller.Grid.GridController;
 import Controller.HttpUtility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
-import Controller.HttpUtility.jsonDeSerialzableClasses.*;
 import Controller.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
 import Controller.ProgressManager.ProgressAnimationManager;
-import Controller.JavaFXUtility.*;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
@@ -17,15 +15,9 @@ import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
 import CoreParts.smallParts.CellLocation;
 import Main.sheetCellApp;
-import Utility.Exception.*;
 import Utility.DtoContainerData;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import expression.ReturnedValueType;
 import expression.impl.stringFunction.Str;
-import expression.impl.variantImpl.EffectiveValue;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -46,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -172,7 +163,7 @@ public class MainController implements Closeable {
                     Map<String, String> params = new HashMap<>();
                     params.put("xmlAddress", absolutePath);
 
-                    HttpRequestManager.sendPostRequest(Constants.INIT_SHEET_CELL_ENDPOINT, params, new Callback() {
+                    HttpRequestManager.sendPostRequestASyncWithCallBack(Constants.INIT_SHEET_CELL_ENDPOINT, params, new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
@@ -183,7 +174,7 @@ public class MainController implements Closeable {
 
                             if (response.isSuccessful()) {
 
-                                HttpRequestManager.sendGetRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
+                                HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
                                     @Override
                                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                                         Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
@@ -249,109 +240,7 @@ public class MainController implements Closeable {
         new Thread(task).start();
     }
 
-//    public void updateCell(String text, String newValue) {
-//
-//        final DtoSheetCell[] newDtoSheetCell = new DtoSheetCell[1];
-//        final int[] latestVersion = new int[1];
-//
-//        try {
-//            Map<String, String> params = new HashMap<>();
-//            params.put("newValue", newValue);
-//            params.put("colLocation", text.charAt(0) + "");
-//            params.put("rowLocation", text.substring(1));
-//
-//
-//
-//            HttpRequestManager.sendPostRequest(Constants.UPDATE_CELL_ENDPOINT, params, new Callback() {
-//                @Override
-//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                    Platform.runLater(() -> createErrorPopup("Failed to update cell: " + e.getMessage(), "Error"));
-//                }
-//
-//                @Override
-//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                }
-//            });
-//
-//
-//            HttpRequestManager.sendGetRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
-//
-//                @Override
-//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                    Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
-//                }
-//
-//                @Override
-//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//
-//                    Platform.runLater(() -> {
-//                        if (response.isSuccessful()) {
-//                            String sheetCellAsJson = null;
-//                            try {
-//                                sheetCellAsJson = response.body().string();
-//                            } catch (IOException e) {
-//                                throw new RuntimeException(e);
-//                            }
-//                            newDtoSheetCell[0] = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-//                            latestVersion[0] = newDtoSheetCell[0].getLatestVersion();
-//                        }
-//                    });
-//                }
-//            });
-//
-//
-//            Map<String, String> paramsForRequestedCell = new HashMap<>();
-//            paramsForRequestedCell.put("cellLocation", text);
-//            HttpRequestManager.sendGetRequest(Constants.GET_REQUESTED_CELL_ENDPOINT, paramsForRequestedCell, new Callback() {
-//
-//                @Override
-//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                    Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
-//                }
-//                @Override
-//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                    Platform.runLater(() -> {
-//                        try {
-//                            String dtoCellAsJson = response.body().string();
-//                            DtoCell dtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
-//                            dtoCell.getAffectedBy();
-//
-//                            model.setPropertiesByDtoSheetCell(newDtoSheetCell[0]);
-//                            model.setLatestUpdatedVersionProperty(dtoCell);
-//                            model.setOriginalValueLabelProperty(dtoCell);
-//                            model.setTotalVersionsProperty(latestVersion[0]);
-//                            gridScrollerController.showNeighbors(dtoCell);
-//
-//                        } catch (IOException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    });
-//                }
-//            });
-//
-//
-//            //engine.updateCell(newValue, text.charAt(0), text.substring(1));
-////            DtoCell requestedCell = engine.getRequestedCell(text);
-////            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-////            model.setLatestUpdatedVersionProperty(requestedCell);
-////            model.setOriginalValueLabelProperty(requestedCell);
-////            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-////
-////            gridScrollerController.showNeighbors(requestedCell);
-//
-//
-//
-//        }catch (CycleDetectedException e) {
-//            createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
-//        }
-//        catch (Exception e) {
-//            createErrorPopup(e.getMessage(), "Error");
-//        }
-//    }
-
-
     public void updateCell(String text, String newValue) {
-
         CompletableFuture.runAsync(() -> {
             try {
                 Map<String, String> params = new HashMap<>();
@@ -359,52 +248,52 @@ public class MainController implements Closeable {
                 params.put("colLocation", text.charAt(0) + "");
                 params.put("rowLocation", text.substring(1));
 
-                // Send POST request synchronously
-                Response postResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, params);
-                if (!postResponse.isSuccessful()) {
-                    Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
-                    return;
+                // Send POST request synchronously and close the response
+                try (Response postResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, params)) {
+                    if (!postResponse.isSuccessful()) {
+                        Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
+                        return;
+                    }
                 }
 
-                // Send GET request to fetch the sheet cell synchronously
-                Response sheetCellResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>());
-                if (!sheetCellResponse.isSuccessful()) {
-                    Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
-                    return;
+                try (Response sheetCellResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
+                    if (!sheetCellResponse.isSuccessful()) {
+                        Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
+                        return;
+                    }
+
+                    String sheetCellAsJson = sheetCellResponse.body().string();
+                    DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                    int latestVersion = newDtoSheetCell.getLatestVersion();
+
+                    // Send GET request to fetch the requested cell synchronously and close the response
+                    Map<String, String> paramsForRequestedCell = new HashMap<>();
+                    paramsForRequestedCell.put("cellLocation", text);
+                    try (Response requestedCellResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_REQUESTED_CELL_ENDPOINT, paramsForRequestedCell)) {
+                        if (!requestedCellResponse.isSuccessful()) {
+                            Platform.runLater(() -> createErrorPopup("Failed to load requested cell", "Error"));
+                            return;
+                        }
+
+                        String dtoCellAsJson = requestedCellResponse.body().string();
+                        DtoCell dtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
+
+                        // Update the UI on the JavaFX Application Thread
+                        Platform.runLater(() -> {
+                            model.setPropertiesByDtoSheetCell(newDtoSheetCell);
+                            model.setLatestUpdatedVersionProperty(dtoCell);
+                            model.setOriginalValueLabelProperty(dtoCell);
+                            model.setTotalVersionsProperty(latestVersion);
+                            gridScrollerController.showNeighbors(dtoCell);
+                        });
+                    }
                 }
-
-                String sheetCellAsJson = sheetCellResponse.body().string();
-                DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-                int latestVersion = newDtoSheetCell.getLatestVersion();
-
-                // Send GET request to fetch the requested cell synchronously
-                Map<String, String> paramsForRequestedCell = new HashMap<>();
-                paramsForRequestedCell.put("cellLocation", text);
-                Response requestedCellResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_REQUESTED_CELL_ENDPOINT, paramsForRequestedCell);
-
-                if (!requestedCellResponse.isSuccessful()) {
-                    Platform.runLater(() -> createErrorPopup("Failed to load requested cell", "Error"));
-                    return;
-                }
-
-                String dtoCellAsJson = requestedCellResponse.body().string();
-                DtoCell dtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
-
-                // Update the UI on the JavaFX Application Thread
-                Platform.runLater(() -> {
-                    model.setPropertiesByDtoSheetCell(newDtoSheetCell);
-                    model.setLatestUpdatedVersionProperty(dtoCell);
-                    model.setOriginalValueLabelProperty(dtoCell);
-                    model.setTotalVersionsProperty(latestVersion);
-                    gridScrollerController.showNeighbors(dtoCell);
-                });
 
             } catch (IOException e) {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
         });
     }
-
 
     public void setEngine(EngineImpl engine) {
         this.engine = engine;
@@ -429,11 +318,43 @@ public class MainController implements Closeable {
     public void rangeAddClicked() {
         RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
         String name = rangeStringsData.getName();
+        String range = rangeStringsData.getRange();
+
         if(name != null) //in case when just shutting the window without entering anything
         {
             try {
-                engine.UpdateNewRange(name,rangeStringsData.getRange());
-                rangesController.addRange(engine.getRequestedRange(name),name);
+                Map<String,String> params = new HashMap<>();
+                params.put("name",name);
+                params.put("range",range);
+                HttpRequestManager.sendPostRequestASyncWithCallBack(Constants.ADD_RANGE_ENDPOINT, params, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if (!response.isSuccessful()) {
+                            Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
+                        }
+                    }
+                });
+
+               HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_REQUESTED_RANGE_ENDPOINT, params, new Callback() {
+                   @Override
+                   public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                       Platform.runLater(() -> createErrorPopup("Failed to get range", "Error"));
+                   }
+
+                   @Override
+                   public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                       String requestedRangeAsJson = response.body().string();
+                       List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
+                      // rangesController.addRange(engine.getRequestedRange(name),name);
+                       rangesController.addRange(requestedRange,name);
+                   }
+               });
+                //engine.UpdateNewRange(name,rangeStringsData.getRange());
             }
             catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
@@ -443,44 +364,146 @@ public class MainController implements Closeable {
 
     public void rangeDeleteClicked() {
 
-        Set<String> rangeNames = engine.getAllRangeNames();
-        RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
-        String name = rangeStringsData.getName();
-
-        if (name != null) //in case when just shutting the window without entering anything
-        {
+        CompletableFuture.runAsync(() -> {
             try {
-                engine.deleteRange(name);
-                rangesController.deleteRange(name);
+
+                Response allRangesResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_ALL_RANGES_ENDPOINT, new HashMap<>());
+                String allRangesAsJson = allRangesResponse.body().string();
+                Set <String> rangeNames = Constants.GSON_INSTANCE.fromJson(allRangesAsJson, new TypeToken<Set<String>>(){}.getType());
+
+                // Use Platform.runLater to ensure UI updates happen on the JavaFX Application Thread
+                Platform.runLater(() -> {
+                    RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
+                    String name = rangeStringsData.getName();
+
+                    if (name != null) {
+                        CompletableFuture.runAsync(() -> {
+                            try {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("name", name);
+
+                                Response deleteRangeResponse = HttpRequestManager.sendPostRequestSync(Constants.DELETE_RANGE_ENDPOINT, params);
+
+                                if (!deleteRangeResponse.isSuccessful()) {
+                                    Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
+                                } else {
+                                    Platform.runLater(() -> rangesController.deleteRange(name));
+                                }
+                            } catch (Exception e) {
+                                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+                            }
+                        });
+                    }
+                });
+
             } catch (Exception e) {
-                createErrorPopup(e.getMessage(), "Error");
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
-        }
+        });
+
+
+//        Set<String> rangeNames = engine.getAllRangeNames();
+//        RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
+//        String name = rangeStringsData.getName();
+//
+//        if (name != null) //in case when just shutting the window without entering anything
+//        {
+//            try {
+//                engine.deleteRange(name);
+//                rangesController.deleteRange(name);
+//            } catch (Exception e) {
+//                createErrorPopup(e.getMessage(), "Error");
+//            }
+//        }
     }
 
     public void cellClicked(String location) {
 
-        DtoCell requestedCell = engine.getRequestedCell(location);
-        model.setIsCellLabelClicked(true);
-        model.setLatestUpdatedVersionProperty(requestedCell);
-        model.setOriginalValueLabelProperty(requestedCell);
-        actionLineController.updateCssWhenUpdatingCell(location);
-        gridScrollerController.clearAllHighlights();
-        gridScrollerController.showNeighbors(requestedCell);
-        rangesController.resetComboBox();
-        customizeController.resetComboBox();
-        model.setColumnSelected(false);
-        model.setRowSelected(false);
-        model.setCellLocationProperty(location);
+        Map<String,String> params = new HashMap<>();
+        params.put("cellLocation",location);
+
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_REQUESTED_CELL_ENDPOINT, params, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> createErrorPopup("Failed to get cell", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String requestedCellAsJson = response.body().string();
+                DtoCell requestedCell = Constants.GSON_INSTANCE.fromJson(requestedCellAsJson, DtoCell.class);
+
+                Platform.runLater(() -> {
+                    model.setIsCellLabelClicked(true);
+                    model.setLatestUpdatedVersionProperty(requestedCell);
+                    model.setOriginalValueLabelProperty(requestedCell);
+                    actionLineController.updateCssWhenUpdatingCell(location);
+                    gridScrollerController.clearAllHighlights();
+                    gridScrollerController.showNeighbors(requestedCell);
+                    rangesController.resetComboBox();
+                    customizeController.resetComboBox();
+                    model.setColumnSelected(false);
+                    model.setRowSelected(false);
+                    model.setCellLocationProperty(location);
+                });
+            }
+        });
+//
+//                DtoCell requestedCell = engine.getRequestedCell(location);
+//        model.setIsCellLabelClicked(true);
+//        model.setLatestUpdatedVersionProperty(requestedCell);
+//        model.setOriginalValueLabelProperty(requestedCell);
+//        actionLineController.updateCssWhenUpdatingCell(location);
+//        gridScrollerController.clearAllHighlights();
+//        gridScrollerController.showNeighbors(requestedCell);
+//        rangesController.resetComboBox();
+//        customizeController.resetComboBox();
+//        model.setColumnSelected(false);
+//        model.setRowSelected(false);
+//        model.setCellLocationProperty(location);
     }
 
     public void handleRangeClick(String rangeName) {
         gridScrollerController.clearAllHighlights();
-        gridScrollerController.showAffectedCells(engine.getRequestedRange(rangeName));
+
+        Map<String,String> params = new HashMap<>();
+        params.put("name",rangeName);
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_REQUESTED_RANGE_ENDPOINT, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> createErrorPopup("Failed to get range", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String requestedRangeAsJson = response.body().string();
+                List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
+                Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
+            }
+        });
     }
 
     public void specificVersionClicked(int versionNumber) {
-        popUpWindowsHandler.openVersionGridPopUp(engine.getSheetCell(versionNumber), versionNumber, gridScrollerController);
+
+        Map<String,String> params = new HashMap<>();
+        params.put("versionNumber",versionNumber + "");
+
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> createErrorPopup("Failed to get version", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String requestedVersionAsJson = response.body().string();
+                DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
+                Platform.runLater(() -> {
+                    popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
+                });
+            }
+        });
     }
 
     public void sortRowsButtonClicked() {
@@ -489,12 +512,29 @@ public class MainController implements Closeable {
         String columns = sortRowsData.getColumnsToSortBy();
         String range = sortRowsData.getRange();
 
+        Map<String,String> params = new HashMap<>();
+        params.put("columns",columns);
+        params.put("range",range);
+
         //if one of them is null means that the user just closed the window without entering anything
         if(columns != null && range != null)
         {
             try {
-                DtoContainerData dtoContainerData = engine.sortSheetCell(range, columns);
-                createSortGridPopUp(dtoContainerData);
+
+                HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.SORT_SHEET_CELL_ENDPOINT, params, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Platform.runLater(() -> createErrorPopup("Failed to sort rows", "Error"));
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String sortedSheetCellAsJson = response.body().string();
+                        DtoContainerData dtoContainerData = Constants.GSON_INSTANCE.fromJson(sortedSheetCellAsJson, DtoContainerData.class);
+                        DtoSheetCell dtoSheetCell = dtoContainerData.getDtoSheetCell();
+                        Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
+                    }
+                });
             }catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
             }
@@ -506,34 +546,96 @@ public class MainController implements Closeable {
     }
 
     public void filterDataButtonClicked() {
-
-        boolean inputIsValid = true;
-
         // Open the filter data window and retrieve user input
         FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
         String range = filterGridData.getRange();
         String filterColumn = filterGridData.getColumnsToFilterBy();
 
-        // Check if the user has provided input (if window wasn't closed without action)
-        if (range != null && filterColumn != null && !(filterColumn.isEmpty())) {
+        // Validate user input
+        if (range == null || filterColumn == null || filterColumn.isEmpty()) {
+            return; // Exit if input is invalid
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("range", range);
+        params.put("filterColumn", filterColumn);
+
+        // Run the filtering process asynchronously to avoid blocking the UI thread
+        CompletableFuture.runAsync(() -> {
             try {
-                // Fetch unique strings in the selected column within the given range
-                Map<Character, Set<String>> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
-
-                Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
-
-                boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
-
-
-
-                if (inputIsValid && !isFilterEmpty) {
-                    DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter);
-                    createFilterGridPopUpp(filteredSheetCell);
+                // Fetch unique column values
+                Map<Character, Set<String>> columnValues = fetchUniqueColumnValues(params);
+                if (columnValues == null) {
+                    return;
                 }
 
+
+                // Run the UI operation on the JavaFX Application Thread and continue processing afterwards
+                Platform.runLater(() -> {
+                    Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
+                    boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
+
+                    // Proceed only if the filter is not empty
+                    if (!isFilterEmpty) {
+                        // Pass the filter and range information in the second HTTP request
+                        CompletableFuture.runAsync(() -> {
+                            try {
+                                DtoContainerData filteredSheetCell = fetchFilteredSheetData(range, filter);
+                                if (filteredSheetCell != null) {
+                                    Platform.runLater(() -> createFilterGridPopUpp(filteredSheetCell));
+                                }
+                            } catch (Exception e) {
+                                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+                            }
+                        });
+                    }
+                });
+
             } catch (Exception e) {
-                createErrorPopup(e.getMessage(), "Error");
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
+        });
+    }
+
+    // Helper method to fetch unique column values
+    private Map<Character, Set<String>> fetchUniqueColumnValues(Map<String, String> params) {
+        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_UNIQUE_STRINGS_IN_COLUMN, params)) {
+            if (!response.isSuccessful()) {
+                Platform.runLater(() -> createErrorPopup("Failed to retrieve column values", "Error"));
+                return null;
+            }
+
+            String columnValuesAsJson = response.body().string();
+            return Constants.GSON_INSTANCE.fromJson(columnValuesAsJson, new TypeToken<Map<Character, Set<String>>>(){}.getType());
+
+        } catch (IOException e) {
+            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            return null;
+        }
+    }
+
+    // Helper method to fetch the filtered sheet data
+    private DtoContainerData fetchFilteredSheetData(String range, Map<Character, Set<String>> filter) {
+        // Convert filter map to JSON
+        String filterJson = Constants.GSON_INSTANCE.toJson(filter);
+
+        // Prepare the parameters for the GET request
+        Map<String, String> params = new HashMap<>();
+        params.put("range", range);
+        params.put("filter", filterJson);
+
+        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.FILTER_SHEET_CELL_ENDPOINT, params)) {
+            if (!response.isSuccessful()) {
+                Platform.runLater(() -> createErrorPopup("Failed to filter data", "Error"));
+                return null;
+            }
+
+            String filteredSheetCellAsJson = response.body().string();
+            return Constants.GSON_INSTANCE.fromJson(filteredSheetCellAsJson, DtoContainerData.class);
+
+        } catch (IOException e) {
+            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            return null;
         }
     }
 

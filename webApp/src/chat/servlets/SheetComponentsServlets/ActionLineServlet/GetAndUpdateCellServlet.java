@@ -1,4 +1,4 @@
-package chat.servlets;
+package chat.servlets.SheetComponentsServlets.ActionLineServlet;
 
 import CoreParts.api.Engine;
 import CoreParts.impl.DtoComponents.DtoCell;
@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class UpdateCellServlet extends HttpServlet {
+public class GetAndUpdateCellServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

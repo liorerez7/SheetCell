@@ -8,31 +8,81 @@
         <servlet-class>chat.servlets.LoginServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>InitSheetCellServlet</servlet-name>
-        <servlet-class>chat.servlets.InitSheetCellServlet</servlet-class>
+        <servlet-name>GetSheetCellAndLoadXML</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetCellAndLoadXML</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>UpdateCellServlet</servlet-name>
-        <servlet-class>chat.servlets.UpdateCellServlet</servlet-class>
+        <servlet-name>GetAndUpdateCellServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.ActionLineServlet.GetAndUpdateCellServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddRangeServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.AddRangeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SortRangeServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.SortServlets.SortRangeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteRangeServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.DeleteRangeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterRangeServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.FilterServlets.FilterRangeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetUniqueStringsInColumnsServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.UtilityServlets.GetUniqueStringsInColumnsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginShortResponseServlet</servlet-name>
         <servlet-class>chat.servlets.LightweightLoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetRangeServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.GetRangeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UpdateCellServlet</servlet-name>
-        <url-pattern>/updateCell</url-pattern>
+        <servlet-name>FilterRangeServlet</servlet-name>
+        <url-pattern>/filterSheetCell</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UpdateCellServlet</servlet-name>
+        <servlet-name>GetUniqueStringsInColumnsServlet</servlet-name>
+        <url-pattern>/uniqueStringsInColumn</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SortRangeServlet</servlet-name>
+        <url-pattern>/sortSheetCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetAndUpdateCellServlet</servlet-name>
+        <url-pattern>/updateCell</url-pattern>
         <url-pattern>/requestedCell</url-pattern>
     </servlet-mapping>
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>GetAndUpdateCellServlet</servlet-name>-->
+<!--        <url-pattern>/requestedCell</url-pattern>-->
+<!--    </servlet-mapping>-->
     <servlet-mapping>
-        <servlet-name>InitSheetCellServlet</servlet-name>
+        <servlet-name>AddRangeServlet</servlet-name>
+        <url-pattern>/addRange</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteRangeServlet</servlet-name>
+        <url-pattern>/deleteRange</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetRangeServlet</servlet-name>
+        <url-pattern>/requestedRange</url-pattern>
+        <url-pattern>/allRanges</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetSheetCellAndLoadXML</servlet-name>
         <url-pattern>/xmlAddress</url-pattern>
         <url-pattern>/sheetCell</url-pattern>
     </servlet-mapping>
