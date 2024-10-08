@@ -134,31 +134,133 @@ public class MainController implements Closeable {
         themeManager = new ThemeManager(mainPane, leftCommands);
     }
 
+//    public void initializeGridBasedOnXML(String absolutePath) {
+//
+//        // Create a new instance of ProgressAnimationManager
+//        ProgressAnimationManager progressAnimationManager = new ProgressAnimationManager(progressManager);
+//
+//        // Get the VBox layout that contains the progressPane, welcomeLabel, and cancelButton
+//        VBox layout = progressAnimationManager.createProgressAnimationLayout();
+//
+//        // Set the VBox layout as the content of the gridScroller
+//        if (gridScroller != null) {
+//            gridScroller.setContent(layout); // Temporarily show progress bar, label, and cancel button
+//        }
+//
+//        // Create a Task to handle the file loading
+//        Task<Void> task = new Task<Void>() {
+//            @Override
+//            protected Void call() throws Exception {
+//                try {
+//                    // Simulate progress over 2 seconds
+//                    gridScrollerController.hideGrid();
+//                    for (int i = 0; i <= 100; i++) {
+//                        updateProgress(i, 100);
+//                        progressAnimationManager.updateProgress(i / 100.0);  // Update progress via ProgressAnimationManager
+//                        Thread.sleep(20);  // Simulate loading time
+//                    }
+//
+//                    Map<String, String> params = new HashMap<>();
+//                    params.put("xmlAddress", absolutePath);
+//
+//                    HttpRequestManager.sendPostRequestASyncWithCallBack(Constants.INIT_SHEET_CELL_ENDPOINT, params, new Callback() {
+//                        @Override
+//                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                            Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
+//                        }
+//
+//                        @Override
+//                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//
+//                            if (response.isSuccessful()) {
+//
+//                                HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
+//                                    @Override
+//                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                                        Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
+//                                    }
+//
+//                                    @Override
+//                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                                        if (response.isSuccessful()) {
+//
+//                                            String sheetCellAsJson = response.body().string();
+//
+//
+//                                            DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+//                                            System.out.println(newDtoSheetCell.getRanges().get("grades").get(0));
+//                                            int latestVersion = newDtoSheetCell.getLatestVersion();
+//                                            Map<String, List<CellLocation>> ranges = newDtoSheetCell.getRanges();
+//                                            int numberOfColumns = newDtoSheetCell.getNumberOfColumns();
+//                                            int numberOfRows = newDtoSheetCell.getNumberOfRows();
+//
+//                                            Platform.runLater(() -> {
+//                                                headerController.FileHasBeenLoaded(absolutePath);
+//                                                Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
+//                                                rangesController.clearAllRanges();
+//                                                model.setReadingXMLSuccess(true);
+//                                                model.setCellLabelToProperties(cellLocationLabelMap);
+//                                                model.bindCellLabelToProperties();
+//                                                model.setPropertiesByDtoSheetCell(newDtoSheetCell);
+//                                                model.setTotalVersionsProperty(latestVersion);
+//                                                rangesController.setAllRanges(ranges);
+//                                                customizeController.loadAllColData(numberOfColumns);
+//                                                customizeController.loadAllRowData(numberOfRows);
+//                                                themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+//
+//                                            });
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                            else {
+//                                Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
+//                            }
+//                        }
+//                    });
+//
+//                } catch (Exception e) {
+//                    gridScrollerController.showGrid();
+//                    Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+//                } finally {
+//                    Platform.runLater(() -> {
+//                        if (gridScroller != null) {
+//                            gridScroller.setContent(gridScrollerController.getGrid()); // Restore grid
+//                        }
+//                    });
+//                }
+//                return null;
+//            }
+//        };
+//
+//        // Bind the progress bar to the task's progress
+//        progressManager.getProgressBar().progressProperty().bind(task.progressProperty());
+//
+//        // Run the task in a new thread
+//        new Thread(task).start();
+//    }
+
     public void initializeGridBasedOnXML(String absolutePath) {
-
-        // Create a new instance of ProgressAnimationManager
+        // Set up progress animation and display it
         ProgressAnimationManager progressAnimationManager = new ProgressAnimationManager(progressManager);
-
-        // Get the VBox layout that contains the progressPane, welcomeLabel, and cancelButton
         VBox layout = progressAnimationManager.createProgressAnimationLayout();
 
-        // Set the VBox layout as the content of the gridScroller
         if (gridScroller != null) {
-            gridScroller.setContent(layout); // Temporarily show progress bar, label, and cancel button
+            gridScroller.setContent(layout);
         }
 
-        // Create a Task to handle the file loading
-        Task<Void> task = new Task<Void>() {
+        // Create a Task to handle the file loading asynchronously
+        Task<Void> task = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 try {
-                    // Simulate progress over 2 seconds
                     gridScrollerController.hideGrid();
                     for (int i = 0; i <= 100; i++) {
                         updateProgress(i, 100);
-                        progressAnimationManager.updateProgress(i / 100.0);  // Update progress via ProgressAnimationManager
-                        Thread.sleep(20);  // Simulate loading time
+                        progressAnimationManager.updateProgress(i / 100.0);
+                        Thread.sleep(20);
                     }
+
 
                     Map<String, String> params = new HashMap<>();
                     params.put("xmlAddress", absolutePath);
@@ -170,62 +272,22 @@ public class MainController implements Closeable {
                         }
 
                         @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-                            if (response.isSuccessful()) {
-
-                                HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
-                                    @Override
-                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                        Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
-                                    }
-
-                                    @Override
-                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                                        if (response.isSuccessful()) {
-
-                                            String sheetCellAsJson = response.body().string();
-
-
-                                            DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-                                            System.out.println(newDtoSheetCell.getRanges().get("grades").get(0));
-                                            int latestVersion = newDtoSheetCell.getLatestVersion();
-                                            Map<String, List<CellLocation>> ranges = newDtoSheetCell.getRanges();
-                                            int numberOfColumns = newDtoSheetCell.getNumberOfColumns();
-                                            int numberOfRows = newDtoSheetCell.getNumberOfRows();
-
-                                            Platform.runLater(() -> {
-                                                headerController.FileHasBeenLoaded(absolutePath);
-                                                Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
-                                                rangesController.clearAllRanges();
-                                                model.setReadingXMLSuccess(true);
-                                                model.setCellLabelToProperties(cellLocationLabelMap);
-                                                model.bindCellLabelToProperties();
-                                                model.setPropertiesByDtoSheetCell(newDtoSheetCell);
-                                                model.setTotalVersionsProperty(latestVersion);
-                                                rangesController.setAllRanges(ranges);
-                                                customizeController.loadAllColData(numberOfColumns);
-                                                customizeController.loadAllRowData(numberOfRows);
-                                                themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
-
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-                            else {
-                                Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
+                        public void onResponse(@NotNull Call call, @NotNull Response response) {
+                            try (response) {
+                                if (response.isSuccessful()) {
+                                    fetchDtoSheetCellAsync(absolutePath);
+                                } else {
+                                    Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
+                                }
                             }
                         }
                     });
-
                 } catch (Exception e) {
-                    gridScrollerController.showGrid();
                     Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
                 } finally {
                     Platform.runLater(() -> {
                         if (gridScroller != null) {
-                            gridScroller.setContent(gridScrollerController.getGrid()); // Restore grid
+                            gridScroller.setContent(gridScrollerController.getGrid());
                         }
                     });
                 }
@@ -239,6 +301,49 @@ public class MainController implements Closeable {
         // Run the task in a new thread
         new Thread(task).start();
     }
+
+
+    // Helper method to fetch the DtoSheetCell asynchronously
+    private void fetchDtoSheetCellAsync(String absolutePath) {
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                try (response) {
+                    if (response.isSuccessful()) {
+                        String sheetCellAsJson = response.body().string();
+                        DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                        Platform.runLater(() -> updateUIWithNewSheetCell(absolutePath, newDtoSheetCell));
+                    } else {
+                        Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
+                    }
+                } catch (IOException e) {
+                    Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error processing response"));
+                }
+            }
+        });
+    }
+
+    // Helper method to update the UI with the newly loaded DtoSheetCell
+    private void updateUIWithNewSheetCell(String absolutePath, DtoSheetCell newDtoSheetCell) {
+        headerController.FileHasBeenLoaded(absolutePath);
+        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
+        rangesController.clearAllRanges();
+        model.setReadingXMLSuccess(true);
+        model.setCellLabelToProperties(cellLocationLabelMap);
+        model.bindCellLabelToProperties();
+        model.setPropertiesByDtoSheetCell(newDtoSheetCell);
+        model.setTotalVersionsProperty(newDtoSheetCell.getLatestVersion());
+        rangesController.setAllRanges(newDtoSheetCell.getRanges());
+        customizeController.loadAllColData(newDtoSheetCell.getNumberOfColumns());
+        customizeController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
+        themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+    }
+
 
     public void updateCell(String text, String newValue) {
         CompletableFuture.runAsync(() -> {
