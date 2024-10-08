@@ -1,16 +1,19 @@
 package DtoComponents;
 
+
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
-import CoreParts.smallParts.CellLocation;
 import expression.impl.Range;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
+
+
 
 import java.util.*;
 
 public class DtoSheetCell {
 
-    private Map<CellLocation,EffectiveValue> sheetCell = new HashMap<>();
+    private Map<CellLocation, EffectiveValue> sheetCell = new HashMap<>();
    // private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
     private Map<String,List<CellLocation>> ranges = new HashMap<>();
     private String name;
@@ -35,6 +38,7 @@ public class DtoSheetCell {
             ranges.put(range.getRangeName(),range.getCellLocations());
         });
     }
+
     public DtoSheetCell(Map<CellLocation,EffectiveValue> sheetCell, Map<String, List<CellLocation>> ranges,
                         String name, int versionNumber, int currentNumberOfRows, int currentNumberOfCols, int currentCellLength, int currentCellWidth) {
 

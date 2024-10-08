@@ -1,13 +1,14 @@
 package Controller.Main;
 
 import Controller.JavaFXUtility.StringParser;
-import CoreParts.impl.DtoComponents.DtoCell;
-import CoreParts.impl.DtoComponents.DtoSheetCell;
-import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
-import expression.impl.variantImpl.EffectiveValue;
+
+import DtoComponents.DtoCell;
+import DtoComponents.DtoSheetCell;
 import javafx.beans.property.*;
 import javafx.scene.control.Label;
+import smallParts.CellLocation;
+import smallParts.CellLocationFactory;
+import smallParts.EffectiveValue;
 
 
 import java.util.HashMap;

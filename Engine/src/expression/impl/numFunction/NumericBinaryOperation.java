@@ -4,7 +4,8 @@ import expression.ReturnedValueType;
 
 import expression.api.Expression;
 import expression.impl.variantImpl.BinaryExpression;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.EffectiveValue;
+
 
 public abstract class NumericBinaryOperation extends BinaryExpression {
 

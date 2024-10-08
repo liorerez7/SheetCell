@@ -1,9 +1,10 @@
 package CoreParts.api;
 
 import CoreParts.api.sheet.SheetCellViewOnly;
-import CoreParts.smallParts.CellLocation;
-import expression.impl.variantImpl.EffectiveValue;
+
 import expression.api.Expression;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
 
 import java.util.Set;
 

@@ -1,7 +1,8 @@
 package Utility.Exception;
 
 import CoreParts.api.Cell;
-import CoreParts.smallParts.CellLocation;
+import smallParts.CellLocation;
+
 
 import java.util.List;
 

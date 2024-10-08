@@ -7,10 +7,9 @@ import Controller.JavaFXUtility.FilterGridData;
 import Controller.JavaFXUtility.RangeStringsData;
 import Controller.JavaFXUtility.RunTimeAnalysisData;
 import Controller.JavaFXUtility.SortRowsData;
-import CoreParts.api.Engine;
-import CoreParts.impl.DtoComponents.DtoSheetCell;
-import CoreParts.smallParts.CellLocation;
-import Utility.DtoContainerData;
+
+import DtoComponents.DtoContainerData;
+import DtoComponents.DtoSheetCell;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -24,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import okhttp3.Response;
+import smallParts.CellLocation;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class PopUpWindowsHandler {
 
 
-    public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell,GridController gridScrollerController ,List<CellLocation> cycle) {
+    public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, GridController gridScrollerController , List<CellLocation> cycle) {
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Circular Dependency Error");

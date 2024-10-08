@@ -1,7 +1,8 @@
 package expression.api;
 
 import CoreParts.api.sheet.SheetCellViewOnly;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.EffectiveValue;
+
 import java.io.Serializable;
 
 public interface Expression extends Serializable {

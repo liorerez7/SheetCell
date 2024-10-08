@@ -1,7 +1,8 @@
 package chat.servlets.SheetComponentsServlets.ActionLineServlet;
 
 import CoreParts.api.Engine;
-import CoreParts.impl.DtoComponents.DtoCell;
+
+import DtoComponents.DtoCell;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import jakarta.servlet.http.HttpServlet;

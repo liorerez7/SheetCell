@@ -41,17 +41,6 @@ public class CellLocation implements Serializable { // TODO: Implement the CellL
         return Objects.hash(visualColumn, visualRow);
     }
 
-
-//    @Override
-//    public String toString() {
-//        return "CellLocation{" +
-//                "visualColumn=" + visualColumn +
-//                ", visualRow='" + visualRow + '\'' +
-//                ", realRow=" + realRow +
-//                ", realColumn=" + realColumn +
-//                '}';
-//    }
-
     @Override
     public String toString() {
         return String.format("%c%s", visualColumn, visualRow);

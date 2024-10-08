@@ -3,12 +3,10 @@ package Controller.Grid;
 
 import Controller.Main.MainController;
 import Controller.JavaFXUtility.StringParser;
-import CoreParts.impl.DtoComponents.DtoCell;
-import CoreParts.impl.DtoComponents.DtoSheetCell;
-import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
-import Utility.DtoContainerData;
-import expression.impl.variantImpl.EffectiveValue;
+
+import DtoComponents.DtoCell;
+import DtoComponents.DtoContainerData;
+import DtoComponents.DtoSheetCell;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +21,10 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import smallParts.CellLocation;
+import smallParts.CellLocationFactory;
+import smallParts.EffectiveValue;
+
 import java.util.*;
 
 

@@ -1,6 +1,8 @@
 package expression.impl;
 
-import CoreParts.smallParts.CellLocation;
+
+
+import smallParts.CellLocation;
 
 import java.io.Serializable;
 import java.util.ArrayList;

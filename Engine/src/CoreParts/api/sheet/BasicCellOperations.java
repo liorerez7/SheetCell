@@ -1,8 +1,8 @@
 package CoreParts.api.sheet;
 
 import CoreParts.api.Cell;
-import CoreParts.smallParts.CellLocation;
 import expression.api.Expression;
+import smallParts.CellLocation;
 
 public interface BasicCellOperations {
     Cell getCell(CellLocation location);

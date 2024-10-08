@@ -2,8 +2,7 @@ package Utility;
 
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
-import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
+
 import Utility.Exception.CellCantBeEvaluatedException;
 import Utility.Exception.RangeDoesntExistException;
 import Utility.Exception.RefToUnSetCellException;
@@ -19,6 +18,9 @@ import expression.impl.numFunction.Average;
 import expression.impl.numFunction.Num;
 import expression.impl.numFunction.Sum;
 import expression.impl.stringFunction.Str;
+import smallParts.CellLocation;
+import smallParts.CellLocationFactory;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

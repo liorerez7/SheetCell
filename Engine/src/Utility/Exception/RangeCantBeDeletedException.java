@@ -1,6 +1,8 @@
 package Utility.Exception;
 
-import CoreParts.smallParts.CellLocation;
+
+
+import smallParts.CellLocation;
 
 import java.util.Set;
 import java.util.stream.Collectors;

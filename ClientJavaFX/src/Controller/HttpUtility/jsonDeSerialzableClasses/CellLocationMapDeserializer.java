@@ -1,8 +1,10 @@
 package Controller.HttpUtility.jsonDeSerialzableClasses;
 
-import CoreParts.smallParts.CellLocation;
+
 import com.google.gson.*;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
+
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

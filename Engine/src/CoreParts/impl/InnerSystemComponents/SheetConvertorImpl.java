@@ -3,13 +3,14 @@ package CoreParts.impl.InnerSystemComponents;
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
 import CoreParts.api.SheetConvertor;
-import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
+
 import GeneratedClassesEx2.*;
 import Utility.Exception.RangeNameAlreadyExistException;
 import expression.impl.Range;
 import expression.impl.Ref;
 import Utility.CellUtils;
+import smallParts.CellLocation;
+import smallParts.CellLocationFactory;
 
 import java.util.HashSet;
 import java.util.List;

@@ -6,7 +6,8 @@ import expression.ReturnedValueType;
 import expression.api.Expression;
 import expression.impl.Range;
 import expression.impl.Ref;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.EffectiveValue;
+
 
 import java.util.Set;
 

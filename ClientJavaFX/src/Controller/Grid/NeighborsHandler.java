@@ -52,12 +52,13 @@
 
 package Controller.Grid;
 
-import CoreParts.impl.DtoComponents.DtoCell;
-import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
+
+import DtoComponents.DtoCell;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
+import smallParts.CellLocation;
+import smallParts.CellLocationFactory;
 
 import java.util.List;
 import java.util.Map;

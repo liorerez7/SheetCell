@@ -2,8 +2,9 @@ package expression.impl.boolFunction;
 
 import expression.ReturnedValueType;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValue;
+
 import expression.impl.variantImpl.UnaryExpression;
+import smallParts.EffectiveValue;
 
 public class Not extends UnaryExpression {
 

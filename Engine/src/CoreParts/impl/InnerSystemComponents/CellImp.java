@@ -2,11 +2,13 @@ package CoreParts.impl.InnerSystemComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCellViewOnly;
-import CoreParts.smallParts.CellLocation;
+
 import Utility.Exception.AvgWithNoNumericCellsException;
 import Utility.Exception.CellCantBeEvaluatedException;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
+
 
 import java.io.Serializable;
 import java.util.HashSet;

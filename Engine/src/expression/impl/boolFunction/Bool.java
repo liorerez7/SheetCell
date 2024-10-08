@@ -3,7 +3,8 @@ package expression.impl.boolFunction;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.ReturnedValueType;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.EffectiveValue;
+
 
 public class Bool implements Expression {
 

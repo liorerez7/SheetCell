@@ -1,11 +1,13 @@
 package chat.utils.jsonSerializableClasses;
 
-import CoreParts.smallParts.CellLocation;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
+
 
 import java.lang.reflect.Type;
 import java.util.Map;

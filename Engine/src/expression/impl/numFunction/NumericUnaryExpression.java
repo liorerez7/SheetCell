@@ -3,8 +3,9 @@ package expression.impl.numFunction;
 import expression.ReturnedValueType;
 
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValue;
+
 import expression.impl.variantImpl.UnaryExpression;
+import smallParts.EffectiveValue;
 
 public abstract class NumericUnaryExpression extends UnaryExpression {
 

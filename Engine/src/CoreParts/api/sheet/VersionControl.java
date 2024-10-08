@@ -1,8 +1,9 @@
 package CoreParts.api.sheet;
 
 import CoreParts.api.Cell;
-import CoreParts.smallParts.CellLocation;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
+
 import java.util.Map;
 
 public interface VersionControl {

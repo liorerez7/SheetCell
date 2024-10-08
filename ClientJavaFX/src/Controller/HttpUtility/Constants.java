@@ -1,13 +1,15 @@
 package Controller.HttpUtility;
 
 import Controller.HttpUtility.jsonDeSerialzableClasses.*;
-import CoreParts.impl.DtoComponents.DtoSheetCell;
-import CoreParts.smallParts.CellLocation;
-import Utility.DtoContainerData;
+
+import DtoComponents.DtoContainerData;
+import DtoComponents.DtoSheetCell;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
+
 
 import java.util.Map;
 

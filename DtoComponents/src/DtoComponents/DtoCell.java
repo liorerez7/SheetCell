@@ -1,8 +1,9 @@
 package DtoComponents;
 
 import CoreParts.api.Cell;
-import CoreParts.smallParts.CellLocation;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
+
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 public class DtoCell {
     private EffectiveValue effectiveValue;
     private String originalValue;
-    private CellLocation  location;
+    private CellLocation location;
     private int version;
     private Set<CellLocation > affectedBy;
     private Set<CellLocation> affectingOn;

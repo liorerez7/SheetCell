@@ -1,5 +1,7 @@
 package smallParts;
 
+import expression.ReturnedValueType;
+
 import java.io.Serializable;
 
 public class EffectiveValue implements Serializable {

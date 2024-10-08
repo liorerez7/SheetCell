@@ -2,8 +2,9 @@ package expression.impl.stringFunction;
 
 import expression.ReturnedValueType;
 import expression.api.Expression;
-import expression.impl.variantImpl.EffectiveValue;
+
 import expression.impl.variantImpl.TernaryExpression;
+import smallParts.EffectiveValue;
 
 public class Sub  extends TernaryExpression {
 

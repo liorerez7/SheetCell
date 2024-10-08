@@ -1,8 +1,8 @@
 package CoreParts.api.sheet;
 
 import CoreParts.api.Cell;
-import CoreParts.smallParts.CellLocation;
 import expression.impl.Range;
+import smallParts.CellLocation;
 
 import java.io.Serializable;
 import java.util.Map;

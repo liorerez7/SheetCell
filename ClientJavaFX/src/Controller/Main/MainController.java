@@ -10,14 +10,12 @@ import Controller.ProgressManager.ProgressAnimationManager;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
 import CoreParts.api.Engine;
-import CoreParts.impl.DtoComponents.DtoCell;
-import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.impl.InnerSystemComponents.EngineImpl;
-import CoreParts.smallParts.CellLocation;
+import DtoComponents.DtoCell;
+import DtoComponents.DtoContainerData;
+import DtoComponents.DtoSheetCell;
 import Main.sheetCellApp;
-import Utility.DtoContainerData;
 import com.google.gson.reflect.TypeToken;
-import expression.impl.stringFunction.Str;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -34,6 +32,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
+import smallParts.CellLocation;
 
 
 import java.io.Closeable;
@@ -135,6 +134,7 @@ public class MainController implements Closeable {
 
     public void initializeGridBasedOnXML(String absolutePath) {
         // Set up progress animation and display it
+
         ProgressAnimationManager progressAnimationManager = new ProgressAnimationManager(progressManager);
         VBox layout = progressAnimationManager.createProgressAnimationLayout();
 

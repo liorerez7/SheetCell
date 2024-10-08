@@ -2,11 +2,12 @@ package expression.impl;
 
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCellViewOnly;
-import CoreParts.smallParts.CellLocation;
+
 import expression.ReturnedValueType;
 import expression.api.Expression;
 import expression.impl.stringFunction.Str;
-import expression.impl.variantImpl.EffectiveValue;
+import smallParts.CellLocation;
+import smallParts.EffectiveValue;
 
 
 public class Ref implements Expression {

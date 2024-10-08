@@ -3,10 +3,11 @@ package Utility;
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCellViewOnly;
 import CoreParts.impl.InnerSystemComponents.SheetCellImp;
-import CoreParts.smallParts.CellLocation;
-import CoreParts.smallParts.CellLocationFactory;
+
 import expression.impl.Range;
 import expression.impl.Ref;
+import smallParts.CellLocation;
+import smallParts.CellLocationFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;

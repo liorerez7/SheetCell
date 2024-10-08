@@ -2,6 +2,7 @@ package expression.impl.variantImpl;
 
 import CoreParts.api.sheet.SheetCellViewOnly;
 import expression.api.Expression;
+import smallParts.EffectiveValue;
 
 public abstract class UnaryExpression implements Expression {
 
