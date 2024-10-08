@@ -92,7 +92,6 @@ public class MainController implements Closeable {
     private final PopUpWindowsHandler popUpWindowsHandler;
     private final ThemeManager themeManager;
     private ProgressManager progressManager;
-    // Reference to the stage
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -133,112 +132,6 @@ public class MainController implements Closeable {
         popUpWindowsHandler = new PopUpWindowsHandler();
         themeManager = new ThemeManager(mainPane, leftCommands);
     }
-
-//    public void initializeGridBasedOnXML(String absolutePath) {
-//
-//        // Create a new instance of ProgressAnimationManager
-//        ProgressAnimationManager progressAnimationManager = new ProgressAnimationManager(progressManager);
-//
-//        // Get the VBox layout that contains the progressPane, welcomeLabel, and cancelButton
-//        VBox layout = progressAnimationManager.createProgressAnimationLayout();
-//
-//        // Set the VBox layout as the content of the gridScroller
-//        if (gridScroller != null) {
-//            gridScroller.setContent(layout); // Temporarily show progress bar, label, and cancel button
-//        }
-//
-//        // Create a Task to handle the file loading
-//        Task<Void> task = new Task<Void>() {
-//            @Override
-//            protected Void call() throws Exception {
-//                try {
-//                    // Simulate progress over 2 seconds
-//                    gridScrollerController.hideGrid();
-//                    for (int i = 0; i <= 100; i++) {
-//                        updateProgress(i, 100);
-//                        progressAnimationManager.updateProgress(i / 100.0);  // Update progress via ProgressAnimationManager
-//                        Thread.sleep(20);  // Simulate loading time
-//                    }
-//
-//                    Map<String, String> params = new HashMap<>();
-//                    params.put("xmlAddress", absolutePath);
-//
-//                    HttpRequestManager.sendPostRequestASyncWithCallBack(Constants.INIT_SHEET_CELL_ENDPOINT, params, new Callback() {
-//                        @Override
-//                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                            Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
-//                        }
-//
-//                        @Override
-//                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//
-//                            if (response.isSuccessful()) {
-//
-//                                HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
-//                                    @Override
-//                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                                        Platform.runLater(() -> createErrorPopup("Failed to load sheet: " + e.getMessage(), "Error"));
-//                                    }
-//
-//                                    @Override
-//                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                                        if (response.isSuccessful()) {
-//
-//                                            String sheetCellAsJson = response.body().string();
-//
-//
-//                                            DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-//                                            System.out.println(newDtoSheetCell.getRanges().get("grades").get(0));
-//                                            int latestVersion = newDtoSheetCell.getLatestVersion();
-//                                            Map<String, List<CellLocation>> ranges = newDtoSheetCell.getRanges();
-//                                            int numberOfColumns = newDtoSheetCell.getNumberOfColumns();
-//                                            int numberOfRows = newDtoSheetCell.getNumberOfRows();
-//
-//                                            Platform.runLater(() -> {
-//                                                headerController.FileHasBeenLoaded(absolutePath);
-//                                                Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
-//                                                rangesController.clearAllRanges();
-//                                                model.setReadingXMLSuccess(true);
-//                                                model.setCellLabelToProperties(cellLocationLabelMap);
-//                                                model.bindCellLabelToProperties();
-//                                                model.setPropertiesByDtoSheetCell(newDtoSheetCell);
-//                                                model.setTotalVersionsProperty(latestVersion);
-//                                                rangesController.setAllRanges(ranges);
-//                                                customizeController.loadAllColData(numberOfColumns);
-//                                                customizeController.loadAllRowData(numberOfRows);
-//                                                themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
-//
-//                                            });
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                            else {
-//                                Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
-//                            }
-//                        }
-//                    });
-//
-//                } catch (Exception e) {
-//                    gridScrollerController.showGrid();
-//                    Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-//                } finally {
-//                    Platform.runLater(() -> {
-//                        if (gridScroller != null) {
-//                            gridScroller.setContent(gridScrollerController.getGrid()); // Restore grid
-//                        }
-//                    });
-//                }
-//                return null;
-//            }
-//        };
-//
-//        // Bind the progress bar to the task's progress
-//        progressManager.getProgressBar().progressProperty().bind(task.progressProperty());
-//
-//        // Run the task in a new thread
-//        new Thread(task).start();
-//    }
 
     public void initializeGridBasedOnXML(String absolutePath) {
         // Set up progress animation and display it
@@ -302,7 +195,6 @@ public class MainController implements Closeable {
         new Thread(task).start();
     }
 
-
     // Helper method to fetch the DtoSheetCell asynchronously
     private void fetchDtoSheetCellAsync(String absolutePath) {
         HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
@@ -343,7 +235,6 @@ public class MainController implements Closeable {
         customizeController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
         themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
     }
-
 
     public void updateCell(String text, String newValue) {
         CompletableFuture.runAsync(() -> {
@@ -466,25 +357,21 @@ public class MainController implements Closeable {
     public void rangeDeleteClicked() {
 
         CompletableFuture.runAsync(() -> {
-            try {
 
-                Response allRangesResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_ALL_RANGES_ENDPOINT, new HashMap<>());
+            try (Response allRangesResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_ALL_RANGES_ENDPOINT, new HashMap<>())) {
                 String allRangesAsJson = allRangesResponse.body().string();
-                Set <String> rangeNames = Constants.GSON_INSTANCE.fromJson(allRangesAsJson, new TypeToken<Set<String>>(){}.getType());
+                Set<String> rangeNames = Constants.GSON_INSTANCE.fromJson(allRangesAsJson, new TypeToken<Set<String>>(){}.getType());
 
-                // Use Platform.runLater to ensure UI updates happen on the JavaFX Application Thread
+                // Handle the next request inside Platform.runLater to stay on the UI thread
                 Platform.runLater(() -> {
                     RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
                     String name = rangeStringsData.getName();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("name", name);
 
                     if (name != null) {
                         CompletableFuture.runAsync(() -> {
-                            try {
-                                Map<String, String> params = new HashMap<>();
-                                params.put("name", name);
-
-                                Response deleteRangeResponse = HttpRequestManager.sendPostRequestSync(Constants.DELETE_RANGE_ENDPOINT, params);
-
+                            try (Response deleteRangeResponse = HttpRequestManager.sendPostRequestSync(Constants.DELETE_RANGE_ENDPOINT, params)) {
                                 if (!deleteRangeResponse.isSuccessful()) {
                                     Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
                                 } else {
@@ -496,26 +383,10 @@ public class MainController implements Closeable {
                         });
                     }
                 });
-
             } catch (Exception e) {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
         });
-
-
-//        Set<String> rangeNames = engine.getAllRangeNames();
-//        RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
-//        String name = rangeStringsData.getName();
-//
-//        if (name != null) //in case when just shutting the window without entering anything
-//        {
-//            try {
-//                engine.deleteRange(name);
-//                rangesController.deleteRange(name);
-//            } catch (Exception e) {
-//                createErrorPopup(e.getMessage(), "Error");
-//            }
-//        }
     }
 
     public void cellClicked(String location) {
@@ -532,37 +403,26 @@ public class MainController implements Closeable {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String requestedCellAsJson = response.body().string();
-                DtoCell requestedCell = Constants.GSON_INSTANCE.fromJson(requestedCellAsJson, DtoCell.class);
+                try (response) {
+                    String requestedCellAsJson = response.body().string();
+                    DtoCell requestedCell = Constants.GSON_INSTANCE.fromJson(requestedCellAsJson, DtoCell.class);
 
-                Platform.runLater(() -> {
-                    model.setIsCellLabelClicked(true);
-                    model.setLatestUpdatedVersionProperty(requestedCell);
-                    model.setOriginalValueLabelProperty(requestedCell);
-                    actionLineController.updateCssWhenUpdatingCell(location);
-                    gridScrollerController.clearAllHighlights();
-                    gridScrollerController.showNeighbors(requestedCell);
-                    rangesController.resetComboBox();
-                    customizeController.resetComboBox();
-                    model.setColumnSelected(false);
-                    model.setRowSelected(false);
-                    model.setCellLocationProperty(location);
-                });
+                    Platform.runLater(() -> {
+                        model.setIsCellLabelClicked(true);
+                        model.setLatestUpdatedVersionProperty(requestedCell);
+                        model.setOriginalValueLabelProperty(requestedCell);
+                        actionLineController.updateCssWhenUpdatingCell(location);
+                        gridScrollerController.clearAllHighlights();
+                        gridScrollerController.showNeighbors(requestedCell);
+                        rangesController.resetComboBox();
+                        customizeController.resetComboBox();
+                        model.setColumnSelected(false);
+                        model.setRowSelected(false);
+                        model.setCellLocationProperty(location);
+                    });
+                }
             }
         });
-//
-//                DtoCell requestedCell = engine.getRequestedCell(location);
-//        model.setIsCellLabelClicked(true);
-//        model.setLatestUpdatedVersionProperty(requestedCell);
-//        model.setOriginalValueLabelProperty(requestedCell);
-//        actionLineController.updateCssWhenUpdatingCell(location);
-//        gridScrollerController.clearAllHighlights();
-//        gridScrollerController.showNeighbors(requestedCell);
-//        rangesController.resetComboBox();
-//        customizeController.resetComboBox();
-//        model.setColumnSelected(false);
-//        model.setRowSelected(false);
-//        model.setCellLocationProperty(location);
     }
 
     public void handleRangeClick(String rangeName) {
@@ -578,10 +438,13 @@ public class MainController implements Closeable {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String requestedRangeAsJson = response.body().string();
-                List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
-                Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
+                try (response) {
+                    String requestedRangeAsJson = response.body().string();
+                    List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
+                    Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
+                }
             }
+
         });
     }
 
@@ -598,11 +461,13 @@ public class MainController implements Closeable {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String requestedVersionAsJson = response.body().string();
-                DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
-                Platform.runLater(() -> {
-                    popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
-                });
+                try (response) {
+                    String requestedVersionAsJson = response.body().string();
+                    DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
+                    Platform.runLater(() -> {
+                        popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
+                    });
+                }
             }
         });
     }
@@ -630,10 +495,12 @@ public class MainController implements Closeable {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String sortedSheetCellAsJson = response.body().string();
-                        DtoContainerData dtoContainerData = Constants.GSON_INSTANCE.fromJson(sortedSheetCellAsJson, DtoContainerData.class);
-                        DtoSheetCell dtoSheetCell = dtoContainerData.getDtoSheetCell();
-                        Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
+                        try (response) {
+                            String sortedSheetCellAsJson = response.body().string();
+                            DtoContainerData dtoContainerData = Constants.GSON_INSTANCE.fromJson(sortedSheetCellAsJson, DtoContainerData.class);
+                            DtoSheetCell dtoSheetCell = dtoContainerData.getDtoSheetCell();
+                            Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
+                        }
                     }
                 });
             }catch (Exception e) {
