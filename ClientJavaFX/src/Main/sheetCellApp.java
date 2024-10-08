@@ -65,7 +65,6 @@ public class sheetCellApp extends Application {
         mainAppRoot = mainLoader.load();
         mainController = mainLoader.getController();
         mainController.setStage(stage);
-        mainController.setEngine(new EngineImpl());
         mainController.setApp(this);
 
 

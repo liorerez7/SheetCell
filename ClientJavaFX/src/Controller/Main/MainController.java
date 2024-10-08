@@ -45,7 +45,7 @@ import java.util.concurrent.CompletableFuture;
 public class MainController implements Closeable {
 
 
-    private Engine engine;
+
     private Stage stage;
     private sheetCellApp app;  // Reference to the main application
 
@@ -293,10 +293,6 @@ public class MainController implements Closeable {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
         });
-    }
-
-    public void setEngine(EngineImpl engine) {
-        this.engine = engine;
     }
 
     public StringProperty getOriginalValueLabelProperty() {
@@ -760,20 +756,47 @@ public class MainController implements Closeable {
                 char col = cellId.charAt(0);
                 String row = cellId.substring(1);
 
-                // Step 7: Show the runtime analysis popup on the JavaFX Application Thread
+//                // Step 7: Show the runtime analysis popup on the JavaFX Application Thread
+//                Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
+//                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController));
+//
+//                // Step 8: Restore the sheet cell state after analysis
+//                if (!sendRestoreSheetCellRequest()) {
+//                    return;
+//                }
                 Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
-                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController));
-
-                // Step 8: Restore the sheet cell state after analysis
-                if (!sendRestoreSheetCellRequest()) {
-                    return;
-                }
+                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController,
+                        () -> CompletableFuture.runAsync(() -> {
+                            if (!sendRestoreSheetCellRequest()) {
+                                return;
+                            }
+                        })
+                ));
 
             } catch (Exception e) {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error processing runtime analysis"));
             }
         });
     }
+
+    // Helper method to send a request to restore the sheet cell state
+    private boolean sendRestoreSheetCellRequest() {
+        try (Response response = HttpRequestManager.sendPostRequestSync(Constants.RESTORE_CURRENT_SHEET_CELL_STATE_ENDPOINT, new HashMap<>())) {
+            if (!response.isSuccessful()) {
+                Platform.runLater(() -> createErrorPopup("Failed to restore sheet cell state", "Error"));
+                return false;
+            }
+            else{
+                int x = 5;
+                return true;
+            }
+
+        } catch (IOException e) {
+            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error restoring sheet cell state"));
+            return false;
+        }
+    }
+
 
     // Helper method to send a request to save the current sheet cell state
     private boolean sendSaveSheetCellRequest() {
@@ -836,49 +859,54 @@ public class MainController implements Closeable {
         }
     }
 
-    // Helper method to send a request to restore the sheet cell state
-    private boolean sendRestoreSheetCellRequest() {
-        try (Response response = HttpRequestManager.sendPostRequestSync(Constants.RESTORE_CURRENT_SHEET_CELL_STATE_ENDPOINT, new HashMap<>())) {
-            if (!response.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to restore sheet cell state", "Error"));
-                return false;
-            }
-            return true;
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error restoring sheet cell state"));
-            return false;
-        }
-    }
-
 
     public void makeGraphClicked(boolean isChartGraph) {
+        // Step 1: Open the Graph Window and get the selected columns and titles
+        List<String> columnsForXYaxis = popUpWindowsHandler.openGraphWindow();
 
-          List<String> columnsForXYaxis = popUpWindowsHandler.openGraphWindow();
+        if (columnsForXYaxis == null || columnsForXYaxis.size() != 4) {
+            return;
+        }
 
-          char xAxis = columnsForXYaxis.get(0).charAt(0);
-          char yAxis = columnsForXYaxis.get(1).charAt(0);
+        char xAxis = columnsForXYaxis.get(0).charAt(0);
+        char yAxis = columnsForXYaxis.get(1).charAt(0);
+        List<Character> columns = new ArrayList<>();
+        columns.add(xAxis);
+        columns.add(yAxis);
 
-          List<Character> columns = new ArrayList<>();
-            columns.add(xAxis);
-            columns.add(yAxis);
+        String xTitle = columnsForXYaxis.get(2);
+        String yTitle = columnsForXYaxis.get(3);
 
-          String xTitle = columnsForXYaxis.get(2);
-          String yTitle = columnsForXYaxis.get(3);
+        // Step 2: Fetch the unique strings in columns via HTTP request
+        CompletableFuture.runAsync(() -> {
+            try {
+                // Prepare parameters for the HTTP request
+                Map<String, String> params = new HashMap<>();
+                params.put("columns", Constants.GSON_INSTANCE.toJson(columns)); // Serialize the columns list
+                params.put("isChartGraph", String.valueOf(isChartGraph));
 
-          if(columnsForXYaxis != null && columnsForXYaxis.size() == 4 ){
-              try {
-                  Map<Character,Set<String>> columnsXYaxisToStrings = engine.getUniqueStringsInColumn(columns, isChartGraph);
-                  Map<Character,List<String>> filteredColumnsXYaxisToStrings = popUpWindowsHandler.openFilterDataWithOrderPopUp(xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
-                    if(filteredColumnsXYaxisToStrings != null) {
+                // Fetch the column values using the client method
+                Map<Character, Set<String>> columnsXYaxisToStrings = fetchUniqueColumnValues(params);
+                if (columnsXYaxisToStrings == null) {
+                    return;
+                }
 
-                        popUpWindowsHandler.openGraphPopUp(xAxis, xTitle, yTitle, filteredColumnsXYaxisToStrings, isChartGraph);
+                // Open the filter popup and get the filtered columns
+                Platform.runLater(() -> {
+                    Map<Character, List<String>> filteredColumnsXYaxisToStrings = popUpWindowsHandler.openFilterDataWithOrderPopUp(
+                            xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
+
+                    if (filteredColumnsXYaxisToStrings != null) {
+                        Platform.runLater(() -> popUpWindowsHandler.openGraphPopUp(
+                                xAxis, xTitle, yTitle, filteredColumnsXYaxisToStrings, isChartGraph));
                     }
-
-              } catch (Exception e) {
-                  createErrorPopup(e.getMessage(), "Error");
-              }
-          }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            }
+        });
     }
+
 
     public void ChartGraphClicked() {
         makeGraphClicked(true);
