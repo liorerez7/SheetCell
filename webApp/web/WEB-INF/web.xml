@@ -12,6 +12,14 @@
         <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetCellAndLoadXML</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>SaveCurrentSheetCellServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.SaveAndRestoreServlets.SaveCurrentSheetCellServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RestoreCurrentSheetCellServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.SaveAndRestoreServlets.RestoreCurrentSheetCellServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.ActionLineServlet.GetAndUpdateCellServlet</servlet-class>
     </servlet>
@@ -58,6 +66,14 @@
     <servlet-mapping>
         <servlet-name>SortRangeServlet</servlet-name>
         <url-pattern>/sortSheetCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveCurrentSheetCellServlet</servlet-name>
+        <url-pattern>/saveCurrentSheetCellState</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RestoreCurrentSheetCellServlet</servlet-name>
+        <url-pattern>/restoreCurrentSheetCellState</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
