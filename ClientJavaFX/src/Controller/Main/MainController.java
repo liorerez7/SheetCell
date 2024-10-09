@@ -1,6 +1,7 @@
 package Controller.Main;
 
 import Controller.Customize.CustomizeController;
+import Controller.DashboardScreen.DashboardController;
 import Controller.Grid.GridController;
 import Controller.HttpUtility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
@@ -86,11 +87,11 @@ public class MainController implements Closeable {
     private StackPane ranges;
 
 
-
     private final Model model;
     private final PopUpWindowsHandler popUpWindowsHandler;
     private final ThemeManager themeManager;
     private ProgressManager progressManager;
+    private DashboardController dashController;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -148,11 +149,11 @@ public class MainController implements Closeable {
             protected Void call() {
                 try {
                     gridScrollerController.hideGrid();
-                    for (int i = 0; i <= 100; i++) {
-                        updateProgress(i, 100);
-                        progressAnimationManager.updateProgress(i / 100.0);
-                        Thread.sleep(20);
-                    }
+//                    for (int i = 0; i <= 100; i++) {
+//                        updateProgress(i, 100);
+//                        progressAnimationManager.updateProgress(i / 100.0);
+//                        Thread.sleep(20);
+//                    }
 
 
                     Map<String, String> params = new HashMap<>();
@@ -165,13 +166,16 @@ public class MainController implements Closeable {
                         }
 
                         @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) {
-                            try (response) {
-                                if (response.isSuccessful()) {
-                                    fetchDtoSheetCellAsync(absolutePath);
-                                } else {
-                                    Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
-                                }
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                            if (response.isSuccessful()) {
+                                String sheetNameAsJson = response.body().string();
+                                String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
+                                fetchDtoSheetCellAsync(absolutePath);
+                                dashController.addFilePathToTable(absolutePath, sheetName);
+                            } else {
+                                    String serverErrorMessage = response.body().string();
+                                    Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code() + ". " + serverErrorMessage, "Error"));
                             }
                         }
                     });
@@ -902,6 +906,17 @@ public class MainController implements Closeable {
     public void showMainAppScreen() {
         if (app != null) {
             app.showMainAppScreen();  // Switch to main app screen using the app reference
+        }
+    }
+    public void showDashBoardScreen(String userName) {
+        if (app != null) {
+            app.showDashBoardScreen(userName);  // Switch to main app screen using the app reference
+        }
+    }
+
+    public void setDashController(DashboardController dashboardController) {
+        if (dashboardController != null) {
+            this.dashController = dashboardController;
         }
     }
 }

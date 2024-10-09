@@ -19,7 +19,9 @@ public class Constants {
 
     // fxml locations
     public final static String MAIN_APP_PAGE_FXML_RESOURCE_LOCATION = "/Controller/Main/SheetCell.fxml";
-    public final static String LOGIN_PAGE_FXML_RESOURCE_LOCATION = "/Controller/login/login.fxml";
+    public final static String LOGIN_PAGE_FXML_RESOURCE_LOCATION = "/Controller/LoginScreen/login.fxml";
+    public static final String DASHBOARD_PAGE_FXML_RESOURCE_LOCATION = "/Controller/DashboardScreen/dashboard.fxml";
+
 
     // Server resources locations
     public final static String BASE_DOMAIN = "localhost";

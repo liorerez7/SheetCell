@@ -39,9 +39,10 @@
 
 package Main;
 
+import Controller.DashboardScreen.DashboardController;
 import Controller.HttpUtility.Constants;
 import Controller.Main.MainController;
-import Controller.login.LoginController;
+import Controller.LoginScreen.LoginController;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -54,7 +55,9 @@ public class sheetCellApp extends Application {
     private Stage stage;
     private Parent mainAppRoot;
     private Parent loginRoot;
+    private Parent dashboardRoot;
     private MainController mainController;
+    private DashboardController dashboardController;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -74,6 +77,13 @@ public class sheetCellApp extends Application {
         LoginController loginController = loginLoader.getController();
         loginController.setMainController(mainController);
 
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource(Constants.DASHBOARD_PAGE_FXML_RESOURCE_LOCATION));
+        dashboardRoot = dashboardLoader.load();
+        dashboardController = dashboardLoader.getController();
+        dashboardController.setMainController(mainController);
+        mainController.setDashController(dashboardController);
+
+
         // Initially show the login screen
         showLoginScreen();
 
@@ -90,6 +100,12 @@ public class sheetCellApp extends Application {
 
     public void showMainAppScreen() {
         stage.getScene().setRoot(mainAppRoot);  // Switch to the main application screen
+    }
+    public void showDashBoardScreen(String username) {
+        if (dashboardController != null) {
+            dashboardController.setUsername(username);  // Set the username in the DashboardController
+        }
+        stage.getScene().setRoot(dashboardRoot);  // Switch to the dashboard screen
     }
 
     public static void main(String[] args) {

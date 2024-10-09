@@ -1,4 +1,4 @@
-package Controller.login;
+package Controller.LoginScreen;
 
 import Controller.HttpUtility.Constants;
 import Controller.Main.MainController;
@@ -86,9 +86,8 @@ public class LoginController {
                     );
                 } else {
                     Platform.runLater(() -> {
-//                            chatAppMainController.updateUserName(userName);
-//                            chatAppMainController.switchToChatRoom();
-                        mainController.showMainAppScreen();
+                        mainController.showDashBoardScreen(userName);
+                        //mainController.showMainAppScreen();
                         System.out.println("Login successful");
                     });
                 }

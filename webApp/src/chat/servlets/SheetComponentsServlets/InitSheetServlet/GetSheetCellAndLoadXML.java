@@ -22,13 +22,19 @@ public class GetSheetCellAndLoadXML extends HttpServlet {
 
         try{
             engine.readSheetCellFromXML(xmlAddress);
+            String sheetName = engine.getSheetCell().getSheetName();
+            String sheetNameAsJson = Constants.GSON_INSTANCE.toJson(sheetName);
+            response.setContentType("application/json;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(sheetNameAsJson);
+            response.getWriter().flush();
+            response.setStatus(HttpServletResponse.SC_OK);
         }
         catch (Exception e){
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
-            response.getOutputStream().print("Error: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_CONFLICT); // Set status to 409 explicitly
+            response.setContentType("text/plain; charset=UTF-8");
+            response.getWriter().write("Error: " + e.getMessage()); // Use getWriter() instead of getOutputStream() for text
         }
-
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override

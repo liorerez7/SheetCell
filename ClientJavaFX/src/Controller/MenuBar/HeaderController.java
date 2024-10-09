@@ -148,18 +148,6 @@ public class HeaderController {
         path.getStylesheets().add(getClass().getResource("sunBurstTheme.css").toExternalForm());
         menuBar.getStylesheets().add(getClass().getResource("sunBurstTheme.css").toExternalForm());
     }
-
-//    private void switchStyleClass(Label path, String newStyleClass, String... classesToRemove) {
-//        // Remove any of the classes in the classesToRemove array if they exist
-//        for (String styleClass : classesToRemove) {
-//            if (path.getStyleClass().contains(styleClass)) {
-//                path.getStyleClass().remove(styleClass);
-//            }
-//        }
-//
-//        // Add the new style class
-//        path.getStyleClass().add(newStyleClass); // Add your new class here
-//    }
 }
 
 
