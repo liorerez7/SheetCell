@@ -219,9 +219,11 @@ public class DashboardController {
         // Call the file chooser and get the selected file
         File selectedFile = openXMLFileChooser(stage);
 
-        String filePath = selectedFile.getAbsolutePath();
+        if(selectedFile != null) {
+            String filePath = selectedFile.getAbsolutePath();
+            mainController.initializeGridBasedOnXML(selectedFile, filePath);
+        }
 
-        mainController.initializeGridBasedOnXML(selectedFile, filePath);
     }
 
     private File openXMLFileChooser(Stage stage) {
