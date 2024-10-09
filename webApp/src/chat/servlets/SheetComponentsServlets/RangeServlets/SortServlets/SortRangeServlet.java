@@ -1,7 +1,8 @@
 package chat.servlets.SheetComponentsServlets.RangeServlets.SortServlets;
 
-import CoreParts.api.Engine;
+import CoreParts.api.SheetManager;
 import DtoComponents.DtoContainerData;
+import EngineManager.Engine;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
@@ -17,11 +18,13 @@ public class SortRangeServlet extends HttpServlet {
         String rangeName = request.getParameter("range");
         String column = request.getParameter("columns");
 
-
-        Engine engine = ServletUtils.getEngine(getServletContext());
+        Engine engine = ServletUtils.getEngineManager(getServletContext());
+        String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+        SheetManager sheetManager = engine.getSheetCell(sheetName);
+        //SheetManager sheetManager = ServletUtils.getEngine(getServletContext());
 
         try{
-            DtoContainerData dtoContainerData = engine.sortSheetCell(rangeName, column);
+            DtoContainerData dtoContainerData = sheetManager.sortSheetCell(rangeName, column);
             String dtoContainerDataAsJson = Constants.GSON_INSTANCE.toJson(dtoContainerData);
             response.getWriter().print(dtoContainerDataAsJson);
             response.getWriter().flush();

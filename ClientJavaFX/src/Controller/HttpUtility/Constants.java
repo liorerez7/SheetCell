@@ -47,6 +47,7 @@ public class Constants {
     public static final String GET_UNIQUE_STRINGS_IN_COLUMN = FULL_SERVER_PATH + "/uniqueStringsInColumn";
     public static final String SAVE_CURRENT_SHEET_CELL_STATE_ENDPOINT = FULL_SERVER_PATH + "/saveCurrentSheetCellState";
     public static final String RESTORE_CURRENT_SHEET_CELL_STATE_ENDPOINT = FULL_SERVER_PATH + "/restoreCurrentSheetCellState";
+    public static final String UPDATE_SHEET_NAME_IN_SEASSION_ENDPOINT = FULL_SERVER_PATH + "/updateSheetNameInSession";
 
 
 

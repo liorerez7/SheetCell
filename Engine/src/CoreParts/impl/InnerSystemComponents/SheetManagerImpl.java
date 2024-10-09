@@ -8,7 +8,7 @@ import DtoComponents.DtoContainerData;
 import DtoComponents.DtoSheetCell;
 import GeneratedClassesEx2.STLSheet;
 import Utility.CellUtils;
-import CoreParts.api.Engine;
+import CoreParts.api.SheetManager;
 import Utility.EngineUtilities;
 import Utility.Exception.CycleDetectedException;
 import Utility.Exception.RefToUnSetCellException;
@@ -27,12 +27,12 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class EngineImpl implements Engine {
+public class SheetManagerImpl implements SheetManager {
 
     private SheetCell sheetCell;
     private byte[] savedSheetCellState;
 
-    public EngineImpl() {
+    public SheetManagerImpl() {
         sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0, null);
     }
 
@@ -56,13 +56,9 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void readSheetCellFromXML(String path) throws Exception {
+    public void readSheetCellFromXML(InputStream path) throws Exception {
 
-        Path filePath = Paths.get(path);
 
-        if (!filePath.isAbsolute()) {
-            throw new IllegalArgumentException("Provided path is not absolute. Please provide a full path.");
-        }
         byte[] savedSheetCellState = sheetCell.saveSheetCellState();
 
         try {
@@ -207,9 +203,9 @@ public class EngineImpl implements Engine {
         return sheetCell;
     }
 
-    private void getSheetFromSTL(String path) throws FileNotFoundException, JAXBException {
-        InputStream in = new FileInputStream(path);
-        STLSheet sheet = EngineUtilities.deserializeFrom(in);
+    private void getSheetFromSTL(InputStream path) throws FileNotFoundException, JAXBException {
+//        InputStream in = new FileInputStream(path);
+        STLSheet sheet = EngineUtilities.deserializeFrom(path);
         SheetConvertor convertor = new SheetConvertorImpl();
         sheetCell = convertor.convertSheet(sheet);
     }

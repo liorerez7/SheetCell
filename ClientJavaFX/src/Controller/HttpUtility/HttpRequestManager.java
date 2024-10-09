@@ -2,13 +2,15 @@ package Controller.HttpUtility;
 
 import okhttp3.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import Controller.HttpUtility.http.HttpClientUtil;
 
 public class HttpRequestManager {
 
-
-    private static final OkHttpClient client = new OkHttpClient();
+    // Use the same HTTP client from HttpClientUtil
+    private static final OkHttpClient client = HttpClientUtil.getHttpClient();
 
     public static void sendGetRequestASyncWithCallBack(String endpoint, Map<String, String> params, Callback callback) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(endpoint).newBuilder();
@@ -72,5 +74,28 @@ public class HttpRequestManager {
 
         return client.newCall(request).execute();
     }
-}
 
+    public static Response sendFileSync(String url, File file) throws IOException {
+
+
+        // Determine the media type based on the file type (assumes XML)
+        MediaType mediaType = MediaType.parse("application/xml");
+
+        // Create a RequestBody using the file
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file1", file.getName(),
+                        RequestBody.create(file, mediaType))
+                .build();
+
+        // Build the request to the server
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        // Send the request and get the response
+        Call call = client.newCall(request);
+        return call.execute();
+    }
+}

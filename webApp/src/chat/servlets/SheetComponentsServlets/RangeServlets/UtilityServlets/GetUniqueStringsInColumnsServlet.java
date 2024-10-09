@@ -1,6 +1,6 @@
 package chat.servlets.SheetComponentsServlets.RangeServlets.UtilityServlets;
 
-import CoreParts.api.Engine;
+import CoreParts.api.SheetManager;
 
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
@@ -24,14 +24,14 @@ public class GetUniqueStringsInColumnsServlet extends HttpServlet {
         String rangeName = request.getParameter("range");
         String column = request.getParameter("filterColumn");
 
-        Engine engine = ServletUtils.getEngine(getServletContext());
+        SheetManager sheetManager = ServletUtils.getEngine(getServletContext());
 
         try {
             if (columnsJson != null && isChartGraphStr != null) {
                 // If columns and isChartGraph parameters are provided, use the new implementation
                 boolean isChartGraph = Boolean.parseBoolean(isChartGraphStr);
                 List<Character> columnsForXYaxis = Constants.GSON_INSTANCE.fromJson(columnsJson, new TypeToken<List<Character>>(){}.getType());
-                Map<Character, Set<String>> characterToSetMap = engine.getUniqueStringsInColumn(columnsForXYaxis, isChartGraph);
+                Map<Character, Set<String>> characterToSetMap = sheetManager.getUniqueStringsInColumn(columnsForXYaxis, isChartGraph);
 
                 String characterToSetMapAsJson = Constants.GSON_INSTANCE.toJson(characterToSetMap);
                 response.getWriter().print(characterToSetMapAsJson);
@@ -39,7 +39,7 @@ public class GetUniqueStringsInColumnsServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else if (rangeName != null && column != null) {
                 // If range and filterColumn are provided, use the existing implementation
-                Map<Character, Set<String>> characterToSetMap = engine.getUniqueStringsInColumn(column, rangeName);
+                Map<Character, Set<String>> characterToSetMap = sheetManager.getUniqueStringsInColumn(column, rangeName);
 
                 String characterToSetMapAsJson = Constants.GSON_INSTANCE.toJson(characterToSetMap);
                 response.getWriter().print(characterToSetMapAsJson);

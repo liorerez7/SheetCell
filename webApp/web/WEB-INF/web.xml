@@ -12,6 +12,10 @@
         <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetCellAndLoadXML</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>updateSheetNameParam</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.UpdateSeassionParams.updateSheetNameParam</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>SaveCurrentSheetCellServlet</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.SaveAndRestoreServlets.SaveCurrentSheetCellServlet</servlet-class>
     </servlet>
@@ -54,6 +58,10 @@
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateSheetNameParam</servlet-name>
+        <url-pattern>/updateSheetNameInSession</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FilterRangeServlet</servlet-name>

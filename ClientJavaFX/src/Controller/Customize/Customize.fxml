@@ -152,6 +152,11 @@
                   <MenuItem fx:id="ChartGraphButton" mnemonicParsing="false" onAction="#ChartGraphClicked" text="barChart" />
               </items>
             </MenuButton>
+            <Button fx:id="backDashBoard" mnemonicParsing="false" onAction="#backDashBoardClicked" styleClass="ModernButton" text="backToDashBoard" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
          </children>
       </GridPane>
    </children>

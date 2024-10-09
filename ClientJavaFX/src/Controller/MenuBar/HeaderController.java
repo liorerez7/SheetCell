@@ -72,7 +72,7 @@ public class HeaderController {
 
         // Pass the selected file to the MainController
         if (selectedFile != null) {
-            mainController.initializeGridBasedOnXML(selectedFile.getAbsolutePath());
+            //mainController.initializeGridBasedOnXML(selectedFile.getAbsolutePath());
         } else {
             System.out.println("File selection canceled.");
         }

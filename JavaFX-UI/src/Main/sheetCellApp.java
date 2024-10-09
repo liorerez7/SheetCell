@@ -1,7 +1,7 @@
 package Main;
 
 import Controller.Main.MainController;
-import CoreParts.impl.InnerSystemComponents.EngineImpl;
+import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +17,7 @@ public class sheetCellApp extends Application {
         loader.setLocation(location);
         Parent root = loader.load();
         MainController mainController = loader.getController();
-        mainController.setEngine(new EngineImpl());
+        mainController.setEngine(new SheetManagerImpl());
 
 
         Scene scene = new Scene(root, 1515, 770);

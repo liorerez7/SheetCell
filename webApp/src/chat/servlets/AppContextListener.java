@@ -1,7 +1,8 @@
 package chat.servlets;
 
-import CoreParts.api.Engine;
-import CoreParts.impl.InnerSystemComponents.EngineImpl;
+import CoreParts.api.SheetManager;
+import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
+import EngineManager.Engine;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -11,8 +12,10 @@ public class AppContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
-        Engine userEngine = new EngineImpl();  // Initialize the engine
-        context.setAttribute("engine", userEngine);  // Store in ServletContext
+        SheetManager userSheetManager = new SheetManagerImpl();  // Initialize the engine
+        context.setAttribute("engine", userSheetManager);  // Store in ServletContext
+        Engine engine = new Engine();  // Initialize the engine
+        context.setAttribute("engineManager", engine);  // Store in ServletContext
     }
 
     @Override

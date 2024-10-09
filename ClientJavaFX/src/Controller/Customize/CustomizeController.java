@@ -69,6 +69,9 @@ public class CustomizeController {
     @FXML
     private MenuItem ChartGraphButton;
 
+    @FXML
+    private Button backDashBoard;
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         setupBindings();
@@ -146,6 +149,10 @@ public class CustomizeController {
         }
     }
 
+    @FXML
+    void backDashBoardClicked(ActionEvent event) {
+        mainController.showDashBoardScreen("needToChange");
+    }
 
     private String toRgbString(Color color) {
         return String.format("rgb(%d,%d,%d)", (int) (color.getRed() * 255),

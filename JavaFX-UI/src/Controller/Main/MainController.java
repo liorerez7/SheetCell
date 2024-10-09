@@ -7,10 +7,10 @@ import Controller.ProgressManager.ProgressAnimationManager;
 import Controller.Utility.*;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
-import CoreParts.api.Engine;
+import CoreParts.api.SheetManager;
 import CoreParts.impl.DtoComponents.DtoCell;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
-import CoreParts.impl.InnerSystemComponents.EngineImpl;
+import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
 import CoreParts.smallParts.CellLocation;
 import Utility.Exception.*;
 import Utility.DtoContainerData;
@@ -34,7 +34,7 @@ import java.util.*;
 
 
 public class MainController {
-    Engine engine;
+    SheetManager sheetManager;
 
     @FXML
     private HeaderController headerController;
@@ -137,21 +137,21 @@ public class MainController {
                     }
 
                     // Load the XML file (this is the actual task)
-                    engine.readSheetCellFromXML(absolutePath); //can throw exception
+                    //sheetManager.readSheetCellFromXML(absolutePath); //can throw exception
 
                     Platform.runLater(() -> {
                         // UI updates after loading
                         headerController.FileHasBeenLoaded(absolutePath);
-                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(engine.getSheetCell());
+                        Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(sheetManager.getSheetCell());
                         rangesController.clearAllRanges();
                         model.setReadingXMLSuccess(true);
                         model.setCellLabelToProperties(cellLocationLabelMap);
                         model.bindCellLabelToProperties();
-                        model.setPropertiesByDtoSheetCell(engine.getSheetCell());
-                        model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
-                        rangesController.setAllRanges(engine.getSheetCell().getRanges());
-                        customizeController.loadAllColData(engine.getSheetCell().getNumberOfColumns());
-                        customizeController.loadAllRowData(engine.getSheetCell().getNumberOfRows());
+                        model.setPropertiesByDtoSheetCell(sheetManager.getSheetCell());
+                        model.setTotalVersionsProperty(sheetManager.getSheetCell().getLatestVersion());
+                        rangesController.setAllRanges(sheetManager.getSheetCell().getRanges());
+                        customizeController.loadAllColData(sheetManager.getSheetCell().getNumberOfColumns());
+                        customizeController.loadAllRowData(sheetManager.getSheetCell().getNumberOfRows());
                         themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
                     });
                 } catch (Exception e) {
@@ -177,25 +177,25 @@ public class MainController {
 
     public void updateCell(String text, String newValue) {
         try {
-            engine.updateCell(newValue, text.charAt(0), text.substring(1));
-            DtoCell requestedCell = engine.getRequestedCell(text);
-            model.setPropertiesByDtoSheetCell(engine.getSheetCell());
+            sheetManager.updateCell(newValue, text.charAt(0), text.substring(1));
+            DtoCell requestedCell = sheetManager.getRequestedCell(text);
+            model.setPropertiesByDtoSheetCell(sheetManager.getSheetCell());
             model.setLatestUpdatedVersionProperty(requestedCell);
             model.setOriginalValueLabelProperty(requestedCell);
-            model.setTotalVersionsProperty(engine.getSheetCell().getLatestVersion());
+            model.setTotalVersionsProperty(sheetManager.getSheetCell().getLatestVersion());
 
             gridScrollerController.showNeighbors(requestedCell);
 
         }catch (CycleDetectedException e) {
-            createErrorPopUpCircularDependency(engine.getSheetCell(), e.getCycle());
+            createErrorPopUpCircularDependency(sheetManager.getSheetCell(), e.getCycle());
         }
         catch (Exception e) {
             createErrorPopup(e.getMessage(), "Error");
         }
     }
 
-    public void setEngine(EngineImpl engine) {
-        this.engine = engine;
+    public void setEngine(SheetManagerImpl engine) {
+        this.sheetManager = engine;
     }
 
     public StringProperty getOriginalValueLabelProperty() {
@@ -220,8 +220,8 @@ public class MainController {
         if(name != null) //in case when just shutting the window without entering anything
         {
             try {
-                engine.UpdateNewRange(name,rangeStringsData.getRange());
-                rangesController.addRange(engine.getRequestedRange(name),name);
+                sheetManager.UpdateNewRange(name,rangeStringsData.getRange());
+                rangesController.addRange(sheetManager.getRequestedRange(name),name);
             }
             catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
@@ -231,14 +231,14 @@ public class MainController {
 
     public void rangeDeleteClicked() {
 
-        Set<String> rangeNames = engine.getAllRangeNames();
+        Set<String> rangeNames = sheetManager.getAllRangeNames();
         RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
         String name = rangeStringsData.getName();
 
         if (name != null) //in case when just shutting the window without entering anything
         {
             try {
-                engine.deleteRange(name);
+                sheetManager.deleteRange(name);
                 rangesController.deleteRange(name);
             } catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
@@ -248,7 +248,7 @@ public class MainController {
 
     public void cellClicked(String location) {
 
-        DtoCell requestedCell = engine.getRequestedCell(location);
+        DtoCell requestedCell = sheetManager.getRequestedCell(location);
         model.setIsCellLabelClicked(true);
         model.setLatestUpdatedVersionProperty(requestedCell);
         model.setOriginalValueLabelProperty(requestedCell);
@@ -264,11 +264,11 @@ public class MainController {
 
     public void handleRangeClick(String rangeName) {
         gridScrollerController.clearAllHighlights();
-        gridScrollerController.showAffectedCells(engine.getRequestedRange(rangeName));
+        gridScrollerController.showAffectedCells(sheetManager.getRequestedRange(rangeName));
     }
 
     public void specificVersionClicked(int versionNumber) {
-        popUpWindowsHandler.openVersionGridPopUp(engine.getSheetCell(versionNumber), versionNumber, gridScrollerController);
+        popUpWindowsHandler.openVersionGridPopUp(sheetManager.getSheetCell(versionNumber), versionNumber, gridScrollerController);
     }
 
     public void sortRowsButtonClicked() {
@@ -281,7 +281,7 @@ public class MainController {
         if(columns != null && range != null)
         {
             try {
-                DtoContainerData dtoContainerData = engine.sortSheetCell(range, columns);
+                DtoContainerData dtoContainerData = sheetManager.sortSheetCell(range, columns);
                 createSortGridPopUp(dtoContainerData);
             }catch (Exception e) {
                 createErrorPopup(e.getMessage(), "Error");
@@ -306,7 +306,7 @@ public class MainController {
         if (range != null && filterColumn != null && !(filterColumn.isEmpty())) {
             try {
                 // Fetch unique strings in the selected column within the given range
-                Map<Character, Set<String>> columnValues = engine.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
+                Map<Character, Set<String>> columnValues = sheetManager.getUniqueStringsInColumn(filterColumn, range); // needs to return map<char,string>
 
                 Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues); // also needs be map<char,string>
 
@@ -315,7 +315,7 @@ public class MainController {
 
 
                 if (inputIsValid && !isFilterEmpty) {
-                    DtoContainerData filteredSheetCell = engine.filterSheetCell(range, filter);
+                    DtoContainerData filteredSheetCell = sheetManager.filterSheetCell(range, filter);
                     createFilterGridPopUpp(filteredSheetCell);
                 }
 
@@ -413,11 +413,11 @@ public class MainController {
         }
 
         // Save current state of the sheet cell
-        engine.saveCurrentSheetCellState();
+        sheetManager.saveCurrentSheetCellState();
 
         // Step 2: Fetch sheet cell data and cell value
-        DtoSheetCell sheetCellRunTime = engine.getSheetCell();
-        DtoCell dtoCell = engine.getRequestedCell(runTimeAnalysisData.getCellId());
+        DtoSheetCell sheetCellRunTime = sheetManager.getSheetCell();
+        DtoCell dtoCell = sheetManager.getRequestedCell(runTimeAnalysisData.getCellId());
 
         // Extract necessary values from runtimeAnalysisData
         String cellId = runTimeAnalysisData.getCellId().toUpperCase();
@@ -441,10 +441,10 @@ public class MainController {
         String row = cellId.substring(1);
 
         // Step 3: Call the PopUpWindowsHandler to handle UI logic
-        popUpWindowsHandler.showRuntimeAnalysisPopup(sheetCellRunTime, startingValue, endingValue, stepValue, currentVal, col, row, engine, model, gridScrollerController);
+        popUpWindowsHandler.showRuntimeAnalysisPopup(sheetCellRunTime, startingValue, endingValue, stepValue, currentVal, col, row, sheetManager, model, gridScrollerController);
 
         // Step 4: Restore previous state of the sheet cell after closing the popup
-        engine.restoreSheetCellState();
+        sheetManager.restoreSheetCellState();
     }
 
     public void makeGraphClicked(boolean isChartGraph) {
@@ -463,7 +463,7 @@ public class MainController {
 
           if(columnsForXYaxis != null && columnsForXYaxis.size() == 4 ){
               try {
-                  Map<Character,Set<String>> columnsXYaxisToStrings = engine.getUniqueStringsInColumn(columns, isChartGraph);
+                  Map<Character,Set<String>> columnsXYaxisToStrings = sheetManager.getUniqueStringsInColumn(columns, isChartGraph);
                   Map<Character,List<String>> filteredColumnsXYaxisToStrings = popUpWindowsHandler.openFilterDataWithOrderPopUp(xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
                     if(filteredColumnsXYaxisToStrings != null) {
 

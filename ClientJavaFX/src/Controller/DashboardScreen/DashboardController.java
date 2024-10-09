@@ -152,6 +152,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class DashboardController {
 
@@ -209,17 +212,16 @@ public class DashboardController {
     }
 
     @FXML
-    private void onLoadSheetFileButtonClicked(ActionEvent event) {
+    private void onLoadSheetFileButtonClicked(ActionEvent event) throws FileNotFoundException {
         // Retrieve the current stage
         Stage stage = (Stage) loadSheetFileButton.getScene().getWindow();
 
         // Call the file chooser and get the selected file
         File selectedFile = openXMLFileChooser(stage);
 
-        // Pass the selected file to the MainController
-        if (selectedFile != null) {
-            mainController.initializeGridBasedOnXML(selectedFile.getAbsolutePath());
-        }
+        String filePath = selectedFile.getAbsolutePath();
+
+        mainController.initializeGridBasedOnXML(selectedFile, filePath);
     }
 
     private File openXMLFileChooser(Stage stage) {
@@ -259,10 +261,46 @@ public class DashboardController {
     private void onViewSheetButtonClicked(ActionEvent event) {
         // Get the selected entry (formatted string) from the table
         StringProperty selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();
+        String sheetName = extractSheetName(selectedEntry.get());
+        String sheetPath = extractFilePath(selectedEntry.get());
+
+        mainController.updateCurrentGridSheet(sheetPath, sheetName);
+
         if (selectedEntry != null) {
             // Proceed with showing the main application screen
             mainController.showMainAppScreen();
         }
+    }
+
+    private String extractFilePath(String input) {
+        // Define the prefix and suffix that surround the file path
+        String prefix = "File Path: ";
+        String suffix = " | Sheet Name:";
+
+        int prefixIndex = input.indexOf(prefix);
+        int suffixIndex = input.indexOf(suffix);
+
+        if (prefixIndex == -1 || suffixIndex == -1) {
+            // Return null or throw an exception if the prefix or suffix is not found
+            return null;
+        }
+
+        // Extract the file path by calculating the start and end positions
+        return input.substring(prefixIndex + prefix.length(), suffixIndex).trim();
+    }
+
+    private String extractSheetName(String input) {
+        // Define the prefix that precedes the sheet name
+        String prefix = "Sheet Name: ";
+        int prefixIndex = input.indexOf(prefix);
+
+        if (prefixIndex == -1) {
+            // Return null or throw an exception if the prefix is not found
+            return null;
+        }
+
+        // Extract the sheet name starting from the end of the prefix
+        return input.substring(prefixIndex + prefix.length()).trim();
     }
 
     // Placeholder for the Request Permission Button action

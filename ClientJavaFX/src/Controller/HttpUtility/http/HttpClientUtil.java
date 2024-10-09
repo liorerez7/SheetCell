@@ -39,4 +39,9 @@ public class HttpClientUtil {
         HTTP_CLIENT.dispatcher().executorService().shutdown();
         HTTP_CLIENT.connectionPool().evictAll();
     }
+
+
+    public static OkHttpClient getHttpClient() {
+        return HTTP_CLIENT;
+    }
 }

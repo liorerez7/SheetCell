@@ -5,11 +5,10 @@ import Controller.Utility.FilterGridData;
 import Controller.Utility.RangeStringsData;
 import Controller.Utility.RunTimeAnalysisData;
 import Controller.Utility.SortRowsData;
-import CoreParts.api.Engine;
+import CoreParts.api.SheetManager;
 import CoreParts.impl.DtoComponents.DtoSheetCell;
 import CoreParts.smallParts.CellLocation;
 import Utility.DtoContainerData;
-import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -669,7 +668,7 @@ public class PopUpWindowsHandler {
             DtoSheetCell sheetCellRunTime,
             int startingValue, int endingValue, int stepValue,
             double currentVal, char col, String row,
-            Engine engine, Model model, GridController gridScrollerController) {
+            SheetManager sheetManager, Model model, GridController gridScrollerController) {
 
         String title = "Run Time Analysis";
         Stage popupStage = new Stage();
@@ -725,9 +724,9 @@ public class PopUpWindowsHandler {
 
             try {
                 // Update the cell value in the engine
-                engine.updateCell(String.valueOf(newValue), col, row);
+                sheetManager.updateCell(String.valueOf(newValue), col, row);
                 // Fetch the latest sheet cell and update the grid
-                DtoSheetCell updatedSheetCell = engine.getSheetCell();
+                DtoSheetCell updatedSheetCell = sheetManager.getSheetCell();
                 model.setPropertiesByDtoSheetCellRunTimeAnalsys(updatedSheetCell);
             } catch (Exception e) {
                 throw new RuntimeException(e);

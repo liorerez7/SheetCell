@@ -1,7 +1,8 @@
 package chat.servlets.SheetComponentsServlets.RangeServlets;
 
-import CoreParts.api.Engine;
+import CoreParts.api.SheetManager;
 
+import EngineManager.Engine;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
@@ -20,13 +21,18 @@ public class GetRangeServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        Engine engine = ServletUtils.getEngine(getServletContext());
+        Engine engine = ServletUtils.getEngineManager(getServletContext());
+        String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+        SheetManager sheetManager = engine.getSheetCell(sheetName);
+
+        //SheetManager sheetManager = ServletUtils.getEngine(getServletContext());
+
         String rangeName = request.getParameter("name");
         List<CellLocation> requestedRange = null;
 
         if(rangeName == null){
             try{
-                Set<String> allRanges = engine.getAllRangeNames();
+                Set<String> allRanges = sheetManager.getAllRangeNames();
                 String allRangesJson = Constants.GSON_INSTANCE.toJson(allRanges);
                 response.getWriter().print(allRangesJson);
                 response.getWriter().flush();
@@ -37,7 +43,7 @@ public class GetRangeServlet extends HttpServlet {
         }
         else{
             try{
-                requestedRange = engine.getRequestedRange(rangeName);
+                requestedRange = sheetManager.getRequestedRange(rangeName);
                 String requestedRangeAsJson = Constants.GSON_INSTANCE.toJson(requestedRange);
                 response.getWriter().print(requestedRangeAsJson);
                 response.getWriter().flush();

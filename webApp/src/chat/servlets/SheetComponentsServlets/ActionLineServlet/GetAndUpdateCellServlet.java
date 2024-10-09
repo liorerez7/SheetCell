@@ -1,8 +1,9 @@
 package chat.servlets.SheetComponentsServlets.ActionLineServlet;
 
-import CoreParts.api.Engine;
+import CoreParts.api.SheetManager;
 
 import DtoComponents.DtoCell;
+import EngineManager.Engine;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
@@ -21,10 +22,14 @@ public class GetAndUpdateCellServlet extends HttpServlet {
         char columnOfCell = request.getParameter("colLocation").charAt(0);
         String row = request.getParameter("rowLocation");
 
-        Engine engine = ServletUtils.getEngine(getServletContext());
+        Engine engine = ServletUtils.getEngineManager(getServletContext());
+        String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+        SheetManager sheetManager = engine.getSheetCell(sheetName);
+        //SheetManager sheetManager = ServletUtils.getEngine(getServletContext());
 
         try{
-            engine.updateCell(cellValue, columnOfCell, row);
+
+            sheetManager.updateCell(cellValue, columnOfCell, row);
         }
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_CONFLICT);
@@ -39,10 +44,13 @@ public class GetAndUpdateCellServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        Engine engine = ServletUtils.getEngine(getServletContext());
+        Engine engine = ServletUtils.getEngineManager(getServletContext());
+        String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+        SheetManager sheetManager = engine.getSheetCell(sheetName);
+        //SheetManager sheetManager = ServletUtils.getEngine(getServletContext());
         String cellLocation = request.getParameter("cellLocation");
 
-        DtoCell dtoCell = engine.getRequestedCell(cellLocation);
+        DtoCell dtoCell = sheetManager.getRequestedCell(cellLocation);
         String dtoCellAsJson = Constants.GSON_INSTANCE.toJson(dtoCell);
         PrintWriter out = response.getWriter();
         out.print(dtoCellAsJson);

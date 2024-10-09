@@ -7,15 +7,16 @@ import DtoComponents.DtoSheetCell;
 
 import smallParts.CellLocation;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface Engine {
+public interface SheetManager {
     DtoCell getRequestedCell(String cellId);
     DtoSheetCell getSheetCell();
     DtoSheetCell getSheetCell(int versionNumber);
-    void readSheetCellFromXML(String path) throws Exception;
+    void readSheetCellFromXML(InputStream path) throws Exception;
     void updateCell(String newValue, char col, String row) throws Exception;
 
     void saveCurrentSheetCellState();
