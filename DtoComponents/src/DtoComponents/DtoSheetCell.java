@@ -3,8 +3,10 @@ package DtoComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
+import Utility.CellUtils;
 import Utility.EngineUtilities;
 import expression.impl.Range;
+import expression.impl.stringFunction.Str;
 import smallParts.CellLocation;
 import smallParts.EffectiveValue;
 
@@ -17,6 +19,8 @@ public class DtoSheetCell {
     private Map<CellLocation, EffectiveValue> sheetCell = new HashMap<>();
    // private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
     private Map<String,List<CellLocation>> ranges = new HashMap<>();
+    private Map<String,DtoCell> cellIdToDtoCell = new HashMap<>();
+
     private String name;
     private int versionNumber;
     private int currentNumberOfRows;
@@ -125,6 +129,86 @@ public class DtoSheetCell {
 
     public DtoContainerData sortSheetCell(String range, String args) {
         return EngineUtilities.sortSheetCell(range, args, this);
+    }
+
+    public Map<Character, Set<String>> getUniqueStringsInColumn(String filterColumn, String range) {
+        Map<Character, Set<String>> columnToUniqueStrings = new HashMap<>();
+        List<Character> columns = CellUtils.processCharString(filterColumn);
+        int startingRowInRange = range.charAt(1) - '0';
+        int endingRowInRange = range.charAt(5) - '0'; // Assumes format like "A3..A5"
+
+        for (Character col : columns) {
+            // Convert column to uppercase for consistent matching
+            char upperCol = Character.toUpperCase(col);
+
+            // Retrieve values from the view sheet and collect unique values
+            Set<String> uniqueStrings = new HashSet<>();
+            getViewSheetCell().forEach((location, effectiveValue) -> {
+                if (location.getVisualColumn() == upperCol &&
+                        location.getRealRow() + 1 >= startingRowInRange &&
+                        location.getRealRow() + 1 <= endingRowInRange) {
+
+                    if (effectiveValue != null) {
+                        String value = effectiveValue.getValue().toString();
+
+                        // Try to parse as a double and format if applicable
+                        try {
+                            double doubleValue = Double.parseDouble(value);
+                            value = CellUtils.formatNumber(doubleValue);
+                        } catch (NumberFormatException e) {
+                            // Ignore and keep the value as a string
+                        }
+                        uniqueStrings.add(value);
+                    }
+                }
+            });
+
+            columnToUniqueStrings.put(upperCol, Set.copyOf(uniqueStrings));
+        }
+
+        return columnToUniqueStrings;
+    }
+
+    public Map<Character, Set<String>> getUniqueStringsInColumn(List<Character> columns, boolean isChartGraph) {
+        Map<Character, Set<String>> columnToUniqueStrings = new HashMap<>();
+
+        for (Character col : columns) {
+            // Convert column to uppercase for consistent matching
+            char upperCol = Character.toUpperCase(col);
+
+            // Retrieve values from the view sheet and collect unique values
+            Set<String> uniqueStrings = new HashSet<>();
+            getViewSheetCell().forEach((location, effectiveValue) -> {
+                if (location.getVisualColumn() == upperCol) {
+                    if (effectiveValue != null) {
+                        String value = effectiveValue.getValue().toString();
+
+                        if (isChartGraph) {
+                            try {
+                                double doubleValue = Double.parseDouble(value);
+                                value = CellUtils.formatNumber(doubleValue);
+                            } catch (NumberFormatException e) {
+                                // Ignore and keep the value as a string
+                            }
+                        } else {
+                            try {
+                                double doubleValue = Double.parseDouble(value);
+                                value = CellUtils.formatNumber(doubleValue);
+                                uniqueStrings.add(value);
+                            } catch (NumberFormatException e) {
+                                // Ignore and keep the value as a string
+                            }
+                        }
+
+                        uniqueStrings.add(value);
+                    }
+                }
+            });
+
+            columnToUniqueStrings.put(upperCol, Set.copyOf(uniqueStrings));
+        }
+
+        return columnToUniqueStrings;
     }
 
 
