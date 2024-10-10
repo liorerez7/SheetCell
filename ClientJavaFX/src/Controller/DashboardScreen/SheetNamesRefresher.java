@@ -29,7 +29,7 @@ public class SheetNamesRefresher extends TimerTask {
         HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_ALL_SHEET_NAMES, new HashMap<>(), new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> errorHandler.accept("Failed to get sheet names from server: " + e.getMessage()));
+//                Platform.runLater(() -> errorHandler.accept("Failed to get sheet names from server: " + e.getMessage()));
             }
 
             @Override
@@ -39,9 +39,9 @@ public class SheetNamesRefresher extends TimerTask {
                     Set<String> sheetNames = Constants.GSON_INSTANCE.fromJson(sheetNamesAsJson, Set.class);
                     Platform.runLater(() -> sheetNamesConsumer.accept(sheetNames));
                 } else {
-                    String errorMessageAsJson = response.body().string();
-                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
-                    Platform.runLater(() -> errorHandler.accept(error));
+//                    String errorMessageAsJson = response.body().string();
+//                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+//                    Platform.runLater(() -> errorHandler.accept(error));
                 }
             }
         });

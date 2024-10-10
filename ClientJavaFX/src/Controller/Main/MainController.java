@@ -165,7 +165,6 @@ public class MainController implements Closeable {
                     if (response.isSuccessful()) {
                         String sheetCellAsJson = response.body().string();
                         DtoSheetCell dtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-                        dtoSheetCellAsDataParameter = dtoSheetCell;
                         Platform.runLater(() -> updateUIWithNewSheetCell(dtoSheetCell));
                     } else {
                         Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
@@ -688,14 +687,6 @@ public class MainController implements Closeable {
                 char col = cellId.charAt(0);
                 String row = cellId.substring(1);
 
-//                // Step 7: Show the runtime analysis popup on the JavaFX Application Thread
-//                Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
-//                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController));
-//
-//                // Step 8: Restore the sheet cell state after analysis
-//                if (!sendRestoreSheetCellRequest()) {
-//                    return;
-//                }
                 Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
                         dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController,
                         () -> CompletableFuture.runAsync(() -> {

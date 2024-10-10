@@ -98,12 +98,11 @@
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/updateCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/requestedCell</url-pattern>
     </servlet-mapping>
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>GetAndUpdateCellServlet</servlet-name>-->
-<!--        <url-pattern>/requestedCell</url-pattern>-->
-<!--    </servlet-mapping>-->
     <servlet-mapping>
         <servlet-name>AddRangeServlet</servlet-name>
         <url-pattern>/addRange</url-pattern>

@@ -872,9 +872,19 @@ public class PopUpWindowsHandler {
 
     private boolean updateCellRequest(Map<String, String> map) {
 
+//        try (Response updateCellResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, map)) {
+//            if (!updateCellResponse.isSuccessful()) {
+//                Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
+//                return false;
+//            }
+//            return true;
+
         try (Response updateCellResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, map)) {
             if (!updateCellResponse.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to save current sheet cell state", "Error"));
+                String responseBody = updateCellResponse.body().string();
+                System.err.println("Error response: " + responseBody);
+                System.err.println("Status code: " + updateCellResponse.code());
+                Platform.runLater(() -> createErrorPopup("Failed to update cell: " + responseBody, "Error"));
                 return false;
             }
             return true;
