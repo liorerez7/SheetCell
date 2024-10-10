@@ -7,7 +7,6 @@ import Controller.HttpUtility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
 import Controller.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
-import Controller.ProgressManager.ProgressAnimationManager;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
 import DtoComponents.DtoCell;
@@ -19,7 +18,6 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -35,7 +33,6 @@ import smallParts.CellLocation;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -90,6 +87,10 @@ public class MainController implements Closeable {
     private final ThemeManager themeManager;
     private ProgressManager progressManager;
     private DashboardController dashController;
+    private Timer timer;
+//    private DtoSheetCell dtoSheetCell;
+//    private DtoCell dtoCell;
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -137,7 +138,7 @@ public class MainController implements Closeable {
                 if (uploadFileResponse.isSuccessful()) {
                     String sheetNameAsJson = uploadFileResponse.body().string();
                     String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
-                    dashController.addFilePathToTable(absolutePath, sheetName);
+                    dashController.addFilePathToTable(sheetName);
                 } else {
                     // Handle error response from the server
                     String errorMessageAsJson = uploadFileResponse.body().string(); // Get the error message sent by the server
@@ -151,7 +152,7 @@ public class MainController implements Closeable {
     }
 
     // Helper method to fetch the DtoSheetCell asynchronously
-    private void fetchDtoSheetCellAsync(String absolutePath) {
+    private void fetchDtoSheetCellAsync() {
         HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -163,8 +164,8 @@ public class MainController implements Closeable {
                 try (response) {
                     if (response.isSuccessful()) {
                         String sheetCellAsJson = response.body().string();
-                        DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-                        Platform.runLater(() -> updateUIWithNewSheetCell(absolutePath, newDtoSheetCell));
+                        DtoSheetCell dtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                        Platform.runLater(() -> updateUIWithNewSheetCell(dtoSheetCell));
                     } else {
                         Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
                     }
@@ -176,8 +177,8 @@ public class MainController implements Closeable {
     }
 
     // Helper method to update the UI with the newly loaded DtoSheetCell
-    private void updateUIWithNewSheetCell(String absolutePath, DtoSheetCell newDtoSheetCell) {
-        headerController.FileHasBeenLoaded(absolutePath);
+    private void updateUIWithNewSheetCell(DtoSheetCell newDtoSheetCell) {
+        //headerController.FileHasBeenLoaded(absolutePath);
         Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
         rangesController.clearAllRanges();
         model.setReadingXMLSuccess(true);
@@ -202,7 +203,9 @@ public class MainController implements Closeable {
                 // Send POST request synchronously and close the response
                 try (Response postResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, params)) {
                     if (!postResponse.isSuccessful()) {
-                        Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
+                        String errorMessageAsJson = postResponse.body().string(); // Get the error message sent by the server
+                        String errorMessage = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                        Platform.runLater(() -> createErrorPopup(errorMessage, "Error"));
                         return;
                     }
                 }
@@ -227,15 +230,15 @@ public class MainController implements Closeable {
                         }
 
                         String dtoCellAsJson = requestedCellResponse.body().string();
-                        DtoCell dtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
+                        DtoCell newDtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
 
                         // Update the UI on the JavaFX Application Thread
                         Platform.runLater(() -> {
                             model.setPropertiesByDtoSheetCell(newDtoSheetCell);
-                            model.setLatestUpdatedVersionProperty(dtoCell);
-                            model.setOriginalValueLabelProperty(dtoCell);
+                            model.setLatestUpdatedVersionProperty(newDtoCell);
+                            model.setOriginalValueLabelProperty(newDtoCell);
                             model.setTotalVersionsProperty(latestVersion);
-                            gridScrollerController.showNeighbors(dtoCell);
+                            gridScrollerController.showNeighbors(newDtoCell);
                         });
                     }
                 }
@@ -374,6 +377,7 @@ public class MainController implements Closeable {
                         model.setColumnSelected(false);
                         model.setRowSelected(false);
                         model.setCellLocationProperty(location);
+
                     });
                 }
             }
@@ -591,7 +595,7 @@ public class MainController implements Closeable {
     }
 
     public void changeTextAlignment(String alignment, Label selectedColumnLabel) {
-    gridScrollerController.changeTextAlignment(alignment, selectedColumnLabel.getText());
+        gridScrollerController.changeTextAlignment(alignment, selectedColumnLabel.getText());
     }
 
     public ObservableValue<String> getCellLocationProperty() {
@@ -714,7 +718,6 @@ public class MainController implements Closeable {
                 return false;
             }
             else{
-                int x = 5;
                 return true;
             }
 
@@ -732,7 +735,9 @@ public class MainController implements Closeable {
                 Platform.runLater(() -> createErrorPopup("Failed to save current sheet cell state", "Error"));
                 return false;
             }
-            return true;
+            else{
+                return true;
+            }
         } catch (IOException e) {
             Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error saving current sheet cell state"));
             return false;
@@ -872,7 +877,7 @@ public class MainController implements Closeable {
         }
     }
 
-    public void updateCurrentGridSheet(String absolutePath ,String sheetName) {
+    public void updateCurrentGridSheet(String sheetName) {
 
         Map<String,String> params = new HashMap<>();
         params.put("sheetName",sheetName);
@@ -886,9 +891,25 @@ public class MainController implements Closeable {
                 throw new RuntimeException(e);
             }
 
-            fetchDtoSheetCellAsync(absolutePath);
+            fetchDtoSheetCellAsync();
 
         });
+    }
+
+
+    public void startSheetNamesRefresher() {
+
+        SheetGridRefresher refresher = new SheetGridRefresher(v -> NewVersionOfSheetIsAvailable());
+        timer = new Timer();
+        timer.schedule(refresher, 0, 1000); //
+    }
+
+    public void NewVersionOfSheetIsAvailable(){
+        model.setNewerVersionOfSheet(true);
+    }
+
+    public BooleanProperty getNewerVersionOfSheetProperty(){
+        return model.getNewerVersionOfSheetProperty();
     }
 
 

@@ -12,16 +12,24 @@
         <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetCellAndLoadXML</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GetSheetNamesServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetNamesServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>updateSheetNameParam</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.UpdateSeassionParams.updateSheetNameParam</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SaveCurrentSheetCellServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.SaveAndRestoreServlets.SaveCurrentSheetCellServlet</servlet-class>
+        <servlet-class>chat.servlets.SheetComponentsServlets.SheetStateServlet.SaveCurrentSheetCellServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RestoreCurrentSheetCellServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.SaveAndRestoreServlets.RestoreCurrentSheetCellServlet</servlet-class>
+        <servlet-class>chat.servlets.SheetComponentsServlets.SheetStateServlet.RestoreCurrentSheetCellServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>IsSheetUpdatedServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.SheetStateServlet.IsSheetUpdatedServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
@@ -84,6 +92,10 @@
         <url-pattern>/restoreCurrentSheetCellState</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>IsSheetUpdatedServlet</servlet-name>
+        <url-pattern>/isSheetUpdated</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/updateCell</url-pattern>
         <url-pattern>/requestedCell</url-pattern>
@@ -109,6 +121,10 @@
         <servlet-name>GetSheetCellAndLoadXML</servlet-name>
         <url-pattern>/xmlAddress</url-pattern>
         <url-pattern>/sheetCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetSheetNamesServlet</servlet-name>
+        <url-pattern>/allSheetNames</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginShortResponseServlet</servlet-name>

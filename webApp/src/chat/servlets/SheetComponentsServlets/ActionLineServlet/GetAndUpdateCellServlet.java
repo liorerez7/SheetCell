@@ -28,15 +28,16 @@ public class GetAndUpdateCellServlet extends HttpServlet {
         //SheetManager sheetManager = ServletUtils.getEngine(getServletContext());
 
         try{
-
             sheetManager.updateCell(cellValue, columnOfCell, row);
+            response.setStatus(HttpServletResponse.SC_OK);
         }
         catch (Exception e){
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
-            response.getOutputStream().print("Error: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            String errorMessage = ServletUtils.extractErrorMessage(e);
+            String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
+            response.getWriter().write(errorMessageAsJson);
+            response.getWriter().flush();
         }
-
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override

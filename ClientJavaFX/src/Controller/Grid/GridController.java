@@ -91,6 +91,7 @@ public class GridController {
 
 
         Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
+
         // Add cells with Label
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
@@ -101,6 +102,7 @@ public class GridController {
                 customCellLabel.setAlignment(Pos.CENTER);
                 customCellLabel.setTextAlignment(TextAlignment.CENTER);
                 cellLocationToCustomCellLabel.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
+
 
                 setLabelSize(cell, cellWidth, cellLength);
                 // Bind the Label's textProperty to the EffectiveValue

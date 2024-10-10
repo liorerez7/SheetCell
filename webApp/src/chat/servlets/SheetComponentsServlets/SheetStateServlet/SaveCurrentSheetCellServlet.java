@@ -1,4 +1,4 @@
-package chat.servlets.SheetComponentsServlets.SaveAndRestoreServlets;
+package chat.servlets.SheetComponentsServlets.SheetStateServlet;
 
 import CoreParts.api.SheetManager;
 import EngineManager.Engine;

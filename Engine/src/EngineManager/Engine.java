@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Engine {
 
-    private Map<String, SheetManagerImpl> sheetCells = new HashMap<>();
+    private final Map<String, SheetManagerImpl> sheetCells = new HashMap<>();
     private final Set<String> sheetNames = new HashSet<>();
 
 
@@ -60,5 +60,9 @@ public class Engine {
 
     public boolean isUserExists(String username) {
         return sheetNames.contains(username);
+    }
+
+    public Set<String> getSheetNames() {
+        return sheetNames;
     }
 }

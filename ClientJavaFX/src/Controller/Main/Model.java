@@ -27,6 +27,7 @@ public class Model {
     private BooleanProperty isRowSelected;
     private BooleanProperty readingXMLSuccessProperty;
     private StringProperty cellLocationProperty;
+    private BooleanProperty isNewerVersionOfSheet;
 
 
     Model(DtoSheetCell sheetCell) {
@@ -40,6 +41,7 @@ public class Model {
         isRowSelected = new SimpleBooleanProperty(false);
         readingXMLSuccessProperty = new SimpleBooleanProperty(false);
         cellLocationProperty = new SimpleStringProperty("");
+        isNewerVersionOfSheet = new SimpleBooleanProperty(false);
     }
 
     private DtoSheetCell runTimeAnalysisSheetCell;
@@ -189,5 +191,13 @@ public class Model {
 
     public BooleanProperty getReadingXMLSuccess() {
         return readingXMLSuccessProperty;
+    }
+
+    public void setNewerVersionOfSheet(boolean b) {
+        isNewerVersionOfSheet.set(b);
+    }
+
+    public BooleanProperty getNewerVersionOfSheetProperty() {
+        return isNewerVersionOfSheet;
     }
 }

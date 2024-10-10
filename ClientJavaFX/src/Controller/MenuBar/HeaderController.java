@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -22,13 +23,11 @@ public class HeaderController {
     private MenuBar menuBar;
 
     @FXML
-    private Label path;
+    private Button updateSheet;
+
 
     @FXML
     private MenuItem classicDisplayButton;
-
-    @FXML
-    private Text pathText;
 
     @FXML
     private MenuItem midNightDisplayButton;
@@ -41,9 +40,9 @@ public class HeaderController {
 
     private StringProperty pathProperty;
 
-    @FXML public void initialize() {
-        path.textProperty().bind(pathProperty);
-    }
+//    @FXML public void initialize() {
+//        path.textProperty().bind(pathProperty);
+//    }
 
     public HeaderController() {
         pathProperty = new SimpleStringProperty("");
@@ -55,6 +54,7 @@ public class HeaderController {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        updateSheet.disableProperty().bind(mainController.getNewerVersionOfSheetProperty().not());
     }
 
     @FXML
@@ -118,35 +118,41 @@ public class HeaderController {
 
     public void changeToDarkTheme() {
         menuBar.getStylesheets().clear();
-        path.getStylesheets().clear();
+     //   path.getStylesheets().clear();
 
 
-        Utilies.switchStyleClass(path, "DarkLabelsOfUserInterfaceSection","LabelsOfUserInterfaceSection", "SunLabelsOfUserInterfaceSection");
+     //   Utilies.switchStyleClass(path, "DarkLabelsOfUserInterfaceSection","LabelsOfUserInterfaceSection", "SunLabelsOfUserInterfaceSection");
 
 
         menuBar.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
-        path.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
+      //  path.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
     }
+
     public void changeToClassicTheme() {
         menuBar.getStylesheets().clear();
-        path.getStylesheets().clear();
+       // path.getStylesheets().clear();
 
 
-        Utilies.switchStyleClass(path, "LabelsOfUserInterfaceSection","DarkLabelsOfUserInterfaceSection", "SunLabelsOfUserInterfaceSection");
+      //  Utilies.switchStyleClass(path, "LabelsOfUserInterfaceSection","DarkLabelsOfUserInterfaceSection", "SunLabelsOfUserInterfaceSection");
 
 
-        path.getStylesheets().add(getClass().getResource("MenuBar.css").toExternalForm());
+     //   path.getStylesheets().add(getClass().getResource("MenuBar.css").toExternalForm());
         menuBar.getStylesheets().add(getClass().getResource("MenuBar.css").toExternalForm());
     }
 
     public void changeToSunBurstTheme() {
         menuBar.getStylesheets().clear();
-        path.getStylesheets().clear();
+       // path.getStylesheets().clear();
 
-        Utilies.switchStyleClass(path, "SunLabelsOfUserInterfaceSection","DarkLabelsOfUserInterfaceSection", "LabelsOfUserInterfaceSection");
+    //    Utilies.switchStyleClass(path, "SunLabelsOfUserInterfaceSection","DarkLabelsOfUserInterfaceSection", "LabelsOfUserInterfaceSection");
 
-        path.getStylesheets().add(getClass().getResource("sunBurstTheme.css").toExternalForm());
+       // path.getStylesheets().add(getClass().getResource("sunBurstTheme.css").toExternalForm());
         menuBar.getStylesheets().add(getClass().getResource("sunBurstTheme.css").toExternalForm());
+    }
+
+    @FXML
+    void updateSheetClicked(ActionEvent event) {
+
     }
 }
 
