@@ -88,7 +88,7 @@ public class MainController implements Closeable {
     private ProgressManager progressManager;
     private DashboardController dashController;
     private Timer timer;
-//    private DtoSheetCell dtoSheetCell;
+    private DtoSheetCell dtoSheetCellAsDataParameter;
 //    private DtoCell dtoCell;
 
 
@@ -165,6 +165,7 @@ public class MainController implements Closeable {
                     if (response.isSuccessful()) {
                         String sheetCellAsJson = response.body().string();
                         DtoSheetCell dtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                        dtoSheetCellAsDataParameter = dtoSheetCell;
                         Platform.runLater(() -> updateUIWithNewSheetCell(dtoSheetCell));
                     } else {
                         Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
@@ -457,7 +458,6 @@ public class MainController implements Closeable {
                         try (response) {
                             String sortedSheetCellAsJson = response.body().string();
                             DtoContainerData dtoContainerData = Constants.GSON_INSTANCE.fromJson(sortedSheetCellAsJson, DtoContainerData.class);
-                            DtoSheetCell dtoSheetCell = dtoContainerData.getDtoSheetCell();
                             Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
                         }
                     }
@@ -558,6 +558,7 @@ public class MainController implements Closeable {
             }
 
             String filteredSheetCellAsJson = response.body().string();
+
             return Constants.GSON_INSTANCE.fromJson(filteredSheetCellAsJson, DtoContainerData.class);
 
         } catch (IOException e) {
@@ -726,7 +727,6 @@ public class MainController implements Closeable {
             return false;
         }
     }
-
 
     // Helper method to send a request to save the current sheet cell state
     private boolean sendSaveSheetCellRequest() {

@@ -2,6 +2,7 @@ package chat.servlets.SheetComponentsServlets.RangeServlets.UtilityServlets;
 
 import CoreParts.api.SheetManager;
 
+import EngineManager.Engine;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +25,9 @@ public class GetUniqueStringsInColumnsServlet extends HttpServlet {
         String rangeName = request.getParameter("range");
         String column = request.getParameter("filterColumn");
 
-        SheetManager sheetManager = ServletUtils.getEngine(getServletContext());
+        Engine engine = ServletUtils.getEngineManager(getServletContext());
+        String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+        SheetManager sheetManager = engine.getSheetCell(sheetName);
 
         try {
             if (columnsJson != null && isChartGraphStr != null) {

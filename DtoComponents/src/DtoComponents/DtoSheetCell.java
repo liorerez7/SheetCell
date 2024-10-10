@@ -3,6 +3,7 @@ package DtoComponents;
 
 import CoreParts.api.Cell;
 import CoreParts.api.sheet.SheetCell;
+import Utility.EngineUtilities;
 import expression.impl.Range;
 import smallParts.CellLocation;
 import smallParts.EffectiveValue;
@@ -117,6 +118,15 @@ public class DtoSheetCell {
     public EffectiveValue getEffectiveValue(CellLocation cellLocation) {
         return sheetCell.get(cellLocation);
     }
+
+    public DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter) {
+        return EngineUtilities.filterSheetCell(range, filter, this);
+    }
+
+    public DtoContainerData sortSheetCell(String range, String args) {
+        return EngineUtilities.sortSheetCell(range, args, this);
+    }
+
 
 //    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersionToCellsChanges() {
 //        return versionToCellsChanges;
