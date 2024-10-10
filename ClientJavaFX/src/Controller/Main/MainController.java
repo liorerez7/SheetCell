@@ -785,6 +785,7 @@ public class MainController implements Closeable {
                 });
             }
             else {
+                model.setNewerVersionOfSheet(false);
                 fetchDtoSheetCellAsync();
             }
         });
@@ -801,8 +802,8 @@ public class MainController implements Closeable {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String sheetNameAsJson = response.body().string();
-                    String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
+                    String sheetName = response.body().string();
+                    //String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
                     updateCurrentGridSheet(sheetName);
                 } else {
                     Platform.runLater(() -> createErrorPopup("Failed to get sheet name", "Error"));
@@ -833,4 +834,7 @@ public class MainController implements Closeable {
         return dtoSheetCellAsDataParameter.getLatestVersion() + "";
     }
 
+    public void setNewerVersionOfSheetProperty(boolean b) {
+        model.setNewerVersionOfSheet(b);
+    }
 }
