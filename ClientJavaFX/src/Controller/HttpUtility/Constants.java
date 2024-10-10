@@ -47,6 +47,8 @@ public class Constants {
     public static final String UPDATE_SHEET_NAME_IN_SEASSION_ENDPOINT = FULL_SERVER_PATH + "/updateSheetNameInSession";
     public static final String GET_ALL_SHEET_NAMES = FULL_SERVER_PATH + "/allSheetNames";
     public static final String GET_IS_SHEET_UPDATED = FULL_SERVER_PATH + "/isSheetUpdated";
+    public static final String GET_MY_SHEET_NAME = FULL_SERVER_PATH + "/mySheetName";
+
 
 
 

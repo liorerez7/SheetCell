@@ -90,7 +90,7 @@ public class DashboardController {
                 this::addAllSheetNames,
                 this::displayError);
         timer = new Timer();
-        timer.schedule(refresher, 0, 1000); //
+        timer.schedule(refresher, 0, 2000); //
     }
 
     public void stopSheetNamesRefresher() {

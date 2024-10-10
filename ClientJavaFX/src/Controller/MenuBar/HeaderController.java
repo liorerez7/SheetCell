@@ -152,7 +152,7 @@ public class HeaderController {
 
     @FXML
     void updateSheetClicked(ActionEvent event) {
-
+        mainController.updateCurrentGridSheet();
     }
 }
 

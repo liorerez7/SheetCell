@@ -12,6 +12,10 @@
         <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetCellAndLoadXML</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GetMySheetNameServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetMySheetNameServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetSheetNamesServlet</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetNamesServlet</servlet-class>
     </servlet>
@@ -96,6 +100,10 @@
     <servlet-mapping>
         <servlet-name>GetSheetNamesServlet</servlet-name>
         <url-pattern>/allSheetNames</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetMySheetNameServlet</servlet-name>
+        <url-pattern>/mySheetName</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginShortResponseServlet</servlet-name>
