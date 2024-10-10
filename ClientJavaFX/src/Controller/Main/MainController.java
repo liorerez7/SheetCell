@@ -644,195 +644,63 @@ public class MainController implements Closeable {
         themeMethod.run();
     }
 
-//    public void runtimeAnalysisClicked() {
-//        // Step 1: Fetch runtime analysis data
-//        RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
-//        if (runTimeAnalysisData.getCellId().isEmpty()) {
-//            return;
-//        }
-//
-//        CompletableFuture.runAsync(() -> {
-//            try {
-//                String cellId = runTimeAnalysisData.getCellId().toUpperCase();
-//                int startingValue = runTimeAnalysisData.getStartingValue();
-//                int endingValue = runTimeAnalysisData.getEndingValue();
-//                int stepValue = runTimeAnalysisData.getStepValue();
-//                String currentValue;
-//
-//                // Step 2: Save the current sheet cell state through the server
-//                if (!sendSaveSheetCellRequest()) {
-//                    return;
-//                }
-//
-//                // Step 3: Fetch sheet cell data from the server
-//                DtoSheetCell dtoSheetCell = fetchDtoSheetCell();
-//                if (dtoSheetCell == null) {
-//                    return;
-//                }
-//
-//                // Step 4: Fetch the requested cell data from the server
-//                DtoCell dtoCell = fetchRequestedCell(cellId);
-//                if (dtoCell == null) {
-//                    return;
-//                }
-//                currentValue = dtoCell.getEffectiveValue().getValue().toString();
-//
-//                // Step 5: Validate the cell value
-//                double currentVal = validateCellValue(currentValue, startingValue, endingValue);
-//                if (Double.isNaN(currentVal)) {
-//                    return;
-//                }
-//
-//                // Step 6: Extract column and row information
-//                char col = cellId.charAt(0);
-//                String row = cellId.substring(1);
-//
-//                Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
-//                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController,
-//                        () -> CompletableFuture.runAsync(() -> {
-//                            if (!sendRestoreSheetCellRequest()) {
-//                                return;
-//                            }
-//                        })
-//                ));
-//
-//            } catch (Exception e) {
-//                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error processing runtime analysis"));
-//            }
-//        });
-//    }
-//
-//    // Helper method to send a request to restore the sheet cell state
-//    private boolean sendRestoreSheetCellRequest() {
-//        try (Response response = HttpRequestManager.sendPostRequestSync(Constants.RESTORE_CURRENT_SHEET_CELL_STATE_ENDPOINT, new HashMap<>())) {
-//            if (!response.isSuccessful()) {
-//                Platform.runLater(() -> createErrorPopup("Failed to restore sheet cell state", "Error"));
-//                return false;
-//            }
-//            else{
-//                return true;
-//            }
-//
-//        } catch (IOException e) {
-//            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error restoring sheet cell state"));
-//            return false;
-//        }
-//    }
-//
-//    // Helper method to send a request to save the current sheet cell state
-//    private boolean sendSaveSheetCellRequest() {
-//        try (Response response = HttpRequestManager.sendPostRequestSync(Constants.SAVE_CURRENT_SHEET_CELL_STATE_ENDPOINT, new HashMap<>())) {
-//            if (!response.isSuccessful()) {
-//                Platform.runLater(() -> createErrorPopup("Failed to save current sheet cell state", "Error"));
-//                return false;
-//            }
-//            else{
-//                return true;
-//            }
-//        } catch (IOException e) {
-//            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error saving current sheet cell state"));
-//            return false;
-//        }
-//    }
-//
-//    // Helper method to fetch the DtoSheetCell from the server
-//    private DtoSheetCell fetchDtoSheetCell() {
-//        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
-//            if (!response.isSuccessful()) {
-//                Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
-//                return null;
-//            }
-//            String dtoSheetCellAsJson = response.body().string();
-//            return Constants.GSON_INSTANCE.fromJson(dtoSheetCellAsJson, DtoSheetCell.class);
-//        } catch (IOException e) {
-//            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error fetching sheet cell data"));
-//            return null;
-//        }
-//    }
-//
-//    // Helper method to fetch the requested DtoCell based on cellId
-//    private DtoCell fetchRequestedCell(String cellId) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("cellLocation", cellId);
-//
-//        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_REQUESTED_CELL_ENDPOINT, params)) {
-//            if (!response.isSuccessful()) {
-//                Platform.runLater(() -> createErrorPopup("Failed to load requested cell", "Error"));
-//                return null;
-//            }
-//            String dtoCellAsJson = response.body().string();
-//            return Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
-//        } catch (IOException e) {
-//            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error fetching requested cell"));
-//            return null;
-//        }
-//    }
-
-public void runtimeAnalysisClicked() {
-    // Step 1: Fetch runtime analysis data
-    RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
-    if (runTimeAnalysisData.getCellId().isEmpty()) {
-        return;
-    }
-
-    CompletableFuture.runAsync(() -> {
-        try {
-            String cellId = runTimeAnalysisData.getCellId().toUpperCase();
-            int startingValue = runTimeAnalysisData.getStartingValue();
-            int endingValue = runTimeAnalysisData.getEndingValue();
-            int stepValue = runTimeAnalysisData.getStepValue();
-            String currentValue;
-
-            // Step 2: Save the current sheet cell state through the server
-            if (!sendSaveSheetCellRequest()) {
-                return;
-            }
-
-            // Step 3: Fetch sheet cell data from the server
-            DtoSheetCell dtoSheetCell = fetchDtoSheetCell();
-            if (dtoSheetCell == null) {
-                return;
-            }
-
-            // Step 4: Fetch the requested cell data from the server
-            DtoCell dtoCell = fetchRequestedCell(cellId);
-            if (dtoCell == null) {
-                return;
-            }
-            currentValue = dtoCell.getEffectiveValue().getValue().toString();
-
-            // Step 5: Validate the cell value
-            double currentVal = validateCellValue(currentValue, startingValue, endingValue);
-            if (Double.isNaN(currentVal)) {
-                return;
-            }
-
-            // Step 6: Extract column and row information
-            char col = cellId.charAt(0);
-            String row = cellId.substring(1);
-
-//                // Step 7: Show the runtime analysis popup on the JavaFX Application Thread
-//                Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
-//                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController));
-//
-//                // Step 8: Restore the sheet cell state after analysis
-//                if (!sendRestoreSheetCellRequest()) {
-//                    return;
-//                }
-            Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
-                    dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController,
-                    () -> CompletableFuture.runAsync(() -> {
-                        if (!sendRestoreSheetCellRequest()) {
-                            return;
-                        }
-                    })
-            ));
-
-        } catch (Exception e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error processing runtime analysis"));
+    public void runtimeAnalysisClicked() {
+        // Step 1: Fetch runtime analysis data
+        RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
+        if (runTimeAnalysisData.getCellId().isEmpty()) {
+            return;
         }
-    });
-}
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                String cellId = runTimeAnalysisData.getCellId().toUpperCase();
+                int startingValue = runTimeAnalysisData.getStartingValue();
+                int endingValue = runTimeAnalysisData.getEndingValue();
+                int stepValue = runTimeAnalysisData.getStepValue();
+                String currentValue;
+
+                // Step 2: Save the current sheet cell state through the server
+                if (!sendSaveSheetCellRequest()) {
+                    return;
+                }
+
+                // Step 3: Fetch sheet cell data from the server
+                DtoSheetCell dtoSheetCell = fetchDtoSheetCell();
+                if (dtoSheetCell == null) {
+                    return;
+                }
+
+                // Step 4: Fetch the requested cell data from the server
+                DtoCell dtoCell = fetchRequestedCell(cellId);
+                if (dtoCell == null) {
+                    return;
+                }
+                currentValue = dtoCell.getEffectiveValue().getValue().toString();
+
+                // Step 5: Validate the cell value
+                double currentVal = validateCellValue(currentValue, startingValue, endingValue);
+                if (Double.isNaN(currentVal)) {
+                    return;
+                }
+
+                // Step 6: Extract column and row information
+                char col = cellId.charAt(0);
+                String row = cellId.substring(1);
+
+                Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
+                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController,
+                        () -> CompletableFuture.runAsync(() -> {
+                            if (!sendRestoreSheetCellRequest()) {
+                                return;
+                            }
+                        })
+                ));
+
+            } catch (Exception e) {
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error processing runtime analysis"));
+            }
+        });
+    }
 
     // Helper method to send a request to restore the sheet cell state
     private boolean sendRestoreSheetCellRequest() {
@@ -842,7 +710,6 @@ public void runtimeAnalysisClicked() {
                 return false;
             }
             else{
-                int x = 5;
                 return true;
             }
 
@@ -852,7 +719,6 @@ public void runtimeAnalysisClicked() {
         }
     }
 
-
     // Helper method to send a request to save the current sheet cell state
     private boolean sendSaveSheetCellRequest() {
         try (Response response = HttpRequestManager.sendPostRequestSync(Constants.SAVE_CURRENT_SHEET_CELL_STATE_ENDPOINT, new HashMap<>())) {
@@ -860,7 +726,9 @@ public void runtimeAnalysisClicked() {
                 Platform.runLater(() -> createErrorPopup("Failed to save current sheet cell state", "Error"));
                 return false;
             }
-            return true;
+            else{
+                return true;
+            }
         } catch (IOException e) {
             Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error saving current sheet cell state"));
             return false;
@@ -899,6 +767,8 @@ public void runtimeAnalysisClicked() {
             return null;
         }
     }
+
+
 
     // Helper method to validate the cell value
     private double validateCellValue(String currentValue, int startingValue, int endingValue) {

@@ -82,7 +82,7 @@ public class DashboardController {
         });
 
         // Start the refresher
-        //startSheetNamesRefresher();
+        startSheetNamesRefresher();
     }
 
     public void startSheetNamesRefresher() {

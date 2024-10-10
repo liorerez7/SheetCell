@@ -673,144 +673,6 @@ public class PopUpWindowsHandler {
 
 
 
-//    public void showRuntimeAnalysisPopup(
-//            DtoSheetCell sheetCellRunTime,
-//            int startingValue, int endingValue, int stepValue,
-//            double currentVal, char col, String row,
-//            Model model, GridController gridScrollerController,
-//            Runnable onCloseCallback) {
-//
-//        String title = "Run Time Analysis";
-//        Stage popupStage = new Stage();
-//        popupStage.initModality(Modality.APPLICATION_MODAL);
-//        popupStage.setTitle(title);
-//
-//        // Create a new GridPane for the popup
-//        GridPane popupGrid = new GridPane();
-//        popupGrid.getStylesheets().add("Controller/Grid/ExelBasicGrid.css");
-//
-//        Platform.runLater(() -> {
-//            Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime);
-//            model.setCellLabelToPropertiesRunTimeAnalysis(cellLocationLabelMap);
-//            model.bindCellLabelToPropertiesRunTimeAnalysis();
-//            model.setPropertiesByDtoSheetCellRunTimeAnalsys(sheetCellRunTime);
-//
-//            VBox sliderBox = new VBox(10);
-//            sliderBox.setAlignment(Pos.CENTER);
-//
-//            Label cellIdLabel = new Label("Cell ID: " + col + row);
-//            cellIdLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;");
-//
-//            Slider valueSlider = new Slider(startingValue, endingValue, currentVal);
-//            valueSlider.setBlockIncrement(stepValue);
-//            valueSlider.setMajorTickUnit(stepValue);
-//
-//            if ((endingValue - startingValue) / stepValue - 1 > 5) {
-//                valueSlider.setMinorTickCount((endingValue - startingValue) / stepValue - 1);
-//            } else {
-//                valueSlider.setMinorTickCount(5);
-//            }
-//            valueSlider.setSnapToTicks(true);
-//            valueSlider.setShowTickMarks(true);
-//            valueSlider.setShowTickLabels(true);
-//
-//            Label valueLabel = new Label("Value: " + currentVal);
-//            valueLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #000000;");
-//
-//            valueSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-//                int newValue = (int) Math.round(newVal.doubleValue() / stepValue) * stepValue;
-//                if (newValue > endingValue) {
-//                    newValue -= stepValue;
-//                }
-//                valueSlider.setValue(newValue);
-//                valueLabel.setText("Value: " + newValue);
-//
-//                String newValueStr = String.valueOf(newValue);
-//                CompletableFuture.runAsync(() -> {
-//                    try {
-//                        Map<String, String> map = new HashMap<>();
-//                        map.put("newValue", newValueStr);
-//                        map.put("colLocation", col + "");
-//                        map.put("rowLocation", row);
-//
-//                        updateCellRequest(map);
-//
-//                        DtoSheetCell updatedSheetCell = fetchDtoSheetCell();
-//
-//                        Platform.runLater(() -> model.setPropertiesByDtoSheetCellRunTimeAnalsys(updatedSheetCell));
-//
-//                    } catch (Exception e) {
-//                        Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error updating cell"));
-//                    }
-//                });
-//            });
-//
-//            sliderBox.getChildren().addAll(cellIdLabel, valueSlider, valueLabel);
-//
-//            VBox contentBox = new VBox(10, popupGrid, sliderBox);
-//            contentBox.setAlignment(Pos.CENTER_LEFT);
-//            contentBox.setPadding(new Insets(10));
-//
-//            ScrollPane contentScrollPane = new ScrollPane(contentBox);
-//            contentScrollPane.setFitToWidth(true);
-//            contentScrollPane.setFitToHeight(true);
-//
-//            Scene popupScene = new Scene(contentScrollPane);
-//            popupStage.setScene(popupScene);
-//
-//            // Set an action when the popup window is closed
-//            popupStage.setOnHidden(event -> {
-//                if (onCloseCallback != null) {
-//                    onCloseCallback.run();
-//                }
-//            });
-//
-//            popupStage.showAndWait();
-//        });
-//    }
-//
-//
-//
-//
-//    private boolean updateCellRequest(Map<String, String> map) {
-//
-////        try (Response updateCellResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, map)) {
-////            if (!updateCellResponse.isSuccessful()) {
-////                Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
-////                return false;
-////            }
-////            return true;
-//
-//        try (Response updateCellResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, map)) {
-//            if (!updateCellResponse.isSuccessful()) {
-//                String responseBody = updateCellResponse.body().string();
-//                System.err.println("Error response: " + responseBody);
-//                System.err.println("Status code: " + updateCellResponse.code());
-//                Platform.runLater(() -> createErrorPopup("Failed to update cell: " + responseBody, "Error"));
-//                return false;
-//            }
-//            return true;
-//        } catch (IOException e) {
-//            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error saving current sheet cell state"));
-//            return false;
-//        }
-//    }
-//
-//    // Helper method to fetch the DtoSheetCell from the server
-//    private DtoSheetCell fetchDtoSheetCell() {
-//        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
-//            if (!response.isSuccessful()) {
-//                Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
-//                return null;
-//            }
-//            String dtoSheetCellAsJson = response.body().string();
-//            return Constants.GSON_INSTANCE.fromJson(dtoSheetCellAsJson, DtoSheetCell.class);
-//        } catch (IOException e) {
-//            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error fetching sheet cell data"));
-//            return null;
-//        }
-//    }
-
     public void showRuntimeAnalysisPopup(
             DtoSheetCell sheetCellRunTime,
             int startingValue, int endingValue, int stepValue,
@@ -912,9 +774,19 @@ public class PopUpWindowsHandler {
 
     private boolean updateCellRequest(Map<String, String> map) {
 
+//        try (Response updateCellResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, map)) {
+//            if (!updateCellResponse.isSuccessful()) {
+//                Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
+//                return false;
+//            }
+//            return true;
+
         try (Response updateCellResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, map)) {
             if (!updateCellResponse.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to save current sheet cell state", "Error"));
+                String responseBody = updateCellResponse.body().string();
+                System.err.println("Error response: " + responseBody);
+                System.err.println("Status code: " + updateCellResponse.code());
+                Platform.runLater(() -> createErrorPopup("Failed to update cell: " + responseBody, "Error"));
                 return false;
             }
             return true;
@@ -938,6 +810,8 @@ public class PopUpWindowsHandler {
             return null;
         }
     }
+
+
 
     public List<String> openGraphWindow(){
 
