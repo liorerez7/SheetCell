@@ -169,9 +169,7 @@ public class MainController implements Closeable {
                 try (response) {
                     if (response.isSuccessful()) {
                         String sheetCellAsJson = response.body().string();
-                        //DtoSheetCell dtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
                         dtoSheetCellAsDataParameter = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-                        //Platform.runLater(() -> updateUIWithNewSheetCell(dtoSheetCell));
                         Platform.runLater(() -> updateUIWithNewSheetCell(dtoSheetCellAsDataParameter));
                     } else {
                         Platform.runLater(() -> createErrorPopup("Failed to load sheet: Server responded with code " + response.code(), "Error"));
@@ -224,40 +222,20 @@ public class MainController implements Closeable {
                     }
 
                     String sheetCellAsJson = sheetCellResponse.body().string();
-                    //DtoSheetCell newDtoSheetCell = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
                     dtoSheetCellAsDataParameter = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-
-                    //int latestVersion = newDtoSheetCell.getLatestVersion();
 
                     int latestVersion = dtoSheetCellAsDataParameter.getLatestVersion();
 
-                    // Send GET request to fetch the requested cell synchronously and close the response
-                    Map<String, String> paramsForRequestedCell = new HashMap<>();
-                    paramsForRequestedCell.put("cellLocation", text);
-                    try (Response requestedCellResponse = HttpRequestManager.sendGetRequestSync(Constants.GET_REQUESTED_CELL_ENDPOINT, paramsForRequestedCell)) {
-                        if (!requestedCellResponse.isSuccessful()) {
-                            Platform.runLater(() -> createErrorPopup("Failed to load requested cell", "Error"));
-                            return;
-                        }
+                    DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(text);
 
-                        String dtoCellAsJson = requestedCellResponse.body().string();
-                        //DtoCell newDtoCell = Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
-                        DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(text);
-
-                        // Update the UI on the JavaFX Application Thread
-                        Platform.runLater(() -> {
-//                            model.setPropertiesByDtoSheetCell(newDtoSheetCell);
-//                            model.setLatestUpdatedVersionProperty(newDtoCell);
-//                            model.setOriginalValueLabelProperty(newDtoCell);
-//                            model.setTotalVersionsProperty(latestVersion);
-//                            gridScrollerController.showNeighbors(newDtoCell);
-                            model.setPropertiesByDtoSheetCell(dtoSheetCellAsDataParameter);
-                            model.setLatestUpdatedVersionProperty(dtoCell);
-                            model.setOriginalValueLabelProperty(dtoCell);
-                            model.setTotalVersionsProperty(latestVersion);
-                            gridScrollerController.showNeighbors(dtoCell);
-                        });
-                    }
+                    // Update the UI on the JavaFX Application Thread
+                    Platform.runLater(() -> {
+                        model.setPropertiesByDtoSheetCell(dtoSheetCellAsDataParameter);
+                        model.setLatestUpdatedVersionProperty(dtoCell);
+                        model.setOriginalValueLabelProperty(dtoCell);
+                        model.setTotalVersionsProperty(latestVersion);
+                        gridScrollerController.showNeighbors(dtoCell);
+                    });
                 }
 
             } catch (IOException e) {
@@ -317,7 +295,6 @@ public class MainController implements Closeable {
                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                        String requestedRangeAsJson = response.body().string();
                        List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
-                      // rangesController.addRange(engine.getRequestedRange(name),name);
                        rangesController.addRange(requestedRange,name);
                    }
                });
@@ -366,51 +343,21 @@ public class MainController implements Closeable {
 
     public void cellClicked(String location) {
 
-        Map<String,String> params = new HashMap<>();
-        params.put("cellLocation",location);
+        DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(location);
 
-        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_REQUESTED_CELL_ENDPOINT, params, new Callback() {
+        Platform.runLater(() -> {
+            model.setIsCellLabelClicked(true);
+            model.setLatestUpdatedVersionProperty(dtoCell);
+            model.setOriginalValueLabelProperty(dtoCell);
+            actionLineController.updateCssWhenUpdatingCell(location);
+            gridScrollerController.clearAllHighlights();
+            gridScrollerController.showNeighbors(dtoCell);
+            rangesController.resetComboBox();
+            customizeController.resetComboBox();
+            model.setColumnSelected(false);
+            model.setRowSelected(false);
+            model.setCellLocationProperty(location);
 
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> createErrorPopup("Failed to get cell", "Error"));
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (response) {
-                    String requestedCellAsJson = response.body().string();
-                    //DtoCell requestedCell = Constants.GSON_INSTANCE.fromJson(requestedCellAsJson, DtoCell.class);
-
-                    DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(location);
-
-                    Platform.runLater(() -> {
-//                        model.setIsCellLabelClicked(true);
-//                        model.setLatestUpdatedVersionProperty(requestedCell);
-//                        model.setOriginalValueLabelProperty(requestedCell);
-//                        actionLineController.updateCssWhenUpdatingCell(location);
-//                        gridScrollerController.clearAllHighlights();
-//                        gridScrollerController.showNeighbors(requestedCell);
-//                        rangesController.resetComboBox();
-//                        customizeController.resetComboBox();
-//                        model.setColumnSelected(false);
-//                        model.setRowSelected(false);
-//                        model.setCellLocationProperty(location);
-                        model.setIsCellLabelClicked(true);
-                        model.setLatestUpdatedVersionProperty(dtoCell);
-                        model.setOriginalValueLabelProperty(dtoCell);
-                        actionLineController.updateCssWhenUpdatingCell(location);
-                        gridScrollerController.clearAllHighlights();
-                        gridScrollerController.showNeighbors(dtoCell);
-                        rangesController.resetComboBox();
-                        customizeController.resetComboBox();
-                        model.setColumnSelected(false);
-                        model.setRowSelected(false);
-                        model.setCellLocationProperty(location);
-
-                    });
-                }
-            }
         });
     }
 
@@ -430,7 +377,6 @@ public class MainController implements Closeable {
                 try (response) {
                     String requestedRangeAsJson = response.body().string();
                     List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
-                    //List<CellLocation> requestedRange = dtoSheetCellAsDataParameter.getRanges().get(rangeName);
                     Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
                 }
             }
@@ -468,35 +414,12 @@ public class MainController implements Closeable {
         String columns = sortRowsData.getColumnsToSortBy();
         String range = sortRowsData.getRange();
 
-        Map<String,String> params = new HashMap<>();
-        params.put("columns",columns);
-        params.put("range",range);
-
-        //if one of them is null means that the user just closed the window without entering anything
-        if(columns != null && range != null)
-        {
-            try {
-
-                HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.SORT_SHEET_CELL_ENDPOINT, params, new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Platform.runLater(() -> createErrorPopup("Failed to sort rows", "Error"));
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        try (response) {
-                            String sortedSheetCellAsJson = response.body().string();
-                            //DtoContainerData dtoContainerData = Constants.GSON_INSTANCE.fromJson(sortedSheetCellAsJson, DtoContainerData.class);
-                            DtoContainerData dtoContainerData = dtoSheetCellAsDataParameter.sortSheetCell(range,columns);
-                            Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
-                        }
-                    }
-                });
-            }catch (Exception e) {
-                createErrorPopup(e.getMessage(), "Error");
-            }
+        if(columns == null || range == null || columns.isEmpty() || range.isEmpty()){
+            return;
         }
+
+        DtoContainerData dtoContainerData = dtoSheetCellAsDataParameter.sortSheetCell(range,columns);
+        Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
     }
 
     private void createSortGridPopUp(DtoContainerData dtoContainerData) {
@@ -514,91 +437,23 @@ public class MainController implements Closeable {
             return; // Exit if input is invalid
         }
 
-        Map<String, String> params = new HashMap<>();
-        params.put("range", range);
-        params.put("filterColumn", filterColumn);
+        Map<Character, Set<String>> columnValues = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(filterColumn,range);
 
-        // Run the filtering process asynchronously to avoid blocking the UI thread
-        CompletableFuture.runAsync(() -> {
-            try {
-                // Fetch unique column values
-                //Map<Character, Set<String>> columnValues = fetchUniqueColumnValues(params);
-                Map<Character, Set<String>> columnValues = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(filterColumn,range);
-                if (columnValues == null) {
-                    return;
+        Platform.runLater(() -> {
+            Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
+            boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
+
+            // Proceed only if the filter is not empty
+            if (!isFilterEmpty) {
+                // Pass the filter and range information in the second HTTP request
+                DtoContainerData filteredSheetCell = dtoSheetCellAsDataParameter.filterSheetCell(range, filter);
+                if (filteredSheetCell != null) {
+                    Platform.runLater(() -> createFilterGridPopUpp(filteredSheetCell));
                 }
-
-
-                // Run the UI operation on the JavaFX Application Thread and continue processing afterwards
-                Platform.runLater(() -> {
-                    Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
-                    boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
-
-                    // Proceed only if the filter is not empty
-                    if (!isFilterEmpty) {
-                        // Pass the filter and range information in the second HTTP request
-                        CompletableFuture.runAsync(() -> {
-                            try {
-                                //DtoContainerData filteredSheetCell = fetchFilteredSheetData(range, filter);
-                                DtoContainerData filteredSheetCell = dtoSheetCellAsDataParameter.filterSheetCell(range,filter);
-                                if (filteredSheetCell != null) {
-                                    Platform.runLater(() -> createFilterGridPopUpp(filteredSheetCell));
-                                }
-                            } catch (Exception e) {
-                                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-                            }
-                        });
-                    }
-                });
-
-            } catch (Exception e) {
-                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
         });
     }
 
-    // Helper method to fetch unique column values
-    private Map<Character, Set<String>> fetchUniqueColumnValues(Map<String, String> params) {
-        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_UNIQUE_STRINGS_IN_COLUMN, params)) {
-            if (!response.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to retrieve column values", "Error"));
-                return null;
-            }
-
-            String columnValuesAsJson = response.body().string();
-            return Constants.GSON_INSTANCE.fromJson(columnValuesAsJson, new TypeToken<Map<Character, Set<String>>>(){}.getType());
-
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-            return null;
-        }
-    }
-
-    // Helper method to fetch the filtered sheet data
-    private DtoContainerData fetchFilteredSheetData(String range, Map<Character, Set<String>> filter) {
-        // Convert filter map to JSON
-        String filterJson = Constants.GSON_INSTANCE.toJson(filter);
-
-        // Prepare the parameters for the GET request
-        Map<String, String> params = new HashMap<>();
-        params.put("range", range);
-        params.put("filter", filterJson);
-
-        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.FILTER_SHEET_CELL_ENDPOINT, params)) {
-            if (!response.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to filter data", "Error"));
-                return null;
-            }
-
-            String filteredSheetCellAsJson = response.body().string();
-
-            return Constants.GSON_INSTANCE.fromJson(filteredSheetCellAsJson, DtoContainerData.class);
-
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-            return null;
-        }
-    }
 
     private void createFilterGridPopUpp(DtoContainerData filteredSheetCell) {
         popUpWindowsHandler.openFilterGridPopUp(filteredSheetCell, gridScrollerController);
@@ -774,41 +629,6 @@ public class MainController implements Closeable {
         }
     }
 
-    // Helper method to fetch the DtoSheetCell from the server
-    private DtoSheetCell fetchDtoSheetCell() {
-        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
-            if (!response.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
-                return null;
-            }
-            String dtoSheetCellAsJson = response.body().string();
-            return Constants.GSON_INSTANCE.fromJson(dtoSheetCellAsJson, DtoSheetCell.class);
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error fetching sheet cell data"));
-            return null;
-        }
-    }
-
-    // Helper method to fetch the requested DtoCell based on cellId
-    private DtoCell fetchRequestedCell(String cellId) {
-        Map<String, String> params = new HashMap<>();
-        params.put("cellLocation", cellId);
-
-        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_REQUESTED_CELL_ENDPOINT, params)) {
-            if (!response.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to load requested cell", "Error"));
-                return null;
-            }
-            String dtoCellAsJson = response.body().string();
-            return Constants.GSON_INSTANCE.fromJson(dtoCellAsJson, DtoCell.class);
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error fetching requested cell"));
-            return null;
-        }
-    }
-
-
-
     // Helper method to validate the cell value
     private double validateCellValue(String currentValue, int startingValue, int endingValue) {
         try {
@@ -841,34 +661,20 @@ public class MainController implements Closeable {
         String xTitle = columnsForXYaxis.get(2);
         String yTitle = columnsForXYaxis.get(3);
 
-        // Step 2: Fetch the unique strings in columns via HTTP request
-        CompletableFuture.runAsync(() -> {
-            try {
-                // Prepare parameters for the HTTP request
-                Map<String, String> params = new HashMap<>();
-                params.put("columns", Constants.GSON_INSTANCE.toJson(columns)); // Serialize the columns list
-                params.put("isChartGraph", String.valueOf(isChartGraph));
+        Map<Character, Set<String>> columnsXYaxisToStrings = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(columns,isChartGraph);
 
-                // Fetch the column values using the client method
-                Map<Character, Set<String>> columnsXYaxisToStrings = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(columns,isChartGraph);
+        if (columnsXYaxisToStrings == null) {
+            return;
+        }
 
-                //Map<Character, Set<String>> columnsXYaxisToStrings = fetchUniqueColumnValues(params);
-                if (columnsXYaxisToStrings == null) {
-                    return;
-                }
+        // Open the filter popup and get the filtered columns
+        Platform.runLater(() -> {
+            Map<Character, List<String>> filteredColumnsXYaxisToStrings = popUpWindowsHandler.openFilterDataWithOrderPopUp(
+                    xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
 
-                // Open the filter popup and get the filtered columns
-                Platform.runLater(() -> {
-                    Map<Character, List<String>> filteredColumnsXYaxisToStrings = popUpWindowsHandler.openFilterDataWithOrderPopUp(
-                            xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
-
-                    if (filteredColumnsXYaxisToStrings != null) {
-                        Platform.runLater(() -> popUpWindowsHandler.openGraphPopUp(
-                                xAxis, xTitle, yTitle, filteredColumnsXYaxisToStrings, isChartGraph));
-                    }
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            if (filteredColumnsXYaxisToStrings != null) {
+                Platform.runLater(() -> popUpWindowsHandler.openGraphPopUp(
+                        xAxis, xTitle, yTitle, filteredColumnsXYaxisToStrings, isChartGraph));
             }
         });
     }
@@ -926,7 +732,6 @@ public class MainController implements Closeable {
             }
 
             fetchDtoSheetCellAsync();
-
         });
     }
 

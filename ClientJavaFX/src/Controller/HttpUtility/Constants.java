@@ -34,17 +34,14 @@ public class Constants {
     public final static String LOGOUT = FULL_SERVER_PATH + "/chat/logout";
     public final static String SEND_CHAT_LINE = FULL_SERVER_PATH + "/pages/chatroom/sendChat";
     public final static String CHAT_LINES_LIST = FULL_SERVER_PATH + "/chat";
+
     public final static String INIT_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/xmlAddress";
     public static final String GET_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/sheetCell";
     public static final String UPDATE_CELL_ENDPOINT = FULL_SERVER_PATH + "/updateCell";
-    public static final String GET_REQUESTED_CELL_ENDPOINT = FULL_SERVER_PATH + "/requestedCell";
     public static final String ADD_RANGE_ENDPOINT = FULL_SERVER_PATH + "/addRange";
     public static final String GET_REQUESTED_RANGE_ENDPOINT = FULL_SERVER_PATH + "/requestedRange";
     public static final String GET_ALL_RANGES_ENDPOINT = FULL_SERVER_PATH + "/allRanges";
     public static final String DELETE_RANGE_ENDPOINT = FULL_SERVER_PATH + "/deleteRange";
-    public static final String SORT_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/sortSheetCell";
-    public static final String FILTER_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/filterSheetCell";
-    public static final String GET_UNIQUE_STRINGS_IN_COLUMN = FULL_SERVER_PATH + "/uniqueStringsInColumn";
     public static final String SAVE_CURRENT_SHEET_CELL_STATE_ENDPOINT = FULL_SERVER_PATH + "/saveCurrentSheetCellState";
     public static final String RESTORE_CURRENT_SHEET_CELL_STATE_ENDPOINT = FULL_SERVER_PATH + "/restoreCurrentSheetCellState";
     public static final String UPDATE_SHEET_NAME_IN_SEASSION_ENDPOINT = FULL_SERVER_PATH + "/updateSheetNameInSession";

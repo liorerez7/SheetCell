@@ -40,20 +40,8 @@
         <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.AddRangeServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SortRangeServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.SortServlets.SortRangeServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>DeleteRangeServlet</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.DeleteRangeServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>FilterRangeServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.FilterServlets.FilterRangeServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>GetUniqueStringsInColumnsServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.UtilityServlets.GetUniqueStringsInColumnsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginShortResponseServlet</servlet-name>
@@ -72,18 +60,6 @@
         <url-pattern>/updateSheetNameInSession</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>FilterRangeServlet</servlet-name>
-        <url-pattern>/filterSheetCell</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GetUniqueStringsInColumnsServlet</servlet-name>
-        <url-pattern>/uniqueStringsInColumn</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SortRangeServlet</servlet-name>
-        <url-pattern>/sortSheetCell</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>SaveCurrentSheetCellServlet</servlet-name>
         <url-pattern>/saveCurrentSheetCellState</url-pattern>
     </servlet-mapping>
@@ -98,10 +74,6 @@
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/updateCell</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GetAndUpdateCellServlet</servlet-name>
-        <url-pattern>/requestedCell</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddRangeServlet</servlet-name>
