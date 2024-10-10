@@ -44,8 +44,27 @@ public class DtoSheetCell {
         });
     }
 
+    // Constructor to populate DtoSheetCell from SheetCellImp
+    public DtoSheetCell(SheetCell sheetCellImp, Map<String,DtoCell> cellIdToDtoCell) {
+        for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
+            EffectiveValue effectiveValue;
+            effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
+
+            sheetCell.put(entry.getKey(), effectiveValue);
+        }
+        //versionToCellsChanges = sheetCellImp.getVersions();
+        copyBasicTypes(sheetCellImp);
+        Set<Range> systemRanges = sheetCellImp.getSystemRanges();
+        systemRanges.forEach(range -> {
+            ranges.put(range.getRangeName(),range.getCellLocations());
+        });
+
+        this.cellIdToDtoCell = cellIdToDtoCell;
+    }
+
     public DtoSheetCell(Map<CellLocation,EffectiveValue> sheetCell, Map<String, List<CellLocation>> ranges,
-                        String name, int versionNumber, int currentNumberOfRows, int currentNumberOfCols, int currentCellLength, int currentCellWidth) {
+                        String name, int versionNumber, int currentNumberOfRows,
+                        int currentNumberOfCols, int currentCellLength, int currentCellWidth, Map<String,DtoCell> cellIdToDtoCell) {
 
         this.sheetCell = sheetCell;
         this.ranges = ranges;
@@ -55,6 +74,7 @@ public class DtoSheetCell {
         this.currentNumberOfCols = currentNumberOfCols;
         this.currentCellLength = currentCellLength;
         this.currentCellWidth = currentCellWidth;
+        this.cellIdToDtoCell = cellIdToDtoCell;
     }
 
     public DtoSheetCell(SheetCell sheetCell, int requestedVersion) {
@@ -77,6 +97,7 @@ public class DtoSheetCell {
             sheetCellChanges = sheetCell.getVersions().get(requestedVersion);
         }
     }
+
 
     public Map<CellLocation, EffectiveValue> getViewSheetCell() {
         return sheetCell;
@@ -211,6 +232,18 @@ public class DtoSheetCell {
         return columnToUniqueStrings;
     }
 
+
+    public DtoCell getRequestedCell(String cellId) {
+        if(cellIdToDtoCell != null)
+        {
+            return cellIdToDtoCell.get(cellId);
+        }
+        return null;
+    }
+
+    public Map<String, DtoCell> getCellIdToDtoCell() {
+        return cellIdToDtoCell;
+    }
 
 //    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersionToCellsChanges() {
 //        return versionToCellsChanges;

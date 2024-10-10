@@ -22,6 +22,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +48,15 @@ public class SheetManagerImpl implements SheetManager {
 
     @Override
     public DtoSheetCell getSheetCell() {
-        return new DtoSheetCell(sheetCell);
+        Map<String,DtoCell> cellIdToDtoCell = new HashMap<>();
+
+        for (Map.Entry<CellLocation, Cell> entry : sheetCell.getSheetCell().entrySet()) {
+            DtoCell dtoCell = new DtoCell(entry.getValue());
+            cellIdToDtoCell.put(entry.getKey().getCellId(),dtoCell);
+
+        }
+
+        return new DtoSheetCell(sheetCell, cellIdToDtoCell);
     }
 
     @Override

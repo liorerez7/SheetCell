@@ -1,5 +1,6 @@
 package Controller.HttpUtility.jsonDeSerialzableClasses;
 
+import DtoComponents.DtoCell;
 import DtoComponents.DtoSheetCell;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -27,6 +28,10 @@ public class DtoSheetCellDeserializer implements JsonDeserializer<DtoSheetCell> 
         Type rangeMapType = new TypeToken<Map<String, List<CellLocation>>>() {}.getType();
         Map<String, List<CellLocation>> rangesMap = context.deserialize(jsonObject.get("ranges"), rangeMapType);
 
+        // Deserialize cellIdToDtoCell
+        Type cellIdToDtoCellType = new TypeToken<Map<String, DtoCell>>() {}.getType();
+        Map<String, DtoCell> cellIdToDtoCellMap = context.deserialize(jsonObject.get("cellIdToDtoCell"), cellIdToDtoCellType);
+
         String name = jsonObject.get("name").getAsString();
         int versionNumber = jsonObject.get("versionNumber").getAsInt();
         int currentNumberOfRows = jsonObject.get("currentNumberOfRows").getAsInt();
@@ -35,6 +40,7 @@ public class DtoSheetCellDeserializer implements JsonDeserializer<DtoSheetCell> 
         int currentCellWidth = jsonObject.get("currentCellWidth").getAsInt();
 
 
-        return new DtoSheetCell(sheetCellMap, rangesMap, name, versionNumber, currentNumberOfRows, currentNumberOfCols, currentCellLength, currentCellWidth);
+        return new DtoSheetCell(sheetCellMap, rangesMap, name, versionNumber, currentNumberOfRows,
+                currentNumberOfCols, currentCellLength, currentCellWidth, cellIdToDtoCellMap);
     }
 }

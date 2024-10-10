@@ -2,12 +2,14 @@ package chat.utils.jsonSerializableClasses;
 
 
 import DtoComponents.DtoSheetCell;
+import DtoComponents.DtoCell;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
 public class DtoSheetCellSerializer implements JsonSerializer<DtoSheetCell> {
     @Override
@@ -21,6 +23,20 @@ public class DtoSheetCellSerializer implements JsonSerializer<DtoSheetCell> {
         jsonObject.addProperty("currentNumberOfCols", src.getNumberOfColumns());
         jsonObject.addProperty("currentCellLength", src.getCellLength());
         jsonObject.addProperty("currentCellWidth", src.getCellWidth());
+
+        // Serialize cellIdToDtoCell
+        jsonObject.add("cellIdToDtoCell", serializeCellIdToDtoCell(src.getCellIdToDtoCell(), context));
+
+        return jsonObject;
+    }
+
+    private JsonElement serializeCellIdToDtoCell(Map<String, DtoCell> map, JsonSerializationContext context) {
+        JsonObject jsonObject = new JsonObject();
+        for (Map.Entry<String, DtoCell> entry : map.entrySet()) {
+            String key = entry.getKey();
+            JsonElement value = context.serialize(entry.getValue(), DtoCell.class);
+            jsonObject.add(key, value);
+        }
         return jsonObject;
     }
 }

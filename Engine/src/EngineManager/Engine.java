@@ -2,6 +2,9 @@ package EngineManager;
 
 import CoreParts.api.SheetManager;
 import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
+import DtoComponents.DtoCell;
+import DtoComponents.DtoSheetCell;
+import smallParts.CellLocation;
 
 import java.io.InputStream;
 import java.util.*;

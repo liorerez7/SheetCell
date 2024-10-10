@@ -9,11 +9,15 @@ import Controller.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
+import CoreParts.api.SheetManager;
+import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
 import DtoComponents.DtoCell;
 import DtoComponents.DtoContainerData;
 import DtoComponents.DtoSheetCell;
+import EngineManager.Engine;
 import Main.sheetCellApp;
 import com.google.gson.reflect.TypeToken;
+import expression.impl.stringFunction.Str;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -133,6 +137,7 @@ public class MainController implements Closeable {
     }
 
     public void initializeGridBasedOnXML(File xmlFile, String absolutePath) {
+
         try {
             try (Response uploadFileResponse = HttpRequestManager.sendFileSync(Constants.INIT_SHEET_CELL_ENDPOINT, xmlFile)) {
                 if (uploadFileResponse.isSuccessful()) {
