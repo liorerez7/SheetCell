@@ -242,6 +242,13 @@ public class MainController implements Closeable {
     }
 
     public void updateCell(String text, String newValue) {
+
+        if(model.getNewerVersionOfSheetProperty().getValue()){
+            Platform.runLater(() -> createErrorPopup("there is a newer version of this sheet\nPress the " +
+                    "UpdateSheet button inorder to update cells ", "Error"));
+            return;
+        }
+
         CompletableFuture.runAsync(() -> {
             try {
                 Map<String, String> params = new HashMap<>();
@@ -305,6 +312,13 @@ public class MainController implements Closeable {
     }
 
     public void rangeAddClicked() {
+
+        if(model.getNewerVersionOfSheetProperty().getValue()){
+            Platform.runLater(() -> createErrorPopup("there is a newer version of this sheet\nPress the " +
+                    "UpdateSheet button inorder to add range ", "Error"));
+            return;
+        }
+
         RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
         String name = rangeStringsData.getName();
         String range = rangeStringsData.getRange();
@@ -351,6 +365,12 @@ public class MainController implements Closeable {
     }
 
     public void rangeDeleteClicked() {
+
+        if(model.getNewerVersionOfSheetProperty().getValue()){
+            Platform.runLater(() -> createErrorPopup("there is a newer version of this sheet\nPress the " +
+                    "UpdateSheet button inorder to delete range ", "Error"));
+            return;
+        }
 
         CompletableFuture.runAsync(() -> {
 
