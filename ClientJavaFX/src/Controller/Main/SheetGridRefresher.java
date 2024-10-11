@@ -1,8 +1,7 @@
 package Controller.Main;
 
-import Controller.HttpUtility.Constants;
+import Utility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
-import DtoComponents.DtoSheetCell;
 import javafx.application.Platform;
 import okhttp3.Call;
 import okhttp3.Callback;

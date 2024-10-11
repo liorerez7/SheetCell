@@ -1,4 +1,4 @@
-package Controller.HttpUtility;
+package Utility;
 
 import Controller.HttpUtility.jsonDeSerialzableClasses.*;
 
@@ -49,6 +49,15 @@ public class Constants {
     public static final String GET_IS_SHEET_UPDATED = FULL_SERVER_PATH + "/isSheetUpdated";
     public static final String GET_MY_SHEET_NAME = FULL_SERVER_PATH + "/mySheetName";
 
+
+    public static final String NEWER_VERSION__ERROR_MESSAGE = "there is a newer version" +
+            " of this sheet\nPress the " +
+            "UpdateSheet button inorder to ";
+
+    public static final String CANT_UPDATE_CELL_NEWER_VERSION_MESSAGE =  NEWER_VERSION__ERROR_MESSAGE + "update cells";
+
+    public static final String CANT_ADD_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "add ranges";
+    public static final String CANT_DELETE_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "delete ranges";
 
 
 

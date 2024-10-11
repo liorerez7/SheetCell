@@ -3,21 +3,17 @@ package Controller.Main;
 import Controller.Customize.CustomizeController;
 import Controller.DashboardScreen.DashboardController;
 import Controller.Grid.GridController;
-import Controller.HttpUtility.Constants;
+import Utility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
 import Controller.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
-import CoreParts.api.SheetManager;
-import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
 import DtoComponents.DtoCell;
 import DtoComponents.DtoContainerData;
 import DtoComponents.DtoSheetCell;
-import EngineManager.Engine;
 import Main.sheetCellApp;
 import com.google.gson.reflect.TypeToken;
-import expression.impl.stringFunction.Str;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -244,8 +240,7 @@ public class MainController implements Closeable {
     public void updateCell(String text, String newValue) {
 
         if(model.getNewerVersionOfSheetProperty().getValue()){
-            Platform.runLater(() -> createErrorPopup("there is a newer version of this sheet\nPress the " +
-                    "UpdateSheet button inorder to update cells ", "Error"));
+            Platform.runLater(() -> createErrorPopup(Constants.CANT_UPDATE_CELL_NEWER_VERSION_MESSAGE, "Error"));
             return;
         }
 
@@ -314,8 +309,7 @@ public class MainController implements Closeable {
     public void rangeAddClicked() {
 
         if(model.getNewerVersionOfSheetProperty().getValue()){
-            Platform.runLater(() -> createErrorPopup("there is a newer version of this sheet\nPress the " +
-                    "UpdateSheet button inorder to add range ", "Error"));
+            Platform.runLater(() -> createErrorPopup(Constants.CANT_ADD_RANGE_NEWER_VERSION_MESSAGE, "Error"));
             return;
         }
 
@@ -367,8 +361,7 @@ public class MainController implements Closeable {
     public void rangeDeleteClicked() {
 
         if(model.getNewerVersionOfSheetProperty().getValue()){
-            Platform.runLater(() -> createErrorPopup("there is a newer version of this sheet\nPress the " +
-                    "UpdateSheet button inorder to delete range ", "Error"));
+            Platform.runLater(() -> createErrorPopup(Constants.CANT_DELETE_RANGE_NEWER_VERSION_MESSAGE, "Error"));
             return;
         }
 

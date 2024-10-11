@@ -40,7 +40,7 @@
 package Main;
 
 import Controller.DashboardScreen.DashboardController;
-import Controller.HttpUtility.Constants;
+import Utility.Constants;
 import Controller.Main.MainController;
 import Controller.LoginScreen.LoginController;
 

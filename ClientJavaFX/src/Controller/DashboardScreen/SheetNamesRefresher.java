@@ -1,6 +1,6 @@
 package Controller.DashboardScreen;
 
-import Controller.HttpUtility.Constants;
+import Utility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
 import javafx.application.Platform;
 import okhttp3.Call;

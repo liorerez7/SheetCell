@@ -1,6 +1,6 @@
 package Controller.LoginScreen;
 
-import Controller.HttpUtility.Constants;
+import Utility.Constants;
 import Controller.Main.MainController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

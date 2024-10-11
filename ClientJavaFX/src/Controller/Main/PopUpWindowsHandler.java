@@ -1,7 +1,7 @@
 package Controller.Main;
 
 import Controller.Grid.GridController;
-import Controller.HttpUtility.Constants;
+import Utility.Constants;
 import Controller.HttpUtility.HttpRequestManager;
 import Controller.JavaFXUtility.FilterGridData;
 import Controller.JavaFXUtility.RangeStringsData;
