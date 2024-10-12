@@ -39,9 +39,7 @@ public class SheetNamesRefresher extends TimerTask {
                     Set<String> sheetNames = Constants.GSON_INSTANCE.fromJson(sheetNamesAsJson, Set.class);
                     Platform.runLater(() -> sheetNamesConsumer.accept(sheetNames));
                 } else {
-//                    String errorMessageAsJson = response.body().string();
-//                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
-//                    Platform.runLater(() -> errorHandler.accept(error));
+
                 }
             }
         });

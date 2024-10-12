@@ -39,7 +39,6 @@ public class LoginController {
     private final StringProperty errorMessageProperty = new SimpleStringProperty();
 
 
-
     @FXML
     public void initialize() {
         errorMessageLabel.textProperty().bind(errorMessageProperty);
@@ -86,6 +85,7 @@ public class LoginController {
                     );
                 } else {
                     Platform.runLater(() -> {
+                        mainController.setUserName(userName);
                         mainController.showDashBoardScreen(userName);
                         //mainController.showMainAppScreen();
                         System.out.println("Login successful");
@@ -104,16 +104,3 @@ public class LoginController {
     }
 }
 
-
-
-
-
-//
-//
-//    private void userNameKeyTyped(KeyEvent event) {
-//        errorMessageProperty.set("");
-//    }
-//
-//    private void quitButtonClicked(ActionEvent e) {
-//        Platform.exit();
-//    }

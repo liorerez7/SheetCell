@@ -3,6 +3,7 @@ package Controller.DashboardScreen;
 import Utility.Constants;
 import Utility.HttpUtility.HttpRequestManager;
 import Controller.Main.MainController;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -16,12 +17,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import loginPage.users.PermissionLine;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class DashboardController {
@@ -38,8 +41,18 @@ public class DashboardController {
     @FXML
     private TableColumn<StringProperty, String> filePathColumn;
 
+    // Permission table columns
     @FXML
-    private TableView<?> permissionsTable;
+    private TableView<PermissionRow> permissionsTable;
+
+    @FXML
+    private TableColumn<PermissionRow, String> usernameColumn;
+
+    @FXML
+    private TableColumn<PermissionRow, String> permissionStatusColumn;
+
+    @FXML
+    private TableColumn<PermissionRow, String> approvedByOwnerColumn;
 
     @FXML
     private Button viewSheetButton;
@@ -57,21 +70,35 @@ public class DashboardController {
     // List to hold the file paths and sheet names
     private ObservableList<StringProperty> fileEntries;
 
+    private ObservableList<PermissionRow> permissionEntries;
+
     private Set<String> sheetNames = new HashSet<>();
     private Timer timer;
+    private List<PermissionLine> currentPermissions = new ArrayList<>();
+
 
     @FXML
     public void initialize() {
-        // Initialize the ObservableList
+        // Initialize the ObservableList for file entries
         fileEntries = FXCollections.observableArrayList();
+        // Initialize the ObservableList for permission entries
+        permissionEntries = FXCollections.observableArrayList();
 
         // Set up the column to display the file paths
         filePathColumn.setCellValueFactory(cellData -> cellData.getValue());
 
-        // Bind the ObservableList to the TableView
+        // Set up columns for permissions table
+        usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
+        permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
+        approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
+
+        // Bind the ObservableLists to the TableViews
         availableSheetsTable.setItems(fileEntries);
+        permissionsTable.setItems(permissionEntries);
 
         availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 
         // Disable the "View Sheet" button if no row is selected
         viewSheetButton.setDisable(true);
@@ -79,6 +106,10 @@ public class DashboardController {
         // Add a listener to enable the button when a row is selected
         availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             viewSheetButton.setDisable(newSelection == null);
+            if (newSelection != null) {
+                String sheetName = newSelection.getValue();
+                updatePermissionTableForSheet(sheetName);
+            }
         });
 
         // Start the refresher
@@ -162,45 +193,148 @@ public class DashboardController {
         }
     }
 
-//    public void addAllSheetNames(Set<String> sheetNames) {
-//        fileEntries.clear();
-//        this.sheetNames.clear();
-//        sheetNames.forEach(this::addFilePathToTable);
-//    }
+    public void addAllSheetNames(Set<String> sheetNames) {
+        // Get the currently selected item (if any)
+        StringProperty selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();
+        String selectedSheetName = (selectedEntry != null) ? selectedEntry.getValue() : null;
 
-public void addAllSheetNames(Set<String> sheetNames) {
-    // Get the currently selected item (if any)
-    StringProperty selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();
-    String selectedSheetName = (selectedEntry != null) ? selectedEntry.getValue() : null;
+        // Clear and update the file entries
+        fileEntries.clear();
+        this.sheetNames.clear();
+        sheetNames.forEach(this::addFilePathToTable);
 
-    // Clear and update the file entries
-    fileEntries.clear();
-    this.sheetNames.clear();
-    sheetNames.forEach(this::addFilePathToTable);
-
-    // Restore the selection if the previously selected item still exists
-    if (selectedSheetName != null) {
-        for (StringProperty entry : fileEntries) {
-            if (entry.getValue().equals(selectedSheetName)) {
-                availableSheetsTable.getSelectionModel().select(entry);
-                viewSheetButton.setDisable(false); // Enable the button if a valid selection is restored
-                return;
+        // Restore the selection if the previously selected item still exists
+        if (selectedSheetName != null) {
+            for (StringProperty entry : fileEntries) {
+                if (entry.getValue().equals(selectedSheetName)) {
+                    availableSheetsTable.getSelectionModel().select(entry);
+                    viewSheetButton.setDisable(false); // Enable the button if a valid selection is restored
+                    return;
+                }
             }
         }
+
+        viewSheetButton.setDisable(true);
     }
 
-    // If the previously selected item does not exist, keep the button disabled
-    viewSheetButton.setDisable(true);
-}
+    // Add and remove lines from the permissions table
+    public void addLine(String username, String permissionStatus, String isApproved) {
+        PermissionRow newRow = new PermissionRow(username, permissionStatus, isApproved);
+        permissionEntries.add(newRow);
+    }
+
+    public void removeLine(String username) {
+        permissionEntries.removeIf(row -> row.getUsername().equals(username));
+    }
+
+//    // Update the permission table when a sheet is selected
+//    private void updatePermissionTableForSheet(String sheetName) {
+//        // Clear current table data
+//        permissionEntries.clear();
+//        Map<String, String> params = new HashMap<>();
+//        params.put("sheetName", sheetName);
+//
+//        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_PERMISSIONS_FOR_SHEET, params, new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Platform.runLater(() -> mainController.createErrorPopup("Failed to get permissions for sheet", "Error"));
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                if (!response.isSuccessful()) {
+//                    String errorMessageAsJson = response.body().string();
+//                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+//                    Platform.runLater(() -> mainController.createErrorPopup(error, "Error"));
+//                }
+//                String permissionsAsJson = response.body().string();
+//                Type permissionListType = new TypeToken<List<PermissionLine>>() {}.getType();
+//                List<PermissionLine> permissions = Constants.GSON_INSTANCE.fromJson(permissionsAsJson, permissionListType);
+//
+//                permissions.forEach(permission -> {
+//                    String username = permission.getUserName();
+//                    String permissionStatus = permission.getPermissionStatus().toString();
+//                    String isApproved = permission.isApprovedByOwner() ? "Yes" : "No";
+//                    Platform.runLater(() -> addLine(username, permissionStatus, isApproved));
+//                });
+//            }
+//        });
+//    }
 
 
-    // Placeholder for the Request Permission Button action
+    private void updatePermissionTableForSheet(String sheetName) {
+        Map<String, String> params = new HashMap<>();
+        params.put("sheetName", sheetName);
+
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_PERMISSIONS_FOR_SHEET, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> mainController.createErrorPopup("Failed to get permissions for sheet", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    String errorMessageAsJson = response.body().string();
+                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                    Platform.runLater(() -> mainController.createErrorPopup(error, "Error"));
+                    return;
+                }
+
+                String permissionsAsJson = response.body().string();
+                Type permissionListType = new TypeToken<List<PermissionLine>>() {}.getType();
+                List<PermissionLine> newPermissions = Constants.GSON_INSTANCE.fromJson(permissionsAsJson, permissionListType);
+
+                // Check if the new permissions are different from the current ones
+                if (!arePermissionsEqual(currentPermissions, newPermissions)) {
+                    // If they are different, update the table
+                    Platform.runLater(() -> {
+                        // Clear the current table data
+                        permissionEntries.clear();
+
+                        // Add the new permission entries
+                        newPermissions.forEach(permission -> {
+                            String username = permission.getUserName();
+                            String permissionStatus = permission.getPermissionStatus().toString();
+                            String isApproved = permission.isApprovedByOwner() ? "Yes" : "No";
+                            addLine(username, permissionStatus, isApproved);
+                        });
+
+                        // Update the current permissions stored
+                        currentPermissions.clear();
+                        currentPermissions.addAll(newPermissions);
+                    });
+                }
+            }
+        });
+    }
+
+    // Helper method to compare two lists of PermissionLine objects
+    private boolean arePermissionsEqual(List<PermissionLine> oldPermissions, List<PermissionLine> newPermissions) {
+        if (oldPermissions.size() != newPermissions.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < oldPermissions.size(); i++) {
+            PermissionLine oldPerm = oldPermissions.get(i);
+            PermissionLine newPerm = newPermissions.get(i);
+
+            if (!oldPerm.getUserName().equals(newPerm.getUserName()) ||
+                    !oldPerm.getPermissionStatus().equals(newPerm.getPermissionStatus()) ||
+                    oldPerm.isApprovedByOwner() != newPerm.isApprovedByOwner()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     @FXML
     private void onRequestPermissionButtonClicked(ActionEvent event) {
         // Logic to request permission will go here
     }
 
-    // Placeholder for the Ack/Deny Permission Button action
     @FXML
     private void onAskDenyPermissionButtonClicked(ActionEvent event) {
         // Logic to acknowledge or deny permission request will go here
@@ -225,5 +359,33 @@ public void addAllSheetNames(Set<String> sheetNames) {
                 addAllSheetNames(sheetNames);
             }
         });
+    }
+
+    public static class PermissionRow {
+        private final StringProperty username;
+        private final StringProperty permissionStatus;
+        private final StringProperty approvedByOwner;
+
+        public PermissionRow(String username, String permissionStatus, String approvedByOwner) {
+            this.username = new SimpleStringProperty(username);
+            this.permissionStatus = new SimpleStringProperty(permissionStatus);
+            this.approvedByOwner = new SimpleStringProperty(approvedByOwner);
+        }
+
+        public StringProperty usernameProperty() {
+            return username;
+        }
+
+        public StringProperty permissionStatusProperty() {
+            return permissionStatus;
+        }
+
+        public StringProperty approvedByOwnerProperty() {
+            return approvedByOwner;
+        }
+
+        public String getUsername() {
+            return username.get();
+        }
     }
 }

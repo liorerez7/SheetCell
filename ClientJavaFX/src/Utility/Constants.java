@@ -49,6 +49,8 @@ public class Constants {
     public static final String GET_ALL_SHEET_NAMES = FULL_SERVER_PATH + "/allSheetNames";
     public static final String GET_IS_SHEET_UPDATED = FULL_SERVER_PATH + "/isSheetUpdated";
     public static final String GET_MY_SHEET_NAME = FULL_SERVER_PATH + "/mySheetName";
+    public static final String GET_PERMISSIONS_FOR_SHEET = FULL_SERVER_PATH + "/permissionsForSheet";
+
 
 
     public static final String NEWER_VERSION__ERROR_MESSAGE = "there is a newer version" +

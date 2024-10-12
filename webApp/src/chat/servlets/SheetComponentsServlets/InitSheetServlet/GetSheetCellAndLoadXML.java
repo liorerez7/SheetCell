@@ -12,6 +12,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import loginPage.users.PermissionManager;
+import loginPage.users.PermissionStatus;
+import loginPage.users.UserManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +27,8 @@ public class GetSheetCellAndLoadXML extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         Engine engine = ServletUtils.getEngineManager(getServletContext());
+        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
+        String userName = SessionUtils.getUsername(request);
 
         Part filePart = null;
         try {
@@ -40,10 +45,18 @@ public class GetSheetCellAndLoadXML extends HttpServlet {
         try (InputStream fileContent = filePart.getInputStream()) {
             SheetManager sheetManager = engine.getSheetCell(fileContent);
             String sheetName = sheetManager.getSheetCell().getSheetName();
+
+            synchronized (permissionManager) {
+                permissionManager.addPermission(sheetName, userName, PermissionStatus.OWNER, true);
+                permissionManager.newSheetCreated(sheetName);
+            }
+
             String sheetNameAsJson = Constants.GSON_INSTANCE.toJson(sheetName);
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write(sheetNameAsJson);
+
         } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_CONFLICT);
             String errorMessage = ServletUtils.extractErrorMessage(e);
             String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);

@@ -55,6 +55,10 @@
         <servlet-name>GetRangeServlet</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.GetRangeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetPermissionsForSheet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.GetPermissionsForSheet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
@@ -108,6 +112,10 @@
     <servlet-mapping>
         <servlet-name>LoginShortResponseServlet</servlet-name>
         <url-pattern>/loginShortResponse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetPermissionsForSheet</servlet-name>
+        <url-pattern>/permissionsForSheet</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>chat.servlets.AppContextListener</listener-class>

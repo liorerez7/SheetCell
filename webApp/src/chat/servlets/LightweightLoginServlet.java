@@ -6,6 +6,7 @@ import chat.utils.SessionUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import loginPage.users.PermissionManager;
 import loginPage.users.UserManager;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class LightweightLoginServlet extends HttpServlet {
 
         String usernameFromSession = SessionUtils.getUsername(request);
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
+        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
 
 
 
@@ -58,6 +60,8 @@ public class LightweightLoginServlet extends HttpServlet {
                     else {
                         //add the new user to the users list
                         userManager.addUser(usernameFromParameter);
+                        permissionManager.newUserNameLoggedIn(usernameFromParameter);
+
                         //set the username in a session so it will be available on each request
                         //the true parameter means that if a session object does not exists yet
                         //create a new one

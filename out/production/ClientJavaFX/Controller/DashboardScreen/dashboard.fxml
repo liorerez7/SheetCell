@@ -27,7 +27,9 @@
                 </TableView>
                 <TableView fx:id="permissionsTable" prefHeight="200" style="-fx-border-color: #dcdcdc; -fx-border-radius: 5px;">
                     <columns>
-                        <TableColumn prefWidth="246.0" text="Permissions" />
+                        <TableColumn fx:id="usernameColumn" prefWidth="100.0" text="Username" />
+                        <TableColumn fx:id="permissionStatusColumn" prefWidth="100.0" text="Permission Status" />
+                        <TableColumn fx:id="approvedByOwnerColumn" prefWidth="100.0" text="Approved by Owner" />
                     </columns>
                 </TableView>
             </VBox>

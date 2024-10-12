@@ -93,6 +93,7 @@ public class MainController implements Closeable {
     private Timer timer;
     private DtoSheetCell dtoSheetCellAsDataParameter;
     private String sheetName;
+    private String userName;
 
 
 
@@ -862,5 +863,9 @@ public class MainController implements Closeable {
 
     public void setNewerVersionOfSheetProperty(boolean b) {
         model.setNewerVersionOfSheet(b);
+    }
+
+    public void setUserName(String userName){
+        this.userName = userName;
     }
 }
