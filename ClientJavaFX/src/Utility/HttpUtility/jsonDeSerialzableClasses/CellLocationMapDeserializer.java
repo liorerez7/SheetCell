@@ -1,4 +1,4 @@
-package Controller.HttpUtility.jsonDeSerialzableClasses;
+package Utility.HttpUtility.jsonDeSerialzableClasses;
 
 
 import com.google.gson.*;

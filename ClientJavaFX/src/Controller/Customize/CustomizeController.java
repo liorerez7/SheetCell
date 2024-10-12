@@ -1,7 +1,7 @@
 package Controller.Customize;
 
 import Controller.Main.MainController;
-import Controller.JavaFXUtility.Utilies;
+import Utility.JavaFXUtility.Utilies;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

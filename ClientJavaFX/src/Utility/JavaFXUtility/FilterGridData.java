@@ -1,4 +1,4 @@
-package Controller.JavaFXUtility;
+package Utility.JavaFXUtility;
 
 public class FilterGridData extends BaseRangeData {
     private String columnsToFilterBy;

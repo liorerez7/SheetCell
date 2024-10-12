@@ -1,7 +1,7 @@
 package Controller.DashboardScreen;
 
 import Utility.Constants;
-import Controller.HttpUtility.HttpRequestManager;
+import Utility.HttpUtility.HttpRequestManager;
 import Controller.Main.MainController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

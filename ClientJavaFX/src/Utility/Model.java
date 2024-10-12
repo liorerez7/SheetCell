@@ -1,6 +1,6 @@
-package Controller.Main;
+package Utility;
 
-import Controller.JavaFXUtility.StringParser;
+import Utility.JavaFXUtility.StringParser;
 
 import DtoComponents.DtoCell;
 import DtoComponents.DtoSheetCell;
@@ -30,7 +30,7 @@ public class Model {
     private BooleanProperty isNewerVersionOfSheet;
 
 
-    Model(DtoSheetCell sheetCell) {
+    public Model(DtoSheetCell sheetCell) {
         this.sheetCell = sheetCell;
 
         isCellLabelClicked = new SimpleBooleanProperty(false);

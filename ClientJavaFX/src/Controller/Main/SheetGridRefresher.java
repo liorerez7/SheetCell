@@ -1,7 +1,7 @@
 package Controller.Main;
 
 import Utility.Constants;
-import Controller.HttpUtility.HttpRequestManager;
+import Utility.HttpUtility.HttpRequestManager;
 import javafx.application.Platform;
 import okhttp3.Call;
 import okhttp3.Callback;

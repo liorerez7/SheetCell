@@ -1,4 +1,4 @@
-package Controller.JavaFXUtility;
+package Utility.JavaFXUtility;
 
 public class BaseRangeData {
     protected String range;

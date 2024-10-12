@@ -1,4 +1,4 @@
-package Controller.JavaFXUtility;
+package Utility.JavaFXUtility;
 
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -50,15 +50,6 @@ public class Utilies {
     public static void setMenuButtonTextColor(MenuButton menuButton, Color color) {
         // Set the text color for the MenuButton button
         menuButton.setStyle("-fx-text-fill: " + toHexString(color) + ";");
-
-        // Get the skin of the MenuButton to access the items
-//        MenuButtonSkin skin = (MenuButtonSkin) menuButton.getSkin();
-//        if (skin != null) {
-//            for (MenuItem menuItem : menuButton.getItems()) {
-//                // Customize each MenuItem to set the text color
-//                menuItem.setStyle("-fx-text-fill: " + toHexString(color) + ";");
-//            }
-//        }
     }
 
     // Helper method to convert Color to Hex String

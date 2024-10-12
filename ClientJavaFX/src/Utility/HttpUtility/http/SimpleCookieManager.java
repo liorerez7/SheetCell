@@ -1,4 +1,4 @@
-package Controller.HttpUtility.http;
+package Utility.HttpUtility.http;
 
 import okhttp3.Cookie;
 import okhttp3.CookieJar;

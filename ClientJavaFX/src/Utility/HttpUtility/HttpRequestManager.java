@@ -1,11 +1,11 @@
-package Controller.HttpUtility;
+package Utility.HttpUtility;
 
 import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import Controller.HttpUtility.http.HttpClientUtil;
+import Utility.HttpUtility.http.HttpClientUtil;
 
 public class HttpRequestManager {
 

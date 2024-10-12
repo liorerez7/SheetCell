@@ -2,7 +2,7 @@
 package Controller.Grid;
 
 import Controller.Main.MainController;
-import Controller.JavaFXUtility.StringParser;
+import Utility.JavaFXUtility.StringParser;
 
 import DtoComponents.DtoCell;
 import DtoComponents.DtoContainerData;

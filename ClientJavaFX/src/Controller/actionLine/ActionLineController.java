@@ -1,7 +1,7 @@
 package Controller.actionLine;
 
 import Controller.Main.MainController;
-import Controller.JavaFXUtility.Utilies;
+import Utility.JavaFXUtility.Utilies;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

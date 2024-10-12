@@ -1,4 +1,4 @@
-package Controller.Main;
+package Utility;
 
 import Controller.Customize.CustomizeController;
 import javafx.scene.layout.Pane;

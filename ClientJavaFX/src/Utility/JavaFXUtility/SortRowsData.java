@@ -1,4 +1,4 @@
-package Controller.JavaFXUtility;
+package Utility.JavaFXUtility;
 
 public class SortRowsData extends BaseRangeData {
     private String columnsToSortBy;

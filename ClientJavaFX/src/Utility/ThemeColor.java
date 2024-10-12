@@ -1,4 +1,4 @@
-package Controller.Main;
+package Utility;
 
 public enum ThemeColor {
     CLASSIC,

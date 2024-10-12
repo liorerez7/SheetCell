@@ -4,7 +4,7 @@ import Controller.Customize.CustomizeController;
 import Controller.DashboardScreen.DashboardController;
 import Controller.Grid.GridController;
 import Utility.Constants;
-import Controller.HttpUtility.HttpRequestManager;
+import Utility.HttpUtility.HttpRequestManager;
 import Controller.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
 import Controller.Ranges.RangesController;
@@ -13,6 +13,9 @@ import DtoComponents.DtoCell;
 import DtoComponents.DtoContainerData;
 import DtoComponents.DtoSheetCell;
 import Main.sheetCellApp;
+import Utility.JavaFXUtility.*;
+import Utility.Model;
+import Utility.ThemeManager;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -89,7 +92,8 @@ public class MainController implements Closeable {
     private DashboardController dashController;
     private Timer timer;
     private DtoSheetCell dtoSheetCellAsDataParameter;
-//    private DtoCell dtoCell;
+    private String sheetName;
+
 
 
     public void setStage(Stage stage) {
@@ -511,7 +515,6 @@ public class MainController implements Closeable {
         });
     }
 
-
     private void createFilterGridPopUpp(DtoContainerData filteredSheetCell) {
         popUpWindowsHandler.openFilterGridPopUp(filteredSheetCell, gridScrollerController);
     }
@@ -776,6 +779,7 @@ public class MainController implements Closeable {
 
     public void updateCurrentGridSheet(String sheetName) {
 
+        this.sheetName = sheetName;
         Map<String,String> params = new HashMap<>();
         params.put("sheetName",sheetName);
 
@@ -789,8 +793,6 @@ public class MainController implements Closeable {
             }
 
             if(dtoSheetCellAsDataParameter == null){
-//                fetchDtoSheetCellAsync();
-//                startSheetNamesRefresher();
                 fetchDtoSheetCellAsync(() -> {
                     if (dtoSheetCellAsDataParameter != null) {
                         startSheetNamesRefresher();
@@ -806,23 +808,34 @@ public class MainController implements Closeable {
 
     public void updateCurrentGridSheet() {
 
-        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_MY_SHEET_NAME, new HashMap<>(), new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> createErrorPopup("Failed to get sheet name", "Error"));
-            }
+        //TODO: i think that sheetName can never be null because the first method that is being called when entring the
+        // the sheet screen is the method: updateCurrentGridSheet(String sheetName) and it is being called with the sheetName
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String sheetName = response.body().string();
-                    //String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
-                    updateCurrentGridSheet(sheetName);
-                } else {
-                    Platform.runLater(() -> createErrorPopup("Failed to get sheet name", "Error"));
-                }
-            }
-        });
+//        if(sheetName == null){
+//            HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_MY_SHEET_NAME, new HashMap<>(), new Callback() {
+//                @Override
+//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                    Platform.runLater(() -> createErrorPopup("Failed to get sheet name", "Error"));
+//                }
+//
+//                @Override
+//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                    if (response.isSuccessful()) {
+//                        String sheetNamee = response.body().string();
+//                        sheetName = sheetNamee;
+//                        updateCurrentGridSheet(sheetNamee);
+//                    } else {
+//                        Platform.runLater(() -> createErrorPopup("Failed to get sheet name", "Error"));
+//                    }
+//                }
+//            });
+//        }
+//        else {
+//            updateCurrentGridSheet(sheetName);
+//        }
+
+        updateCurrentGridSheet(sheetName);
+
     }
 
 

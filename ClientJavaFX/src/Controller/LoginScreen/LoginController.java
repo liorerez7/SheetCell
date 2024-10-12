@@ -15,7 +15,7 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-import Controller.HttpUtility.http.HttpClientUtil;
+import Utility.HttpUtility.http.HttpClientUtil;
 
 import java.io.IOException;
 

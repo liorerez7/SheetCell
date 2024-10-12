@@ -1,9 +1,10 @@
 package Utility;
 
-import Controller.HttpUtility.jsonDeSerialzableClasses.*;
-
 import DtoComponents.DtoContainerData;
 import DtoComponents.DtoSheetCell;
+import Utility.HttpUtility.jsonDeSerialzableClasses.CellLocationMapDeserializer;
+import Utility.HttpUtility.jsonDeSerialzableClasses.DtoContainerDataDeserializer;
+import Utility.HttpUtility.jsonDeSerialzableClasses.DtoSheetCellDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
