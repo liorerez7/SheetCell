@@ -5,7 +5,7 @@ import Controller.DashboardScreen.DashboardController;
 import Controller.Grid.GridController;
 import Utility.Constants;
 import Utility.HttpUtility.HttpRequestManager;
-import Controller.JavaFXUtility.*;
+import Utility.JavaFXUtility.*;
 import Controller.MenuBar.HeaderController;
 import Controller.Ranges.RangesController;
 import Controller.actionLine.ActionLineController;
