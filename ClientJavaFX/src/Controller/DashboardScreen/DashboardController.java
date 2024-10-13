@@ -88,8 +88,6 @@ public class DashboardController {
         currentUserName = userName;
     }
 
-//
-
     @FXML
     public void initialize() {
         // Initialize the ObservableList for file entries

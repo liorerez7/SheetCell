@@ -8,6 +8,7 @@
           <element id="module-output" name="webApp" />
           <element id="module-output" name="Engine" />
           <element id="module-output" name="GeneratedClasses" />
+          <element id="module-output" name="DtoComponents" />
         </element>
         <element id="directory" name="lib">
           <element id="file-copy" path="$PROJECT_DIR$/../../../JAXB/jaxb-ri-4.0.5/jaxb-ri/mod/jaxb-jxc.jar" />
