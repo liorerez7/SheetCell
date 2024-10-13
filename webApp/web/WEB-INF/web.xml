@@ -56,8 +56,24 @@
         <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.GetRangeServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>GetPermissionsForSheet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.GetPermissionsForSheet</servlet-class>
+        <servlet-name>GetPermissionLinesForSheet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.GetPermissionLinesForSheet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetMyPermissionForSheet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.GetMyPermissionForSheet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RequestPermissionServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.RequestPermissionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateResponsePermissionServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.UpdateResponsePermissionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResponsePermissionServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.ResponsePermissionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -114,8 +130,24 @@
         <url-pattern>/loginShortResponse</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>GetPermissionsForSheet</servlet-name>
-        <url-pattern>/permissionsForSheet</url-pattern>
+        <servlet-name>GetPermissionLinesForSheet</servlet-name>
+        <url-pattern>/permissionLinesForSheet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestPermissionServlet</servlet-name>
+        <url-pattern>/requestPermission</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResponsePermissionServlet</servlet-name>
+        <url-pattern>/myResponsePermission</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateResponsePermissionServlet</servlet-name>
+        <url-pattern>/updateResponsePermission</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetMyPermissionForSheet</servlet-name>
+        <url-pattern>/myPermissionForSheet</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>chat.servlets.AppContextListener</listener-class>

@@ -95,6 +95,7 @@ public class MainController implements Closeable {
     private DtoSheetCell dtoSheetCellAsDataParameter;
     private String sheetName;
     private String userName;
+    private PermissionStatus permissionStatus;
 
 
 
@@ -143,9 +144,9 @@ public class MainController implements Closeable {
         try {
             try (Response uploadFileResponse = HttpRequestManager.sendFileSync(Constants.INIT_SHEET_CELL_ENDPOINT, xmlFile)) {
                 if (uploadFileResponse.isSuccessful()) {
-                    String sheetNameAsJson = uploadFileResponse.body().string();
-                    String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
-                    dashController.addFilePathToTable(userName, sheetName, "10x10", PermissionStatus.OWNER.toString());
+                    // sheetNameAsJson = uploadFileResponse.body().string();
+                    //String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
+//                    dashController.addFilePathToTable(userName, sheetName, "10x10", PermissionStatus.OWNER.toString());
                 } else {
                     // Handle error response from the server
                     String errorMessageAsJson = uploadFileResponse.body().string(); // Get the error message sent by the server
@@ -810,32 +811,13 @@ public class MainController implements Closeable {
 
     public void updateCurrentGridSheet() {
 
-        //TODO: i think that sheetName can never be null because the first method that is being called when entring the
-        // the sheet screen is the method: updateCurrentGridSheet(String sheetName) and it is being called with the sheetName
+        updateCurrentGridSheet(sheetName);
 
-//        if(sheetName == null){
-//            HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_MY_SHEET_NAME, new HashMap<>(), new Callback() {
-//                @Override
-//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                    Platform.runLater(() -> createErrorPopup("Failed to get sheet name", "Error"));
-//                }
-//
-//                @Override
-//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                    if (response.isSuccessful()) {
-//                        String sheetNamee = response.body().string();
-//                        sheetName = sheetNamee;
-//                        updateCurrentGridSheet(sheetNamee);
-//                    } else {
-//                        Platform.runLater(() -> createErrorPopup("Failed to get sheet name", "Error"));
-//                    }
-//                }
-//            });
-//        }
-//        else {
-//            updateCurrentGridSheet(sheetName);
-//        }
+    }
 
+    public void updateCurrentGridSheet(String sheetName, PermissionStatus permissionStatus) {
+
+        this.permissionStatus = permissionStatus;
         updateCurrentGridSheet(sheetName);
 
     }

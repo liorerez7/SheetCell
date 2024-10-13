@@ -1,5 +1,7 @@
 package loginPage.users;
 
+import java.util.Objects;
+
 public class PermissionLine {
 
     private String userName;
@@ -34,5 +36,20 @@ public class PermissionLine {
 
     public void setPermissionStatus(PermissionStatus permissionStatus) {
         this.permissionStatus = permissionStatus;
+    }
+
+    //implement equals and hashcode
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PermissionLine that = (PermissionLine) o;
+        return approvedByOwner == that.approvedByOwner && Objects.equals(userName, that.userName) && permissionStatus == that.permissionStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName, permissionStatus, approvedByOwner);
     }
 }

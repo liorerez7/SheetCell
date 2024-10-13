@@ -1,5 +1,6 @@
 package chat.servlets;
 
+import EngineManager.Engine;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import chat.utils.SessionUtils;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import loginPage.users.PermissionManager;
+import loginPage.users.SheetInfosManager;
 import loginPage.users.UserManager;
 
 import java.io.IOException;
@@ -20,8 +22,13 @@ public class LightweightLoginServlet extends HttpServlet {
         response.setContentType("text/plain;charset=UTF-8");
 
         String usernameFromSession = SessionUtils.getUsername(request);
-        UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
+        Engine engine = ServletUtils.getEngineManager(getServletContext());
+        UserManager userManager = engine.getUserManager();
+        PermissionManager permissionManager = engine.getPermissionManager();
+        SheetInfosManager sheetInfosManager = engine.getSheetInfosManager();
+
+//        UserManager userManager = ServletUtils.getUserManager(getServletContext());
+//        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
 
 
 
@@ -60,7 +67,8 @@ public class LightweightLoginServlet extends HttpServlet {
                     else {
                         //add the new user to the users list
                         userManager.addUser(usernameFromParameter);
-                        permissionManager.newUserNameLoggedIn(usernameFromParameter);
+                        //permissionManager.newUserNameLoggedIn(usernameFromParameter);
+                        sheetInfosManager.newUserLoggedIn(usernameFromParameter);
 
                         //set the username in a session so it will be available on each request
                         //the true parameter means that if a session object does not exists yet

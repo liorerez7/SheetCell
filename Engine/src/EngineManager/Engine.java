@@ -6,6 +6,7 @@ import DtoComponents.DtoCell;
 import DtoComponents.DtoSheetCell;
 import DtoComponents.DtoSheetInfoLine;
 import loginPage.users.PermissionManager;
+import loginPage.users.SheetInfosManager;
 import loginPage.users.UserManager;
 import smallParts.CellLocation;
 
@@ -18,7 +19,7 @@ public class Engine {
     private final Set<String> sheetNames = new HashSet<>();
     private final UserManager userManager = new UserManager();
     private final PermissionManager permissionManager = new PermissionManager(userManager);
-
+    private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager);
 
     public synchronized SheetManager getSheetCell(InputStream sheetInputStream) {
 
@@ -30,6 +31,8 @@ public class Engine {
                 return sheetCells.get(currentSheetName);
             } else {
                 sheetNames.add(currentSheetName);
+                String sheetSize = sheetManager.getSheetCell().getSheetSize();
+                sheetInfosManager.AddSheet(currentSheetName, sheetSize);
                 sheetCells.put(currentSheetName, sheetManager);
                 return sheetManager;
             }
@@ -70,17 +73,7 @@ public class Engine {
         return sheetNames;
     }
 
-    public Set<DtoSheetInfoLine> getSheetInfos(String userName) {
-        Set<DtoSheetInfoLine> sheetInfos  = new HashSet<>();
-//        for (String sheetName : sheetNames) {
-//            SheetManagerImpl sheetManager = sheetCells.get(sheetName);
-//            DtoSheetCell sheetCell = sheetManager.getSheetCell();
-//            String ownerName = sheetCell.getOwnerName();
-//            String size = sheetCell.getSheetSize();
-//            String permissionStatus = PermissionManager.getPermissionStatus();
-//            DtoSheetInfoLine sheetInfo = new DtoSheetInfoLine(ownerName, sheetName, size, permissionStatus);
-//            sheetInfos.add(sheetInfo);
-//        }
-        return sheetInfos;
+    public SheetInfosManager getSheetInfosManager() {
+        return sheetInfosManager;
     }
 }

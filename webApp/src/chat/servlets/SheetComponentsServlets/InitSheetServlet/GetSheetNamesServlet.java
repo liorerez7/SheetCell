@@ -21,14 +21,26 @@ public class GetSheetNamesServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
+
+        String userName = (String) request.getSession(false).getAttribute(Constants.USERNAME);
+
+
+
         try{
             Engine engine = ServletUtils.getEngineManager(getServletContext());
-            //Set<DtoSheetInfoLine> sheetInfos = engine.getSheetInfos();
+            Set<DtoSheetInfoLine> sheetInfos = engine.getSheetInfosManager().getSheetInfos(userName);
+            String sheetInfosAsJson = Constants.GSON_INSTANCE.toJson(sheetInfos);
 
-            Set<String> sheetNames = engine.getSheetNames();
-            String sheetNamesAsJson = Constants.GSON_INSTANCE.toJson(sheetNames);
+            //Set<String> sheetNames = engine.getSheetNames();
+            //String sheetNamesAsJson = Constants.GSON_INSTANCE.toJson(sheetNames);
+
+            if(sheetInfos == null){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
             PrintWriter out = response.getWriter();
-            out.print(sheetNamesAsJson);
+            out.print(sheetInfosAsJson);
             out.flush();
         }catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -37,9 +49,6 @@ public class GetSheetNamesServlet extends HttpServlet {
             response.getWriter().write(errorMessageAsJson);
             response.getWriter().flush();
         }
-
-
-
     }
 
 }

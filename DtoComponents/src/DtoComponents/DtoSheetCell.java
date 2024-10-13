@@ -27,6 +27,7 @@ public class DtoSheetCell {
     private int currentNumberOfCols;
     private int currentCellLength;
     private int currentCellWidth;
+    private String sheetSize = "10x10";
 
     // Constructor to populate DtoSheetCell from SheetCellImp
     public DtoSheetCell(SheetCell sheetCellImp) {
@@ -64,7 +65,8 @@ public class DtoSheetCell {
 
     public DtoSheetCell(Map<CellLocation,EffectiveValue> sheetCell, Map<String, List<CellLocation>> ranges,
                         String name, int versionNumber, int currentNumberOfRows,
-                        int currentNumberOfCols, int currentCellLength, int currentCellWidth, Map<String,DtoCell> cellIdToDtoCell) {
+                        int currentNumberOfCols, int currentCellLength,
+                        int currentCellWidth, Map<String,DtoCell> cellIdToDtoCell) {
 
         this.sheetCell = sheetCell;
         this.ranges = ranges;
@@ -97,7 +99,6 @@ public class DtoSheetCell {
             sheetCellChanges = sheetCell.getVersions().get(requestedVersion);
         }
     }
-
 
     public Map<CellLocation, EffectiveValue> getViewSheetCell() {
         return sheetCell;
@@ -243,6 +244,10 @@ public class DtoSheetCell {
 
     public Map<String, DtoCell> getCellIdToDtoCell() {
         return cellIdToDtoCell;
+    }
+
+    public String getSheetSize() {
+        return sheetSize;
     }
 
 //    public Map<Integer, Map<CellLocation, EffectiveValue>> getVersionToCellsChanges() {

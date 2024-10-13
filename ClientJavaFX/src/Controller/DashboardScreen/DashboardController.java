@@ -12,13 +12,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import loginPage.users.PermissionLine;
+import Utility.PermissionStatus;
+import loginPage.users.RequestPermission;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -27,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class DashboardController {
 
@@ -82,6 +87,7 @@ public class DashboardController {
     private Set<String> sheetNames = new HashSet<>();
     private Timer timer;
     private List<PermissionLine> currentPermissions = new ArrayList<>();
+    private Set<DtoSheetInfoLine> currentSheetInfoLines = new HashSet<>();
     private String currentUserName;
 
     public void setUserName(String userName) {
@@ -138,7 +144,7 @@ public class DashboardController {
 
     public void startSheetNamesRefresher() {
         SheetNamesRefresher refresher = new SheetNamesRefresher(
-                this::addAllSheetNames,
+                this::addAllSheetInfoLines,
                 this::displayError);
         timer = new Timer();
         timer.schedule(refresher, 0, 2000); //
@@ -203,48 +209,72 @@ public class DashboardController {
 
         if (selectedEntry != null) {
             String sheetName = selectedEntry.getSheetName();
-            mainController.updateCurrentGridSheet(sheetName);
-            mainController.showMainAppScreen();
-        }
-    }
 
-    public void addAllSheetNames(Set<String> sheetNames) {
+            Map<String,String> params = new HashMap<>();
+            params.put("sheetName", sheetName);
 
-        // Get the currently selected item (if any)
-        SheetInfo selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();  // Updated to SheetInfo
-        String selectedSheetName = (selectedEntry != null) ? selectedEntry.getSheetName() : null;
+            try(Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_MY_PERMISSION_FOR_SHEET, params)) {
+                String permissionStatus = response.body().string();
+                PermissionStatus status = null;
 
-        // Clear and update the file entries
-        fileEntries.clear();
-        this.sheetNames.clear();
-        sheetNames.forEach(sheetName -> addFilePathToTable("Owner", sheetName, "Size", "Permission"));  // You can modify the parameters based on your logic
-
-        // Restore the selection if the previously selected item still exists
-        if (selectedSheetName != null) {
-            for (SheetInfo entry : fileEntries) {
-                if (entry.getSheetName().equals(selectedSheetName)) {
-                    availableSheetsTable.getSelectionModel().select(entry);
-                    viewSheetButton.setDisable(false); // Enable the button if a valid selection is restored
-                    return;
+                switch (permissionStatus) {
+                    case "WRITER":
+                        status = PermissionStatus.WRITER;
+                        break;
+                    case "READER":
+                        status = PermissionStatus.READER;
+                        break;
+                    case "NONE":
+                        status = PermissionStatus.NONE;
+                        break;
                 }
-            }
-        }
 
-        viewSheetButton.setDisable(true);
+                switch (status) {
+                    case WRITER:
+                        mainController.updateCurrentGridSheet(sheetName, status);
+                        mainController.showMainAppScreen();
+                        break;
+                    case READER:
+                        mainController.updateCurrentGridSheet(sheetName, status);
+                        mainController.showMainAppScreen();
+                        break;
+                    case NONE:
+                        mainController.createErrorPopup("You do not have permission to view this sheet", "Error");
+                        break;
+                }
+
+            } catch (IOException e) {
+                mainController.createErrorPopup("Failed to get permission for sheet", "Error");
+            }
+
+//            mainController.updateCurrentGridSheet(sheetName);
+//            mainController.showMainAppScreen();
+        }
     }
 
-
-    public void addAllSheetInfoLines(Set<DtoSheetInfoLine> sheetInfoLines) {
-
+    public void addAllSheetInfoLines(Set<DtoSheetInfoLine> newSheetInfoLines) {
         Platform.runLater(() -> {
-            // Clear the current table data
-            fileEntries.clear();
-            this.sheetNames.clear();
+            // Check if the new sheet info lines are different from the current ones
+            if (!newSheetInfoLines.equals(currentSheetInfoLines)) {
+                // Clear the current table data
+                fileEntries.clear();
+                this.sheetNames.clear();
 
-            sheetInfoLines.forEach(sheetInfoLine -> addFilePathToTable(sheetInfoLine.getOwnerName()
-                    ,sheetInfoLine.getSheetName(), sheetInfoLine.getSheetSize(), sheetInfoLine.getMyPermission()));
+                // Add the new sheet info lines
+                newSheetInfoLines.forEach(sheetInfoLine -> addFilePathToTable(
+                        sheetInfoLine.getOwnerName(),
+                        sheetInfoLine.getSheetName(),
+                        sheetInfoLine.getSheetSize(),
+                        sheetInfoLine.getMyPermission())
+                );
 
-            viewSheetButton.setDisable(true);
+                // Disable the view button since the new sheet info lines are added
+                viewSheetButton.setDisable(true);
+
+                // Update the current sheet info lines
+                currentSheetInfoLines.clear();
+                currentSheetInfoLines.addAll(newSheetInfoLines);
+            }
         });
     }
 
@@ -262,7 +292,7 @@ public class DashboardController {
         Map<String, String> params = new HashMap<>();
         params.put("sheetName", sheetName);
 
-        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_PERMISSIONS_FOR_SHEET, params, new Callback() {
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_PERMISSIONS_LINES_FOR_SHEET, params, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> mainController.createErrorPopup("Failed to get permissions for sheet", "Error"));
@@ -283,25 +313,29 @@ public class DashboardController {
 
                 // Check if the new permissions are different from the current ones
                 if (!arePermissionsEqual(currentPermissions, newPermissions)) {
-                    // If they are different, update the table
-                    Platform.runLater(() -> {
-                        // Clear the current table data
-                        permissionEntries.clear();
-
-                        // Add the new permission entries
-                        newPermissions.forEach(permission -> {
-                            String username = permission.getUserName();
-                            String permissionStatus = permission.getPermissionStatus().toString();
-                            String isApproved = permission.isApprovedByOwner() ? "Yes" : "No";
-                            addLine(username, permissionStatus, isApproved);
-                        });
-
-                        // Update the current permissions stored
-                        currentPermissions.clear();
-                        currentPermissions.addAll(newPermissions);
-                    });
+                    // If they are different, refresh the table
+                    refreshPermissionTable(newPermissions);
                 }
             }
+        });
+    }
+
+    private void refreshPermissionTable(List<PermissionLine> newPermissions) {
+        Platform.runLater(() -> {
+            // Clear the current table data
+            permissionEntries.clear();
+
+            // Add the new permission entries
+            newPermissions.forEach(permission -> {
+                String username = permission.getUserName();
+                String permissionStatus = permission.getPermissionStatus().toString();
+                String isApproved = permission.isApprovedByOwner() ? "Yes" : "No";
+                addLine(username, permissionStatus, isApproved);
+            });
+
+            // Update the current permissions stored
+//            currentPermissions.clear();
+//            currentPermissions.addAll(newPermissions);
         });
     }
 
@@ -327,12 +361,259 @@ public class DashboardController {
 
     @FXML
     private void onRequestPermissionButtonClicked(ActionEvent event) {
-        // Logic to request permission will go here
+        fetchSheetNamesAndShowPopup();
+    }
+
+    private void fetchSheetNamesAndShowPopup() {
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_ALL_SHEET_NAMES, new HashMap<>(), new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    // Handle failure by showing a popup or logging
+                    showErrorPopup("Failed to retrieve sheet names.");
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (response.isSuccessful()) {
+                        String sheetInfosAsJson = response.body().string();
+
+                        Type permissionListType = new TypeToken<Set<DtoSheetInfoLine>>() {}.getType();
+                        Set<DtoSheetInfoLine> sheetInfos = Constants.GSON_INSTANCE.fromJson(sheetInfosAsJson, permissionListType);
+
+                        Set<String> sheetNamesThatImNotTheOwner = new HashSet<>();
+                        sheetInfos.forEach(sheetInfo -> {
+                            if (!sheetInfo.getOwnerName().equals(username))
+                            {
+                                sheetNamesThatImNotTheOwner.add(sheetInfo.getSheetName());
+                            }
+                        });
+
+                        // Show the popup with sheet names on the JavaFX Application thread
+                        Platform.runLater(() -> showSheetAndPermissionSelectionPopup(sheetNamesThatImNotTheOwner));
+                    } else {
+                        Platform.runLater(() -> showErrorPopup("Failed to retrieve sheet names."));
+                    }
+                } finally {
+                    response.close();
+                }
+            }
+        });
+    }
+
+    private void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
+        // Create a new stage for the popup window
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Select Sheet and Permission");
+
+        // Create a ListView for selecting the sheet
+        ListView<String> sheetListView = new ListView<>();
+        sheetListView.getItems().addAll(sheetNames);
+        sheetListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        // Create a ChoiceBox for selecting the permission (Writer/Reader)
+        ChoiceBox<String> permissionChoiceBox = new ChoiceBox<>();
+        permissionChoiceBox.getItems().addAll("Writer", "Reader");
+
+        // Initially, disable the submit button until a sheet and permission are selected
+        Button submitButton = new Button("Submit");
+        submitButton.setDisable(true);
+
+        // Add listeners to enable the submit button once both a sheet and permission are selected
+        sheetListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            checkSubmitButtonState(sheetListView, permissionChoiceBox, submitButton);
+        });
+        permissionChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            checkSubmitButtonState(sheetListView, permissionChoiceBox, submitButton);
+        });
+
+        // Handle submission of the selected sheet and permission
+        submitButton.setOnAction(e -> {
+            String selectedSheet = sheetListView.getSelectionModel().getSelectedItem();
+            String selectedPermission = permissionChoiceBox.getSelectionModel().getSelectedItem();
+            if (selectedSheet != null && selectedPermission != null) {
+                // Handle the selected sheet and permission (e.g., send to the server)
+                System.out.println("Selected sheet: " + selectedSheet + ", Permission: " + selectedPermission);
+
+                Map<String,String> params = new HashMap<>();
+                params.put("sheetName", selectedSheet);
+                params.put("permission", selectedPermission);
+
+                HttpRequestManager.sendPostRequestASyncWithCallBack(Constants.REQUEST_PERMISSION, params, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Platform.runLater(() -> showErrorPopup("Failed to request permission."));
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if (!response.isSuccessful()) {
+                            String errorMessageAsJson = response.body().string();
+                            String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                            Platform.runLater(() -> showErrorPopup(error));
+                        }
+                    }
+                });
+
+                popupStage.close();
+            }
+        });
+
+        // Layout: VBox to hold the ListView, ChoiceBox, and Button
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(new Label("Select a sheet:"), sheetListView,
+                new Label("Select permission:"), permissionChoiceBox, submitButton);
+        layout.setPadding(new Insets(10));
+        layout.setAlignment(Pos.CENTER);
+
+        // Add layout to a Scene and show the stage
+        Scene scene = new Scene(layout, 300, 400);
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+
+    // Helper method to check if the submit button should be enabled
+    private void checkSubmitButtonState(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Button submitButton) {
+        String selectedSheet = sheetListView.getSelectionModel().getSelectedItem();
+        String selectedPermission = permissionChoiceBox.getSelectionModel().getSelectedItem();
+        submitButton.setDisable(selectedSheet == null || selectedPermission == null);
+    }
+
+    private void showErrorPopup(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
     private void onAskDenyPermissionButtonClicked(ActionEvent event) {
-        // Logic to acknowledge or deny permission request will go here
+        CompletableFuture.runAsync(() -> {
+
+            try (Response myRequestsResponse = HttpRequestManager.sendGetRequestSync(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
+
+                String myRequestsAsJson = myRequestsResponse.body().string();
+                Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
+                List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
+
+                Platform.runLater(() -> {
+                    showAskDenyPopup(myRequests);
+                });
+
+            } catch (IOException e) {
+                Platform.runLater(() -> showErrorPopup("Failed to retrieve requests."));
+            }
+        });
+    }
+
+    private void showAskDenyPopup(List<RequestPermission> myRequests) {
+        // Create a new stage for the popup window
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Request Permissions");
+
+        // Create a VBox to hold all requests
+        VBox requestList = new VBox(10);
+        requestList.setPadding(new Insets(10));
+
+        // Iterate through the requests and create UI components for each one
+        for (RequestPermission request : myRequests) {
+
+            if(!request.getWasAnswered()) {
+
+
+                HBox requestBox = new HBox(10);
+
+                // Create labels for the request details
+                Label usernameLabel = new Label("User: " + request.getUserNameForRequest());
+                Label sheetNameLabel = new Label("Sheet: " + request.getSheetNameForRequest());
+                Label statusLabel = new Label("Status: " + request.getPermissionStatusForRequest());
+
+                // Create Approve and Deny buttons
+                Button approveButton = new Button("Approve");
+                Button denyButton = new Button("Deny");
+
+                // Add action handlers for Approve and Deny buttons
+                approveButton.setOnAction(e -> handlePermissionResponse(request, true, popupStage));
+                denyButton.setOnAction(e -> handlePermissionResponse(request, false, popupStage));
+
+                // Add all elements to the request box
+                requestBox.getChildren().addAll(usernameLabel, sheetNameLabel, statusLabel, approveButton, denyButton);
+
+                // Add the request box to the list of requests
+                requestList.getChildren().add(requestBox);
+            }
+        }
+
+        // Add the requestList to a ScrollPane to handle long lists
+        ScrollPane scrollPane = new ScrollPane(requestList);
+        scrollPane.setFitToWidth(true);
+
+        // Create a VBox to hold the scrollPane
+        VBox layout = new VBox(10, scrollPane);
+        layout.setPadding(new Insets(10));
+        layout.setAlignment(Pos.CENTER);
+
+        // Add layout to a Scene and show the stage
+        Scene scene = new Scene(layout, 400, 500);
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+
+    private void handlePermissionResponse(RequestPermission request, boolean isApproved, Stage popupStage) {
+
+        String action = isApproved ? "Approved" : "Denied";
+        Map<String,String> params = new HashMap<>();
+
+        params.put("sheetName", request.getSheetNameForRequest());
+        params.put("userName", request.getUserNameForRequest());
+        params.put("permission", request.getPermissionStatusForRequest().toString());
+        params.put("isApproved", String.valueOf(isApproved));
+
+        try (Response responseForSendingResponseStatus = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_RESPONSE_PERMISSION, params)) {
+
+            // Force refresh the permission table regardless of equality check
+            forceRefreshPermissionTableForSheet(request.getSheetNameForRequest());
+
+            if (!responseForSendingResponseStatus.isSuccessful()) {
+                System.out.println("Failed to send response status");
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        popupStage.close();
+    }
+
+    private void forceRefreshPermissionTableForSheet(String sheetName) {
+        Map<String, String> params = new HashMap<>();
+        params.put("sheetName", sheetName);
+
+        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_PERMISSIONS_LINES_FOR_SHEET, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> mainController.createErrorPopup("Failed to get permissions for sheet", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    String errorMessageAsJson = response.body().string();
+                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                    Platform.runLater(() -> mainController.createErrorPopup(error, "Error"));
+                    return;
+                }
+
+                String permissionsAsJson = response.body().string();
+                Type permissionListType = new TypeToken<List<PermissionLine>>() {}.getType();
+                List<PermissionLine> newPermissions = Constants.GSON_INSTANCE.fromJson(permissionsAsJson, permissionListType);
+
+                // Always refresh the table
+                refreshPermissionTable(newPermissions);
+            }
+        });
     }
 
     public static class PermissionRow {
@@ -423,90 +704,16 @@ public class DashboardController {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-//@FXML
-//    public void initialize() {
-//        // Initialize the ObservableList for file entries
-//        fileEntries = FXCollections.observableArrayList();
+//    public void addAllSheetInfoLines(Set<DtoSheetInfoLine> sheetInfoLines) {
 //
-//        // Set up the columns for the available sheets table
-//        ownerColumn.setCellValueFactory(cellData -> cellData.getValue().ownerNameProperty());
-//        sheetNameColumn.setCellValueFactory(cellData -> cellData.getValue().sheetNameProperty());
-//        sizeColumn.setCellValueFactory(cellData -> cellData.getValue().sizeProperty());
-//        myPermissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
+//        Platform.runLater(() -> {
+//            // Clear the current table data
+//            fileEntries.clear();
+//            this.sheetNames.clear();
 //
-//        // Bind the ObservableList to the TableView
-//        availableSheetsTable.setItems(fileEntries);
-//        availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-//        permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//            sheetInfoLines.forEach(sheetInfoLine -> addFilePathToTable(sheetInfoLine.getOwnerName()
+//                    ,sheetInfoLine.getSheetName(), sheetInfoLine.getSheetSize(), sheetInfoLine.getMyPermission()));
 //
-//        // Disable the "View Sheet" button if no row is selected
-//        viewSheetButton.setDisable(true);
-//
-//        // Add a listener to enable the button when a row is selected
-//        availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-//            viewSheetButton.setDisable(newSelection == null);
-//            if (newSelection != null) {
-//                String sheetName = newSelection.getSheetName();
-//                updatePermissionTableForSheet(sheetName);
-//            }
+//            viewSheetButton.setDisable(true);
 //        });
-//
-//        // Start the refresher
-//        startSheetNamesRefresher();
-//    }
-
-
-
-
-
-
-
-//    @FXML
-//    public void initialize() {
-//        // Initialize the ObservableList for file entries
-//        fileEntries = FXCollections.observableArrayList();
-//        // Initialize the ObservableList for permission entries
-//        permissionEntries = FXCollections.observableArrayList();
-//
-//        // Set up the column to display the file paths
-//        filePathColumn.setCellValueFactory(cellData -> cellData.getValue());
-//
-//        // Set up columns for permissions table
-//        usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
-//        permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
-//        approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
-//
-//        // Bind the ObservableLists to the TableViews
-//        availableSheetsTable.setItems(fileEntries);
-//        permissionsTable.setItems(permissionEntries);
-//
-//        availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-//        permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-//
-//
-//        // Disable the "View Sheet" button if no row is selected
-//        viewSheetButton.setDisable(true);
-//
-//        // Add a listener to enable the button when a row is selected
-//        availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-//            viewSheetButton.setDisable(newSelection == null);
-//            if (newSelection != null) {
-//                String sheetName = newSelection.getValue();
-//                updatePermissionTableForSheet(sheetName);
-//            }
-//        });
-//
-//        // Start the refresher
-//        startSheetNamesRefresher();
 //    }

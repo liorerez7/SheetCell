@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import loginPage.users.PermissionManager;
 import loginPage.users.PermissionStatus;
-import loginPage.users.UserManager;
+import loginPage.users.SheetInfosManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,10 @@ public class GetSheetCellAndLoadXML extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         Engine engine = ServletUtils.getEngineManager(getServletContext());
-        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
+        PermissionManager permissionManager = engine.getPermissionManager();
+        SheetInfosManager sheetInfosManager = engine.getSheetInfosManager();
+
+//        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
         String userName = SessionUtils.getUsername(request);
 
         Part filePart = null;
@@ -48,7 +51,8 @@ public class GetSheetCellAndLoadXML extends HttpServlet {
 
             synchronized (permissionManager) {
                 permissionManager.addPermission(sheetName, userName, PermissionStatus.OWNER, true);
-                permissionManager.newSheetCreated(sheetName);
+                sheetInfosManager.newSheetWasCreated(sheetName, userName, sheetManager.getSheetCell().getSheetSize(), PermissionStatus.OWNER.toString());
+               // permissionManager.newSheetCreated(sheetName);
             }
 
             String sheetNameAsJson = Constants.GSON_INSTANCE.toJson(sheetName);
