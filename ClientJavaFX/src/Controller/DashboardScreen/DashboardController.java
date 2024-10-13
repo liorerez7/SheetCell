@@ -96,11 +96,18 @@ public class DashboardController {
         // Initialize the ObservableList for permission entries
         permissionEntries = FXCollections.observableArrayList(); // Initialize permissionEntries here
 
+
         // Set up the columns for the available sheets table
         ownerColumn.setCellValueFactory(cellData -> cellData.getValue().ownerNameProperty());
         sheetNameColumn.setCellValueFactory(cellData -> cellData.getValue().sheetNameProperty());
         sizeColumn.setCellValueFactory(cellData -> cellData.getValue().sizeProperty());
         myPermissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
+
+
+        // Set up the columns for the permissions table (new)
+        usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
+        permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
+        approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
 
         // Bind the ObservableLists to the TableViews
         availableSheetsTable.setItems(fileEntries);
@@ -353,6 +360,14 @@ public class DashboardController {
 
         public String getUsername() {
             return username.get();
+        }
+
+        public String getPermissionStatus() {
+            return permissionStatus.get();
+        }
+
+        public String getApprovedByOwner() {
+            return approvedByOwner.get();
         }
     }
 
