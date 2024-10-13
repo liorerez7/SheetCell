@@ -22,7 +22,10 @@
             <VBox spacing="10" style="-fx-padding: 10;">
                 <TableView fx:id="availableSheetsTable" prefHeight="200" style="-fx-border-color: #dcdcdc; -fx-border-radius: 5px;">
                     <columns>
-                        <TableColumn fx:id="filePathColumn" prefWidth="246.0" text="Available Sheets" />
+                        <TableColumn fx:id="ownerColumn" prefWidth="100.0" text="Owner" />
+                        <TableColumn fx:id="sheetNameColumn" prefWidth="100.0" text="Sheet Name" />
+                        <TableColumn fx:id="sizeColumn" prefWidth="100.0" text="Size" />
+                        <TableColumn fx:id="myPermissionStatusColumn" prefWidth="100.0" text="My Permission Status" />
                     </columns>
                 </TableView>
                 <TableView fx:id="permissionsTable" prefHeight="200" style="-fx-border-color: #dcdcdc; -fx-border-radius: 5px;">

@@ -1,5 +1,6 @@
 package Controller.DashboardScreen;
 
+import DtoComponents.DtoSheetInfoLine;
 import Utility.Constants;
 import Utility.HttpUtility.HttpRequestManager;
 import Controller.Main.MainController;
@@ -36,10 +37,16 @@ public class DashboardController {
     private Label usernameLabel;
 
     @FXML
-    private TableView<StringProperty> availableSheetsTable;
+    private TableView<SheetInfo> availableSheetsTable;  // Updated to SheetInfo
 
     @FXML
-    private TableColumn<StringProperty, String> filePathColumn;
+    private TableColumn<SheetInfo, String> ownerColumn;  // Updated to SheetInfo
+    @FXML
+    private TableColumn<SheetInfo, String> sheetNameColumn;  // Updated to SheetInfo
+    @FXML
+    private TableColumn<SheetInfo, String> sizeColumn;  // Updated to SheetInfo
+    @FXML
+    private TableColumn<SheetInfo, String> myPermissionStatusColumn;  // Updated to SheetInfo
 
     // Permission table columns
     @FXML
@@ -68,37 +75,34 @@ public class DashboardController {
     private String username;
 
     // List to hold the file paths and sheet names
-    private ObservableList<StringProperty> fileEntries;
+    private ObservableList<SheetInfo> fileEntries;  // Updated to SheetInfo
 
     private ObservableList<PermissionRow> permissionEntries;
 
     private Set<String> sheetNames = new HashSet<>();
     private Timer timer;
     private List<PermissionLine> currentPermissions = new ArrayList<>();
+    private String currentUserName;
 
+    public void setUserName(String userName) {
+        currentUserName = userName;
+    }
 
     @FXML
     public void initialize() {
         // Initialize the ObservableList for file entries
         fileEntries = FXCollections.observableArrayList();
-        // Initialize the ObservableList for permission entries
-        permissionEntries = FXCollections.observableArrayList();
 
-        // Set up the column to display the file paths
-        filePathColumn.setCellValueFactory(cellData -> cellData.getValue());
+        // Set up the columns for the available sheets table
+        ownerColumn.setCellValueFactory(cellData -> cellData.getValue().ownerNameProperty());
+        sheetNameColumn.setCellValueFactory(cellData -> cellData.getValue().sheetNameProperty());
+        sizeColumn.setCellValueFactory(cellData -> cellData.getValue().sizeProperty());
+        myPermissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
 
-        // Set up columns for permissions table
-        usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
-        permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
-        approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
-
-        // Bind the ObservableLists to the TableViews
+        // Bind the ObservableList to the TableView
         availableSheetsTable.setItems(fileEntries);
-        permissionsTable.setItems(permissionEntries);
-
         availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
 
         // Disable the "View Sheet" button if no row is selected
         viewSheetButton.setDisable(true);
@@ -107,13 +111,17 @@ public class DashboardController {
         availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             viewSheetButton.setDisable(newSelection == null);
             if (newSelection != null) {
-                String sheetName = newSelection.getValue();
+                String sheetName = newSelection.getSheetName();
                 updatePermissionTableForSheet(sheetName);
             }
         });
 
         // Start the refresher
         startSheetNamesRefresher();
+    }
+
+    public void addFilePathToTable(String ownerName, String sheetName, String size, String permissionStatus) {
+        fileEntries.add(new SheetInfo(ownerName, sheetName, size, permissionStatus));
     }
 
     public void startSheetNamesRefresher() {
@@ -167,11 +175,6 @@ public class DashboardController {
         return fileChooser.showOpenDialog(stage);
     }
 
-    public void addFilePathToTable(String sheetName) {
-        sheetNames.add(sheetName);
-        fileEntries.add(new SimpleStringProperty(sheetName));
-    }
-
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
@@ -184,29 +187,30 @@ public class DashboardController {
     @FXML
     private void onViewSheetButtonClicked(ActionEvent event) {
         // Get the selected entry (formatted string) from the table
-        StringProperty selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();
+        SheetInfo selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();  // Updated to SheetInfo
 
         if (selectedEntry != null) {
-            String sheetName = selectedEntry.getValue();
+            String sheetName = selectedEntry.getSheetName();
             mainController.updateCurrentGridSheet(sheetName);
             mainController.showMainAppScreen();
         }
     }
 
     public void addAllSheetNames(Set<String> sheetNames) {
+
         // Get the currently selected item (if any)
-        StringProperty selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();
-        String selectedSheetName = (selectedEntry != null) ? selectedEntry.getValue() : null;
+        SheetInfo selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();  // Updated to SheetInfo
+        String selectedSheetName = (selectedEntry != null) ? selectedEntry.getSheetName() : null;
 
         // Clear and update the file entries
         fileEntries.clear();
         this.sheetNames.clear();
-        sheetNames.forEach(this::addFilePathToTable);
+        sheetNames.forEach(sheetName -> addFilePathToTable("Owner", sheetName, "Size", "Permission"));  // You can modify the parameters based on your logic
 
         // Restore the selection if the previously selected item still exists
         if (selectedSheetName != null) {
-            for (StringProperty entry : fileEntries) {
-                if (entry.getValue().equals(selectedSheetName)) {
+            for (SheetInfo entry : fileEntries) {
+                if (entry.getSheetName().equals(selectedSheetName)) {
                     availableSheetsTable.getSelectionModel().select(entry);
                     viewSheetButton.setDisable(false); // Enable the button if a valid selection is restored
                     return;
@@ -215,6 +219,21 @@ public class DashboardController {
         }
 
         viewSheetButton.setDisable(true);
+    }
+
+
+    public void addAllSheetInfoLines(Set<DtoSheetInfoLine> sheetInfoLines) {
+
+        Platform.runLater(() -> {
+            // Clear the current table data
+            fileEntries.clear();
+            this.sheetNames.clear();
+
+            sheetInfoLines.forEach(sheetInfoLine -> addFilePathToTable(sheetInfoLine.getOwnerName()
+                    ,sheetInfoLine.getSheetName(), sheetInfoLine.getSheetSize(), sheetInfoLine.getMyPermission()));
+
+            viewSheetButton.setDisable(true);
+        });
     }
 
     // Add and remove lines from the permissions table
@@ -226,41 +245,6 @@ public class DashboardController {
     public void removeLine(String username) {
         permissionEntries.removeIf(row -> row.getUsername().equals(username));
     }
-
-//    // Update the permission table when a sheet is selected
-//    private void updatePermissionTableForSheet(String sheetName) {
-//        // Clear current table data
-//        permissionEntries.clear();
-//        Map<String, String> params = new HashMap<>();
-//        params.put("sheetName", sheetName);
-//
-//        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_PERMISSIONS_FOR_SHEET, params, new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Platform.runLater(() -> mainController.createErrorPopup("Failed to get permissions for sheet", "Error"));
-//            }
-//
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                if (!response.isSuccessful()) {
-//                    String errorMessageAsJson = response.body().string();
-//                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
-//                    Platform.runLater(() -> mainController.createErrorPopup(error, "Error"));
-//                }
-//                String permissionsAsJson = response.body().string();
-//                Type permissionListType = new TypeToken<List<PermissionLine>>() {}.getType();
-//                List<PermissionLine> permissions = Constants.GSON_INSTANCE.fromJson(permissionsAsJson, permissionListType);
-//
-//                permissions.forEach(permission -> {
-//                    String username = permission.getUserName();
-//                    String permissionStatus = permission.getPermissionStatus().toString();
-//                    String isApproved = permission.isApprovedByOwner() ? "Yes" : "No";
-//                    Platform.runLater(() -> addLine(username, permissionStatus, isApproved));
-//                });
-//            }
-//        });
-//    }
-
 
     private void updatePermissionTableForSheet(String sheetName) {
         Map<String, String> params = new HashMap<>();
@@ -329,7 +313,6 @@ public class DashboardController {
         return true;
     }
 
-
     @FXML
     private void onRequestPermissionButtonClicked(ActionEvent event) {
         // Logic to request permission will go here
@@ -338,27 +321,6 @@ public class DashboardController {
     @FXML
     private void onAskDenyPermissionButtonClicked(ActionEvent event) {
         // Logic to acknowledge or deny permission request will go here
-    }
-
-    public void getAllSheetNamesInSystem() {
-        HttpRequestManager.sendGetRequestASyncWithCallBack(Constants.GET_ALL_SHEET_NAMES, new HashMap<>(), new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                throw new RuntimeException("Failed to get sheet names from server");
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    String errorMessageAsJson = response.body().string();
-                    String error = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
-                    mainController.createErrorPopup(error, "Error");
-                }
-                String sheetNamesAsJson = response.body().string();
-                Set<String> sheetNames = Constants.GSON_INSTANCE.fromJson(sheetNamesAsJson, Set.class);
-                addAllSheetNames(sheetNames);
-            }
-        });
     }
 
     public static class PermissionRow {
@@ -388,4 +350,113 @@ public class DashboardController {
             return username.get();
         }
     }
+
+    public static class SheetInfo {
+
+        private final StringProperty ownerName;
+        private final StringProperty sheetName;
+        private final StringProperty size;
+        private final StringProperty permissionStatus;
+
+        public SheetInfo(String ownerName, String sheetName, String size, String permissionStatus) {
+            this.ownerName = new SimpleStringProperty(ownerName);
+            this.sheetName = new SimpleStringProperty(sheetName);
+            this.size = new SimpleStringProperty(size);
+            this.permissionStatus = new SimpleStringProperty(permissionStatus);
+        }
+
+        public StringProperty ownerNameProperty() {
+            return ownerName;
+        }
+
+        public StringProperty sheetNameProperty() {
+            return sheetName;
+        }
+
+        public StringProperty sizeProperty() {
+            return size;
+        }
+
+        public StringProperty permissionStatusProperty() {
+            return permissionStatus;
+        }
+
+        public String getMyPermission() {
+            return permissionStatus.get();
+        }
+
+        public String getOwnerName() {
+            return ownerName.get();
+        }
+
+        public String getSheetName() {
+            return sheetName.get();
+        }
+
+        public String getSheetSize() {
+            return size.get();
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    @FXML
+//    public void initialize() {
+//        // Initialize the ObservableList for file entries
+//        fileEntries = FXCollections.observableArrayList();
+//        // Initialize the ObservableList for permission entries
+//        permissionEntries = FXCollections.observableArrayList();
+//
+//        // Set up the column to display the file paths
+//        filePathColumn.setCellValueFactory(cellData -> cellData.getValue());
+//
+//        // Set up columns for permissions table
+//        usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
+//        permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
+//        approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
+//
+//        // Bind the ObservableLists to the TableViews
+//        availableSheetsTable.setItems(fileEntries);
+//        permissionsTable.setItems(permissionEntries);
+//
+//        availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//        permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//
+//
+//        // Disable the "View Sheet" button if no row is selected
+//        viewSheetButton.setDisable(true);
+//
+//        // Add a listener to enable the button when a row is selected
+//        availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+//            viewSheetButton.setDisable(newSelection == null);
+//            if (newSelection != null) {
+//                String sheetName = newSelection.getValue();
+//                updatePermissionTableForSheet(sheetName);
+//            }
+//        });
+//
+//        // Start the refresher
+//        startSheetNamesRefresher();
+//    }

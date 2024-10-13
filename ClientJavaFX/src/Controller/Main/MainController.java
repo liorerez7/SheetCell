@@ -15,6 +15,7 @@ import DtoComponents.DtoSheetCell;
 import Main.sheetCellApp;
 import Utility.JavaFXUtility.*;
 import Utility.Model;
+import Utility.PermissionStatus;
 import Utility.ThemeManager;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
@@ -144,7 +145,7 @@ public class MainController implements Closeable {
                 if (uploadFileResponse.isSuccessful()) {
                     String sheetNameAsJson = uploadFileResponse.body().string();
                     String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
-                    dashController.addFilePathToTable(sheetName);
+                    dashController.addFilePathToTable(userName, sheetName, "10x10", PermissionStatus.OWNER.toString());
                 } else {
                     // Handle error response from the server
                     String errorMessageAsJson = uploadFileResponse.body().string(); // Get the error message sent by the server
@@ -867,5 +868,6 @@ public class MainController implements Closeable {
 
     public void setUserName(String userName){
         this.userName = userName;
+        this.dashController.setUserName(userName);
     }
 }

@@ -1,5 +1,6 @@
 package Controller.LoginScreen;
 
+import Controller.DashboardScreen.DashboardController;
 import Utility.Constants;
 import Controller.Main.MainController;
 import javafx.application.Platform;
