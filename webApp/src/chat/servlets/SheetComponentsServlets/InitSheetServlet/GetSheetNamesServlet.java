@@ -1,6 +1,7 @@
 package chat.servlets.SheetComponentsServlets.InitSheetServlet;
 
 import CoreParts.api.SheetManager;
+import DtoComponents.DtoSheetInfoLine;
 import EngineManager.Engine;
 import chat.constants.Constants;
 import chat.utils.ServletUtils;
@@ -22,6 +23,8 @@ public class GetSheetNamesServlet extends HttpServlet {
 
         try{
             Engine engine = ServletUtils.getEngineManager(getServletContext());
+            //Set<DtoSheetInfoLine> sheetInfos = engine.getSheetInfos();
+
             Set<String> sheetNames = engine.getSheetNames();
             String sheetNamesAsJson = Constants.GSON_INSTANCE.toJson(sheetNames);
             PrintWriter out = response.getWriter();

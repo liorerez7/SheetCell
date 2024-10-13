@@ -88,10 +88,15 @@ public class DashboardController {
         currentUserName = userName;
     }
 
+//
+
     @FXML
     public void initialize() {
         // Initialize the ObservableList for file entries
         fileEntries = FXCollections.observableArrayList();
+
+        // Initialize the ObservableList for permission entries
+        permissionEntries = FXCollections.observableArrayList(); // Initialize permissionEntries here
 
         // Set up the columns for the available sheets table
         ownerColumn.setCellValueFactory(cellData -> cellData.getValue().ownerNameProperty());
@@ -99,8 +104,10 @@ public class DashboardController {
         sizeColumn.setCellValueFactory(cellData -> cellData.getValue().sizeProperty());
         myPermissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
 
-        // Bind the ObservableList to the TableView
+        // Bind the ObservableLists to the TableViews
         availableSheetsTable.setItems(fileEntries);
+        permissionsTable.setItems(permissionEntries); // Bind permissionEntries to the permissions table
+
         availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -414,7 +421,37 @@ public class DashboardController {
 
 
 
-
+//@FXML
+//    public void initialize() {
+//        // Initialize the ObservableList for file entries
+//        fileEntries = FXCollections.observableArrayList();
+//
+//        // Set up the columns for the available sheets table
+//        ownerColumn.setCellValueFactory(cellData -> cellData.getValue().ownerNameProperty());
+//        sheetNameColumn.setCellValueFactory(cellData -> cellData.getValue().sheetNameProperty());
+//        sizeColumn.setCellValueFactory(cellData -> cellData.getValue().sizeProperty());
+//        myPermissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
+//
+//        // Bind the ObservableList to the TableView
+//        availableSheetsTable.setItems(fileEntries);
+//        availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//        permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//
+//        // Disable the "View Sheet" button if no row is selected
+//        viewSheetButton.setDisable(true);
+//
+//        // Add a listener to enable the button when a row is selected
+//        availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+//            viewSheetButton.setDisable(newSelection == null);
+//            if (newSelection != null) {
+//                String sheetName = newSelection.getSheetName();
+//                updatePermissionTableForSheet(sheetName);
+//            }
+//        });
+//
+//        // Start the refresher
+//        startSheetNamesRefresher();
+//    }
 
 
 

@@ -4,6 +4,9 @@ import CoreParts.api.SheetManager;
 import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
 import DtoComponents.DtoCell;
 import DtoComponents.DtoSheetCell;
+import DtoComponents.DtoSheetInfoLine;
+import loginPage.users.PermissionManager;
+import loginPage.users.UserManager;
 import smallParts.CellLocation;
 
 import java.io.InputStream;
@@ -13,6 +16,8 @@ public class Engine {
 
     private final Map<String, SheetManagerImpl> sheetCells = new HashMap<>();
     private final Set<String> sheetNames = new HashSet<>();
+    private final UserManager userManager = new UserManager();
+    private final PermissionManager permissionManager = new PermissionManager(userManager);
 
 
     public synchronized SheetManager getSheetCell(InputStream sheetInputStream) {
@@ -49,23 +54,33 @@ public class Engine {
         }
     }
 
-    public synchronized void addUser(String username) {
-        sheetNames.add(username);
+    public synchronized UserManager getUserManager() {
+        return userManager;
     }
 
-    public synchronized void removeUser(String username) {
-        sheetNames.remove(username);
+    public synchronized PermissionManager getPermissionManager() {
+        return permissionManager;
     }
 
     public synchronized Set<String> getUsers() {
         return Collections.unmodifiableSet(sheetNames);
     }
 
-    public boolean isUserExists(String username) {
-        return sheetNames.contains(username);
-    }
-
     public Set<String> getSheetNames() {
         return sheetNames;
+    }
+
+    public Set<DtoSheetInfoLine> getSheetInfos(String userName) {
+        Set<DtoSheetInfoLine> sheetInfos  = new HashSet<>();
+//        for (String sheetName : sheetNames) {
+//            SheetManagerImpl sheetManager = sheetCells.get(sheetName);
+//            DtoSheetCell sheetCell = sheetManager.getSheetCell();
+//            String ownerName = sheetCell.getOwnerName();
+//            String size = sheetCell.getSheetSize();
+//            String permissionStatus = PermissionManager.getPermissionStatus();
+//            DtoSheetInfoLine sheetInfo = new DtoSheetInfoLine(ownerName, sheetName, size, permissionStatus);
+//            sheetInfos.add(sheetInfo);
+//        }
+        return sheetInfos;
     }
 }

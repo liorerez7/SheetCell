@@ -69,9 +69,6 @@ public class PermissionManager {
         }
     }
 
-
-
-
     public synchronized void removeUser(String userName) {
         for (String sheetName : sheetNameToPermissionLines.keySet()) {
             removePermission(sheetName, userName);
