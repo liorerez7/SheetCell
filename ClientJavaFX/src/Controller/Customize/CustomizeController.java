@@ -151,7 +151,8 @@ public class CustomizeController {
 
     @FXML
     void backDashBoardClicked(ActionEvent event) {
-        mainController.showDashBoardScreen("needToChange");
+        String username = mainController.getUserName();
+        mainController.showDashBoardScreen(username);
     }
 
     private String toRgbString(Color color) {

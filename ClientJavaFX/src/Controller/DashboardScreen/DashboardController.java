@@ -127,7 +127,6 @@ public class DashboardController {
 
         // Add a listener to enable the button when a row is selected
         availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            viewSheetButton.setDisable(newSelection == null);
             if (newSelection != null) {
                 String sheetName = newSelection.getSheetName();
                 updatePermissionTableForSheet(sheetName);
@@ -209,31 +208,12 @@ public class DashboardController {
 
         if (selectedEntry != null) {
             String sheetName = selectedEntry.getSheetName();
+            PermissionStatus status = fetchMyPermissionStatus(sheetName);
 
-            Map<String,String> params = new HashMap<>();
-            params.put("sheetName", sheetName);
-
-            try(Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_MY_PERMISSION_FOR_SHEET, params)) {
-                String permissionStatus = response.body().string();
-                PermissionStatus status = null;
-
-                switch (permissionStatus) {
-                    case "WRITER":
-                        status = PermissionStatus.WRITER;
-                        break;
-                    case "READER":
-                        status = PermissionStatus.READER;
-                        break;
-                    case "NONE":
-                        status = PermissionStatus.NONE;
-                        break;
-                }
-
+            if (status != null) {
                 switch (status) {
+                    case OWNER:
                     case WRITER:
-                        mainController.updateCurrentGridSheet(sheetName, status);
-                        mainController.showMainAppScreen();
-                        break;
                     case READER:
                         mainController.updateCurrentGridSheet(sheetName, status);
                         mainController.showMainAppScreen();
@@ -242,13 +222,35 @@ public class DashboardController {
                         mainController.createErrorPopup("You do not have permission to view this sheet", "Error");
                         break;
                 }
-
-            } catch (IOException e) {
-                mainController.createErrorPopup("Failed to get permission for sheet", "Error");
+            } else {
+                mainController.createErrorPopup("Failed to retrieve permission status", "Error");
             }
+        }
+    }
 
-//            mainController.updateCurrentGridSheet(sheetName);
-//            mainController.showMainAppScreen();
+    private PermissionStatus fetchMyPermissionStatus(String sheetName) {
+        Map<String,String> params = new HashMap<>();
+        params.put("sheetName", sheetName);
+
+        try (Response response = HttpRequestManager.sendGetRequestSync(Constants.GET_MY_PERMISSION_FOR_SHEET, params)) {
+            String permissionStatus = response.body().string();
+
+            switch (permissionStatus) {
+                case "OWNER":
+                    return PermissionStatus.OWNER;
+                case "WRITER":
+                    return PermissionStatus.WRITER;
+                case "READER":
+                    return PermissionStatus.READER;
+                case "NONE":
+                    return PermissionStatus.NONE;
+                default:
+                    // Handle unexpected permission status
+                    return PermissionStatus.NONE;  // Or some default value
+            }
+        } catch (IOException e) {
+            mainController.createErrorPopup("Failed to get permission for sheet", "Error");
+            return PermissionStatus.NONE;  // Returning default value on error
         }
     }
 
@@ -310,6 +312,11 @@ public class DashboardController {
                 String permissionsAsJson = response.body().string();
                 Type permissionListType = new TypeToken<List<PermissionLine>>() {}.getType();
                 List<PermissionLine> newPermissions = Constants.GSON_INSTANCE.fromJson(permissionsAsJson, permissionListType);
+
+                PermissionStatus status = fetchMyPermissionStatus(sheetName);
+                viewSheetButton.setDisable(status == PermissionStatus.NONE);
+
+
 
                 // Check if the new permissions are different from the current ones
                 if (!arePermissionsEqual(currentPermissions, newPermissions)) {
@@ -699,21 +706,3 @@ public class DashboardController {
         }
     }
 }
-
-
-
-
-
-//    public void addAllSheetInfoLines(Set<DtoSheetInfoLine> sheetInfoLines) {
-//
-//        Platform.runLater(() -> {
-//            // Clear the current table data
-//            fileEntries.clear();
-//            this.sheetNames.clear();
-//
-//            sheetInfoLines.forEach(sheetInfoLine -> addFilePathToTable(sheetInfoLine.getOwnerName()
-//                    ,sheetInfoLine.getSheetName(), sheetInfoLine.getSheetSize(), sheetInfoLine.getMyPermission()));
-//
-//            viewSheetButton.setDisable(true);
-//        });
-//    }

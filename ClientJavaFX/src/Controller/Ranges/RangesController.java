@@ -203,6 +203,21 @@ public class RangesController {
     }
 
 
+    public void disableWriterButtons() {
+        addRangeButton.disableProperty().unbind();
+        deleteRangeButton.disableProperty().unbind();
 
+        addRangeButton.setDisable(true);
+        deleteRangeButton.setDisable(true);
+    }
+
+    public void enableWriterButtons() {
+
+        deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+        addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+
+//        addRangeButton.setDisable(false);
+//        deleteRangeButton.setDisable(false);
+    }
 }
 

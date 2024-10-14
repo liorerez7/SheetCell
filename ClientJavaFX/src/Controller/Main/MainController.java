@@ -242,6 +242,14 @@ public class MainController implements Closeable {
         customizeController.loadAllColData(newDtoSheetCell.getNumberOfColumns());
         customizeController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
         themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
+
+        if(permissionStatus == PermissionStatus.READER){
+            actionLineController.disableWriterButtons();
+            rangesController.disableWriterButtons();
+        }else {
+            actionLineController.enableWriterButtons();
+            rangesController.enableWriterButtons();
+        }
     }
 
     public void updateCell(String text, String newValue) {
@@ -851,5 +859,9 @@ public class MainController implements Closeable {
     public void setUserName(String userName){
         this.userName = userName;
         this.dashController.setUserName(userName);
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

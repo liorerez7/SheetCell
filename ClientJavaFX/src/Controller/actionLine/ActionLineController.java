@@ -127,4 +127,18 @@ public class ActionLineController {
         Utilies.switchStyleClass(updateCellButton, "SunModernButton", "ModernButton", "DarkModernButton");
 
     }
+
+    public void disableWriterButtons() {
+        updateCellButton.disableProperty().unbind();
+        updateCellButton.setDisable(true);
+
+        newValueText.disableProperty().unbind();
+        newValueText.setDisable(true);
+
+    }
+
+    public void enableWriterButtons() {
+        updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
+        newValueText.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
+    }
 }
