@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import loginPage.users.PermissionManager;
-import loginPage.users.RequestPermission;
 import loginPage.users.ResponsePermission;
 import loginPage.users.SheetInfosManager;
 

@@ -1,5 +1,7 @@
 package loginPage.users;
 
+import DtoComponents.PermissionStatus;
+
 public class ResponsePermission {
 
     private String sheetNameForRequest;

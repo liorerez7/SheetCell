@@ -1,4 +1,4 @@
-package loginPage.users;
+package DtoComponents;
 
 public class RequestPermission {
 

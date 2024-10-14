@@ -1,5 +1,9 @@
 package loginPage.users;
 
+import DtoComponents.PermissionLine;
+import DtoComponents.PermissionStatus;
+import DtoComponents.RequestPermission;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

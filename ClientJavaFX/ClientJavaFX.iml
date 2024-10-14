@@ -27,6 +27,5 @@
     <orderEntry type="library" exported="" name="gson-2.1" level="project" />
     <orderEntry type="library" exported="" name="annotations-13.0" level="project" />
     <orderEntry type="module" module-name="DtoComponents" exported="" />
-    <orderEntry type="module" module-name="Engine" />
   </component>
 </module>

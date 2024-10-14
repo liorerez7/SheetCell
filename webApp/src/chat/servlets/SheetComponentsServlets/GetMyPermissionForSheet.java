@@ -6,11 +6,8 @@ import chat.utils.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import loginPage.users.PermissionLine;
 import loginPage.users.PermissionManager;
-import loginPage.users.PermissionStatus;
-
-import java.util.List;
+import DtoComponents.PermissionStatus;
 
 public class GetMyPermissionForSheet extends HttpServlet {
 

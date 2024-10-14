@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import loginPage.users.PermissionManager;
-import loginPage.users.PermissionStatus;
+import DtoComponents.PermissionStatus;
 import loginPage.users.SheetInfosManager;
 
 import java.io.IOException;

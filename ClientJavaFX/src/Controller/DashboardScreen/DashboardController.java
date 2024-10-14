@@ -1,6 +1,9 @@
 package Controller.DashboardScreen;
 
 import DtoComponents.DtoSheetInfoLine;
+import DtoComponents.PermissionLine;
+import DtoComponents.PermissionStatus;
+import DtoComponents.RequestPermission;
 import Utility.Constants;
 import Utility.HttpUtility.HttpRequestManager;
 import Controller.Main.MainController;
@@ -20,9 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import loginPage.users.PermissionLine;
-import Utility.PermissionStatus;
-import loginPage.users.RequestPermission;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;

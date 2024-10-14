@@ -5,7 +5,6 @@ import Utility.Constants;
 import Utility.HttpUtility.HttpRequestManager;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
-import loginPage.users.PermissionLine;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;

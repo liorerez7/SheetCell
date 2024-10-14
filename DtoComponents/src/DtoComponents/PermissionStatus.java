@@ -1,4 +1,4 @@
-package Utility;
+package DtoComponents;
 
 public enum PermissionStatus {
     OWNER,
