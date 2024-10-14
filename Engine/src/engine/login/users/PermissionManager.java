@@ -37,8 +37,11 @@ public class PermissionManager {
 
         // Update the current permission, removing any previous permission for the same user
         List<PermissionLine> currentPermissions = currentSheetNameToPermissionLines.get(sheetName);
-        currentPermissions.removeIf(perm -> perm.getUserName().equals(userName)); // Remove old permission
-        currentPermissions.add(permissionLine); // Add the new permission
+
+        if(approvedByOwner){
+            currentPermissions.removeIf(perm -> perm.getUserName().equals(userName)); // Remove old permission
+            currentPermissions.add(permissionLine); // Add the new permission
+        }
     }
 
     public synchronized void removePermission(String sheetName, String userName) {
@@ -50,46 +53,12 @@ public class PermissionManager {
         }
     }
 
-
-    public synchronized void addPermission(String sheetName, PermissionLine permissionLine) {
-        currentSheetNameToPermissionLines.get(sheetName).add(permissionLine);
-    }
-
     public List<PermissionLine> getPermissionStatusOfSheet(String sheetName) {
-        //return currentSheetNameToPermissionLines.get(sheetName);
         return allHistorySheetNameToPermissionLines.get(sheetName);
-    }
-
-    public synchronized void newUserNameLoggedIn(String userName) {
-        for (String sheetName : currentSheetNameToPermissionLines.keySet()) {
-            addPermission(sheetName, userName, PermissionStatus.NONE, false);
-        }
     }
 
     public Map<String, List<PermissionLine>> getCurrentSheetNameToPermissionLines() {
         return currentSheetNameToPermissionLines;
-    }
-
-    public synchronized void newSheetCreated(String sheetName) {
-
-        if (!currentSheetNameToPermissionLines.containsKey(sheetName)) {
-            currentSheetNameToPermissionLines.put(sheetName, new ArrayList<>());
-        }
-        List<PermissionLine> permissionLines = currentSheetNameToPermissionLines.get(sheetName);
-
-        // Collect new permissions in a separate list
-        List<PermissionLine> newPermissions = new ArrayList<>();
-
-        synchronized (permissionLines) {
-            for (String userName : userManager.getUsers()) {
-                boolean userExists = permissionLines.stream().anyMatch(p -> p.getUserName().equals(userName));
-                if (!userExists) {
-                    newPermissions.add(new PermissionLine(userName, PermissionStatus.NONE, false));
-                }
-            }
-            // Now add all collected new permissions
-            permissionLines.addAll(newPermissions);
-        }
     }
 
     public synchronized void removeUser(String userName) {
@@ -140,7 +109,6 @@ public class PermissionManager {
 
     public void updateOwnerResponseForRequest(String ownerName, String sheetName, String userName,
                                               PermissionStatus permissionStatus, boolean isApproved) {
-        //first we need to delete from both lists the request and response
 
         List<ResponsePermission> myResponses = ownerNameToHisResponseList.get(ownerName);
         myResponses.forEach(responsePermission -> {
@@ -160,8 +128,6 @@ public class PermissionManager {
             }
         });
 
-        //second we need to change the user permission in the sheet in first table
-
         List<PermissionLine> permissionLines = currentSheetNameToPermissionLines.get(sheetName);
         if (permissionLines != null) {
             boolean found = false;
@@ -169,10 +135,12 @@ public class PermissionManager {
             // Use a traditional for loop to check and update the permission
             for (PermissionLine permissionLine : permissionLines) {
                 if (permissionLine.getUserName().equals(userName)) {
-                    permissionLine.setPermissionStatus(permissionStatus);
-                    permissionLine.setApprovedByOwner(isApproved);
-                    found = true;
-                    break; // No need to keep looping once we found the user
+                    if(isApproved){
+                        permissionLine.setPermissionStatus(permissionStatus);
+                        permissionLine.setApprovedByOwner(isApproved);
+                        found = true;
+                        break;
+                    }
                 }
             }
 
@@ -180,7 +148,7 @@ public class PermissionManager {
             PermissionLine newPermissionLineForAllHistory = new PermissionLine(userName, permissionStatus, isApproved);
 
 
-            if (!found) {
+            if (!found && isApproved) {
                 permissionLines.add(newPermissionLine);
             }
 
@@ -198,6 +166,7 @@ public class PermissionManager {
                 }
             }
         }
+
         return PermissionStatus.NONE;
     }
 }

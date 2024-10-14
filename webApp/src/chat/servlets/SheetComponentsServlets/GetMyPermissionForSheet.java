@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import engine.login.users.PermissionManager;
 import dto.permissions.PermissionStatus;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GetMyPermissionForSheet extends HttpServlet {
 
     @Override

@@ -36,20 +36,34 @@ import java.util.stream.Collectors;
 
 public class DashboardController {
 
-    @FXML private Button loadSheetFileButton;
-    @FXML private Label usernameLabel;
-    @FXML private TableView<SheetInfo> availableSheetsTable;  // Updated to SheetInfo
-    @FXML private TableColumn<SheetInfo, String> ownerColumn;  // Updated to SheetInfo
-    @FXML private TableColumn<SheetInfo, String> sheetNameColumn;  // Updated to SheetInfo
-    @FXML private TableColumn<SheetInfo, String> sizeColumn;  // Updated to SheetInfo
-    @FXML private TableColumn<SheetInfo, String> myPermissionStatusColumn;  // Updated to SheetInfo
-    @FXML private TableView<PermissionRow> permissionsTable;
-    @FXML private TableColumn<PermissionRow, String> usernameColumn;
-    @FXML private TableColumn<PermissionRow, String> permissionStatusColumn;
-    @FXML private TableColumn<PermissionRow, String> approvedByOwnerColumn;
-    @FXML private Button viewSheetButton;
-    @FXML private Button requestPermissionButton;
-    @FXML private Button ackDenyPermissionButton;
+    @FXML
+    private Button loadSheetFileButton;
+    @FXML
+    private Label usernameLabel;
+    @FXML
+    private TableView<SheetInfo> availableSheetsTable;  // Updated to SheetInfo
+    @FXML
+    private TableColumn<SheetInfo, String> ownerColumn;  // Updated to SheetInfo
+    @FXML
+    private TableColumn<SheetInfo, String> sheetNameColumn;  // Updated to SheetInfo
+    @FXML
+    private TableColumn<SheetInfo, String> sizeColumn;  // Updated to SheetInfo
+    @FXML
+    private TableColumn<SheetInfo, String> myPermissionStatusColumn;  // Updated to SheetInfo
+    @FXML
+    private TableView<PermissionRow> permissionsTable;
+    @FXML
+    private TableColumn<PermissionRow, String> usernameColumn;
+    @FXML
+    private TableColumn<PermissionRow, String> permissionStatusColumn;
+    @FXML
+    private TableColumn<PermissionRow, String> approvedByOwnerColumn;
+    @FXML
+    private Button viewSheetButton;
+    @FXML
+    private Button requestPermissionButton;
+    @FXML
+    private Button ackDenyPermissionButton;
 
     private MainController mainController;
     private String username;
@@ -187,11 +201,11 @@ public class DashboardController {
         Map<String, String> params = Collections.singletonMap("sheetName", sheetName);
 
         try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_MY_PERMISSION_FOR_SHEET, params)) {
-            String permissionStatus = response.body().string();
-            return PermissionStatus.fromString(permissionStatus);
+            String permissionAsString = response.body().string();
+            return PermissionStatus.fromString(permissionAsString);
         } catch (IOException e) {
             mainController.createErrorPopup("Failed to get permission for sheet", "Error");
-            return PermissionStatus.NONE;
+            return null;
         }
     }
 
@@ -249,6 +263,11 @@ public class DashboardController {
 
         List<PermissionLine> newPermissions = parsePermissionsResponse(response);
         updatePermissionsTable(sheetName, newPermissions);
+        updateViewSheetButton(sheetName);
+    }
+
+    private void updateViewSheetButton(String sheetName) {
+
     }
 
     private void handlePermissionUpdateErrorResponse(Response response) throws IOException {
@@ -264,6 +283,7 @@ public class DashboardController {
 
     private void updatePermissionsTable(String sheetName, List<PermissionLine> newPermissions) {
         PermissionStatus status = fetchMyPermissionStatus(sheetName);
+
         Platform.runLater(() -> viewSheetButton.setDisable(status == PermissionStatus.NONE));
 
         if (!arePermissionsEqual(currentPermissions, newPermissions)) {
@@ -630,3 +650,5 @@ public class DashboardController {
         }
     }
 }
+
+
