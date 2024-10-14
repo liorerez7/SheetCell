@@ -28,6 +28,7 @@ public class Model {
     private BooleanProperty readingXMLSuccessProperty;
     private StringProperty cellLocationProperty;
     private BooleanProperty isNewerVersionOfSheet;
+    private StringProperty userNameProperty;
 
 
     public Model(DtoSheetCell sheetCell) {
@@ -35,6 +36,7 @@ public class Model {
 
         isCellLabelClicked = new SimpleBooleanProperty(false);
         latestUpdatedVersionProperty = new SimpleStringProperty("");
+        userNameProperty = new SimpleStringProperty("");
         originalValueLabelProperty = new SimpleStringProperty("");
         totalVersionsProperty = new SimpleStringProperty("");
         isColumnSelected = new SimpleBooleanProperty(false);
@@ -119,6 +121,8 @@ public class Model {
         if(cell != null) {
 
             latestVersion = Integer.toString(cell.getLatestVersion());
+            String username = userNameProperty.get();
+            latestVersion = latestVersion + " " + username;
         }
 
         latestUpdatedVersionProperty.set(latestVersion);
@@ -199,5 +203,13 @@ public class Model {
 
     public BooleanProperty getNewerVersionOfSheetProperty() {
         return isNewerVersionOfSheet;
+    }
+
+    public void setUserNameProperty(String userName) {
+        userNameProperty.set(userName);
+    }
+
+    public StringProperty getUserNameProperty() {
+        return userNameProperty;
     }
 }

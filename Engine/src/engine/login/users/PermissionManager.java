@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class PermissionManager {
 
-    private Map<String, List<PermissionLine>> currentSheetNameToPermissionLines = new HashMap<>();
-    private Map<String, List<PermissionLine>> allHistorySheetNameToPermissionLines = new HashMap<>();
-    private UserManager userManager;
-    private Map<String, List<RequestPermission>> userNameToHisRequestList = new HashMap<>();
-    private Map<String, List<ResponsePermission>> ownerNameToHisResponseList = new HashMap<>();
+    private final Map<String, List<PermissionLine>> currentSheetNameToPermissionLines = new HashMap<>();
+    private final Map<String, List<PermissionLine>> allHistorySheetNameToPermissionLines = new HashMap<>();
+    private final UserManager userManager;
+    private final Map<String, List<RequestPermission>> userNameToHisRequestList = new HashMap<>();
+    private final Map<String, List<ResponsePermission>> ownerNameToHisResponseList = new HashMap<>();
 
 
     public PermissionManager(UserManager userManager) {
