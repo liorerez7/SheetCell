@@ -1,9 +1,9 @@
 package chat.servlets.SheetComponentsServlets.RangeServlets;
 
-import CoreParts.api.SheetManager;
-import EngineManager.Engine;
-import chat.constants.Constants;
-import chat.utils.ServletUtils;
+import engine.core_parts.api.SheetManager;
+import engine.Engine;
+import chat.utilities.Constants;
+import chat.utilities.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,17 +1,15 @@
 package chat.servlets.SheetComponentsServlets.InitSheetServlet;
 
-import CoreParts.api.SheetManager;
-import DtoComponents.DtoSheetInfoLine;
-import EngineManager.Engine;
-import chat.constants.Constants;
-import chat.utils.ServletUtils;
+import dto.components.DtoSheetInfoLine;
+import engine.Engine;
+import chat.utilities.Constants;
+import chat.utilities.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Set;
 
 public class GetSheetNamesServlet extends HttpServlet {

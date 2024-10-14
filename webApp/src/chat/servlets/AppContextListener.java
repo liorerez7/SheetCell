@@ -1,14 +1,12 @@
 package chat.servlets;
 
-import CoreParts.api.SheetManager;
-import CoreParts.impl.InnerSystemComponents.SheetManagerImpl;
-import EngineManager.Engine;
-import chat.utils.ServletUtils;
+import engine.Engine;
+import chat.utilities.ServletUtils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
-import loginPage.users.PermissionManager;
-import loginPage.users.UserManager;
+import engine.login.users.PermissionManager;
+import engine.login.users.UserManager;
 
 public class AppContextListener implements ServletContextListener {
 

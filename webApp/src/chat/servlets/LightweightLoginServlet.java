@@ -1,19 +1,19 @@
 package chat.servlets;
 
-import EngineManager.Engine;
-import chat.constants.Constants;
-import chat.utils.ServletUtils;
-import chat.utils.SessionUtils;
+import engine.Engine;
+import chat.utilities.Constants;
+import chat.utilities.ServletUtils;
+import chat.utilities.SessionUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import loginPage.users.PermissionManager;
-import loginPage.users.SheetInfosManager;
-import loginPage.users.UserManager;
+import engine.login.users.PermissionManager;
+import engine.login.users.SheetInfosManager;
+import engine.login.users.UserManager;
 
 import java.io.IOException;
 
-import static chat.constants.Constants.USERNAME;
+import static chat.utilities.Constants.USERNAME;
 
 public class LightweightLoginServlet extends HttpServlet {
 

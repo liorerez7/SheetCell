@@ -1,6 +1,6 @@
 package chat.servlets.SheetComponentsServlets.InitSheetServlet;
 
-import chat.constants.Constants;
+import chat.utilities.Constants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

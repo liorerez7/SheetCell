@@ -1,14 +1,14 @@
 package chat.servlets.SheetComponentsServlets;
 
-import EngineManager.Engine;
-import chat.constants.Constants;
-import chat.utils.ServletUtils;
+import engine.Engine;
+import chat.utilities.Constants;
+import chat.utilities.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import loginPage.users.PermissionManager;
-import loginPage.users.ResponsePermission;
-import loginPage.users.SheetInfosManager;
+import engine.login.users.PermissionManager;
+import engine.login.users.ResponsePermission;
+import engine.login.users.SheetInfosManager;
 
 import java.io.IOException;
 import java.util.List;

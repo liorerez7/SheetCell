@@ -1,6 +1,6 @@
 package chat.servlets.SheetComponentsServlets.UpdateSeassionParams;
 
-import chat.constants.Constants;
+import chat.utilities.Constants;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

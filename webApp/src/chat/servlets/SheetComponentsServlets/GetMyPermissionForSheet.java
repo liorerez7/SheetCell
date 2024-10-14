@@ -1,13 +1,13 @@
 package chat.servlets.SheetComponentsServlets;
 
-import EngineManager.Engine;
-import chat.constants.Constants;
-import chat.utils.ServletUtils;
+import engine.Engine;
+import chat.utilities.Constants;
+import chat.utilities.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import loginPage.users.PermissionManager;
-import DtoComponents.PermissionStatus;
+import engine.login.users.PermissionManager;
+import dto.permissions.PermissionStatus;
 
 public class GetMyPermissionForSheet extends HttpServlet {
 

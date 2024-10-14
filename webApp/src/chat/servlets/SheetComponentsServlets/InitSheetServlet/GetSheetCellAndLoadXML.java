@@ -1,20 +1,20 @@
 package chat.servlets.SheetComponentsServlets.InitSheetServlet;
 
-import CoreParts.api.SheetManager;
-import DtoComponents.DtoSheetCell;
-import EngineManager.Engine;
-import chat.constants.Constants;
-import chat.utils.ServletUtils;
-import chat.utils.SessionUtils;
+import engine.core_parts.api.SheetManager;
+import dto.components.DtoSheetCell;
+import engine.Engine;
+import chat.utilities.Constants;
+import chat.utilities.ServletUtils;
+import chat.utilities.SessionUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import loginPage.users.PermissionManager;
-import DtoComponents.PermissionStatus;
-import loginPage.users.SheetInfosManager;
+import engine.login.users.PermissionManager;
+import dto.permissions.PermissionStatus;
+import engine.login.users.SheetInfosManager;
 
 import java.io.IOException;
 import java.io.InputStream;

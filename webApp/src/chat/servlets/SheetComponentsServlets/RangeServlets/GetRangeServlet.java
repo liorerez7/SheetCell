@@ -1,14 +1,14 @@
 package chat.servlets.SheetComponentsServlets.RangeServlets;
 
-import CoreParts.api.SheetManager;
+import engine.core_parts.api.SheetManager;
 
-import EngineManager.Engine;
-import chat.constants.Constants;
-import chat.utils.ServletUtils;
+import engine.Engine;
+import chat.utilities.Constants;
+import chat.utilities.ServletUtils;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import smallParts.CellLocation;
+import dto.small_parts.CellLocation;
 
 import java.io.IOException;
 import java.util.List;
