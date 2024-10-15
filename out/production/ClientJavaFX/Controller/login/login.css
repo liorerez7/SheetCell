@@ -1,16 +1,52 @@
+/* Background for the entire screen (applied to VBox instead of ScrollPane) */
+.vbox-background {
+    -fx-background-color: #f0f4f8; /* Gentle light blue-gray background */
+}
 
+/* Error label */
 .error-label {
-    -fx-text-fill: RED;
+    -fx-text-fill: #ff6b6b; /* Softer red for error messages */
     -fx-font-weight: BOLD;
     -fx-font-size: 12px;
 }
 
-.main-action-button {
-    -fx-text-fill: GREEN;
-    -fx-font-size: 20px;
+/* Welcome text animation styling */
+.welcome-text {
+    -fx-font-size: 26px;
     -fx-font-weight: BOLD;
+    -fx-text-fill: #34495e; /* Dark blue-gray for welcome text */
 }
 
-#quit-button {
-    -fx-text-fill: RED;
+/* Credits text styling */
+.credits-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: #7f8c8d; /* Light gray-blue for credits */
+}
+
+/* Login button */
+.login-button {
+    -fx-background-color: #78c4d4; /* Gentle teal for login button */
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: BOLD;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+}
+
+.login-button:pressed {
+    -fx-background-color: #5ca6b2; /* Slightly darker teal on press */
+}
+
+/* Quit button */
+.quit-button {
+    -fx-background-color: #f5a3a3; /* Softer red-pink for quit button */
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: BOLD;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+}
+
+.quit-button:pressed {
+    -fx-background-color: #e67f7f; /* Slightly darker red-pink on press */
 }

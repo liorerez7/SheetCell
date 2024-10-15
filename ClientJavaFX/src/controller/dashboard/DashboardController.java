@@ -83,6 +83,66 @@ public class DashboardController {
         setupSheetSelectionListener();
     }
 
+    @FXML
+    private void onAskDenyPermissionButtonClicked(ActionEvent event) {
+        CompletableFuture.runAsync(() -> {
+
+            try (Response myRequestsResponse = HttpRequestManager.sendGetSyncRequest(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
+
+                String myRequestsAsJson = myRequestsResponse.body().string();
+                Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
+                List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
+
+                Platform.runLater(() -> {
+                    showAskDenyPopup(myRequests);
+                });
+
+            } catch (IOException e) {
+                Platform.runLater(() -> showErrorPopup("Failed to retrieve requests."));
+            }
+        });
+    }
+
+    @FXML
+    private void onViewSheetButtonClicked(ActionEvent event) {
+        // Get the selected entry (formatted string) from the table
+        SheetInfo selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();  // Updated to SheetInfo
+
+        if (selectedEntry != null) {
+            String sheetName = selectedEntry.getSheetName();
+            PermissionStatus status = fetchMyPermissionStatus(sheetName);
+
+            if (status != null) {
+                switch (status) {
+                    case OWNER:
+                    case WRITER:
+                    case READER:
+                        mainController.updateCurrentGridSheet(sheetName, status);
+                        mainController.showMainAppScreen();
+                        break;
+                    case NONE:
+                        mainController.createErrorPopup("You do not have permission to view this sheet", "Error");
+                        break;
+                }
+            } else {
+                mainController.createErrorPopup("Failed to retrieve permission status", "Error");
+            }
+        }
+    }
+
+    @FXML
+    private void onLoadSheetFileButtonClicked(ActionEvent event) {
+        File selectedFile = openXMLFileChooser((Stage) loadSheetFileButton.getScene().getWindow());
+        if (selectedFile != null) {
+            mainController.initializeGridBasedOnXML(selectedFile, selectedFile.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    private void onRequestPermissionButtonClicked(ActionEvent event) {
+        fetchSheetNamesAndShowPopup();
+    }
+
     private void initializeTables() {
         fileEntries = FXCollections.observableArrayList();
         permissionEntries = FXCollections.observableArrayList();
@@ -145,14 +205,6 @@ public class DashboardController {
         Platform.runLater(() -> mainController.createErrorPopup(errorMessage, "Error"));
     }
 
-    @FXML
-    private void onLoadSheetFileButtonClicked(ActionEvent event) {
-        File selectedFile = openXMLFileChooser((Stage) loadSheetFileButton.getScene().getWindow());
-        if (selectedFile != null) {
-            mainController.initializeGridBasedOnXML(selectedFile, selectedFile.getAbsolutePath());
-        }
-    }
-
     private File openXMLFileChooser(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open XML File");
@@ -169,33 +221,6 @@ public class DashboardController {
     public void setUsername(String username) {
         this.username = username;
         usernameLabel.setText(username);
-    }
-
-    @FXML
-    private void onViewSheetButtonClicked(ActionEvent event) {
-        // Get the selected entry (formatted string) from the table
-        SheetInfo selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();  // Updated to SheetInfo
-
-        if (selectedEntry != null) {
-            String sheetName = selectedEntry.getSheetName();
-            PermissionStatus status = fetchMyPermissionStatus(sheetName);
-
-            if (status != null) {
-                switch (status) {
-                    case OWNER:
-                    case WRITER:
-                    case READER:
-                        mainController.updateCurrentGridSheet(sheetName, status);
-                        mainController.showMainAppScreen();
-                        break;
-                    case NONE:
-                        mainController.createErrorPopup("You do not have permission to view this sheet", "Error");
-                        break;
-                }
-            } else {
-                mainController.createErrorPopup("Failed to retrieve permission status", "Error");
-            }
-        }
     }
 
     private PermissionStatus fetchMyPermissionStatus(String sheetName) {
@@ -324,11 +349,6 @@ public class DashboardController {
         return true;
     }
 
-    @FXML
-    private void onRequestPermissionButtonClicked(ActionEvent event) {
-        fetchSheetNamesAndShowPopup();
-    }
-
     private void checkSubmitButtonState(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Button submitButton) {
         String selectedSheet = sheetListView.getSelectionModel().getSelectedItem();
         String selectedPermission = permissionChoiceBox.getSelectionModel().getSelectedItem();
@@ -340,26 +360,6 @@ public class DashboardController {
         alert.setTitle("Error");
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    private void onAskDenyPermissionButtonClicked(ActionEvent event) {
-        CompletableFuture.runAsync(() -> {
-
-            try (Response myRequestsResponse = HttpRequestManager.sendGetSyncRequest(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
-
-                String myRequestsAsJson = myRequestsResponse.body().string();
-                Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
-                List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
-
-                Platform.runLater(() -> {
-                    showAskDenyPopup(myRequests);
-                });
-
-            } catch (IOException e) {
-                Platform.runLater(() -> showErrorPopup("Failed to retrieve requests."));
-            }
-        });
     }
 
     private void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
@@ -572,8 +572,6 @@ public class DashboardController {
             }
         });
     }
-
-
 
     public static class PermissionRow {
         private final StringProperty username;
