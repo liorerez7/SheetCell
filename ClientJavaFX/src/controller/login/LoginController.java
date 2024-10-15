@@ -1,5 +1,7 @@
 package controller.login;
 
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 import utilities.Constants;
 import controller.main.MainController;
 import javafx.application.Platform;
@@ -39,10 +41,22 @@ public class LoginController {
 
     private final StringProperty errorMessageProperty = new SimpleStringProperty();
 
+    @FXML
+    private Label welcomeLabel;
 
     @FXML
     public void initialize() {
+
+
         errorMessageLabel.textProperty().bind(errorMessageProperty);
+
+        // Start fade-in animation for welcome label
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), welcomeLabel);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        fadeIn.play();
+
+
         HttpRequestManager.setCookieManagerLoggingFacility(line ->
                 Platform.runLater(() ->
                         updateHttpStatusLine(line)));
