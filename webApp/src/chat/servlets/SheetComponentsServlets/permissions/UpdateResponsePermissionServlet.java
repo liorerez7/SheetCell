@@ -1,5 +1,6 @@
-package chat.servlets.SheetComponentsServlets;
+package chat.servlets.SheetComponentsServlets.permissions;
 
+import dto.permissions.RequestStatus;
 import engine.Engine;
 import chat.utilities.Constants;
 import chat.utilities.ServletUtils;
@@ -31,12 +32,15 @@ public class UpdateResponsePermissionServlet extends HttpServlet {
             PermissionStatus permissionStatus = PermissionStatus.valueOf(permission);
 
             String userName = request.getParameter("userName");
-            boolean isApproved = Boolean.parseBoolean(request.getParameter("isApproved"));
+
+            String requestStatus = request.getParameter("requestStatus");
+            requestStatus = requestStatus.toUpperCase();
+            RequestStatus requestStatusEnum = RequestStatus.valueOf(requestStatus);
 
 
             synchronized (permissionManager) {
-                permissionManager.updateOwnerResponseForRequest(ownerName, sheetName, userName, permissionStatus, isApproved);
-                if(isApproved){
+                permissionManager.updateOwnerResponseForRequest(ownerName, sheetName, userName, permissionStatus, requestStatusEnum);
+                if(requestStatus.equals(RequestStatus.APPROVED.toString())){
                     sheetInfosManager.updateSheetPermissions(ownerName, sheetName, userName);
                 }
             }

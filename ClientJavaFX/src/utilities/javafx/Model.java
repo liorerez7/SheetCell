@@ -86,7 +86,6 @@ public class Model {
             cellLabelToProperties.put(label, new SimpleStringProperty());
 
         });
-
     }
 
     public void bindCellLabelToProperties() {
@@ -105,10 +104,8 @@ public class Model {
             String value = StringParser.convertValueToLabelText(effectiveValue);
 
             property.set(value);
-
         });
     }
-
 
     public StringProperty getLatestUpdatedVersionProperty() {
         return latestUpdatedVersionProperty;
@@ -121,8 +118,6 @@ public class Model {
         if(cell != null) {
 
             latestVersion = Integer.toString(cell.getLatestVersion());
-            String username = userNameProperty.get();
-            latestVersion = latestVersion + " " + username;
         }
 
         latestUpdatedVersionProperty.set(latestVersion);
@@ -206,6 +201,12 @@ public class Model {
     }
 
     public void setUserNameProperty(String userName) {
+        if(userName == null) {
+            userName = "";
+        }
+        else if(userNameProperty.get().equals(userName)) {
+            return;
+        }
         userNameProperty.set(userName);
     }
 

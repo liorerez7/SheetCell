@@ -1,5 +1,6 @@
 package chat.servlets.SheetComponentsServlets.InitSheetServlet;
 
+import dto.permissions.RequestStatus;
 import engine.core_parts.api.SheetManager;
 import dto.components.DtoSheetCell;
 import engine.Engine;
@@ -46,13 +47,12 @@ public class GetSheetCellAndLoadXML extends HttpServlet {
         }
 
         try (InputStream fileContent = filePart.getInputStream()) {
-            SheetManager sheetManager = engine.getSheetCell(fileContent);
+            SheetManager sheetManager = engine.getSheetCell(fileContent, userName);
             String sheetName = sheetManager.getSheetCell().getSheetName();
 
             synchronized (permissionManager) {
-                permissionManager.addPermission(sheetName, userName, PermissionStatus.OWNER, true);
+                permissionManager.addPermission(sheetName, userName, PermissionStatus.OWNER, RequestStatus.APPROVED);
                 sheetInfosManager.newSheetWasCreated(sheetName, userName, sheetManager.getSheetCell().getSheetSize(), PermissionStatus.OWNER.toString());
-               // permissionManager.newSheetCreated(sheetName);
             }
 
             String sheetNameAsJson = Constants.GSON_INSTANCE.toJson(sheetName);

@@ -1,5 +1,9 @@
 package engine;
 
+import dto.components.DtoSheetCell;
+import dto.small_parts.CellLocation;
+import dto.small_parts.CellLocationFactory;
+import dto.small_parts.EffectiveValue;
 import engine.core_parts.api.SheetManager;
 import engine.core_parts.impl.SheetManagerImpl;
 import engine.login.users.PermissionManager;
@@ -16,8 +20,9 @@ public class Engine {
     private final UserManager userManager = new UserManager();
     private final PermissionManager permissionManager = new PermissionManager(userManager);
     private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager);
+    private Map<String, Map<CellLocation, String>> sheetNameToCellLocationToUserName = new HashMap<>();
 
-    public synchronized SheetManager getSheetCell(InputStream sheetInputStream) {
+    public synchronized SheetManager getSheetCell(InputStream sheetInputStream, String userName) {
 
         SheetManagerImpl sheetManager = new SheetManagerImpl();
         try {
@@ -28,6 +33,8 @@ public class Engine {
             } else {
                 sheetNames.add(currentSheetName);
                 String sheetSize = sheetManager.getSheetCell().getSheetSize();
+                DtoSheetCell dtoSheetCell = sheetManager.getSheetCell();
+                initializeCellLocationToUserName(dtoSheetCell, userName);
                 sheetInfosManager.AddSheet(currentSheetName, sheetSize);
                 sheetCells.put(currentSheetName, sheetManager);
                 return sheetManager;
@@ -71,5 +78,59 @@ public class Engine {
 
     public SheetInfosManager getSheetInfosManager() {
         return sheetInfosManager;
+    }
+
+    public Map<CellLocation, String> getCellLocationToUserName(String sheetName) {
+        return sheetNameToCellLocationToUserName.get(sheetName);
+    }
+
+    private void initializeCellLocationToUserName(DtoSheetCell dtoSheetCell, String userName) {
+        dtoSheetCell.getViewSheetCell().forEach((key, value) -> {
+            if(!value.getValue().toString().equals("")){
+                sheetNameToCellLocationToUserName.putIfAbsent(dtoSheetCell.getSheetName(), new HashMap<>());
+                sheetNameToCellLocationToUserName.get(dtoSheetCell.getSheetName()).put(key, userName);
+            }
+        });
+    }
+
+    public void updateUsersInCells(DtoSheetCell beforeUpdateDtoSheetCell, DtoSheetCell afterUpdateDtoSheetCell, String userName) {
+        // Retrieve the previous and new maps of CellLocation to EffectiveValue
+        Map<CellLocation, EffectiveValue> prevMap = beforeUpdateDtoSheetCell.getViewSheetCell();
+        Map<CellLocation, EffectiveValue> newMap = afterUpdateDtoSheetCell.getViewSheetCell();
+
+        // Get the sheet name
+        String sheetName = beforeUpdateDtoSheetCell.getSheetName();
+
+        // Ensure the map for this sheet exists, if not, create a new map
+        Map<CellLocation, String> cellLocationToUserName = sheetNameToCellLocationToUserName.computeIfAbsent(sheetName, k -> new HashMap<>());
+
+        // Check for changes in the cells that exist in both prevMap and newMap
+        for (Map.Entry<CellLocation, EffectiveValue> entry : prevMap.entrySet()) {
+            CellLocation cellLocation = entry.getKey();
+            EffectiveValue prevValue = entry.getValue();
+            EffectiveValue newValue = newMap.get(cellLocation);
+
+            // If the value has changed, update the map with the username
+            if (newValue != null && !prevValue.getValue().equals(newValue.getValue())) {
+                cellLocationToUserName.put(cellLocation, userName);
+            }
+        }
+
+        // Now handle the case where there are new cells in newMap that do not exist in prevMap
+        for (Map.Entry<CellLocation, EffectiveValue> entry : newMap.entrySet()) {
+            CellLocation cellLocation = entry.getKey();
+
+            // If the cell is new (not in prevMap), add it to the result map
+            if (!prevMap.containsKey(cellLocation)) {
+                cellLocationToUserName.put(cellLocation, userName);
+            }
+        }
+    }
+
+
+    public String getUserNameThatLastUpdatedCell(String sheetName, String cellId) {
+        Map<CellLocation, String> cellLocationToUserName = sheetNameToCellLocationToUserName.get(sheetName);
+        CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
+        return cellLocationToUserName.get(cellLocation);
     }
 }

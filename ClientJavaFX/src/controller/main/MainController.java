@@ -42,49 +42,22 @@ import java.util.concurrent.CompletableFuture;
 
 public class MainController implements Closeable {
 
-
+    @FXML private HeaderController headerController;
+    @FXML private VBox header;
+    @FXML private MenuBar menuBar;
+    @FXML private BorderPane mainPane;
+    @FXML private ActionLineController actionLineController;
+    @FXML private GridPane actionLine;
+    @FXML private GridController gridScrollerController;
+    @FXML private ScrollPane gridScroller;
+    @FXML private CustomizeController customizeController;
+    @FXML private VBox customize;
+    @FXML private VBox leftCommands;
+    @FXML private RangesController rangesController;
+    @FXML private StackPane ranges;
 
     private Stage stage;
     private SheetCellApp app;  // Reference to the main application
-
-    @FXML
-    private HeaderController headerController;
-    @FXML
-    private VBox header;
-
-    @FXML
-    private MenuBar menuBar;
-
-    @FXML
-    private BorderPane mainPane;
-
-    @FXML
-    private ActionLineController actionLineController;
-
-    @FXML
-    private GridPane actionLine;
-
-    @FXML
-    private GridController gridScrollerController;
-
-    @FXML
-    private ScrollPane gridScroller;
-
-    @FXML
-    private CustomizeController customizeController;
-
-    @FXML
-    private VBox customize;
-
-    @FXML
-    private VBox leftCommands;
-
-    @FXML
-    private RangesController rangesController;
-    @FXML
-    private StackPane ranges;
-
-
     private final Model model;
     private final PopUpWindowsHandler popUpWindowsHandler;
     private final ThemeManager themeManager;
@@ -95,7 +68,7 @@ public class MainController implements Closeable {
     private String sheetName;
     private String userName;
     private PermissionStatus permissionStatus;
-
+    private Map<CellLocation, String> cellLocationToUserName;
 
 
     public void setStage(Stage stage) {
@@ -298,6 +271,22 @@ public class MainController implements Closeable {
                     });
                 }
 
+                params.clear();
+                params.put("sheetName",sheetName);
+
+                try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT, params)) {
+
+                    String userNameThatLastUpdatedTheCellMapAsJson = response.body().string();
+
+                    cellLocationToUserName = Constants.GSON_INSTANCE.fromJson(userNameThatLastUpdatedTheCellMapAsJson,
+                            new TypeToken<Map<CellLocation, String>>() {}.getType());
+
+                    Platform.runLater(() -> {
+                        model.setUserNameProperty(cellLocationToUserName.get(new CellLocation(text.charAt(0), text.substring(1))));
+                    });
+
+                }
+
             } catch (IOException e) {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
@@ -428,7 +417,8 @@ public class MainController implements Closeable {
             model.setColumnSelected(false);
             model.setRowSelected(false);
             model.setCellLocationProperty(location);
-
+            String userNameThatUpdatedTheCell = cellLocationToUserName.get(new CellLocation(location.charAt(0), location.substring(1)));
+            model.setUserNameProperty(userNameThatUpdatedTheCell);
         });
     }
 
@@ -794,39 +784,57 @@ public class MainController implements Closeable {
         params.put("sheetName",sheetName);
 
         CompletableFuture.runAsync(() -> {
-            try(Response sheetNameResponse = HttpRequestManager.sendPostSyncRequest(Constants.UPDATE_SHEET_NAME_IN_SEASSION_ENDPOINT, params)){
-                if (!sheetNameResponse.isSuccessful()) {
-                    Platform.runLater(() -> createErrorPopup("Failed to update sheet name", "Error"));
+
+            try{
+
+                try(Response sheetNameResponse = HttpRequestManager.sendPostSyncRequest(Constants.UPDATE_SHEET_NAME_IN_SEASSION_ENDPOINT, params)) {
+                    if (!sheetNameResponse.isSuccessful()) {
+                        Platform.runLater(() -> createErrorPopup("Failed to update sheet name", "Error"));
+                    }
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+
+                if (dtoSheetCellAsDataParameter == null) {
+                    fetchDtoSheetCellAsync(() -> {
+                        if (dtoSheetCellAsDataParameter != null) {
+                            startSheetNamesRefresher();
+                        }
+                    });
+                } else {
+                    model.setNewerVersionOfSheet(false);
+                    fetchDtoSheetCellAsync();
+                }
+
+                params.clear();
+                params.put("sheetName", sheetName);
+
+                try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT, params)) {
+
+                    String userNameThatLastUpdatedTheCellMapAsJson = response.body().string();
+
+                    cellLocationToUserName = Constants.GSON_INSTANCE.fromJson(userNameThatLastUpdatedTheCellMapAsJson,
+                            new TypeToken<Map<CellLocation, String>>() {}.getType());
+
+                }
+            }catch (IOException e){
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
 
-            if(dtoSheetCellAsDataParameter == null){
-                fetchDtoSheetCellAsync(() -> {
-                    if (dtoSheetCellAsDataParameter != null) {
-                        startSheetNamesRefresher();
-                    }
-                });
-            }
-            else {
-                model.setNewerVersionOfSheet(false);
-                fetchDtoSheetCellAsync();
-            }
+
         });
     }
 
     public void updateCurrentGridSheet() {
+        updateCurrentGridSheet(sheetName);
+    }
 
+    public void updateCurrentGridSheet(String sheetName, PermissionStatus permissionStatus) {
+        this.permissionStatus = permissionStatus;
         updateCurrentGridSheet(sheetName);
 
     }
 
-    public void updateCurrentGridSheet(String sheetName, PermissionStatus permissionStatus) {
-
-        this.permissionStatus = permissionStatus;
-        updateCurrentGridSheet(sheetName);
-
+    public String getSheetName() {
+        return sheetName;
     }
 
 
@@ -862,5 +870,9 @@ public class MainController implements Closeable {
 
     public String getUserName() {
         return userName;
+    }
+
+    public StringProperty getLastUpdatedUserNameProperty() {
+        return model.getUserNameProperty();
     }
 }

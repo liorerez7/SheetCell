@@ -3,6 +3,7 @@ package engine.login.users;
 import dto.permissions.PermissionLine;
 import dto.permissions.PermissionStatus;
 import dto.permissions.RequestPermission;
+import dto.permissions.RequestStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +24,10 @@ public class PermissionManager {
     }
 
     public synchronized void addPermission(String sheetName, String userName,
-                                           PermissionStatus status, boolean approvedByOwner) {
+                                           PermissionStatus status, RequestStatus requestStatus) {
 
-        PermissionLine permissionLine = new PermissionLine(userName, status, approvedByOwner);
-        PermissionLine permissionLineForAllHistory = new PermissionLine(userName, status, approvedByOwner);
+        PermissionLine permissionLine = new PermissionLine(userName, status, requestStatus);
+        PermissionLine permissionLineForAllHistory = new PermissionLine(userName, status, requestStatus);
 
         // Initialize lists if they don't exist
         allHistorySheetNameToPermissionLines.computeIfAbsent(sheetName, k -> new ArrayList<>());
@@ -38,7 +39,7 @@ public class PermissionManager {
         // Update the current permission, removing any previous permission for the same user
         List<PermissionLine> currentPermissions = currentSheetNameToPermissionLines.get(sheetName);
 
-        if(approvedByOwner){
+        if(permissionLine.isApprovedByOwner()){
             currentPermissions.removeIf(perm -> perm.getUserName().equals(userName)); // Remove old permission
             currentPermissions.add(permissionLine); // Add the new permission
         }
@@ -88,6 +89,9 @@ public class PermissionManager {
 
         // Ensure that ownerName has a list in userNameToResponsePermission
         ownerNameToHisResponseList.computeIfAbsent(ownerName, k -> new ArrayList<>()).add(responsePermission);
+
+        PermissionLine newPermissionLine = new PermissionLine(userName, permissionStatus, RequestStatus.PENDING);
+        allHistorySheetNameToPermissionLines.get(sheetName).add(newPermissionLine);
     }
 
     private String findOwner(String sheetName) {
@@ -108,7 +112,7 @@ public class PermissionManager {
     }
 
     public void updateOwnerResponseForRequest(String ownerName, String sheetName, String userName,
-                                              PermissionStatus permissionStatus, boolean isApproved) {
+                                              PermissionStatus permissionStatus, RequestStatus requestStatus) {
 
         List<ResponsePermission> myResponses = ownerNameToHisResponseList.get(ownerName);
         myResponses.forEach(responsePermission -> {
@@ -132,27 +136,39 @@ public class PermissionManager {
         if (permissionLines != null) {
             boolean found = false;
 
-            // Use a traditional for loop to check and update the permission
             for (PermissionLine permissionLine : permissionLines) {
                 if (permissionLine.getUserName().equals(userName)) {
-                    if(isApproved){
+                    if(requestStatus == RequestStatus.APPROVED){
                         permissionLine.setPermissionStatus(permissionStatus);
-                        permissionLine.setApprovedByOwner(isApproved);
+                        permissionLine.setRequestStatus(requestStatus);
                         found = true;
                         break;
                     }
                 }
             }
 
-            PermissionLine newPermissionLine = new PermissionLine(userName, permissionStatus, isApproved);
-            PermissionLine newPermissionLineForAllHistory = new PermissionLine(userName, permissionStatus, isApproved);
+            PermissionLine newPermissionLine = new PermissionLine(userName, permissionStatus, requestStatus);
+            PermissionLine newPermissionLineForAllHistory = new PermissionLine(userName, permissionStatus, requestStatus);
 
-
-            if (!found && isApproved) {
+            if (!found && (requestStatus == RequestStatus.APPROVED)) {
                 permissionLines.add(newPermissionLine);
             }
 
-            allHistorySheetNameToPermissionLines.get(sheetName).add(newPermissionLineForAllHistory);
+
+            boolean foundInAllHistory = false;
+
+            List<PermissionLine> allHistoryPermissionLines = allHistorySheetNameToPermissionLines.get(sheetName);
+            for(PermissionLine permissionLine : allHistoryPermissionLines){
+                if(permissionLine.getUserName().equals(userName) && permissionLine.getRequestStatus() == RequestStatus.PENDING){
+                    permissionLine.setPermissionStatus(permissionStatus);
+                    permissionLine.setRequestStatus(requestStatus);
+                    foundInAllHistory = true;
+                }
+            }
+
+            if(!foundInAllHistory){
+                allHistorySheetNameToPermissionLines.get(sheetName).add(newPermissionLineForAllHistory);
+            }
         }
     }
 

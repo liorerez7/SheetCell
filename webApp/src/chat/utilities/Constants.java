@@ -1,6 +1,7 @@
 package chat.utilities;
 
 
+import chat.utilities.jsonSerializableClasses.CellLocationToStringMapSerializer;
 import dto.components.DtoContainerData;
 import chat.utilities.jsonSerializableClasses.CellLocationMapSerializer;
 import chat.utilities.jsonSerializableClasses.DtoContainerDataSerializer;
@@ -31,6 +32,7 @@ public class Constants {
     // GSON instance
     public final static Gson GSON_INSTANCE = new GsonBuilder()
             .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {}.getType(), new CellLocationMapSerializer())
+            .registerTypeAdapter(new TypeToken<Map<CellLocation, String>>() {}.getType(), new CellLocationToStringMapSerializer())
             .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellSerializer())
             .registerTypeAdapter(DtoContainerData.class, new DtoContainerDataSerializer())
             .serializeSpecialFloatingPointValues()

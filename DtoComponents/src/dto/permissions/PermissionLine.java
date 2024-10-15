@@ -6,12 +6,12 @@ public class PermissionLine {
 
     private String userName;
     private PermissionStatus permissionStatus;
-    private boolean approvedByOwner;
+    private RequestStatus requestStatus;
 
-    public PermissionLine(String userName, PermissionStatus permissionStatus, boolean approvedByOwner) {
+    public PermissionLine(String userName, PermissionStatus permissionStatus, RequestStatus requestStatus) {
         this.userName = userName;
-        this.approvedByOwner = approvedByOwner;
         this.permissionStatus = permissionStatus;
+        this.requestStatus = requestStatus;
     }
 
     public String getUserName() {
@@ -23,11 +23,7 @@ public class PermissionLine {
     }
 
     public boolean isApprovedByOwner() {
-        return approvedByOwner;
-    }
-
-    public void setApprovedByOwner(boolean approvedByOwner) {
-        this.approvedByOwner = approvedByOwner;
+        return requestStatus.equals(RequestStatus.APPROVED);
     }
 
     public PermissionStatus getPermissionStatus() {
@@ -38,18 +34,27 @@ public class PermissionLine {
         this.permissionStatus = permissionStatus;
     }
 
-    //implement equals and hashcode
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
+    }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PermissionLine that = (PermissionLine) o;
-        return approvedByOwner == that.approvedByOwner && Objects.equals(userName, that.userName) && permissionStatus == that.permissionStatus;
+        return Objects.equals(userName, that.userName)
+                && permissionStatus == that.permissionStatus &&
+                requestStatus == that.requestStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, permissionStatus, approvedByOwner);
+        return Objects.hash(userName, permissionStatus, requestStatus);
     }
 }

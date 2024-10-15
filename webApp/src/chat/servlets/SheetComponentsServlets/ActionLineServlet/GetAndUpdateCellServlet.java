@@ -1,5 +1,7 @@
 package chat.servlets.SheetComponentsServlets.ActionLineServlet;
 
+import chat.utilities.SessionUtils;
+import dto.components.DtoSheetCell;
 import engine.core_parts.api.SheetManager;
 
 import engine.Engine;
@@ -22,13 +24,18 @@ public class GetAndUpdateCellServlet extends HttpServlet {
 
         Engine engine = ServletUtils.getEngineManager(getServletContext());
         String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+        String userName = SessionUtils.getUsername(request);
 
         // Synchronize on the engine or the sheet manager
         synchronized (engine) {  // Alternatively, you can synchronize on sheetManager if it's a better fit
             SheetManager sheetManager = engine.getSheetCell(sheetName);
 
             try {
+                DtoSheetCell beforeUpdateDtoSheetCell = sheetManager.getSheetCell();
                 sheetManager.updateCell(cellValue, columnOfCell, row);
+                DtoSheetCell afterUpdateDtoSheetCell = sheetManager.getSheetCell();
+                engine.updateUsersInCells(beforeUpdateDtoSheetCell, afterUpdateDtoSheetCell, userName);
+
                 response.setStatus(HttpServletResponse.SC_OK);
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -17,6 +17,7 @@
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="339.0" minWidth="10.0" prefWidth="259.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="389.0" minWidth="10.0" prefWidth="167.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.0" minWidth="10.0" prefWidth="155.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="477.0" minWidth="10.0" prefWidth="170.0" />
         <ColumnConstraints hgrow="ALWAYS" maxWidth="477.0" minWidth="10.0" prefWidth="170.0" /> <!-- This column grows the most -->
     </columnConstraints>
     <rowConstraints>
@@ -51,7 +52,7 @@
             <Insets left="12.0" />
          </GridPane.margin>
       </Label>
-        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" prefHeight="40.0" prefWidth="129.0" styleClass="ModernButton" text="version" GridPane.columnIndex="5" GridPane.vgrow="ALWAYS">
+        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" prefHeight="40.0" prefWidth="129.0" styleClass="ModernButton" text="version" GridPane.columnIndex="6" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets left="30.0" />
          </GridPane.margin>
@@ -64,5 +65,10 @@
             <Insets left="20.0" right="20.0" />
          </GridPane.margin>
       </TextField>
+      <Label fx:id="lastUpdatedUserName" prefHeight="17.0" prefWidth="134.0" text="user name:" GridPane.columnIndex="5">
+         <GridPane.margin>
+            <Insets left="12.0" />
+         </GridPane.margin>
+      </Label>
     </children>
 </GridPane>

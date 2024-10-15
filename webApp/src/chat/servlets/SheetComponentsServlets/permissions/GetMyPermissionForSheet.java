@@ -1,4 +1,4 @@
-package chat.servlets.SheetComponentsServlets;
+package chat.servlets.SheetComponentsServlets.permissions;
 
 import engine.Engine;
 import chat.utilities.Constants;
@@ -8,9 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import engine.login.users.PermissionManager;
 import dto.permissions.PermissionStatus;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GetMyPermissionForSheet extends HttpServlet {
 

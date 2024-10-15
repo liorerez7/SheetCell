@@ -4,6 +4,7 @@ import dto.components.DtoSheetInfoLine;
 import dto.permissions.PermissionLine;
 import dto.permissions.PermissionStatus;
 import dto.permissions.RequestPermission;
+import dto.permissions.RequestStatus;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import controller.main.MainController;
@@ -227,8 +228,8 @@ public class DashboardController {
         fileEntries.add(new SheetInfo(sheetInfoLine.getOwnerName(), sheetInfoLine.getSheetName(), sheetInfoLine.getSheetSize(), sheetInfoLine.getMyPermission()));
     }
 
-    public void addLine(String username, String permissionStatus, String isApproved) {
-        PermissionRow newRow = new PermissionRow(username, permissionStatus, isApproved);
+    public void addLine(String username, String permissionStatus, String requestStatus) {
+        PermissionRow newRow = new PermissionRow(username, permissionStatus, requestStatus);
         permissionEntries.add(newRow);
     }
 
@@ -298,8 +299,8 @@ public class DashboardController {
             newPermissions.forEach(permission -> {
                 String username = permission.getUserName();
                 String permissionStatus = permission.getPermissionStatus().toString();
-                String isApproved = permission.isApprovedByOwner() ? "Yes" : "No";
-                addLine(username, permissionStatus, isApproved);
+                String requestStatus = permission.getRequestStatus().toString();
+                addLine(username, permissionStatus, requestStatus);
             });
         });
     }
@@ -427,6 +428,7 @@ public class DashboardController {
                     if (!response.isSuccessful()) {
                         handleHttpResponseFailure(response, "Failed to request permission");
                     }
+                    forceRefreshPermissionTableForSheet(selectedSheet);
                 }
             });
 
@@ -514,13 +516,17 @@ public class DashboardController {
 
     private void handlePermissionResponse(RequestPermission request, boolean isApproved, Stage popupStage) {
 
-        String action = isApproved ? "Approved" : "Denied";
         Map<String,String> params = new HashMap<>();
 
         params.put("sheetName", request.getSheetNameForRequest());
         params.put("userName", request.getUserNameForRequest());
         params.put("permission", request.getPermissionStatusForRequest().toString());
-        params.put("isApproved", String.valueOf(isApproved));
+
+        if(isApproved){
+            params.put("requestStatus", RequestStatus.APPROVED.toString());
+        } else {
+            params.put("requestStatus", RequestStatus.REJECTED.toString());
+        }
 
         try (Response responseForSendingResponseStatus = HttpRequestManager.sendPostSyncRequest(Constants.UPDATE_RESPONSE_PERMISSION, params)) {
 
@@ -567,15 +573,17 @@ public class DashboardController {
         });
     }
 
+
+
     public static class PermissionRow {
         private final StringProperty username;
         private final StringProperty permissionStatus;
-        private final StringProperty approvedByOwner;
+        private final StringProperty requestStatus;
 
         public PermissionRow(String username, String permissionStatus, String approvedByOwner) {
             this.username = new SimpleStringProperty(username);
             this.permissionStatus = new SimpleStringProperty(permissionStatus);
-            this.approvedByOwner = new SimpleStringProperty(approvedByOwner);
+            this.requestStatus = new SimpleStringProperty(approvedByOwner);
         }
 
         public StringProperty usernameProperty() {
@@ -587,7 +595,7 @@ public class DashboardController {
         }
 
         public StringProperty approvedByOwnerProperty() {
-            return approvedByOwner;
+            return requestStatus;
         }
 
         public String getUsername() {
@@ -599,7 +607,7 @@ public class DashboardController {
         }
 
         public String getApprovedByOwner() {
-            return approvedByOwner.get();
+            return requestStatus.get();
         }
     }
 

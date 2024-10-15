@@ -40,6 +40,10 @@
         <servlet-class>chat.servlets.SheetComponentsServlets.ActionLineServlet.GetAndUpdateCellServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GetUserNameLastUpdatedCellServlet</servlet-name>
+        <servlet-class>chat.servlets.SheetComponentsServlets.ActionLineServlet.GetUserNameLastUpdatedCellServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AddRangeServlet</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.AddRangeServlet</servlet-class>
     </servlet>
@@ -57,23 +61,23 @@
     </servlet>
     <servlet>
         <servlet-name>GetPermissionLinesForSheet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.GetPermissionLinesForSheet</servlet-class>
+        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.GetPermissionLinesForSheet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetMyPermissionForSheet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.GetMyPermissionForSheet</servlet-class>
+        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.GetMyPermissionForSheet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RequestPermissionServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.RequestPermissionServlet</servlet-class>
+        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.RequestPermissionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateResponsePermissionServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.UpdateResponsePermissionServlet</servlet-class>
+        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.UpdateResponsePermissionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ResponsePermissionServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.ResponsePermissionServlet</servlet-class>
+        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.ResponsePermissionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -98,6 +102,10 @@
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/updateCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetUserNameLastUpdatedCellServlet</servlet-name>
+        <url-pattern>/userNameThatLastUpdatedCell</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddRangeServlet</servlet-name>

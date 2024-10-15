@@ -3,6 +3,7 @@ package utilities;
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import utilities.http.deserialize.CellLocationMapDeserializer;
+import utilities.http.deserialize.CellLocationToStringMapDeserializer;
 import utilities.http.deserialize.DtoContainerDataDeserializer;
 import utilities.http.deserialize.DtoSheetCellDeserializer;
 import com.google.gson.Gson;
@@ -55,6 +56,8 @@ public class Constants {
     public static final String MY_RESPONSE_PERMISSION = FULL_SERVER_PATH + "/myResponsePermission";
     public static final String UPDATE_RESPONSE_PERMISSION = FULL_SERVER_PATH + "/updateResponsePermission";
     public static final String GET_MY_PERMISSION_FOR_SHEET = FULL_SERVER_PATH + "/myPermissionForSheet";
+    public static final String GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT = FULL_SERVER_PATH + "/userNameThatLastUpdatedCell";
+
 
 
 
@@ -72,20 +75,10 @@ public class Constants {
     public static final String CANT_ADD_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "add ranges";
     public static final String CANT_DELETE_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "delete ranges";
 
-
-
-
-
-
-
-
-
-
-
-
     // GSON instance
     public final static Gson GSON_INSTANCE = new GsonBuilder()
             .registerTypeAdapter(new TypeToken<Map<CellLocation, EffectiveValue>>() {}.getType(), new CellLocationMapDeserializer())
+            .registerTypeAdapter(new TypeToken<Map<CellLocation, String>>() {}.getType(), new CellLocationToStringMapDeserializer())
             .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellDeserializer())
             .registerTypeAdapter(DtoContainerData.class, new DtoContainerDataDeserializer())
             .serializeSpecialFloatingPointValues()  // This allows serialization of NaN and Infinity

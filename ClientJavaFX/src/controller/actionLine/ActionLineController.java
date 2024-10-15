@@ -12,21 +12,16 @@ import javafx.scene.paint.Color;
 
 public class ActionLineController {
 
-    private MainController mainController;
-
     @FXML private GridPane actionLine;
-
     @FXML private Label cellidLabel;
-
     @FXML private Button updateCellButton;
-
     @FXML private MenuButton VersionScroller;
-
     @FXML private TextField newValueText;
-
     @FXML private Label originalValue;
-
     @FXML private Label lastUpdatedVersion;
+    @FXML private Label lastUpdatedUserName;
+
+    private MainController mainController;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -90,6 +85,7 @@ public class ActionLineController {
         updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         lastUpdatedVersion.textProperty().bind(Bindings.concat("Last Version: ", mainController.getVersionProperty()));
         originalValue.textProperty().bind(mainController.getOriginalValueLabelProperty());
+        lastUpdatedUserName.textProperty().bind(Bindings.concat("user name: ", mainController.getLastUpdatedUserNameProperty()));
     }
 
     private void handleVersionClick(int versionNumber) {

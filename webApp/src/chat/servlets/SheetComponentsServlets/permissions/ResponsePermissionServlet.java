@@ -1,4 +1,4 @@
-package chat.servlets.SheetComponentsServlets;
+package chat.servlets.SheetComponentsServlets.permissions;
 
 import engine.Engine;
 import chat.utilities.Constants;
