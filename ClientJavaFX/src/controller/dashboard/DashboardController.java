@@ -37,37 +37,24 @@ import java.util.stream.Collectors;
 
 public class DashboardController {
 
-    @FXML
-    private Button loadSheetFileButton;
-    @FXML
-    private Label usernameLabel;
-    @FXML
-    private TableView<SheetInfo> availableSheetsTable;  // Updated to SheetInfo
-    @FXML
-    private TableColumn<SheetInfo, String> ownerColumn;  // Updated to SheetInfo
-    @FXML
-    private TableColumn<SheetInfo, String> sheetNameColumn;  // Updated to SheetInfo
-    @FXML
-    private TableColumn<SheetInfo, String> sizeColumn;  // Updated to SheetInfo
-    @FXML
-    private TableColumn<SheetInfo, String> myPermissionStatusColumn;  // Updated to SheetInfo
-    @FXML
-    private TableView<PermissionRow> permissionsTable;
-    @FXML
-    private TableColumn<PermissionRow, String> usernameColumn;
-    @FXML
-    private TableColumn<PermissionRow, String> permissionStatusColumn;
-    @FXML
-    private TableColumn<PermissionRow, String> approvedByOwnerColumn;
-    @FXML
-    private Button viewSheetButton;
-    @FXML
-    private Button requestPermissionButton;
-    @FXML
-    private Button ackDenyPermissionButton;
+    @FXML private Button loadSheetFileButton;
+    @FXML private Label helloUserLabel; // No more usernameLabel, using helloUserLabel
+    @FXML private TableView<SheetInfo> availableSheetsTable;  // Updated to SheetInfo
+    @FXML private TableColumn<SheetInfo, String> ownerColumn;  // Updated to SheetInfo
+    @FXML private TableColumn<SheetInfo, String> sheetNameColumn;  // Updated to SheetInfo
+    @FXML private TableColumn<SheetInfo, String> sizeColumn;  // Updated to SheetInfo
+    @FXML private TableColumn<SheetInfo, String> myPermissionStatusColumn;  // Updated to SheetInfo
+    @FXML private TableView<PermissionRow> permissionsTable;
+    @FXML private TableColumn<PermissionRow, String> usernameColumn;
+    @FXML private TableColumn<PermissionRow, String> permissionStatusColumn;
+    @FXML private TableColumn<PermissionRow, String> approvedByOwnerColumn;
+    @FXML private Button viewSheetButton;
+    @FXML private Button requestPermissionButton;
+    @FXML private Button manageAccessRequestsButton;
+    @FXML private Button logoutButton;
+    @FXML private Button exitButton;
 
     private MainController mainController;
-    private String username;
     private ObservableList<SheetInfo> fileEntries;  // Updated to SheetInfo
     private ObservableList<PermissionRow> permissionEntries;
     private Set<String> sheetNames = new HashSet<>();
@@ -75,33 +62,21 @@ public class DashboardController {
     private List<PermissionLine> currentPermissions = new ArrayList<>();
     private Set<DtoSheetInfoLine> currentSheetInfoLines = new HashSet<>();
     private String currentUserName;
+    private DashboardPopUpManager popUpManager;
+
+
+
+
 
     @FXML
     public void initialize() {
         initializeTables();
         startSheetNamesRefresher();
         setupSheetSelectionListener();
+        popUpManager = new DashboardPopUpManager(this);
     }
 
-    @FXML
-    private void onAskDenyPermissionButtonClicked(ActionEvent event) {
-        CompletableFuture.runAsync(() -> {
 
-            try (Response myRequestsResponse = HttpRequestManager.sendGetSyncRequest(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
-
-                String myRequestsAsJson = myRequestsResponse.body().string();
-                Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
-                List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
-
-                Platform.runLater(() -> {
-                    showAskDenyPopup(myRequests);
-                });
-
-            } catch (IOException e) {
-                Platform.runLater(() -> showErrorPopup("Failed to retrieve requests."));
-            }
-        });
-    }
 
     @FXML
     private void onViewSheetButtonClicked(ActionEvent event) {
@@ -138,10 +113,28 @@ public class DashboardController {
         }
     }
 
+
+
     @FXML
-    private void onRequestPermissionButtonClicked(ActionEvent event) {
-        fetchSheetNamesAndShowPopup();
+    private void onLogoutButtonClicked(ActionEvent event) {
+        // Logic for logging out the user.
+        // For example, navigating back to the login screen or clearing user session data.
+        mainController.showLoginScreen();
     }
+
+    @FXML
+    private void onExitButtonClicked(ActionEvent event) {
+        // Logic for logging out the user.
+        // For example, navigating back to the login screen or clearing user session data.
+        mainController.exitApplication();
+    }
+
+    public void setUserName(String userName) {
+        currentUserName = userName;
+        helloUserLabel.setText("Hello " + userName); // Display "Hello <username>"
+    }
+
+
 
     private void initializeTables() {
         fileEntries = FXCollections.observableArrayList();
@@ -150,6 +143,12 @@ public class DashboardController {
         availableSheetsTable.setItems(fileEntries);
         permissionsTable.setItems(permissionEntries);
         viewSheetButton.setDisable(true);
+    }
+
+    private void setupPermissionColumns() {
+        usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
+        permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
+        approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
     }
 
     private void setupTableColumns() {
@@ -166,11 +165,7 @@ public class DashboardController {
         myPermissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
     }
 
-    private void setupPermissionColumns() {
-        usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
-        permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
-        approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
-    }
+
 
     private void setupSheetSelectionListener() {
         availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -192,14 +187,6 @@ public class DashboardController {
         }
     }
 
-    public void setUserName(String userName) {
-        currentUserName = userName;
-    }
-
-    public void addFilePathToTable(String ownerName, String sheetName, String size, String permissionStatus) {
-        fileEntries.add(new SheetInfo(ownerName, sheetName, size, permissionStatus));
-    }
-
     private void displayError(String errorMessage) {
         // Handle the error by showing a popup or logging
         Platform.runLater(() -> mainController.createErrorPopup(errorMessage, "Error"));
@@ -216,11 +203,6 @@ public class DashboardController {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-        usernameLabel.setText(username);
     }
 
     private PermissionStatus fetchMyPermissionStatus(String sheetName) {
@@ -349,12 +331,6 @@ public class DashboardController {
         return true;
     }
 
-    private void checkSubmitButtonState(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Button submitButton) {
-        String selectedSheet = sheetListView.getSelectionModel().getSelectedItem();
-        String selectedPermission = permissionChoiceBox.getSelectionModel().getSelectedItem();
-        submitButton.setDisable(selectedSheet == null || selectedPermission == null);
-    }
-
     private void showErrorPopup(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -362,50 +338,38 @@ public class DashboardController {
         alert.showAndWait();
     }
 
-    private void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
-        Stage popupStage = new Stage();
-        popupStage.setTitle("Select Sheet and Permission");
-
-        ListView<String> sheetListView = createSheetListView(sheetNames);
-        ChoiceBox<String> permissionChoiceBox = createPermissionChoiceBox();
-        Button submitButton = createSubmitButton(sheetListView, permissionChoiceBox, popupStage);
-
-        // Layout: VBox to hold the ListView, ChoiceBox, and Button
-        VBox layout = new VBox(10, new Label("Select a sheet:"), sheetListView,
-                new Label("Select permission:"), permissionChoiceBox, submitButton);
-        layout.setPadding(new Insets(10));
-        layout.setAlignment(Pos.CENTER);
-
-        Scene scene = new Scene(layout, 300, 400);
-        popupStage.setScene(scene);
-        popupStage.show();
+    @FXML
+    private void onRequestPermissionButtonClicked(ActionEvent event) {
+        fetchSheetNamesAndShowPopup();
     }
 
-    private ListView<String> createSheetListView(Set<String> sheetNames) {
-        ListView<String> sheetListView = new ListView<>();
-        sheetListView.getItems().addAll(sheetNames);
-        sheetListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        return sheetListView;
-    }
+    private void fetchSheetNamesAndShowPopup() {
+        handleAsyncGetRequest(Constants.GET_ALL_SHEET_NAMES, new HashMap<>(), new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                handleHttpFailure(e, "Failed to retrieve sheet names");
+            }
 
-    private ChoiceBox<String> createPermissionChoiceBox() {
-        ChoiceBox<String> permissionChoiceBox = new ChoiceBox<>();
-        permissionChoiceBox.getItems().addAll("Writer", "Reader");
-        return permissionChoiceBox;
-    }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String sheetInfosAsJson = response.body().string();
+                    Type permissionListType = new TypeToken<Set<DtoSheetInfoLine>>() {}.getType();
+                    Set<DtoSheetInfoLine> sheetInfos = Constants.GSON_INSTANCE.fromJson(sheetInfosAsJson, permissionListType);
 
-    private Button createSubmitButton(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Stage popupStage) {
-        Button submitButton = new Button("Submit");
-        submitButton.setDisable(true);
+                    Set<String> sheetNamesThatAreNotTheOwner = sheetInfos.stream()
+                            .filter(sheetInfo -> !sheetInfo.getOwnerName().equals(currentUserName))
+                            .map(DtoSheetInfoLine::getSheetName)
+                            .collect(Collectors.toSet());
 
-        sheetListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-                checkSubmitButtonState(sheetListView, permissionChoiceBox, submitButton));
+                    //Platform.runLater(() -> showSheetAndPermissionSelectionPopup(sheetNamesThatAreNotTheOwner));
+                    Platform.runLater(() -> popUpManager.showSheetAndPermissionSelectionPopup(sheetNamesThatAreNotTheOwner)); // Delegate the popup logic to DashboardPopUpManager
 
-        permissionChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-                checkSubmitButtonState(sheetListView, permissionChoiceBox, submitButton));
-
-        submitButton.setOnAction(e -> handleSheetAndPermissionSubmit(sheetListView, permissionChoiceBox, popupStage));
-        return submitButton;
+                } else {
+                    handleHttpResponseFailure(response, "Failed to retrieve sheet names");
+                }
+            }
+        });
     }
 
     private void handleSheetAndPermissionSubmit(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Stage popupStage) {
@@ -440,43 +404,56 @@ public class DashboardController {
         HttpRequestManager.sendGetAsyncRequest(url, params, callback);
     }
 
-    private void handleHttpFailure(IOException e, String errorMessage) {
+    protected void handleHttpFailure(IOException e, String errorMessage) {
         Platform.runLater(() -> showErrorPopup(errorMessage + ": " + e.getMessage()));
     }
 
-    private void handleHttpResponseFailure(Response response, String defaultErrorMessage) throws IOException {
+    protected void handleHttpResponseFailure(Response response, String defaultErrorMessage) throws IOException {
         String errorMessage = Constants.GSON_INSTANCE.fromJson(response.body().string(), String.class);
         Platform.runLater(() -> showErrorPopup(defaultErrorMessage + ": " + errorMessage));
     }
 
-    private void fetchSheetNamesAndShowPopup() {
-        handleAsyncGetRequest(Constants.GET_ALL_SHEET_NAMES, new HashMap<>(), new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                handleHttpFailure(e, "Failed to retrieve sheet names");
-            }
+//    @FXML
+//    private void onManageAccessRequestsButtonClicked(ActionEvent event) {
+//        CompletableFuture.runAsync(() -> {
+//
+//            try (Response myRequestsResponse = HttpRequestManager.sendGetSyncRequest(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
+//
+//                String myRequestsAsJson = myRequestsResponse.body().string();
+//                Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
+//                List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
+//
+//                Platform.runLater(() -> {
+//                    showManageAccessRequestsPopup(myRequests);  // Update method name
+//                });
+//
+//            } catch (IOException e) {
+//                Platform.runLater(() -> showErrorPopup("Failed to retrieve requests."));
+//            }
+//        });
+//    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String sheetInfosAsJson = response.body().string();
-                    Type permissionListType = new TypeToken<Set<DtoSheetInfoLine>>() {}.getType();
-                    Set<DtoSheetInfoLine> sheetInfos = Constants.GSON_INSTANCE.fromJson(sheetInfosAsJson, permissionListType);
+    @FXML
+    private void onManageAccessRequestsButtonClicked(ActionEvent event) {
+        CompletableFuture.runAsync(() -> {
 
-                    Set<String> sheetNamesThatAreNotTheOwner = sheetInfos.stream()
-                            .filter(sheetInfo -> !sheetInfo.getOwnerName().equals(username))
-                            .map(DtoSheetInfoLine::getSheetName)
-                            .collect(Collectors.toSet());
+            try (Response myRequestsResponse = HttpRequestManager.sendGetSyncRequest(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
 
-                    Platform.runLater(() -> showSheetAndPermissionSelectionPopup(sheetNamesThatAreNotTheOwner));
-                } else {
-                    handleHttpResponseFailure(response, "Failed to retrieve sheet names");
-                }
+                String myRequestsAsJson = myRequestsResponse.body().string();
+                Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
+                List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
+
+                Platform.runLater(() -> {
+                    popUpManager.showManageAccessRequestsPopup(myRequests);  // Use popup manager to show the popup
+                });
+
+            } catch (IOException e) {
+                Platform.runLater(() -> showErrorPopup("Failed to retrieve requests."));
             }
         });
     }
 
-    private void showAskDenyPopup(List<RequestPermission> myRequests) {
+    private void showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
         Stage popupStage = new Stage();
         popupStage.setTitle("Request Permissions");
 
@@ -544,7 +521,7 @@ public class DashboardController {
         popupStage.close();
     }
 
-    private void forceRefreshPermissionTableForSheet(String sheetName) {
+    protected void forceRefreshPermissionTableForSheet(String sheetName) {
         Map<String, String> params = new HashMap<>();
         params.put("sheetName", sheetName);
 

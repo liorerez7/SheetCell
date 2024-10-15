@@ -1,6 +1,6 @@
 /* Background for the entire screen (applied to VBox instead of ScrollPane) */
 .vbox-background {
-    -fx-background-color: #f0f4f8; /* Gentle light blue-gray background */
+    -fx-background-color: #e0e7ff; /* Soft lavender blue to complement the gradient */
 }
 
 /* Error label */

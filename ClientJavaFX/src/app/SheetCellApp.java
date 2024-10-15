@@ -90,22 +90,35 @@ public class SheetCellApp extends Application {
         stage.show();
     }
 
-    public void showLoginScreen() {
-        if (stage.getScene() == null) {
-            stage.setScene(new Scene(loginRoot)); // Create a new scene with the login screen root
-        } else {
-            stage.getScene().setRoot(loginRoot);  // Switch to the login screen
-        }
+//    public void showLoginScreen() {
+//        if (stage.getScene() == null) {
+//            stage.setScene(new Scene(loginRoot)); // Create a new scene with the login screen root
+//        } else {
+//            stage.getScene().setRoot(loginRoot);  // Switch to the login screen
+//        }
+//    }
+public void showLoginScreen() {
+    // Set a smaller window size for the login screen
+    if (stage.getScene() == null) {
+        stage.setScene(new Scene(loginRoot, 550, 300)); // Create a new scene with smaller height for login
+    } else {
+        stage.getScene().setRoot(loginRoot);  // Switch to the login screen
+        stage.setWidth(550);  // Set the width for login screen
+        stage.setHeight(300); // Set the height for login screen
     }
+}
 
     public void showMainAppScreen() {
         stage.getScene().setRoot(mainAppRoot);  // Switch to the main application screen
     }
+
     public void showDashBoardScreen(String username) {
         if (dashboardController != null) {
-            dashboardController.setUsername(username);  // Set the username in the DashboardController
+            dashboardController.setUserName(username);  // Set the username in the DashboardController
         }
         stage.getScene().setRoot(dashboardRoot);  // Switch to the dashboard screen
+        stage.setWidth(1000); // Set the width for dashboard screen
+        stage.setHeight(800); // Set the height for dashboard screen
     }
 
     public static void main(String[] args) {

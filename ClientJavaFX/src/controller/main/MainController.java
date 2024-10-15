@@ -875,4 +875,8 @@ public class MainController implements Closeable {
     public StringProperty getLastUpdatedUserNameProperty() {
         return model.getUserNameProperty();
     }
+
+    public void exitApplication() {
+        System.exit(0);
+    }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -8,45 +7,52 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.dashboard.DashboardController">
-    <BorderPane>
-        <top>
-            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10;">
-                <Button fx:id="loadSheetFileButton" onAction="#onLoadSheetFileButtonClicked" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;" text="Load Sheet File Button" />
-                <Label fx:id="usernameLabel" style="-fx-font-size: 14px; -fx-text-fill: #333;" text="Username" />
-            </HBox>
-        </top>
-        <center>
-            <VBox spacing="10" style="-fx-padding: 10;">
-                <TableView fx:id="availableSheetsTable" prefHeight="200" style="-fx-border-color: #dcdcdc; -fx-border-radius: 5px;">
-                    <columns>
-                        <TableColumn fx:id="ownerColumn" prefWidth="100.0" text="Owner" />
-                        <TableColumn fx:id="sheetNameColumn" prefWidth="100.0" text="Sheet Name" />
-                        <TableColumn fx:id="sizeColumn" prefWidth="100.0" text="Size" />
-                        <TableColumn fx:id="myPermissionStatusColumn" prefWidth="100.0" text="My Permission Status" />
-                    </columns>
-                </TableView>
-                <TableView fx:id="permissionsTable" prefHeight="200" style="-fx-border-color: #dcdcdc; -fx-border-radius: 5px;">
-                    <columns>
-                        <TableColumn fx:id="usernameColumn" prefWidth="100.0" text="Username" />
-                        <TableColumn fx:id="permissionStatusColumn" prefWidth="100.0" text="Permission Status" />
-                        <TableColumn fx:id="approvedByOwnerColumn" prefWidth="100.0" text="Approved by Owner" />
-                    </columns>
-                </TableView>
-            </VBox>
-        </center>
-        <right>
-            <VBox alignment="TOP_CENTER" prefHeight="414.0" prefWidth="237.0" spacing="10" style="-fx-padding: 10; -fx-background-color: #add8e6; -fx-background-radius: 5px;">
-                <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Commands:" />
-                <Button fx:id="viewSheetButton" onAction="#onViewSheetButtonClicked" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="View Sheet" />
-                <Button fx:id="requestPermissionButton" onAction="#onRequestPermissionButtonClicked" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Request Permission" />
-                <Button fx:id="askDenyPermissionButton" onAction="#onAskDenyPermissionButtonClicked" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Ask/Deny Permission Request" />
-            <BorderPane.margin>
-               <Insets top="10.0" />
-            </BorderPane.margin>
-            </VBox>
-        </right>
-    </BorderPane>
+<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.dashboard.DashboardController">
+    <ScrollPane fitToHeight="true" fitToWidth="true"> <!-- Outer ScrollPane -->
+        <BorderPane minWidth="600.0" styleClass="dashboard-background">
+            <!-- Left section with curved background -->
+            <left>
+                <VBox alignment="TOP_CENTER" prefWidth="200" spacing="20" style="-fx-padding: 15;" styleClass="left-pane">
+                    <Label fx:id="helloUserLabel" styleClass="dashboard-label" text="Hello" />
+                    <Button fx:id="loadSheetFileButton" onAction="#onLoadSheetFileButtonClicked" styleClass="dashboard-load-button" text="Upload File" />
+                    <Button fx:id="viewSheetButton" onAction="#onViewSheetButtonClicked" styleClass="dashboard-button" text="View Sheet" />
+                    <Button fx:id="requestPermissionButton" onAction="#onRequestPermissionButtonClicked" styleClass="dashboard-button" text="Request Permission" />
+                    <Button fx:id="manageAccessRequestsButton" onAction="#onManageAccessRequestsButtonClicked" styleClass="dashboard-button" text="Manage Access Requests" />
+
+                    <!-- Spacer to push logout and exit buttons to the bottom -->
+                    <Pane VBox.vgrow="ALWAYS" />
+
+                    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+                        <Button fx:id="logoutButton" onAction="#onLogoutButtonClicked" styleClass="small-button" text="Logout" />
+                        <Button fx:id="exitButton" onAction="#onExitButtonClicked" styleClass="small-button-exit" text="Exit" />
+                    </HBox>
+                </VBox>
+            </left>
+
+            <!-- Right section containing the table views -->
+            <center>
+                <VBox spacing="15" style="-fx-padding: 10;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="availableSheetsTable" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="ownerColumn" prefWidth="100.0" text="Owner" />
+                            <TableColumn fx:id="sheetNameColumn" prefWidth="100.0" text="Sheet Name" />
+                            <TableColumn fx:id="sizeColumn" prefWidth="100.0" text="Sheet Size" />
+                            <TableColumn fx:id="myPermissionStatusColumn" prefWidth="100.0" text="Permission" />
+                        </columns>
+                    </TableView>
+
+                    <TableView fx:id="permissionsTable" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="usernameColumn" prefWidth="100.0" text="User Name" />
+                            <TableColumn fx:id="permissionStatusColumn" prefWidth="100.0" text="Permission Type" />
+                            <TableColumn fx:id="approvedByOwnerColumn" prefWidth="100.0" text="Permission Status" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </center>
+        </BorderPane>
+    </ScrollPane>
 </ScrollPane>
