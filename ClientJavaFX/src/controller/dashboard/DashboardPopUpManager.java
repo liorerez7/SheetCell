@@ -168,7 +168,7 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
 
         // Add each pending request as an HBox row
         myRequests.stream()
-                .filter(req -> !req.getWasAnswered()) // Filter unanswered requests
+                .filter(req -> (!req.getWasAnswered())) // Filter unanswered requests
                 .forEach(req -> pendingRequestsBox.getChildren().add(createRequestRow(req, popupStage)));
 
         // Create ScrollPane for pending requests
