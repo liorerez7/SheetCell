@@ -163,6 +163,7 @@ public class PermissionManager {
                     permissionLine.setPermissionStatus(permissionStatus);
                     permissionLine.setRequestStatus(requestStatus);
                     foundInAllHistory = true;
+                    break;
                 }
             }
 

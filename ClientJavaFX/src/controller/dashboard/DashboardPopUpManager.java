@@ -142,7 +142,7 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
                 }
             });
 
-            popupStage.close();  // Close the popup after submission
+//            popupStage.close();  // Close the popup after submission
         }
     }
 
@@ -212,8 +212,6 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
         popupStage.show();
     }
 
-
-
     private HBox createRequestRow(RequestPermission request, Stage popupStage) {
         HBox requestBox = new HBox(10); // Reduced spacing between elements
         requestBox.setPadding(new Insets(5)); // Reduced padding to make rows more compact
@@ -269,7 +267,7 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
             throw new RuntimeException(e);
         }
 
-        popupStage.close();
+//        popupStage.close();
     }
 
     //    private HBox createRequestRow(RequestPermission request, Stage popupStage) {
