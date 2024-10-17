@@ -114,24 +114,29 @@ public class PermissionManager {
     public void updateOwnerResponseForRequest(String ownerName, String sheetName, String userName,
                                               PermissionStatus permissionStatus, RequestStatus requestStatus) {
 
+        // Mark the response as answered
         List<ResponsePermission> myResponses = ownerNameToHisResponseList.get(ownerName);
         myResponses.forEach(responsePermission -> {
             if (responsePermission.getSheetNameForRequest().equals(sheetName) &&
-                    responsePermission.getUserNameForRequest().equals(userName)) {
+                    responsePermission.getUserNameForRequest().equals(userName) && responsePermission.getPermissionStatusForRequest().equals(permissionStatus)) {
 
                 responsePermission.setWasAnswered(true);
             }
         });
 
+        // Mark the request as answered
         List<RequestPermission> myRequests = userNameToHisRequestList.get(userName);
         myRequests.forEach(requestPermission -> {
             if (requestPermission.getSheetNameForRequest().equals(sheetName) &&
-                    requestPermission.getUserNameForRequest().equals(ownerName)) {
+                    requestPermission.getUserNameForRequest().equals(ownerName) && requestPermission.getPermissionStatusForRequest().equals(permissionStatus)) {
 
                 requestPermission.setWasAnswered(true);
             }
         });
 
+
+        // Update the current permission status, this holds the current and relevant permissions.
+        // here there are no pending requests, only current permission status (READER, WRITER, OWNER, NONE)
         List<PermissionLine> permissionLines = currentSheetNameToPermissionLines.get(sheetName);
         if (permissionLines != null) {
             boolean found = false;
@@ -155,15 +160,18 @@ public class PermissionManager {
             }
 
 
+
+            // Update the all history permission status, this holds all the permissions that were ever given to a user.
+            // swap the pending request status to the new status
             boolean foundInAllHistory = false;
 
             List<PermissionLine> allHistoryPermissionLines = allHistorySheetNameToPermissionLines.get(sheetName);
             for(PermissionLine permissionLine : allHistoryPermissionLines){
-                if(permissionLine.getUserName().equals(userName) && permissionLine.getRequestStatus() == RequestStatus.PENDING){
-                    permissionLine.setPermissionStatus(permissionStatus);
+                if(permissionLine.getUserName().equals(userName) && permissionLine.getRequestStatus().equals(RequestStatus.PENDING)
+                && permissionLine.getPermissionStatus().equals(permissionStatus)) {
+
                     permissionLine.setRequestStatus(requestStatus);
                     foundInAllHistory = true;
-                    break;
                 }
             }
 

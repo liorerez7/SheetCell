@@ -2,6 +2,7 @@ package controller.dashboard;
 
 import dto.permissions.RequestPermission;
 import dto.permissions.RequestStatus;
+import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,6 +13,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -29,64 +31,68 @@ import java.util.Set;
 public class DashboardPopUpManager {
 
     private DashboardController dashboardController;
+    private VBox pendingRequestsBox;  // Declare pendingRequestsBox as an instance variable
 
     public DashboardPopUpManager(DashboardController dashboardController) {
         this.dashboardController = dashboardController;
     }
 
+    public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
+        // Create the popup stage
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Select Sheet and Permission");
 
-public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
-    // Create the popup stage
-    Stage popupStage = new Stage();
-    popupStage.setTitle("Select Sheet and Permission");
+        // Create ListView for sheets
+        ListView<String> sheetListView = createSheetListView(sheetNames);
 
-    // Create ListView for sheets
-    ListView<String> sheetListView = createSheetListView(sheetNames);
+        // Create ChoiceBox for permissions
+        ChoiceBox<String> permissionChoiceBox = createPermissionChoiceBox();
 
-    // Create ChoiceBox for permissions
-    ChoiceBox<String> permissionChoiceBox = createPermissionChoiceBox();
+        // Create the Submit button
+        Button submitButton = createSubmitButton(sheetListView, permissionChoiceBox, popupStage);
+        submitButton.getStyleClass().add("popup-button");
 
-    // Create the Submit button
-    Button submitButton = createSubmitButton(sheetListView, permissionChoiceBox, popupStage);
-    submitButton.getStyleClass().add("popup-button");
+        // Create the success message label (initially hidden)
+        Label successMessage = new Label("Request sent successfully \u2714"); // Checkmark icon
+        successMessage.setStyle("-fx-text-fill: green; -fx-font-size: 14px;");
+        successMessage.setVisible(false);  // Initially hidden
 
-    // Create VBox layout for the popup
-    VBox layout = new VBox(15);  // Increase the spacing between elements
-    layout.setPadding(new Insets(20));
-    layout.setAlignment(Pos.CENTER);
-    layout.getStyleClass().add("popup-background");  // Apply the background style from CSS
+        // Create VBox layout for the popup
+        VBox layout = new VBox(15);  // Increase the spacing between elements
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.CENTER);
+        layout.getStyleClass().add("popup-background");  // Apply the background style from CSS
 
-    // Create and add header
-    Label headerLabel = new Label("Select Sheet and Permission");
-    headerLabel.getStyleClass().add("popup-header");
+        // Create and add header
+        Label headerLabel = new Label("Select Sheet and Permission");
+        headerLabel.getStyleClass().add("popup-header");
 
-    // Add elements to layout
-    layout.getChildren().addAll(headerLabel, new Label("Select a sheet:"), sheetListView,
-            new Label("Select permission:"), permissionChoiceBox, submitButton);
+        // Add elements to layout
+        layout.getChildren().addAll(headerLabel, new Label("Select a sheet:"), sheetListView,
+                new Label("Select permission:"), permissionChoiceBox, submitButton, successMessage);
 
-    // Add the layout inside a ScrollPane
-    ScrollPane scrollPane = new ScrollPane(layout);
-    scrollPane.setFitToWidth(true);  // Ensure content width is adjusted
-    scrollPane.setFitToHeight(true);  // Adjust content height
-    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);  // Enable vertical scrollbar as needed
-    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);  // Enable horizontal scrollbar as needed
+        // Add the layout inside a ScrollPane
+        ScrollPane scrollPane = new ScrollPane(layout);
+        scrollPane.setFitToWidth(true);  // Ensure content width is adjusted
+        scrollPane.setFitToHeight(true);  // Adjust content height
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);  // Enable vertical scrollbar as needed
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);  // Enable horizontal scrollbar as needed
 
-    // Set the minimum size for the ScrollPane
-    scrollPane.setMinWidth(330);  // Adjust this to control when horizontal scrollbar appears
-    scrollPane.setMinHeight(430); // Adjust this to control when vertical scrollbar appears
+        // Set the minimum size for the ScrollPane
+        scrollPane.setMinWidth(330);  // Adjust this to control when horizontal scrollbar appears
+        scrollPane.setMinHeight(430); // Adjust this to control when vertical scrollbar appears
 
-    // Set minimum size for the popup stage (optional)
-    popupStage.setMinWidth(350);  // Prevent the stage from being resized too small
-    popupStage.setMinHeight(450); // Prevent the stage from being resized too small
+        // Set minimum size for the popup stage (optional)
+        popupStage.setMinWidth(350);  // Prevent the stage from being resized too small
+        popupStage.setMinHeight(450); // Prevent the stage from being resized too small
 
-    // Create and set the scene with default size
-    Scene scene = new Scene(scrollPane, 350, 450);  // Default size remains 350x450
-    scene.getStylesheets().add(getClass().getResource("dashboard.css").toExternalForm());  // Load CSS
+        // Create and set the scene with default size
+        Scene scene = new Scene(scrollPane, 350, 450);  // Default size remains 350x450
+        scene.getStylesheets().add(getClass().getResource("dashboard.css").toExternalForm());  // Load CSS
 
-    popupStage.setScene(scene);
-    popupStage.show();
-}
-
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
 
     private ListView<String> createSheetListView(Set<String> sheetNames) {
         ListView<String> sheetListView = new ListView<>();
@@ -112,12 +118,12 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
         permissionChoiceBox.getSelectionModel().selectedItemProperty().addListener(listener);
 
         // Handle button action
-        submitButton.setOnAction(e -> handleSheetAndPermissionSubmit(sheetListView, permissionChoiceBox, popupStage));
+        submitButton.setOnAction(e -> handleSheetAndPermissionSubmit(sheetListView, permissionChoiceBox, popupStage, submitButton));
 
         return submitButton;
     }
 
-    private void handleSheetAndPermissionSubmit(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Stage popupStage) {
+    private void handleSheetAndPermissionSubmit(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Stage popupStage, Button submitButton) {
         String selectedSheet = sheetListView.getSelectionModel().getSelectedItem();
         String selectedPermission = permissionChoiceBox.getSelectionModel().getSelectedItem();
 
@@ -125,6 +131,10 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
             Map<String, String> params = new HashMap<>();
             params.put("sheetName", selectedSheet);
             params.put("permission", selectedPermission);
+
+            // Get the success message label (last child of the VBox layout)
+            VBox layout = (VBox) submitButton.getParent();
+            Label successMessage = (Label) layout.getChildren().get(layout.getChildren().size() - 1);
 
             // Asynchronously send the permission request
             HttpRequestManager.sendPostAsyncRequest(Constants.REQUEST_PERMISSION, params, new Callback() {
@@ -139,10 +149,16 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
                         dashboardController.handleHttpResponseFailure(response, "Failed to request permission");
                     }
                     dashboardController.forceRefreshPermissionTableForSheet(selectedSheet);
+
+                    // Show success message after the request is successfully sent
+                    successMessage.setVisible(true);
+
+                    // Hide the success message after 2 seconds
+                    PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                    delay.setOnFinished(event -> successMessage.setVisible(false));
+                    delay.play();
                 }
             });
-
-//            popupStage.close();  // Close the popup after submission
         }
     }
 
@@ -152,12 +168,13 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
         submitButton.setDisable(selectedSheet == null || selectedPermission == null);  // Enable only if both selections are made
     }
 
+
     public void showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
         Stage popupStage = new Stage();
         popupStage.setTitle("Manage Access Requests");
 
-        // Create VBox for pending requests
-        VBox pendingRequestsBox = new VBox(15);
+        // Initialize the instance variable pendingRequestsBox
+        pendingRequestsBox = new VBox(15);
         pendingRequestsBox.setPadding(new Insets(10));
         pendingRequestsBox.setAlignment(Pos.CENTER);
 
@@ -261,41 +278,31 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
 
             if (!responseForSendingResponseStatus.isSuccessful()) {
                 System.out.println("Failed to send response status");
+            } else {
+                removeRequestRow(request);  // Remove the request row after the response
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-//        popupStage.close();
     }
 
-    //    private HBox createRequestRow(RequestPermission request, Stage popupStage) {
-//        HBox requestBox = new HBox(15);
-//        requestBox.setPadding(new Insets(10));
-//        requestBox.setAlignment(Pos.CENTER);
-//        requestBox.getStyleClass().add("popup-background"); // Style the row background if needed
-//
-//        // Create Labels for each detail with consistent styling
-//        Label usernameLabel = new Label("User: " + request.getUserNameForRequest());
-//        Label sheetNameLabel = new Label("Sheet: " + request.getSheetNameForRequest());
-//        Label statusLabel = new Label("Status: " + request.getPermissionStatusForRequest());
-//
-//        // Create Approve and Deny buttons with consistent styling
-//        Button approveButton = new Button("Approve");
-//        approveButton.getStyleClass().add("popup-button"); // Reuse button styles
-//        Button denyButton = new Button("Deny");
-//        denyButton.getStyleClass().add("popup-button"); // Reuse button styles
-//
-//        // Set button actions
-//        approveButton.setOnAction(e -> handlePermissionResponse(request, true, popupStage));
-//        denyButton.setOnAction(e -> handlePermissionResponse(request, false, popupStage));
-//
-//        // Add elements to the HBox
-//        requestBox.getChildren().addAll(usernameLabel, sheetNameLabel, statusLabel, approveButton, denyButton);
-//
-//        return requestBox;
-//    }
+    private void removeRequestRow(RequestPermission request) {
+        // Remove the request row from pendingRequestsBox
+        pendingRequestsBox.getChildren().removeIf(node -> {
+            if (node instanceof HBox) {
+                HBox row = (HBox) node;
+                // Check if the row matches the request (username, sheet name, and permission)
+                Label usernameLabel = (Label) row.getChildren().get(0); // Adjust index if needed
+                Label sheetNameLabel = (Label) row.getChildren().get(1); // Adjust index if needed
+                Label statusLabel = (Label) row.getChildren().get(2); // Adjust index if needed
+                return usernameLabel.getText().contains(request.getUserNameForRequest()) &&
+                        sheetNameLabel.getText().contains(request.getSheetNameForRequest()) &&
+                        statusLabel.getText().contains(request.getPermissionStatusForRequest().toString());
+            }
+            return false;
+        });
+    }
 }
 
 
@@ -305,130 +312,3 @@ public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//public class DashboardPopUpManager {
-//
-//    private DashboardController dashboardController;
-//
-//    public DashboardPopUpManager(DashboardController dashboardController) {
-//        this.dashboardController = dashboardController;
-//    }
-//
-//    public void showSheetAndPermissionSelectionPopup(Set<String> sheetNames) {
-//        // Create the popup stage
-//        Stage popupStage = new Stage();
-//        popupStage.setTitle("Select Sheet and Permission");
-//
-//        // Create ListView for sheets
-//        ListView<String> sheetListView = createSheetListView(sheetNames);
-//
-//        // Create ChoiceBox for permissions
-//        ChoiceBox<String> permissionChoiceBox = createPermissionChoiceBox();
-//
-//        // Create the Submit button
-//        Button submitButton = createSubmitButton(sheetListView, permissionChoiceBox, popupStage);
-//
-//        submitButton.getStyleClass().add("popup-button");
-//
-//        // Create VBox layout for the popup
-//        VBox layout = new VBox(15);  // Increase the spacing between elements
-//        layout.setPadding(new Insets(20));
-//        layout.setAlignment(Pos.CENTER);
-//        layout.getStyleClass().add("popup-background");  // Apply the background style from CSS
-//
-//        // Create and add header
-//        Label headerLabel = new Label("Select Sheet and Permission");
-//        headerLabel.getStyleClass().add("popup-header");
-//
-//        // Add elements to layout
-//        layout.getChildren().addAll(headerLabel, new Label("Select a sheet:"), sheetListView,
-//                new Label("Select permission:"), permissionChoiceBox, submitButton);
-//
-//        // Create and set the scene
-//        Scene scene = new Scene(layout, 350, 450);
-//        scene.getStylesheets().add(getClass().getResource("dashboard.css").toExternalForm());  // Load CSS
-//        popupStage.setScene(scene);
-//        popupStage.show();
-//    }
-//
-//    private ListView<String> createSheetListView(Set<String> sheetNames) {
-//        ListView<String> sheetListView = new ListView<>();
-//        sheetListView.getItems().addAll(sheetNames);
-//        sheetListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-//        return sheetListView;
-//    }
-//
-//    private ChoiceBox<String> createPermissionChoiceBox() {
-//        ChoiceBox<String> permissionChoiceBox = new ChoiceBox<>();
-//        permissionChoiceBox.getItems().addAll("Writer", "Reader");
-//        return permissionChoiceBox;
-//    }
-//
-//    private Button createSubmitButton(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Stage popupStage) {
-//        Button submitButton = new Button("Submit");
-//        submitButton.setDisable(true);  // Initially disable the submit button
-//
-//        // Add listeners to enable the button when both selections are made
-//        ChangeListener<Object> listener = (obs, oldSelection, newSelection) -> checkSubmitButtonState(sheetListView, permissionChoiceBox, submitButton);
-//        sheetListView.getSelectionModel().selectedItemProperty().addListener(listener);
-//        permissionChoiceBox.getSelectionModel().selectedItemProperty().addListener(listener);
-//
-//        // Handle button action
-//        submitButton.setOnAction(e -> handleSheetAndPermissionSubmit(sheetListView, permissionChoiceBox, popupStage));
-//
-//        return submitButton;
-//    }
-//
-//    private void handleSheetAndPermissionSubmit(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Stage popupStage) {
-//        String selectedSheet = sheetListView.getSelectionModel().getSelectedItem();
-//        String selectedPermission = permissionChoiceBox.getSelectionModel().getSelectedItem();
-//
-//        if (selectedSheet != null && selectedPermission != null) {
-//            Map<String, String> params = new HashMap<>();
-//            params.put("sheetName", selectedSheet);
-//            params.put("permission", selectedPermission);
-//
-//            // Asynchronously send the permission request
-//            HttpRequestManager.sendPostAsyncRequest(Constants.REQUEST_PERMISSION, params, new Callback() {
-//                @Override
-//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                    dashboardController.handleHttpFailure(e, "Failed to request permission");
-//                }
-//
-//                @Override
-//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                    if (!response.isSuccessful()) {
-//                        dashboardController.handleHttpResponseFailure(response, "Failed to request permission");
-//                    }
-//                    dashboardController.forceRefreshPermissionTableForSheet(selectedSheet);
-//                }
-//            });
-//
-//            popupStage.close();  // Close the popup after submission
-//        }
-//    }
-//
-//    private void checkSubmitButtonState(ListView<String> sheetListView, ChoiceBox<String> permissionChoiceBox, Button submitButton) {
-//        String selectedSheet = sheetListView.getSelectionModel().getSelectedItem();
-//        String selectedPermission = permissionChoiceBox.getSelectionModel().getSelectedItem();
-//        submitButton.setDisable(selectedSheet == null || selectedPermission == null);  // Enable only if both selections are made
-//    }
-//}

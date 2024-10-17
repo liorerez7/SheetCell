@@ -177,6 +177,14 @@
     -fx-max-width: 150px;
 }
 
+.popup-small-button:hover {
+    -fx-background-color: #1e88e5;
+}
+
+.popup-small-button:pressed {
+    -fx-background-color: #1565c0;
+}
+
 .popup-button:hover {
     -fx-background-color: #1e88e5;
 }
