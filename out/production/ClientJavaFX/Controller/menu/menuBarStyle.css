@@ -1,0 +1,81 @@
+/* General Style for GridPane */
+#gridPaneMenu {
+    /*-fx-background-color: #f5f5f5;*/
+    /*-fx-padding: 10; !* Reduced padding to bring elements closer to the top *!*/
+    /*-fx-hgap: 20;*/
+    /*-fx-vgap: 8; !* Reduced vertical gap *!*/
+    -fx-background-color: #f4f4f4;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #d3d3d3;
+    -fx-padding: 10; /* Reduced padding to bring elements closer to the top */
+    -fx-hgap: 20;
+    -fx-vgap: 8; /* Reduced vertical gap */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+}
+
+/* Style for ComboBox */
+.combo-box {
+    -fx-font-family: "Arial";
+    -fx-font-size: 12px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 4;
+}
+
+/* Style for Buttons */
+.button {
+    -fx-font-family: "Arial";
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+    -fx-background-color: #e6e6e6;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 6;
+}
+
+.button:hover {
+    -fx-background-color: #dcdcdc;
+}
+
+.default-button {
+    -fx-background-color: #b0b0b0;
+    -fx-text-fill: white;
+}
+
+/* Back to Dashboard Button - Elegant Look */
+.navigation-button {
+    -fx-background-color: #4a4a4a; /* Muted dark grey */
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 5;
+    -fx-padding: 6;
+}
+
+.navigation-button:hover {
+    -fx-background-color: #6a6a6a; /* Slightly lighter on hover */
+}
+
+/* Style for ColorPicker */
+.color-picker {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+}
+
+/* Labels */
+.label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+    -fx-padding: 5;
+}
+
+/* Elegant Welcome Label */
+.cool-welcome {
+    -fx-font-family: "Georgia";  /* A serif font for a more classic look */
+    -fx-font-size: 16px;  /* Slightly smaller, more refined size */
+    -fx-text-fill: #3b3b3b;  /* Elegant dark grey color */
+    -fx-font-weight: normal;  /* Normal weight for subtle elegance */
+    -fx-padding: 5;
+    -fx-opacity: 0.9;  /* Slight opacity for a softer look */
+}

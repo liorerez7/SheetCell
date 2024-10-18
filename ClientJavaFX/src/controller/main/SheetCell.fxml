@@ -50,16 +50,22 @@
                         </VBox.margin>
                     </VBox>
                 </children>
-            <opaqueInsets>
-               <Insets />
-            </opaqueInsets>
-            <BorderPane.margin>
-               <Insets top="10.0" />
-            </BorderPane.margin>
+                <opaqueInsets>
+                    <Insets />
+                </opaqueInsets>
+                <BorderPane.margin>
+                    <Insets top="10.0" />
+                </BorderPane.margin>
             </VBox>
         </left>
         <center>
-            <fx:include fx:id="gridScroller" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="550.0" prefWidth="1050.0" source="../grid/Grid.fxml" BorderPane.alignment="TOP_LEFT" />
+            <!-- Add a VBox container around the fx:include to apply margin -->
+            <VBox BorderPane.alignment="TOP_LEFT" spacing="20">
+                <VBox.margin>
+                    <Insets top="100.0" /> <!-- This moves the ScrollPane 100px lower -->
+                </VBox.margin>
+                <fx:include fx:id="gridScroller" maxHeight="580.0" maxWidth="1.7976931348623157E308" minHeight="400.0" prefHeight="400.0" prefWidth="1050.0" source="../grid/Grid.fxml" />
+            </VBox>
         </center>
     </BorderPane>
 </ScrollPane>

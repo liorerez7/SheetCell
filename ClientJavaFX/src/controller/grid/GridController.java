@@ -52,13 +52,15 @@ public class GridController {
     }
 
     public void initializeEmptyGrid(DtoSheetCell sheetCell, GridPane grid, boolean isPopup) {
-
+        // Apply styles and size settings
         grid.getStylesheets().add(Objects.requireNonNull(getClass().getResource("ExelBasicGrid.css")).toExternalForm());
+
+        // Set custom sizes for GridPane and ScrollPane
         grid.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         grid.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         grid.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-
+        // Adjust the height and margins of the gridScroller here
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -72,9 +74,12 @@ public class GridController {
         addRowHeaders(grid, numRows, cellWidth, cellLength);
 
         if (!isPopup) {
-            gridScroller.setContent(grid);
+            gridScroller.setContent(grid);  // Set the grid content to the scroller
         }
     }
+
+
+
 
     public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         neighborsHandler = new NeighborsHandler();
