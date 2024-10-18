@@ -1,6 +1,8 @@
 package controller.menu;
 
 import controller.main.MainController;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -8,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 
 public class HeaderController {
 
@@ -72,6 +75,7 @@ public class HeaderController {
         lengthPlusButton.disableProperty().bind(mainController.getIsRowSelectedProperty().not());
         lengthMinusButton.disableProperty().bind(mainController.getIsRowSelectedProperty().not());
         alignmentComboBox.disableProperty().bind(mainController.getIsColumnSelectedProperty().not());
+        bindColorPickersReset(mainController.getColorProperty());
     }
 
     @FXML
@@ -92,24 +96,47 @@ public class HeaderController {
         setComboBoxHeaderTextColor(alignmentComboBox, Color.WHITE);
     }
 
+//    private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
+//        comboBox.setCellFactory(cb -> new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                setText(empty || item == null ? null : item.getText());
+//                setTextFill(Color.BLACK);
+//            }
+//        });
+//        comboBox.setButtonCell(new ListCell<Label>() {
+//            @Override
+//            protected void updateItem(Label item, boolean empty) {
+//                super.updateItem(item, empty);
+//                setText(empty || item == null ? defaultText : item.getText());
+//                setTextFill(Color.WHITE);
+//            }
+//        });
+//        comboBox.setPromptText(defaultText);
+//    }
+
     private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
         comboBox.setCellFactory(cb -> new ListCell<Label>() {
             @Override
             protected void updateItem(Label item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? null : item.getText());
-                setTextFill(Color.BLACK);
+                setTextFill(Color.BLACK);  // Set dropdown item text color
             }
         });
+
         comboBox.setButtonCell(new ListCell<Label>() {
             @Override
             protected void updateItem(Label item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? defaultText : item.getText());
-                setTextFill(Color.WHITE);
+                // Avoid setting white text if the background is light
+                setTextFill(Color.BLACK);  // Ensures visibility of default text
             }
         });
-        comboBox.setPromptText(defaultText);
+
+        comboBox.setPromptText(defaultText);  // Set the prompt text explicitly
     }
 
     private void setComboBoxHeaderTextColor(ComboBox<Label> comboBox, Color color) {
@@ -117,6 +144,26 @@ public class HeaderController {
         if (textField != null) {
             textField.setStyle("-fx-text-fill: " + toRgbString(color) + ";");
         }
+    }
+
+    private void initializeAlignmentComboBox() {
+        alignmentComboBox.getItems().addAll(
+                new Label("CENTER"),
+                new Label("LEFT"),
+                new Label("RIGHT")
+        );
+
+
+        // Ensure the prompt text is set correctly
+        alignmentComboBox.setPromptText("Alignment");
+        setComboBoxCellFactory(alignmentComboBox, "Alignment");
+
+        // Listen for value changes in the ComboBox
+        alignmentComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                handleTextAlignment(newValue.getText().toLowerCase());
+            }
+        });
     }
 
     @FXML
@@ -240,22 +287,22 @@ public class HeaderController {
         rowComboBox.getSelectionModel().clearSelection(); // Clear the current selection
         rowComboBox.setPromptText("Rows"); // Set default text after clearing selection
         alignmentComboBox.getSelectionModel().clearSelection(); // Clear the current selection
-        alignmentComboBox.setPromptText("AlignmentText"); // Set default prompt text
+        alignmentComboBox.setPromptText("Alignment"); // Set default prompt text
     }
 
-    private void initializeAlignmentComboBox() {
-        alignmentComboBox.getItems().addAll(
-                new Label("CENTER"),
-                new Label("LEFT"),
-                new Label("RIGHT")
-        );
-        setComboBoxCellFactory(alignmentComboBox, "Alignment Text");
-        alignmentComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                handleTextAlignment(newValue.getText().toLowerCase());
-            }
-        });
-    }
+//    private void initializeAlignmentComboBox() {
+//        alignmentComboBox.getItems().addAll(
+//                new Label("CENTER"),
+//                new Label("LEFT"),
+//                new Label("RIGHT")
+//        );
+//        setComboBoxCellFactory(alignmentComboBox, "Alignment Text");
+//        alignmentComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                handleTextAlignment(newValue.getText().toLowerCase());
+//            }
+//        });
+//    }
 
     @FXML
     private void handleTextAlignment(String alignment) {
@@ -268,4 +315,21 @@ public class HeaderController {
         String username = mainController.getUserName();
         mainController.showDashBoardScreen(username);
     }
+
+    private void bindColorPickersReset(BooleanProperty resetColorPickersProperty) {
+        // Listen to the resetColorPickersProperty and reset the ColorPickers when it's true
+        resetColorPickersProperty.addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                resetColorPickersToDefault();
+                // Reset the property back to false after resetting
+                resetColorPickersProperty.set(false);
+            }
+        });
+    }
+    private void resetColorPickersToDefault() {
+        // Set both ColorPickers to white when called
+        textColorPicker.setValue(Color.WHITE);
+        backgroundColorPicker.setValue(Color.WHITE);
+    }
+
 }

@@ -414,6 +414,7 @@ public class MainController implements Closeable {
             model.setIsCellLabelClicked(true);
             model.setLatestUpdatedVersionProperty(dtoCell);
             model.setOriginalValueLabelProperty(dtoCell);
+            model.setColorProperty(true);
             actionLineController.updateCssWhenUpdatingCell(location);
             gridScrollerController.clearAllHighlights();
             gridScrollerController.showNeighbors(dtoCell);
@@ -890,5 +891,9 @@ public class MainController implements Closeable {
 
     public void exitApplication() {
         System.exit(0);
+    }
+
+    public BooleanProperty getColorProperty() {
+        return model.getColorProperty();
     }
 }

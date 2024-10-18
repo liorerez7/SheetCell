@@ -29,6 +29,7 @@ public class Model {
     private StringProperty cellLocationProperty;
     private BooleanProperty isNewerVersionOfSheet;
     private StringProperty userNameProperty;
+    private BooleanProperty colorProperty;
 
 
     public Model(DtoSheetCell sheetCell) {
@@ -44,6 +45,7 @@ public class Model {
         readingXMLSuccessProperty = new SimpleBooleanProperty(false);
         cellLocationProperty = new SimpleStringProperty("");
         isNewerVersionOfSheet = new SimpleBooleanProperty(false);
+        colorProperty = new SimpleBooleanProperty(false);
     }
 
     private DtoSheetCell runTimeAnalysisSheetCell;
@@ -93,6 +95,14 @@ public class Model {
             label.textProperty().bind(property);
 
         });
+    }
+
+    public void setColorProperty(boolean b) {
+        colorProperty.set(b);
+    }
+
+    public BooleanProperty getColorProperty() {
+        return colorProperty;
     }
 
     public void setPropertiesByDtoSheetCell(DtoSheetCell sheetCell) {
