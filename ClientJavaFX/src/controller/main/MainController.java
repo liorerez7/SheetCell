@@ -43,7 +43,7 @@ import java.util.concurrent.CompletableFuture;
 public class MainController implements Closeable {
 
     @FXML private HeaderController headerController;
-    @FXML private VBox header;
+    @FXML private GridPane header;  // Updated from VBox to GridPane
     @FXML private MenuBar menuBar;
     @FXML private BorderPane mainPane;
     @FXML private ActionLineController actionLineController;
@@ -81,7 +81,7 @@ public class MainController implements Closeable {
 
     @FXML
     public void initialize() {
-        customizeController.setMainController(this);
+        //customizeController.setMainController(this);
         headerController.setMainController(this);
         actionLineController.setMainController(this);
         gridScrollerController.setMainController(this);
@@ -211,8 +211,13 @@ public class MainController implements Closeable {
         model.setPropertiesByDtoSheetCell(newDtoSheetCell);
         model.setTotalVersionsProperty(newDtoSheetCell.getLatestVersion());
         rangesController.setAllRanges(newDtoSheetCell.getRanges());
-        customizeController.loadAllColData(newDtoSheetCell.getNumberOfColumns());
-        customizeController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
+
+
+        headerController.loadAllColData(newDtoSheetCell.getNumberOfColumns());
+        headerController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
+//        customizeController.loadAllColData(newDtoSheetCell.getNumberOfColumns());
+//        customizeController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
+
         themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
 
         if(permissionStatus == PermissionStatus.READER){
@@ -413,7 +418,11 @@ public class MainController implements Closeable {
             gridScrollerController.clearAllHighlights();
             gridScrollerController.showNeighbors(dtoCell);
             rangesController.resetComboBox();
-            customizeController.resetComboBox();
+
+
+           // customizeController.resetComboBox();
+            headerController.resetComboBox();
+
             model.setColumnSelected(false);
             model.setRowSelected(false);
             model.setCellLocationProperty(location);
@@ -565,26 +574,29 @@ public class MainController implements Closeable {
 
     public void classicDisplayClicked() {
         applyTheme(() -> themeManager.classicDisplayClicked(
-                headerController::changeToClassicTheme,
+               // headerController::changeToClassicTheme,
                 rangesController::changeToClassicTheme,
-                actionLineController::changeToClassicTheme,
-                customizeController::changeToClassicTheme));
+                actionLineController::changeToClassicTheme
+                //customizeController::changeToClassicTheme
+                ));
     }
 
     public void sunBurstDisplayClicked() {
         applyTheme(() -> themeManager.sunBurstDisplayClicked(
-                headerController::changeToSunBurstTheme,
+                //headerController::changeToSunBurstTheme,
                 rangesController::changeToSunBurstTheme,
-                actionLineController::changeToSunBurstTheme,
-                customizeController::changeToSunBurstTheme));
+                actionLineController::changeToSunBurstTheme
+                //customizeController::changeToSunBurstTheme
+                ));
     }
 
     public void midNightDisplayClicked() {
         applyTheme(() -> themeManager.midNightDisplayClicked(
-                headerController::changeToDarkTheme,
+                //headerController::changeToDarkTheme,
                 rangesController::changeToDarkTheme,
-                actionLineController::changeToDarkTheme,
-                customizeController::changeToDarkTheme));
+                actionLineController::changeToDarkTheme
+              //  customizeController::changeToDarkTheme
+                ));
     }
 
     private void applyTheme(Runnable themeMethod) {

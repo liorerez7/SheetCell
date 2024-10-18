@@ -61,10 +61,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
 }
 
-.CustomizeButton:pressed {
-    -fx-background-color: #004080; /* Even darker blue when pressed */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
-}
 
 .grid {
     -fx-border-color: black; /* Color of the grid lines */
@@ -175,6 +171,12 @@
     -fx-background-color: #004080; /* Even darker blue when pressed */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
 }
+
+.CustomizeButton:pressed {
+    -fx-background-color: #004080; /* Even darker blue when pressed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
+}
+
 
 
 .CustomizeButton .combo-box {

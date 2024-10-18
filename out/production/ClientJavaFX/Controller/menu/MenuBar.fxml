@@ -2,44 +2,113 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="VboxMenu" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="80.0" prefHeight="50.0" prefWidth="199.0" stylesheets="@../cssAdujsments/ExcelCssLayout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.menu.HeaderController">
+<GridPane fx:id="gridPaneMenu" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="80.0" prefHeight="80.0" prefWidth="1194.0" stylesheets="@../cssAdujsments/ExcelCssLayout.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.menu.HeaderController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="132.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="81.0" minWidth="6.0" prefWidth="43.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="207.0" minWidth="10.0" prefWidth="98.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0" prefWidth="79.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="271.0" minWidth="6.0" prefWidth="135.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="271.0" minWidth="10.0" prefWidth="136.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="118.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="253.0" minWidth="10.0" prefWidth="81.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="255.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="35.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+    </rowConstraints>
    <children>
-       <MenuBar fx:id="menuBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="42.0" VBox.vgrow="ALWAYS">
-        <menus>
-          <Menu mnemonicParsing="false" styleClass="menu-item" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#closeMenuButton" text="Close" />
-                  <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="load XML" />
-                  <MenuItem mnemonicParsing="false" onAction="#backToMenuClicked" text="backToMenu" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Display Mode">
-            <items>
-              <MenuItem fx:id="classicDisplayButton" mnemonicParsing="false" onAction="#classicDisplayClicked" text="Classic Light Theme" />
-                  <MenuItem fx:id="midNightDisplayButton" mnemonicParsing="false" onAction="#midNightDisplayClicked" text="Midnight Dark Theme" />
-                  <MenuItem fx:id="sunBurstDisplayButton" mnemonicParsing="false" onAction="#sunBurstDisplayClicked" text="Sunburst Theme" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <AnchorPane maxWidth="1.7976931348623157E308" prefHeight="71.0" prefWidth="204.0">
+      <ComboBox fx:id="columnComboBox" prefHeight="25.0" prefWidth="91.0" promptText="Columns" styleClass="CustomizeButton" stylesheets="@../cssAdujsments/ExcelCssLayout.css" GridPane.columnIndex="2">
+         <GridPane.margin>
+            <Insets left="3.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <Button fx:id="widthMinusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" stylesheets="@../cssAdujsments/ExcelCssLayout.css" text="-" GridPane.columnIndex="3">
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="widthPlusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" text="+" GridPane.columnIndex="3">
+         <GridPane.margin>
+            <Insets left="33.0" />
+         </GridPane.margin>
+      </Button>
+      <ComboBox fx:id="rowComboBox" prefHeight="25.0" prefWidth="94.0" promptText="Rows" styleClass="CustomizeButton" stylesheets="@../cssAdujsments/ExcelCssLayout.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="3.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <Button fx:id="lengthMinusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" text="-" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="lengthPlusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" text="+" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="33.0" />
+         </GridPane.margin>
+      </Button>
+      <ComboBox fx:id="alignmentComboBox" prefHeight="25.0" prefWidth="127.0" promptText="Text Aliligment" styleClass="CustomizeButton" GridPane.columnIndex="4" GridPane.columnSpan="2">
+         <GridPane.margin>
+            <Insets right="5.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <Label prefHeight="21.0" prefWidth="82.0" text="Text Color:" GridPane.columnIndex="5" GridPane.columnSpan="2">
          <padding>
-            <Insets right="5.0" top="5.0" />
+            <Insets right="2.0" />
          </padding>
-         <children>
-            <Button fx:id="updateSheet" mnemonicParsing="false" onAction="#updateSheetClicked" styleClass="ModernButton" text="updateSheet">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin>
+      </Label>
+      <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" styleClass="CustomizeButton" GridPane.columnIndex="6" GridPane.columnSpan="2">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ColorPicker>
+      <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" prefHeight="31.0" prefWidth="57.0" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="7">
+         <font>
+            <Font size="13.0" />
+         </font>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </Button>
+      <Label text="Background Color:" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin>
+      </Label>
+      <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" styleClass="CustomizeButton" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ColorPicker>
+      <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="7" GridPane.rowIndex="1">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="ThemeColorComboBox" prefHeight="25.0" prefWidth="114.0" promptText="Theme Color" styleClass="CustomizeButton" GridPane.columnIndex="8" GridPane.columnSpan="2" />
+      <Label text="Welcome Lior!" GridPane.columnSpan="2" GridPane.rowSpan="2">
+         <GridPane.margin>
+            <Insets bottom="40.0" left="8.0" />
+         </GridPane.margin>
+      </Label>
+      <Button fx:id="backDashBoard" mnemonicParsing="false" onAction="#backDashBoardClicked" styleClass="ModernButton" text="backToDashBoard" GridPane.rowIndex="1">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
    </children>
-</VBox>
+</GridPane>

@@ -20,6 +20,7 @@ public class ActionLineController {
     @FXML private Label originalValue;
     @FXML private Label lastUpdatedVersion;
     @FXML private Label lastUpdatedUserName;
+    @FXML private Button updateSheet;;
 
     private MainController mainController;
 
@@ -86,6 +87,8 @@ public class ActionLineController {
         lastUpdatedVersion.textProperty().bind(Bindings.concat("Last Version: ", mainController.getVersionProperty()));
         originalValue.textProperty().bind(mainController.getOriginalValueLabelProperty());
         lastUpdatedUserName.textProperty().bind(Bindings.concat("user name: ", mainController.getLastUpdatedUserNameProperty()));
+        updateSheet.disableProperty().bind(mainController.getNewerVersionOfSheetProperty().not());
+
     }
 
     private void handleVersionClick(int versionNumber) {
@@ -103,6 +106,7 @@ public class ActionLineController {
         Utilities.switchStyleClass(VersionScroller, "DarkModernButton", "ModernButton", "SunModernButton");
         Utilities.switchStyleClass(actionLine, "DarkUserInterfaceSection", "UserInterfaceSection", "SunUserInterfaceSection");
         Utilities.switchStyleClass(updateCellButton, "DarkModernButton", "SunModernButton", "ModernButton");
+        Utilities.switchStyleClass(updateSheet, "DarkModernButton", "SunModernButton", "ModernButton");
     }
 
     public void changeToClassicTheme() {
@@ -112,6 +116,7 @@ public class ActionLineController {
         Utilities.switchStyleClass(VersionScroller, "ModernButton", "DarkModernButton", "SunModernButton");
         Utilities.switchStyleClass(actionLine, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
         Utilities.switchStyleClass(updateCellButton, "ModernButton", "SunModernButton", "DarkModernButton");
+        Utilities.switchStyleClass(updateSheet, "ModernButton", "SunModernButton", "DarkModernButton");
     }
 
     public void changeToSunBurstTheme() {
@@ -121,6 +126,7 @@ public class ActionLineController {
         Utilities.switchStyleClass(actionLine, "SunUserInterfaceSection", "UserInterfaceSection", "DarkUserInterfaceSection");
         Utilities.switchStyleClass(VersionScroller, "SunModernButton", "ModernButton", "DarkModernButton");
         Utilities.switchStyleClass(updateCellButton, "SunModernButton", "ModernButton", "DarkModernButton");
+        Utilities.switchStyleClass(updateSheet, "SunModernButton", "ModernButton", "DarkModernButton");
 
     }
 
@@ -131,6 +137,12 @@ public class ActionLineController {
         newValueText.disableProperty().unbind();
         newValueText.setDisable(true);
 
+    }
+
+    @FXML
+    void updateSheetClicked(ActionEvent event) {
+        mainController.updateCurrentGridSheet();
+        mainController.setNewerVersionOfSheetProperty(false);
     }
 
     public void enableWriterButtons() {

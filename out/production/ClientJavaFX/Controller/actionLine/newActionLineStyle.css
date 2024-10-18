@@ -1,0 +1,88 @@
+/* General Action Line Styling */
+.UserInterfaceSection {
+    -fx-background-color: #f4f4f4;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #d3d3d3;
+    -fx-padding: 5; /* Reduced padding */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+}
+
+/* Styling for Labels */
+.LabelsOfUserInterfaceSection {
+    -fx-text-fill: #333333; /* Dark gray text for modern look */
+    -fx-font-family: 'Segoe UI', sans-serif; /* Modern font family */
+    -fx-font-size: 14px; /* Standard text size */
+    -fx-background-color: transparent; /* No background color */
+    -fx-padding: 5; /* Padding to space out the text */
+}
+
+/* Labels for subtle details like last version and username */
+.DetailLabel {
+    -fx-text-fill: #4A4A4A; /* Darker gray for modern and classic look */
+    -fx-font-family: 'Segoe UI', sans-serif; /* Retain modern font family */
+    -fx-font-size: 13px; /* Standard size for details */
+    -fx-padding: 5 10; /* Add some padding */
+    -fx-background-color: transparent; /* Transparent background */
+}
+
+.ModernButton {
+    -fx-background-color: #0078D4;
+    -fx-text-fill: white;
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 14px;
+    -fx-padding: 6 12; /* Adjusted padding to match FXML */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1);
+    -fx-cursor: hand;
+}
+
+/* Button hover effect */
+.ModernButton:hover {
+    -fx-background-color: #005a9e; /* Darker blue on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 5, 0, 0, 2); /* Stronger shadow on hover */
+}
+
+/* Button pressed effect */
+.ModernButton:pressed {
+    -fx-background-color: #004377; /* Even darker blue when pressed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 5, 0, 0, 2); /* Stronger shadow when pressed */
+}
+
+/* TextField Styling */
+.TextField {
+    -fx-background-color: #ffffff; /* White background for input */
+    -fx-border-color: #d3d3d3; /* Light gray border */
+    -fx-border-width: 1; /* Thin border */
+    -fx-border-radius: 5px; /* Rounded corners for the input */
+    -fx-padding: 5px; /* Padding for text inside the field */
+    -fx-font-family: 'Segoe UI', sans-serif; /* Modern font */
+    -fx-font-size: 14px; /* Suitable font size */
+}
+
+.TextField:focused {
+    -fx-border-color: #0078D4; /* Blue border when focused */
+    -fx-background-color: #f0f8ff; /* Very light blue background */
+}
+
+/* Styling for the MenuButton */
+.MenuButton {
+    -fx-background-color: #0078D4; /* Primary blue color */
+    -fx-text-fill: white;
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1);
+}
+
+.MenuButton:hover {
+    -fx-background-color: #005a9e;
+}
+
+.MenuButton:pressed {
+    -fx-background-color: #004377;
+}

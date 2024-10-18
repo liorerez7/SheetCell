@@ -185,12 +185,12 @@ public class CustomizeController {
     }
 
     private void initializeAlignmentComboBox() {
-        alignmentComboBox.getItems().addAll(
-                new Label("CENTER"),
-                new Label("LEFT"),
-                new Label("RIGHT")
-        );
-        setComboBoxCellFactory(alignmentComboBox, "Alignment Text");
+            alignmentComboBox.getItems().addAll(
+                    new Label("CENTER"),
+                    new Label("LEFT"),
+                    new Label("RIGHT")
+            );
+            setComboBoxCellFactory(alignmentComboBox, "Alignment Text");
         alignmentComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
                 handleTextAlignment(newValue.getText().toLowerCase());

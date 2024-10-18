@@ -77,13 +77,13 @@ public class ThemeManager {
 
         switch (currentThemeColor) {
             case CLASSIC:
-                customizeController.adjustTextButtonColor(Color.WHITE);
+               // customizeController.adjustTextButtonColor(Color.WHITE);
                 break;
             case MIDNIGHT:
-                customizeController.adjustTextButtonColor(Color.WHITE);
+                //customizeController.adjustTextButtonColor(Color.WHITE);
                 break;
             case SUNBURST:
-                customizeController.adjustTextButtonColor(Color.BLACK);
+                //customizeController.adjustTextButtonColor(Color.BLACK);
                 break;
         }
     }
