@@ -1,0 +1,62 @@
+/* General settings for the VBox */
+#customize {
+    -fx-padding: 10px;
+    -fx-background-color: #f5f5f5; /* Light neutral background */
+}
+
+/* Styling the GridPane */
+#customizeGridPane {
+    -fx-hgap: 5px;
+    -fx-vgap: 5px;
+}
+
+/* Styling for all buttons */
+.button {
+    -fx-background-color: #e0e0e0; /* Neutral gray */
+    -fx-border-color: #b0b0b0; /* Light border */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+/* Hover effect for buttons */
+.button:hover {
+    -fx-background-color: #d0d0d0; /* Slightly darker gray on hover */
+}
+
+/* Pressed effect for buttons */
+.button:pressed {
+    -fx-background-color: #b0b0b0; /* Darker gray on press */
+}
+
+/* Label text inside buttons */
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Darker gray for the text */
+}
+
+/* MenuButton styling */
+.menu-button {
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #b0b0b0;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+/* Hover effect for MenuButton */
+.menu-button:hover {
+    -fx-background-color: #d0d0d0;
+}
+
+/* MenuItem styling */
+.menu-item {
+    -fx-background-color: #ffffff; /* White background for items */
+    -fx-text-fill: #333333; /* Darker text for menu items */
+}
+
+/* Styling for ImageViews */
+.image-view {
+    -fx-opacity: 1; /* Ensures icons are fully visible */
+}
