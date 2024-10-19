@@ -81,7 +81,7 @@ public class MainController implements Closeable {
 
     @FXML
     public void initialize() {
-        //customizeController.setMainController(this);
+        customizeController.setMainController(this);
         headerController.setMainController(this);
         actionLineController.setMainController(this);
         gridScrollerController.setMainController(this);

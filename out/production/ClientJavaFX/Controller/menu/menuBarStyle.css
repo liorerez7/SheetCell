@@ -24,6 +24,18 @@
     -fx-padding: 4;
 }
 
+/* Ensure the prompt text color is set correctly */
+.combo-box .text-field {
+    -fx-text-fill: black; /* Ensure visibility of the prompt text */
+    -fx-prompt-text-fill: grey; /* Set the color for the prompt text */
+}
+
+/* If the combo-box is focused, make the text more prominent */
+.combo-box:focused .text-field {
+    -fx-text-fill: black; /* Ensure visibility when focused */
+}
+
+
 /* Style for Buttons */
 .button {
     -fx-font-family: "Arial";

@@ -2,8 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -37,107 +35,7 @@
             <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <!-- Column ComboBox at (0,0) -->
-            <ComboBox fx:id="columnComboBox" prefHeight="25.0" prefWidth="91.0" promptText="Columns" styleClass="CustomizeButton" stylesheets="@../cssAdujsments/ExcelCssLayout.css" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
-               <GridPane.margin>
-                  <Insets bottom="5.0" right="50.0" top="10.0" />
-               </GridPane.margin>
-            </ComboBox>
-
-            <!-- Row ComboBox at (2,0) -->
-            <ComboBox fx:id="rowComboBox" promptText="Rows" styleClass="CustomizeButton" stylesheets="@../cssAdujsments/ExcelCssLayout.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0">
-               <GridPane.margin>
-                  <Insets bottom="5.0" top="10.0" />
-               </GridPane.margin>
-            </ComboBox>
-
-            <!-- Column Width Settings -->
-            <Label text="Width:" GridPane.columnIndex="0" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="45.0" top="15.0" />
-               </GridPane.margin>
-            </Label>
-            <Button fx:id="widthMinusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" stylesheets="@../cssAdujsments/ExcelCssLayout.css" text="-" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="2.0" top="15.0" />
-               </GridPane.margin>
-            </Button>
-            <Button fx:id="widthPlusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" text="+" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="2.0" top="15.0" />
-               </GridPane.margin>
-            </Button>
-
-            <!-- Row Length Settings -->
-            <Label text="Length:" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="7.0" right="30.0" top="15.0" />
-               </GridPane.margin>
-            </Label>
-            <Button fx:id="lengthMinusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" text="-" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="2.0" top="15.0" />
-               </GridPane.margin>
-            </Button>
-            <Button fx:id="lengthPlusButton" onAction="#handleSizeChangeClicked" styleClass="CustomizeButton" text="+" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="2.0" top="15.0" />
-               </GridPane.margin>
-            </Button>
-
-            <!-- Text Color -->
-            <Label text="Text Color:" GridPane.rowIndex="6">
-               <padding>
-                  <Insets right="2.0" />
-               </padding></Label>
-            <ColorPicker fx:id="textColorPicker" onAction="#textColorClicked" prefHeight="30.0" prefWidth="97.0" styleClass="CustomizeButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
-               <GridPane.margin>
-                  <Insets left="30.0" />
-               </GridPane.margin></ColorPicker>
-
-            <!-- Background Color -->
-            <Label text="Background Color:" GridPane.columnSpan="2" GridPane.rowIndex="7">
-               <GridPane.margin>
-                  <Insets right="14.0" top="5.0" />
-               </GridPane.margin></Label>
-            <ColorPicker fx:id="backgroundColorPicker" onAction="#backgroundTextColorClicked" prefHeight="30.0" prefWidth="98.0" styleClass="CustomizeButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.rowSpan="2">
-               <GridPane.margin>
-                  <Insets bottom="20.0" left="30.0" />
-               </GridPane.margin></ColorPicker>
-
-            <!-- Cell ID -->
-            <Label text="Cell ID:" GridPane.rowIndex="5">
-               <GridPane.margin>
-                  <Insets right="25.0" />
-               </GridPane.margin>
-            </Label>
-            <Button fx:id="defaultBackgroundTextButton" mnemonicParsing="false" onAction="#defaultBackgroundTextClicked" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.rowSpan="2">
-               <font>
-                  <Font size="13.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="20.0" left="90.0" />
-               </GridPane.margin>
-            </Button>
-            <Button fx:id="defaultTextButton" mnemonicParsing="false" onAction="#defaultTextClicked" styleClass="CustomizeButton" text="Default" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
-               <font>
-                  <Font size="13.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets left="90.0" />
-               </GridPane.margin>
-            </Button>
-            <ComboBox fx:id="alignmentComboBox" prefHeight="31.0" prefWidth="145.0" promptText="AlligmentText" styleClass="CustomizeButton" GridPane.columnSpan="2" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets right="3.0" />
-               </GridPane.margin>
-            </ComboBox>
             <Label GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label fx:id="cellIdLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
-               <GridPane.margin>
-                  <Insets right="25.0" />
-               </GridPane.margin>
-            </Label>
             <Button fx:id="runtimeButton" mnemonicParsing="false" onAction="#runtimeAnalysisClicked" styleClass="ModernButton" text="Runtime Analysis" GridPane.columnSpan="2" GridPane.rowIndex="9">
                <font>
                   <Font size="13.0" />
@@ -152,11 +50,8 @@
                   <MenuItem fx:id="ChartGraphButton" mnemonicParsing="false" onAction="#ChartGraphClicked" text="barChart" />
               </items>
             </MenuButton>
-            <Button fx:id="backDashBoard" mnemonicParsing="false" onAction="#backDashBoardClicked" styleClass="ModernButton" text="backToDashBoard" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Button>
+            <Button fx:id="filterDataButton" mnemonicParsing="false" onAction="#filterDataClicked" prefWidth="150.0" styleClass="RangeButton" stylesheets="@../ranges/Ranges.css" text="Filter Data" GridPane.rowIndex="3" />
+            <Button fx:id="sortRowsButton" mnemonicParsing="false" onAction="#sortRowsClicked" prefWidth="150.0" styleClass="RangeButton" stylesheets="@../ranges/Ranges.css" text="Sort Rows" GridPane.columnIndex="2" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

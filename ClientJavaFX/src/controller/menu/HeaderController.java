@@ -16,47 +16,20 @@ public class HeaderController {
 
     MainController mainController;
 
-    @FXML
-    private GridPane gridPaneMenu;
-
-    @FXML
-    private ComboBox<Label> columnComboBox;
-
-    @FXML
-    private Button widthMinusButton;
-
-    @FXML
-    private Button widthPlusButton;
-
-    @FXML
-    private ComboBox<Label> rowComboBox;
-
-    @FXML
-    private Button lengthMinusButton;
-
-    @FXML
-    private Button lengthPlusButton;
-
-    @FXML
-    private ComboBox<Label> alignmentComboBox;
-
-    @FXML
-    private ColorPicker textColorPicker;
-
-    @FXML
-    private Button defaultTextButton;
-
-    @FXML
-    private ColorPicker backgroundColorPicker;
-
-    @FXML
-    private Button defaultBackgroundTextButton;
-
-    @FXML
-    private ComboBox<Label> ThemeColorComboBox;
-
-    @FXML
-    private Button backDashBoard;
+    @FXML private GridPane gridPaneMenu;
+    @FXML private ComboBox<Label> columnComboBox;
+    @FXML private Button widthMinusButton;
+    @FXML private Button widthPlusButton;
+    @FXML private ComboBox<Label> rowComboBox;
+    @FXML private Button lengthMinusButton;
+    @FXML private Button lengthPlusButton;
+    @FXML private ComboBox<Label> alignmentComboBox;
+    @FXML private ColorPicker textColorPicker;
+    @FXML private Button defaultTextButton;
+    @FXML private ColorPicker backgroundColorPicker;
+    @FXML private Button defaultBackgroundTextButton;
+    @FXML private ComboBox<Label> ThemeColorComboBox;
+    @FXML private Button backDashBoard;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -89,32 +62,12 @@ public class HeaderController {
     private void initializeComboBoxes() {
         initializeComboBox(columnComboBox, "Columns");
         initializeComboBox(rowComboBox, "Rows");
-        initializeComboBox(alignmentComboBox, "Alignment Text");
+        initializeComboBox(alignmentComboBox, "Alignment");
 
         setComboBoxHeaderTextColor(columnComboBox, Color.WHITE);
         setComboBoxHeaderTextColor(rowComboBox, Color.WHITE);
         setComboBoxHeaderTextColor(alignmentComboBox, Color.WHITE);
     }
-
-//    private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
-//        comboBox.setCellFactory(cb -> new ListCell<Label>() {
-//            @Override
-//            protected void updateItem(Label item, boolean empty) {
-//                super.updateItem(item, empty);
-//                setText(empty || item == null ? null : item.getText());
-//                setTextFill(Color.BLACK);
-//            }
-//        });
-//        comboBox.setButtonCell(new ListCell<Label>() {
-//            @Override
-//            protected void updateItem(Label item, boolean empty) {
-//                super.updateItem(item, empty);
-//                setText(empty || item == null ? defaultText : item.getText());
-//                setTextFill(Color.WHITE);
-//            }
-//        });
-//        comboBox.setPromptText(defaultText);
-//    }
 
     private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
         comboBox.setCellFactory(cb -> new ListCell<Label>() {
@@ -258,7 +211,6 @@ public class HeaderController {
                 (int) (color.getBlue() * 255));
     }
 
-    // Method to load all column data dynamically (A, B, C,...)
     public void loadAllColData(int numberOfCols) {
         columnComboBox.getItems().clear();  // Clear previous items
         for (int i = 0; i < numberOfCols; i++) {
@@ -270,7 +222,6 @@ public class HeaderController {
         columnComboBox.setPromptText("Columns");  // Set default text after loading
     }
 
-    // Method to load all row data dynamically (1, 2, 3,...)
     public void loadAllRowData(int numberOfRows) {
         rowComboBox.getItems().clear();  // Clear previous items
         for (int i = 1; i <= numberOfRows; i++) {
@@ -280,6 +231,7 @@ public class HeaderController {
         rowComboBox.getSelectionModel().clearSelection();  // Reset selection
         rowComboBox.setPromptText("Rows");  // Set default text after loading
     }
+
     public void resetComboBox() {
 
         columnComboBox.getSelectionModel().clearSelection(); // Clear the current selection
@@ -289,20 +241,6 @@ public class HeaderController {
         alignmentComboBox.getSelectionModel().clearSelection(); // Clear the current selection
         alignmentComboBox.setPromptText("Alignment"); // Set default prompt text
     }
-
-//    private void initializeAlignmentComboBox() {
-//        alignmentComboBox.getItems().addAll(
-//                new Label("CENTER"),
-//                new Label("LEFT"),
-//                new Label("RIGHT")
-//        );
-//        setComboBoxCellFactory(alignmentComboBox, "Alignment Text");
-//        alignmentComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                handleTextAlignment(newValue.getText().toLowerCase());
-//            }
-//        });
-//    }
 
     @FXML
     private void handleTextAlignment(String alignment) {
@@ -326,10 +264,9 @@ public class HeaderController {
             }
         });
     }
+
     private void resetColorPickersToDefault() {
-        // Set both ColorPickers to white when called
         textColorPicker.setValue(Color.WHITE);
         backgroundColorPicker.setValue(Color.WHITE);
     }
-
 }

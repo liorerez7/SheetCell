@@ -11,19 +11,30 @@
 <ScrollPane fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.main.MainController">
     <BorderPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1050.0" styleClass="Background" stylesheets="@../cssAdujsments/ExcelCssLayout.css">
         <top>
-            <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="128.0" prefWidth="700.0" BorderPane.alignment="TOP_LEFT">
+            <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="148.0" prefWidth="1030.0" BorderPane.alignment="TOP_LEFT">
                 <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="49.0" minHeight="0.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                    <RowConstraints maxHeight="49.0" minHeight="0.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                    <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+               <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+               <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+               <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+               <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+               <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
                     <fx:include fx:id="header" maxWidth="1.7976931348623157E308" source="../menu/MenuBar.fxml" GridPane.columnSpan="2" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
-                    <fx:include fx:id="actionLine" maxWidth="1.7976931348623157E308" source="../actionLine/ActionLine.fxml" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+                    <!-- Added padding to lower the actionLine -->
+                    <VBox GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="3">
+                        <VBox.margin>
+                            <Insets top="20.0" /> <!-- This moves the actionLine 20px lower -->
+                        </VBox.margin>
+                        <fx:include fx:id="actionLine" maxWidth="1.7976931348623157E308" source="../actionLine/ActionLine.fxml" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+                    </VBox>
                 </children>
             </GridPane>
         </top>
@@ -60,11 +71,14 @@
         </left>
         <center>
             <!-- Add a VBox container around the fx:include to apply margin -->
-            <VBox BorderPane.alignment="TOP_LEFT" spacing="20">
+            <VBox spacing="20" BorderPane.alignment="TOP_LEFT">
                 <VBox.margin>
-                    <Insets top="100.0" /> <!-- This moves the ScrollPane 100px lower -->
+                    <Insets top="50.0" /> <!-- This moves the ScrollPane 50px lower -->
                 </VBox.margin>
-                <fx:include fx:id="gridScroller" maxHeight="580.0" maxWidth="1.7976931348623157E308" minHeight="400.0" prefHeight="400.0" prefWidth="1050.0" source="../grid/Grid.fxml" />
+                <fx:include fx:id="gridScroller" maxHeight="580.0" maxWidth="1.7976931348623157E308" prefHeight="550.0" prefWidth="1050.0" source="../grid/Grid.fxml" />
+                <BorderPane.margin>
+                    <Insets top="38.0" />
+                </BorderPane.margin>
             </VBox>
         </center>
     </BorderPane>

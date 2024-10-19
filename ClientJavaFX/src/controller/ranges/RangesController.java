@@ -93,19 +93,6 @@ public class RangesController {
         comboBox.setPromptText(defaultText);
     }
 
-//    private void setComboBoxHeaderTextColor(ComboBox<Label> comboBox, Color color) {
-//        TextField textField = (TextField) comboBox.lookup(".text-field");
-//        if (textField != null) {
-//            textField.setStyle("-fx-text-fill: " + toRgbString(color) + ";");
-//        }
-//    }
-
-    private String toRgbString(Color color) {
-        return String.format("rgb(%d,%d,%d)", (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255));
-    }
-
     // Add a new range label to the ComboBox
     public void addRange(List<CellLocation> ranges, String rangeName) {
         // Create the label for the range
@@ -212,12 +199,8 @@ public class RangesController {
     }
 
     public void enableWriterButtons() {
-
         deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
-
-//        addRangeButton.setDisable(false);
-//        deleteRangeButton.setDisable(false);
     }
 }
 

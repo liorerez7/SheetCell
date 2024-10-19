@@ -211,6 +211,7 @@ public class DtoSheetCell {
                             } catch (NumberFormatException e) {
                                 // Ignore and keep the value as a string
                             }
+                            uniqueStrings.add(value);
                         } else {
                             try {
                                 double doubleValue = Double.parseDouble(value);
@@ -220,13 +221,13 @@ public class DtoSheetCell {
                                 // Ignore and keep the value as a string
                             }
                         }
-
-                        uniqueStrings.add(value);
                     }
                 }
             });
 
-            columnToUniqueStrings.put(upperCol, Set.copyOf(uniqueStrings));
+            Set<String> copy = Set.copyOf(uniqueStrings);
+            columnToUniqueStrings.put(upperCol, copy);
+            uniqueStrings.clear();
         }
 
         return columnToUniqueStrings;
