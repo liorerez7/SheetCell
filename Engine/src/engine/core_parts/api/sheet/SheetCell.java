@@ -24,4 +24,5 @@ public interface SheetCell extends
     void deleteRange(String name);
 
     Set<String> getAllRangeNames();
+
 }

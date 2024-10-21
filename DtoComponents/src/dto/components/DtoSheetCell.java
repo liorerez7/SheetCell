@@ -10,12 +10,12 @@ import dto.small_parts.CellLocation;
 import dto.small_parts.EffectiveValue;
 
 
-
+import java.io.*;
 import java.util.*;
 
-public class DtoSheetCell {
+public class DtoSheetCell implements Serializable {
 
-    private Map<CellLocation, EffectiveValue> sheetCell = new HashMap<>();
+    private Map<CellLocation, EffectiveValue> cellLocationToEffectiveValue = new HashMap<>();
    // private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
     private Map<String,List<CellLocation>> ranges = new HashMap<>();
     private Map<String,DtoCell> cellIdToDtoCell = new HashMap<>();
@@ -26,15 +26,14 @@ public class DtoSheetCell {
     private int currentNumberOfCols;
     private int currentCellLength;
     private int currentCellWidth;
-    private String sheetSize = "10x10";
+    private String visualSheetSize;
 
-    // Constructor to populate DtoSheetCell from SheetCellImp
     public DtoSheetCell(SheetCell sheetCellImp) {
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
             EffectiveValue effectiveValue;
             effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
 
-            sheetCell.put(entry.getKey(), effectiveValue);
+            cellLocationToEffectiveValue.put(entry.getKey(), effectiveValue);
         }
         //versionToCellsChanges = sheetCellImp.getVersions();
         copyBasicTypes(sheetCellImp);
@@ -42,15 +41,15 @@ public class DtoSheetCell {
         systemRanges.forEach(range -> {
             ranges.put(range.getRangeName(),range.getCellLocations());
         });
+        visualSheetSize = currentNumberOfRows + "x" + currentNumberOfCols;
     }
 
-    // Constructor to populate DtoSheetCell from SheetCellImp
     public DtoSheetCell(SheetCell sheetCellImp, Map<String,DtoCell> cellIdToDtoCell) {
         for (Map.Entry<CellLocation, Cell> entry : sheetCellImp.getSheetCell().entrySet()) {
             EffectiveValue effectiveValue;
             effectiveValue= entry.getValue().getEffectiveValue().evaluate(sheetCellImp);
 
-            sheetCell.put(entry.getKey(), effectiveValue);
+            cellLocationToEffectiveValue.put(entry.getKey(), effectiveValue);
         }
         //versionToCellsChanges = sheetCellImp.getVersions();
         copyBasicTypes(sheetCellImp);
@@ -59,15 +58,16 @@ public class DtoSheetCell {
             ranges.put(range.getRangeName(),range.getCellLocations());
         });
 
+        visualSheetSize = currentNumberOfRows + "x" + currentNumberOfCols;
         this.cellIdToDtoCell = cellIdToDtoCell;
     }
 
-    public DtoSheetCell(Map<CellLocation,EffectiveValue> sheetCell, Map<String, List<CellLocation>> ranges,
+    public DtoSheetCell(Map<CellLocation,EffectiveValue> cellLocationToEffectiveValue, Map<String, List<CellLocation>> ranges,
                         String name, int versionNumber, int currentNumberOfRows,
                         int currentNumberOfCols, int currentCellLength,
                         int currentCellWidth, Map<String,DtoCell> cellIdToDtoCell) {
 
-        this.sheetCell = sheetCell;
+        this.cellLocationToEffectiveValue = cellLocationToEffectiveValue;
         this.ranges = ranges;
         this.name = name;
         this.versionNumber = versionNumber;
@@ -76,13 +76,15 @@ public class DtoSheetCell {
         this.currentCellLength = currentCellLength;
         this.currentCellWidth = currentCellWidth;
         this.cellIdToDtoCell = cellIdToDtoCell;
+        visualSheetSize = currentNumberOfRows + "x" + currentNumberOfCols;
+
     }
 
-    public DtoSheetCell(SheetCell sheetCell, int requestedVersion) {
+    public DtoSheetCell(SheetCell cellLocationToEffectiveValue, int requestedVersion) {
 
         Set<CellLocation> markedLocations = new HashSet<>();
-        copyBasicTypes(sheetCell);
-        Map<CellLocation, EffectiveValue> sheetCellChanges = sheetCell.getVersions().get(requestedVersion);
+        copyBasicTypes(cellLocationToEffectiveValue);
+        Map<CellLocation, EffectiveValue> sheetCellChanges = cellLocationToEffectiveValue.getVersions().get(requestedVersion);
 
         while (requestedVersion > 0) {
             for (Map.Entry<CellLocation, EffectiveValue> entry : sheetCellChanges.entrySet()) {
@@ -90,17 +92,17 @@ public class DtoSheetCell {
                 if(markedLocations.contains(location)) {
                     continue;
                 }
-                this.sheetCell.put(location, entry.getValue());
+                this.cellLocationToEffectiveValue.put(location, entry.getValue());
                 markedLocations.add(location);
             }
 
             requestedVersion--;
-            sheetCellChanges = sheetCell.getVersions().get(requestedVersion);
+            sheetCellChanges = cellLocationToEffectiveValue.getVersions().get(requestedVersion);
         }
     }
 
     public Map<CellLocation, EffectiveValue> getViewSheetCell() {
-        return sheetCell;
+        return cellLocationToEffectiveValue;
     }
 
     public Map<String,List<CellLocation>> getRanges() {
@@ -141,15 +143,17 @@ public class DtoSheetCell {
     }
 
     public EffectiveValue getEffectiveValue(CellLocation cellLocation) {
-        return sheetCell.get(cellLocation);
+        return cellLocationToEffectiveValue.get(cellLocation);
     }
 
     public DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter) {
-        return EngineUtilities.filterSheetCell(range, filter, this);
+        DtoSheetCell dtoSheetCellCopy = createCopy();
+        return EngineUtilities.filterSheetCell(range, filter, dtoSheetCellCopy);
     }
 
     public DtoContainerData sortSheetCell(String range, String args) {
-        return EngineUtilities.sortSheetCell(range, args, this);
+        DtoSheetCell dtoSheetCellCopy = createCopy();
+        return EngineUtilities.sortSheetCell(range, args, dtoSheetCellCopy);
     }
 
     public Map<Character, Set<String>> getUniqueStringsInColumn(String filterColumn, String range) {
@@ -247,7 +251,25 @@ public class DtoSheetCell {
     }
 
     public String getSheetSize() {
-        return sheetSize;
+        return visualSheetSize;
     }
 
+
+    public DtoSheetCell createCopy() {
+        try {
+            // Serialize the current object to a byte array
+            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(byteOut);
+            out.writeObject(this);
+
+            // Deserialize to create a deep copy
+            ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+            ObjectInputStream in = new ObjectInputStream(byteIn);
+            return (DtoSheetCell) in.readObject();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

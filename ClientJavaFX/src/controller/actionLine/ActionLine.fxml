@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane id="actionLine" fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="50.0" styleClass="UserInterfaceSection" stylesheets="@newActionLineStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.actionLine.ActionLineController">
+<GridPane id="actionLine" fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="850.0" prefHeight="50.0" styleClass="UserInterfaceSection" stylesheets="@newActionLineStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.actionLine.ActionLineController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" prefWidth="80.0" />
         <ColumnConstraints hgrow="SOMETIMES" prefWidth="230.0" />

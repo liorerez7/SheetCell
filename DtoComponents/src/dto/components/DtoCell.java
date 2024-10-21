@@ -5,10 +5,11 @@ import dto.small_parts.CellLocation;
 import dto.small_parts.EffectiveValue;
 
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DtoCell {
+public class DtoCell implements Serializable {
     private EffectiveValue effectiveValue;
     private String originalValue;
     private CellLocation location;
