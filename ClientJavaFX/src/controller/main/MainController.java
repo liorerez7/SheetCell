@@ -116,9 +116,7 @@ public class MainController implements Closeable {
         try {
             try (Response uploadFileResponse = HttpRequestManager.sendFileSync(Constants.INIT_SHEET_CELL_ENDPOINT, xmlFile)) {
                 if (uploadFileResponse.isSuccessful()) {
-                    // sheetNameAsJson = uploadFileResponse.body().string();
-                    //String sheetName = Constants.GSON_INSTANCE.fromJson(sheetNameAsJson, String.class);
-//                    dashController.addFilePathToTable(userName, sheetName, "10x10", PermissionStatus.OWNER.toString());
+
                 } else {
                     // Handle error response from the server
                     String errorMessageAsJson = uploadFileResponse.body().string(); // Get the error message sent by the server
@@ -174,6 +172,7 @@ public class MainController implements Closeable {
                     if (response.isSuccessful()) {
                         String sheetCellAsJson = response.body().string();
                         dtoSheetCellAsDataParameter = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+                        headerController.setupName(userName);
                         Platform.runLater(() -> {
                             updateUIWithNewSheetCell(dtoSheetCellAsDataParameter);
                             if (callback != null) {

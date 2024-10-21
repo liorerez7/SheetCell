@@ -10,20 +10,27 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane id="actionLine" fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="850.0" prefHeight="50.0" styleClass="UserInterfaceSection" stylesheets="@newActionLineStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.actionLine.ActionLineController">
+<GridPane id="actionLine" fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="1430.0" prefHeight="50.0" styleClass="UserInterfaceSection" stylesheets="@newActionLineStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.actionLine.ActionLineController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="80.0" />
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="230.0" />
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="200.0" />
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="150.0" />
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="150.0" />
-        <ColumnConstraints hgrow="ALWAYS" />
-      <ColumnConstraints />
+        <!-- Fixed width columns -->
+        <ColumnConstraints hgrow="NEVER" prefWidth="80.0" />
+        <ColumnConstraints hgrow="NEVER" prefWidth="230.0" />
+        <ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+
+        <!-- Expandable columns -->
+        <ColumnConstraints hgrow="ALWAYS" prefWidth="150.0" />
+        <ColumnConstraints hgrow="ALWAYS" prefWidth="100.0" />
+        <ColumnConstraints hgrow="ALWAYS" prefWidth="150.0" />
+        <ColumnConstraints hgrow="ALWAYS" prefWidth="120.0" />
+
+        <!-- The last column will grow as well -->
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="120.0" />
     </columnConstraints>
+
     <rowConstraints>
-        <RowConstraints vgrow="SOMETIMES" />
+        <RowConstraints vgrow="NEVER" />
     </rowConstraints>
+
     <children>
         <!-- Cell ID Label -->
         <Label fx:id="cellidLabel" prefHeight="28.0" prefWidth="70.0" text="ID">
@@ -86,9 +93,9 @@
         </Label>
 
         <!-- Update Sheet Button -->
-        <Button fx:id="updateSheet" mnemonicParsing="false" onAction="#updateSheetClicked" prefHeight="32.0" styleClass="ModernButton" text="Update Sheet" GridPane.columnIndex="7">
+        <Button fx:id="updateSheet" mnemonicParsing="false" onAction="#updateSheetClicked" prefHeight="32.0" styleClass="ModernButton" text="Update Sheet" GridPane.columnIndex="6" GridPane.columnSpan="2">
             <GridPane.margin>
-                <Insets left="30.0" />
+                <Insets left="110.0" />
             </GridPane.margin>
         </Button>
     </children>

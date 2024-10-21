@@ -90,13 +90,6 @@ public class SheetCellApp extends Application {
         stage.show();
     }
 
-//    public void showLoginScreen() {
-//        if (stage.getScene() == null) {
-//            stage.setScene(new Scene(loginRoot)); // Create a new scene with the login screen root
-//        } else {
-//            stage.getScene().setRoot(loginRoot);  // Switch to the login screen
-//        }
-//    }
 public void showLoginScreen() {
     // Set a smaller window size for the login screen
     if (stage.getScene() == null) {
@@ -110,6 +103,8 @@ public void showLoginScreen() {
 
     public void showMainAppScreen() {
         stage.getScene().setRoot(mainAppRoot);  // Switch to the main application screen
+        stage.setWidth(1500);
+        stage.setHeight(1000);
     }
 
     public void showDashBoardScreen(String username) {

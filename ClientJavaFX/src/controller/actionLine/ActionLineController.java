@@ -1,6 +1,9 @@
 package controller.actionLine;
 
 import controller.main.MainController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import utilities.javafx.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -21,6 +24,8 @@ public class ActionLineController {
     @FXML private Label lastUpdatedVersion;
     @FXML private Label lastUpdatedUserName;
     @FXML private Button updateSheet;;
+    private Timeline updateSheetAnimation;
+
 
     private MainController mainController;
 
@@ -28,6 +33,7 @@ public class ActionLineController {
         this.mainController = mainController;
         initializeBindings();
         initializeVersionScroller();
+        setupUpdateSheetAnimation();
     }
 
     @FXML
@@ -89,12 +95,48 @@ public class ActionLineController {
         lastUpdatedUserName.textProperty().bind(Bindings.concat("user name: ", mainController.getLastUpdatedUserNameProperty()));
         updateSheet.disableProperty().bind(mainController.getNewerVersionOfSheetProperty().not());
 
+        updateSheet.disableProperty().addListener((obs, wasDisabled, isNowDisabled) -> {
+            if (!isNowDisabled) {
+                startUpdateSheetAnimation();
+            } else {
+                stopUpdateSheetAnimation();
+            }
+        });
+
     }
+
+    private void setupUpdateSheetAnimation() {
+        updateSheetAnimation = new Timeline(
+                new KeyFrame(Duration.seconds(0.5), event -> {
+                    // Apply the hover style (background color of hover) temporarily
+                    updateSheet.setStyle("-fx-background-color: #6a6a6a"); // hover color from CSS
+                }),
+                new KeyFrame(Duration.seconds(1.0), event -> {
+                    // Restore the normal style
+                    updateSheet.setStyle("-fx-background-color: #4a4a4a"); // normal color from CSS
+                })
+        );
+        updateSheetAnimation.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    private void startUpdateSheetAnimation() {
+        if (updateSheetAnimation != null) {
+            updateSheetAnimation.play();
+        }
+    }
+
+    private void stopUpdateSheetAnimation() {
+        if (updateSheetAnimation != null) {
+            updateSheetAnimation.stop();
+            // Remove the spark effect when disabled
+            updateSheet.getStyleClass().removeAll("SparkButton", "SparkButtonGray");
+        }
+    }
+
 
     private void handleVersionClick(int versionNumber) {
         mainController.specificVersionClicked(versionNumber);
     }
-
 
 
 

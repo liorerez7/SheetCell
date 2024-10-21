@@ -30,6 +30,7 @@ public class HeaderController {
     @FXML private Button defaultBackgroundTextButton;
     @FXML private ComboBox<Label> ThemeColorComboBox;
     @FXML private Button backDashBoard;
+    @FXML private Label welcomeLabel;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -268,5 +269,9 @@ public class HeaderController {
     private void resetColorPickersToDefault() {
         textColorPicker.setValue(Color.WHITE);
         backgroundColorPicker.setValue(Color.WHITE);
+    }
+
+    public void setupName(String name) {
+        welcomeLabel.setText("Welcome " + name + "!");
     }
 }

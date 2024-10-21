@@ -113,8 +113,6 @@ public class DashboardController {
         }
     }
 
-
-
     @FXML
     private void onLogoutButtonClicked(ActionEvent event) {
         // Logic for logging out the user.
@@ -133,8 +131,6 @@ public class DashboardController {
         currentUserName = userName;
         helloUserLabel.setText("Hello " + userName); // Display "Hello <username>"
     }
-
-
 
     private void initializeTables() {
         fileEntries = FXCollections.observableArrayList();
@@ -164,8 +160,6 @@ public class DashboardController {
         sizeColumn.setCellValueFactory(cellData -> cellData.getValue().sizeProperty());
         myPermissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
     }
-
-
 
     private void setupSheetSelectionListener() {
         availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -413,25 +407,6 @@ public class DashboardController {
         Platform.runLater(() -> showErrorPopup(defaultErrorMessage + ": " + errorMessage));
     }
 
-//    @FXML
-//    private void onManageAccessRequestsButtonClicked(ActionEvent event) {
-//        CompletableFuture.runAsync(() -> {
-//
-//            try (Response myRequestsResponse = HttpRequestManager.sendGetSyncRequest(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
-//
-//                String myRequestsAsJson = myRequestsResponse.body().string();
-//                Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
-//                List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
-//
-//                Platform.runLater(() -> {
-//                    showManageAccessRequestsPopup(myRequests);  // Update method name
-//                });
-//
-//            } catch (IOException e) {
-//                Platform.runLater(() -> showErrorPopup("Failed to retrieve requests."));
-//            }
-//        });
-//    }
 
     @FXML
     private void onManageAccessRequestsButtonClicked(ActionEvent event) {
