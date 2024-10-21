@@ -35,12 +35,12 @@
             <!-- Right section containing the table views -->
             <center>
                 <VBox spacing="15" style="-fx-padding: 10;" VBox.vgrow="ALWAYS">
-                    <TableView fx:id="availableSheetsTable" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="sheetsTable" styleClass="dashboard-table" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="ownerColumn" prefWidth="100.0" text="Owner" />
                             <TableColumn fx:id="sheetNameColumn" prefWidth="100.0" text="Sheet Name" />
                             <TableColumn fx:id="sizeColumn" prefWidth="100.0" text="Sheet Size" />
-                            <TableColumn fx:id="myPermissionStatusColumn" prefWidth="100.0" text="Permission" />
+                            <TableColumn fx:id="myPermissionStatusColumn" prefWidth="100.0" text="My Permission" />
                         </columns>
                     </TableView>
 

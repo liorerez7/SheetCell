@@ -7,10 +7,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import engine.login.users.PermissionManager;
-import engine.login.users.ResponsePermission;
+import dto.permissions.ResponsePermission;
 import engine.login.users.SheetInfosManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponsePermissionServlet extends HttpServlet {
@@ -27,7 +28,16 @@ public class ResponsePermissionServlet extends HttpServlet {
         try {
             synchronized (permissionManager) {
                 List<ResponsePermission> requests = permissionManager.getUserResponsePermission(userName);
-                String responseAsJson = Constants.GSON_INSTANCE.toJson(requests);
+                String responseAsJson;
+
+                if(requests == null) {
+                    List list = new ArrayList();
+                    responseAsJson = Constants.GSON_INSTANCE.toJson(list);
+                }
+                else {
+                    responseAsJson = Constants.GSON_INSTANCE.toJson(requests);
+                }
+
                 response.getWriter().write(responseAsJson);
                 response.getWriter().flush();
             }

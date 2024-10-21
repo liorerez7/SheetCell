@@ -31,7 +31,6 @@ public class Model {
     private StringProperty userNameProperty;
     private BooleanProperty colorProperty;
 
-
     public Model(DtoSheetCell sheetCell) {
         this.sheetCell = sheetCell;
 

@@ -199,8 +199,10 @@ public class RangesController {
     }
 
     public void enableWriterButtons() {
-        deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
-        addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+        addRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
+        deleteRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
+        //        deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
+//        addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
     }
 }
 

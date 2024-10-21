@@ -65,6 +65,12 @@ public class ActionLineController {
         newValueText.getStyleClass().remove("faded");
     }
 
+    @FXML
+    void updateSheetClicked(ActionEvent event) {
+        mainController.updateCurrentGridSheet();
+        mainController.setNewerVersionOfSheetProperty(false);
+    }
+
     private void initializeVersionScroller() {
         mainController.getTotalVersionsProperty().addListener((observable, oldValue, newValue) -> {
             int latestVersion = Integer.parseInt(newValue);
@@ -89,7 +95,8 @@ public class ActionLineController {
     private void initializeBindings() {
         VersionScroller.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         newValueText.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
-        updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
+//        updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
+        updateCellButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
         lastUpdatedVersion.textProperty().bind(Bindings.concat("Last Version: ", mainController.getVersionProperty()));
         originalValue.textProperty().bind(mainController.getOriginalValueLabelProperty());
         lastUpdatedUserName.textProperty().bind(Bindings.concat("user name: ", mainController.getLastUpdatedUserNameProperty()));
@@ -103,6 +110,17 @@ public class ActionLineController {
             }
         });
 
+//        updateCellButton.disableProperty().bind(
+//                Bindings.createBooleanBinding(
+//                        () -> mainController.getNewerVersionOfSheetProperty().getValue() ||
+//                                !(mainController.getIsCellLabelClickedProperty().getValue()))
+//        );
+
+//        updateCellButton.disableProperty().bind(
+//                Bindings.createBooleanBinding(
+//                        () -> !updateSheet.isDisabled() ||
+//                                !(mainController.getIsCellLabelClickedProperty().getValue()))
+//        );
     }
 
     private void setupUpdateSheetAnimation() {
@@ -181,14 +199,18 @@ public class ActionLineController {
 
     }
 
-    @FXML
-    void updateSheetClicked(ActionEvent event) {
-        mainController.updateCurrentGridSheet();
-        mainController.setNewerVersionOfSheetProperty(false);
-    }
-
     public void enableWriterButtons() {
-        updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
+
+        boolean b1 = mainController.getNewerVersionOfSheetProperty().getValue();
+        boolean b2 = !(mainController.getIsCellLabelClickedProperty().getValue());
+        boolean b3 = updateSheet.isDisabled();
+
+//        updateCellButton.disableProperty().bind(
+//                Bindings.createBooleanBinding(
+//                        () -> !updateSheet.isDisabled() ||
+//                                !(mainController.getIsCellLabelClickedProperty().getValue()))
+//        );
+        updateCellButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
         newValueText.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
     }
 }

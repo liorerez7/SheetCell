@@ -1,6 +1,4 @@
-package engine.login.users;
-
-import dto.permissions.PermissionStatus;
+package dto.permissions;
 
 public class ResponsePermission {
 

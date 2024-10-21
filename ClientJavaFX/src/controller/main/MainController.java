@@ -211,11 +211,8 @@ public class MainController implements Closeable {
         model.setTotalVersionsProperty(newDtoSheetCell.getLatestVersion());
         rangesController.setAllRanges(newDtoSheetCell.getRanges());
 
-
         headerController.loadAllColData(newDtoSheetCell.getNumberOfColumns());
         headerController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
-//        customizeController.loadAllColData(newDtoSheetCell.getNumberOfColumns());
-//        customizeController.loadAllRowData(newDtoSheetCell.getNumberOfRows());
 
         themeManager.keepCurrentTheme(mainPane, leftCommands, customizeController);
 
@@ -229,11 +226,6 @@ public class MainController implements Closeable {
     }
 
     public void updateCell(String text, String newValue) {
-
-        if(model.getNewerVersionOfSheetProperty().getValue()){
-            Platform.runLater(() -> createErrorPopup(Constants.CANT_UPDATE_CELL_NEWER_VERSION_MESSAGE, "Error"));
-            return;
-        }
 
         CompletableFuture.runAsync(() -> {
             try {

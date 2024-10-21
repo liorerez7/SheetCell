@@ -1,8 +1,6 @@
 package engine.login.users;
 
-import dto.permissions.PermissionLine;
-import dto.permissions.PermissionStatus;
-import dto.permissions.RequestPermission;
+import dto.permissions.*;
 import dto.permissions.RequestStatus;
 
 import java.util.ArrayList;

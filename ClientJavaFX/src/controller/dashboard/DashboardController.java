@@ -5,6 +5,9 @@ import dto.permissions.PermissionLine;
 import dto.permissions.PermissionStatus;
 import dto.permissions.RequestPermission;
 import dto.permissions.RequestStatus;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import controller.main.MainController;
@@ -39,7 +42,7 @@ public class DashboardController {
 
     @FXML private Button loadSheetFileButton;
     @FXML private Label helloUserLabel; // No more usernameLabel, using helloUserLabel
-    @FXML private TableView<SheetInfo> availableSheetsTable;  // Updated to SheetInfo
+    @FXML private TableView<SheetInfo> sheetsTable;  // Updated to SheetInfo
     @FXML private TableColumn<SheetInfo, String> ownerColumn;  // Updated to SheetInfo
     @FXML private TableColumn<SheetInfo, String> sheetNameColumn;  // Updated to SheetInfo
     @FXML private TableColumn<SheetInfo, String> sizeColumn;  // Updated to SheetInfo
@@ -63,8 +66,8 @@ public class DashboardController {
     private Set<DtoSheetInfoLine> currentSheetInfoLines = new HashSet<>();
     private String currentUserName;
     private DashboardPopUpManager popUpManager;
-
-
+//    private int myPermissionResponses = 0;
+    private final IntegerProperty myPermissionResponses = new SimpleIntegerProperty(0);
 
 
 
@@ -72,8 +75,14 @@ public class DashboardController {
     public void initialize() {
         initializeTables();
         startSheetNamesRefresher();
+        startResponsesRefresher();
         setupSheetSelectionListener();
         popUpManager = new DashboardPopUpManager(this);
+        viewSheetButton.setDisable(true);
+
+        // Bind manageAccessRequestsButton disable property
+        BooleanBinding noPermissionResponses = myPermissionResponses.isEqualTo(0);
+        manageAccessRequestsButton.disableProperty().bind(noPermissionResponses);
     }
 
 
@@ -81,7 +90,7 @@ public class DashboardController {
     @FXML
     private void onViewSheetButtonClicked(ActionEvent event) {
         // Get the selected entry (formatted string) from the table
-        SheetInfo selectedEntry = availableSheetsTable.getSelectionModel().getSelectedItem();  // Updated to SheetInfo
+        SheetInfo selectedEntry = sheetsTable.getSelectionModel().getSelectedItem();  // Updated to SheetInfo
 
         if (selectedEntry != null) {
             String sheetName = selectedEntry.getSheetName();
@@ -136,9 +145,8 @@ public class DashboardController {
         fileEntries = FXCollections.observableArrayList();
         permissionEntries = FXCollections.observableArrayList();
         setupTableColumns();
-        availableSheetsTable.setItems(fileEntries);
+        sheetsTable.setItems(fileEntries);
         permissionsTable.setItems(permissionEntries);
-        viewSheetButton.setDisable(true);
     }
 
     private void setupPermissionColumns() {
@@ -150,7 +158,7 @@ public class DashboardController {
     private void setupTableColumns() {
         setupSheetInfoColumns();
         setupPermissionColumns();
-        availableSheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        sheetsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         permissionsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
@@ -162,7 +170,7 @@ public class DashboardController {
     }
 
     private void setupSheetSelectionListener() {
-        availableSheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        sheetsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 updatePermissionTableForSheet(newSelection.getSheetName());
             }
@@ -173,6 +181,17 @@ public class DashboardController {
         SheetNamesRefresher refresher = new SheetNamesRefresher(this::addAllSheetInfoLines, this::displayError);
         timer = new Timer();
         timer.schedule(refresher, 0, 2000);
+    }
+
+    private void startResponsesRefresher() {
+        ResponsesRefresher refresher = new ResponsesRefresher(this::setMyPermissionResponses);
+        timer = new Timer();
+        timer.schedule(refresher, 0, 2000);
+    }
+
+    private void setMyPermissionResponses(Integer responsesCount) {
+        // Update the myPermissionResponses property in the UI thread
+        Platform.runLater(() -> myPermissionResponses.set(responsesCount));
     }
 
     public void stopSheetNamesRefresher() {
@@ -265,11 +284,6 @@ public class DashboardController {
 
         List<PermissionLine> newPermissions = parsePermissionsResponse(response);
         updatePermissionsTable(sheetName, newPermissions);
-        updateViewSheetButton(sheetName);
-    }
-
-    private void updateViewSheetButton(String sheetName) {
-
     }
 
     private void handlePermissionUpdateErrorResponse(Response response) throws IOException {
@@ -406,7 +420,6 @@ public class DashboardController {
         String errorMessage = Constants.GSON_INSTANCE.fromJson(response.body().string(), String.class);
         Platform.runLater(() -> showErrorPopup(defaultErrorMessage + ": " + errorMessage));
     }
-
 
     @FXML
     private void onManageAccessRequestsButtonClicked(ActionEvent event) {

@@ -1,6 +1,7 @@
 package controller.dashboard;
 
 import dto.components.DtoSheetInfoLine;
+import dto.permissions.RequestPermission;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import com.google.gson.reflect.TypeToken;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.TimerTask;
 import java.util.function.Consumer;
@@ -29,6 +31,7 @@ public class SheetNamesRefresher extends TimerTask {
 
     @Override
     public void run() {
+
         HttpRequestManager.sendGetAsyncRequest(Constants.GET_ALL_SHEET_NAMES, new HashMap<>(), new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -55,5 +58,7 @@ public class SheetNamesRefresher extends TimerTask {
                 }
             }
         });
+
+
     }
 }
