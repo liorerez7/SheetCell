@@ -66,14 +66,12 @@ public class Constants {
 
 
 
-    public static final String NEWER_VERSION__ERROR_MESSAGE = "there is a newer version" +
-            " of this sheet\nPress the " +
-            "UpdateSheet button inorder to ";
+    public static final String CANT_UPDATE_CELL_NO_CLICK_ON_LABEL = "first click on the cell \nyou wish to modify its value";
 
-    public static final String CANT_UPDATE_CELL_NEWER_VERSION_MESSAGE =  NEWER_VERSION__ERROR_MESSAGE + "update cells";
-
-    public static final String CANT_ADD_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "add ranges";
-    public static final String CANT_DELETE_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "delete ranges";
+//    public static final String CANT_UPDATE_CELL_NEWER_VERSION_MESSAGE =  NEWER_VERSION__ERROR_MESSAGE + "update cells";
+//
+//    public static final String CANT_ADD_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "add ranges";
+//    public static final String CANT_DELETE_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "delete ranges";
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new GsonBuilder()

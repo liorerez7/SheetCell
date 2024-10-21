@@ -227,6 +227,11 @@ public class MainController implements Closeable {
 
     public void updateCell(String text, String newValue) {
 
+        if(model.getIsCellLebalClickedProperty().getValue() == false){
+            Platform.runLater(() -> createErrorPopup(Constants.CANT_UPDATE_CELL_NO_CLICK_ON_LABEL, "Error"));
+            return;
+        }
+
         CompletableFuture.runAsync(() -> {
             try {
                 Map<String, String> params = new HashMap<>();
@@ -307,11 +312,6 @@ public class MainController implements Closeable {
 
     public void rangeAddClicked() {
 
-        if(model.getNewerVersionOfSheetProperty().getValue()){
-            Platform.runLater(() -> createErrorPopup(Constants.CANT_ADD_RANGE_NEWER_VERSION_MESSAGE, "Error"));
-            return;
-        }
-
         RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
         String name = rangeStringsData.getName();
         String range = rangeStringsData.getRange();
@@ -358,11 +358,6 @@ public class MainController implements Closeable {
     }
 
     public void rangeDeleteClicked() {
-
-        if(model.getNewerVersionOfSheetProperty().getValue()){
-            Platform.runLater(() -> createErrorPopup(Constants.CANT_DELETE_RANGE_NEWER_VERSION_MESSAGE, "Error"));
-            return;
-        }
 
         CompletableFuture.runAsync(() -> {
 
