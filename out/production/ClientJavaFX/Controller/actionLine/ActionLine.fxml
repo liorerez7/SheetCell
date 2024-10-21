@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane id="actionLine" fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="50.0" styleClass="UserInterfaceSection" stylesheets="@newActionLineStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.actionLine.ActionLineController">
+<GridPane id="actionLine" fx:id="actionLine" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="850.0" prefHeight="50.0" styleClass="UserInterfaceSection" stylesheets="@newActionLineStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.actionLine.ActionLineController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" prefWidth="80.0" />
         <ColumnConstraints hgrow="SOMETIMES" prefWidth="230.0" />
@@ -72,7 +72,7 @@
         </Label>
 
         <!-- Version Scroller MenuButton -->
-        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" prefHeight="32.0" prefWidth="121.0" styleClass="ModernButton" text="Version" GridPane.columnIndex="4" GridPane.columnSpan="2">
+        <MenuButton fx:id="VersionScroller" mnemonicParsing="false" prefHeight="32.0" prefWidth="121.0" styleClass="Version" text="Version" GridPane.columnIndex="4" GridPane.columnSpan="2">
             <GridPane.margin>
                 <Insets left="70.0" />
             </GridPane.margin>

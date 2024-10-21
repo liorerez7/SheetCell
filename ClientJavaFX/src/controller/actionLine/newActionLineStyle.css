@@ -1,77 +1,64 @@
-/* General Action Line Styling */
+/* General Action Line Styling - Matching the Menu Style */
 .UserInterfaceSection {
-    -fx-background-color: #f4f4f4;
+    -fx-background-color: #f4f4f4; /* Light gray for consistency with the menu */
     -fx-background-radius: 8;
     -fx-border-radius: 8;
-    -fx-border-color: #d3d3d3;
-    -fx-padding: 5; /* Reduced padding */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+    -fx-border-color: #d3d3d3; /* Light border to match the menu */
+    -fx-padding: 5;
+    -fx-hgap: 20;
+    -fx-vgap: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2); /* Subtle drop shadow */
 }
 
-/* Styling for Labels */
-.LabelsOfUserInterfaceSection {
-    -fx-text-fill: #333333; /* Dark gray text for modern look */
-    -fx-font-family: 'Segoe UI', sans-serif; /* Modern font family */
-    -fx-font-size: 14px; /* Standard text size */
-    -fx-background-color: transparent; /* No background color */
-    -fx-padding: 5; /* Padding to space out the text */
+/* Uniform Size for Buttons */
+.Button {
+    -fx-pref-height: 30px; /* Uniform height for all */
+    -fx-pref-width: 140px; /* Uniform width for buttons */
 }
 
-/* Labels for subtle details like last version and username */
-.DetailLabel {
-    -fx-text-fill: #4A4A4A; /* Darker gray for modern and classic look */
-    -fx-font-family: 'Segoe UI', sans-serif; /* Retain modern font family */
-    -fx-font-size: 13px; /* Standard size for details */
-    -fx-padding: 5 10; /* Add some padding */
-    -fx-background-color: transparent; /* Transparent background */
-}
-
+/* Buttons Styling - Modern and Matching Menu */
 .ModernButton {
-    -fx-background-color: #0078D4;
+    -fx-background-color: #4a4a4a; /* Muted dark grey for consistency with navigation button */
     -fx-text-fill: white;
-    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-family: 'Arial', sans-serif;
     -fx-font-size: 14px;
-    -fx-padding: 6 12; /* Adjusted padding to match FXML */
+    -fx-padding: 6 12;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
     -fx-border-color: transparent;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1);
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1);
 }
 
-/* Button hover effect */
 .ModernButton:hover {
-    -fx-background-color: #005a9e; /* Darker blue on hover */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 5, 0, 0, 2); /* Stronger shadow on hover */
+    -fx-background-color: #6a6a6a; /* Slightly lighter gray on hover */
 }
 
-/* Button pressed effect */
 .ModernButton:pressed {
-    -fx-background-color: #004377; /* Even darker blue when pressed */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 5, 0, 0, 2); /* Stronger shadow when pressed */
+    -fx-background-color: #3a3a3a; /* Darker gray when pressed */
 }
 
-/* TextField Styling */
+/* TextField Styling - More Integrated with Menu Look */
 .TextField {
-    -fx-background-color: #ffffff; /* White background for input */
-    -fx-border-color: #d3d3d3; /* Light gray border */
-    -fx-border-width: 1; /* Thin border */
-    -fx-border-radius: 5px; /* Rounded corners for the input */
-    -fx-padding: 5px; /* Padding for text inside the field */
-    -fx-font-family: 'Segoe UI', sans-serif; /* Modern font */
-    -fx-font-size: 14px; /* Suitable font size */
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-size: 14px;
 }
 
 .TextField:focused {
-    -fx-border-color: #0078D4; /* Blue border when focused */
-    -fx-background-color: #f0f8ff; /* Very light blue background */
+    -fx-border-color: #4a4a4a; /* Gray border when focused */
+    -fx-background-color: #f0f0f0;
 }
 
 /* Styling for the MenuButton */
 .MenuButton {
-    -fx-background-color: #0078D4; /* Primary blue color */
+    -fx-background-color: #4a4a4a; /* Consistent with buttons in the menu */
     -fx-text-fill: white;
-    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-family: 'Arial', sans-serif;
     -fx-font-size: 14px;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
@@ -80,9 +67,52 @@
 }
 
 .MenuButton:hover {
-    -fx-background-color: #005a9e;
+    -fx-background-color: #6a6a6a;
 }
 
 .MenuButton:pressed {
-    -fx-background-color: #004377;
+    -fx-background-color: #3a3a3a;
+}
+
+/* Separate section for ComboBox called Version */
+.Version {
+    -fx-background-color: #4a4a4a; /* Muted dark grey similar to UpdateCell button */
+    -fx-text-fill: white; /* White text like the button */
+    -fx-border-color: transparent; /* No border to match the button style */
+    -fx-border-radius: 5px; /* Rounded edges */
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-size: 14px; /* Same font size as buttons */
+    -fx-padding: 0; /* Remove internal padding to match button */
+    -fx-background-radius: 5px; /* Rounded background corners */
+    -fx-pref-height: 30px; /* Match button height */
+    -fx-pref-width: 120px; /* Reduced width to make it a bit smaller */
+    -fx-cursor: hand; /* Pointer cursor */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1); /* Subtle shadow effect */
+}
+
+/* ComboBox drop-down styling */
+.Version .list-view {
+    -fx-background-color: #4a4a4a; /* Same color as the button */
+}
+
+/* Hover effect for Version ComboBox */
+.Version:hover {
+    -fx-background-color: #6a6a6a; /* Slightly lighter gray on hover, similar to ModernButton hover */
+}
+
+/* Focus effect for Version ComboBox */
+.Version:focused {
+    -fx-background-color: #3a3a3a; /* Darker gray when focused */
+    -fx-border-color: #3a3a3a; /* Match the focused border color */
+}
+
+/* Version ComboBox text styling */
+.Version .text-field {
+    -fx-text-fill: white; /* White text to match button styling */
+    -fx-prompt-text-fill: grey;
+}
+
+.Version:focused .text-field {
+    -fx-text-fill: white; /* Keep text white when focused */
+    -fx-background-color: #3a3a3a; /* Match background color when focused */
 }
