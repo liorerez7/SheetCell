@@ -59,6 +59,7 @@ public class DashboardController {
     @FXML private Button manageAccessRequestsButton;
     @FXML private Button logoutButton;
     @FXML private Button exitButton;
+    @FXML private Button openChatButton;
 
     private MainController mainController;
     private ObservableList<SheetInfo> fileEntries;  // Updated to SheetInfo
@@ -73,6 +74,30 @@ public class DashboardController {
     private Timeline manageAccessRequestsButtonTimeline;
 
 
+    @FXML private VBox chatArea;
+    @FXML private Button sendMessageButton;
+    @FXML private TextArea chatMessagesArea;
+    @FXML private TextField chatInputField;
+
+
+    @FXML
+    private void onOpenChatButtonClicked() {
+        if (chatArea.isVisible()) {
+            chatArea.setVisible(false);  // Hide the chat area
+        } else {
+            chatArea.setVisible(true);   // Show the chat area
+        }
+    }
+
+    @FXML
+    private void onSendMessageClicked() {
+        String message = chatInputField.getText();
+        chatInputField.clear();
+
+        if (!message.isEmpty()) {
+            chatMessagesArea.appendText("You: " + message + "\n");
+        }
+    }
 
     @FXML
     public void initialize() {

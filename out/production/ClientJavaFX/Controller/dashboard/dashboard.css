@@ -193,12 +193,40 @@
     -fx-background-color: #1565c0;
 }
 
-/* Adjust ChoiceBox Styling for Popup */
-.choice-box {
-    -fx-pref-width: 150px; /* Make the ChoiceBox smaller */
-    -fx-padding: 5px; /* Reduce padding for a cleaner look */
+.chat-box {
+    -fx-background-color: #f4f4f9; /* Light background */
+    -fx-padding: 10px;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+}
+
+.chat-send-button {
+    -fx-background-color: #2196F3; /* Blue for send button */
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 15px;
+}
+
+.chat-send-button:hover {
+    -fx-background-color: #1e88e5;
+}
+
+.chat-send-button:pressed {
+    -fx-background-color: #1565c0;
+}
+
+.chat-input-field {
+    -fx-padding: 5px;
     -fx-background-color: white;
     -fx-border-color: #dcdcdc;
-    -fx-border-radius: 10px;
+    -fx-border-radius: 5px;
+}
+
+.chat-messages-area {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
     -fx-effect: innershadow(two-pass-box, rgba(0, 0, 0, 0.1), 6, 0, 0, 2);
 }

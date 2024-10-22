@@ -168,7 +168,6 @@ public class DashboardPopUpManager {
         submitButton.setDisable(selectedSheet == null || selectedPermission == null);  // Enable only if both selections are made
     }
 
-
     public Stage showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
         Stage popupStage = new Stage();
         popupStage.setTitle("Manage Access Requests");
@@ -194,35 +193,17 @@ public class DashboardPopUpManager {
         pendingScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Show vertical scrollbar as needed
         pendingScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);     // Disable horizontal scrollbar
 
-        // Create VBox for answered requests
-        VBox answeredRequestsBox = new VBox(15);
-        answeredRequestsBox.setPadding(new Insets(10));
-        answeredRequestsBox.setAlignment(Pos.CENTER);
+        // Set a fixed height for the ScrollPane and let the content expand to fit up to this height
+        pendingScrollPane.setPrefViewportHeight(200);  // Set this value to the height before scrollbar shows
 
-        // Create and add header for answered requests
-        Label answeredHeaderLabel = new Label("Answered Requests");
-        answeredHeaderLabel.getStyleClass().add("popup-header");
-        answeredRequestsBox.getChildren().add(answeredHeaderLabel);
-
-        // Initially, the answered requests section will be empty
-        Label emptyMessageLabel = new Label("No answered requests at this time.");
-        emptyMessageLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #777;"); // Styled as a placeholder
-        answeredRequestsBox.getChildren().add(emptyMessageLabel);
-
-        // Create ScrollPane for answered requests (empty for now)
-        ScrollPane answeredScrollPane = new ScrollPane(answeredRequestsBox);
-        answeredScrollPane.setFitToWidth(true);
-        answeredScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Show vertical scrollbar as needed
-        answeredScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);     // Disable horizontal scrollbar
-
-        // Main layout for both pending and answered sections
-        VBox layout = new VBox(20, pendingScrollPane, answeredScrollPane);
+        // Main layout for pending requests only
+        VBox layout = new VBox(20, pendingScrollPane);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
         layout.getStyleClass().add("popup-background"); // Use consistent background styling
 
-        // Create and set the scene with a slightly bigger size
-        Scene scene = new Scene(layout, 650, 500);  // Adjusted size to fit two sections
+        // Create and set the scene
+        Scene scene = new Scene(layout, 650, 400);  // Adjusted size for the remaining section
         scene.getStylesheets().add(getClass().getResource("dashboard.css").toExternalForm()); // Load CSS for styling
 
         popupStage.setScene(scene);
@@ -230,6 +211,7 @@ public class DashboardPopUpManager {
 
         return popupStage;  // Return the popupStage to add the listener for closing event
     }
+
 
 
     private HBox createRequestRow(RequestPermission request, Stage popupStage) {
@@ -312,6 +294,43 @@ public class DashboardPopUpManager {
 
 
 
-
-
-
+//public Stage showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
+//    Stage popupStage = new Stage();
+//    popupStage.setTitle("Manage Access Requests");
+//
+//    // Initialize the instance variable pendingRequestsBox
+//    pendingRequestsBox = new VBox(15);
+//    pendingRequestsBox.setPadding(new Insets(10));
+//    pendingRequestsBox.setAlignment(Pos.CENTER);
+//
+//    // Create and add header for pending requests
+//    Label pendingHeaderLabel = new Label("Pending Requests");
+//    pendingHeaderLabel.getStyleClass().add("popup-header");
+//    pendingRequestsBox.getChildren().add(pendingHeaderLabel);
+//
+//    // Add each pending request as an HBox row
+//    myRequests.stream()
+//            .filter(req -> (!req.getWasAnswered())) // Filter unanswered requests
+//            .forEach(req -> pendingRequestsBox.getChildren().add(createRequestRow(req, popupStage)));
+//
+//    // Create ScrollPane for pending requests
+//    ScrollPane pendingScrollPane = new ScrollPane(pendingRequestsBox);
+//    pendingScrollPane.setFitToWidth(true);
+//    pendingScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Show vertical scrollbar as needed
+//    pendingScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);     // Disable horizontal scrollbar
+//
+//    // Main layout for pending requests only
+//    VBox layout = new VBox(20, pendingScrollPane);
+//    layout.setPadding(new Insets(20));
+//    layout.setAlignment(Pos.CENTER);
+//    layout.getStyleClass().add("popup-background"); // Use consistent background styling
+//
+//    // Create and set the scene with a slightly bigger size
+//    Scene scene = new Scene(layout, 650, 400);  // Adjusted size for the remaining section
+//    scene.getStylesheets().add(getClass().getResource("dashboard.css").toExternalForm()); // Load CSS for styling
+//
+//    popupStage.setScene(scene);
+//    popupStage.show();
+//
+//    return popupStage;  // Return the popupStage to add the listener for closing event
+//}

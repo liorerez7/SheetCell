@@ -3,15 +3,18 @@ package chat.utilities;
 
 import engine.core_parts.api.SheetManager;
 import engine.Engine;
+import engine.dashboard.chat.ChatManager;
 import jakarta.servlet.ServletContext;
 import engine.login.users.PermissionManager;
 import engine.login.users.UserManager;
+import jakarta.servlet.http.HttpServletRequest;
+
+import static chat.utilities.Constants.INT_PARAMETER_ERROR;
 
 public class ServletUtils {
 
 	public static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
 	public static final String CHAT_MANAGER_ATTRIBUTE_NAME = "chatManager";
-	public static final String ENGINE_ATTRIBUTE_NAME = "engine";
 	public static final String ENGINE_MANAGER_ATTRIBUTE_NAME = "engineManager";
 	public static final String PERMISSION_MANAGER_ATTRIBUTE_NAME = "permissionManager";
 
@@ -25,7 +28,6 @@ public class ServletUtils {
 	public static UserManager getUserManager(ServletContext servletContext) {
 		Engine e = getEngineManager(servletContext);
 		return e.getUserManager();
-//		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
 	}
 
 	public static Engine getEngineManager(ServletContext servletContext) {
@@ -35,7 +37,6 @@ public class ServletUtils {
 	public static PermissionManager getPermissionManager(ServletContext servletContext) {
 		Engine e = getEngineManager(servletContext);
 		return e.getPermissionManager();
-//		return (PermissionManager) servletContext.getAttribute("permissionManager");
 	}
 
 	// Helper method to extract the error message
@@ -50,6 +51,26 @@ public class ServletUtils {
 			return message.substring(message.indexOf(":") + 1).trim();
 		}
 		return message;
+	}
+
+	public static ChatManager getChatManager(ServletContext servletContext) {
+		synchronized (chatManagerLock) {
+			if (servletContext.getAttribute(CHAT_MANAGER_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(CHAT_MANAGER_ATTRIBUTE_NAME, new ChatManager());
+			}
+		}
+		return (ChatManager) servletContext.getAttribute(CHAT_MANAGER_ATTRIBUTE_NAME);
+	}
+
+	public static int getIntParameter(HttpServletRequest request, String name) {
+		String value = request.getParameter(name);
+		if (value != null) {
+			try {
+				return Integer.parseInt(value);
+			} catch (NumberFormatException numberFormatException) {
+			}
+		}
+		return INT_PARAMETER_ERROR;
 	}
 
 }
