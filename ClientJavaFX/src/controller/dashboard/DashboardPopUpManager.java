@@ -169,7 +169,7 @@ public class DashboardPopUpManager {
     }
 
 
-    public void showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
+    public Stage showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
         Stage popupStage = new Stage();
         popupStage.setTitle("Manage Access Requests");
 
@@ -227,7 +227,10 @@ public class DashboardPopUpManager {
 
         popupStage.setScene(scene);
         popupStage.show();
+
+        return popupStage;  // Return the popupStage to add the listener for closing event
     }
+
 
     private HBox createRequestRow(RequestPermission request, Stage popupStage) {
         HBox requestBox = new HBox(10); // Reduced spacing between elements

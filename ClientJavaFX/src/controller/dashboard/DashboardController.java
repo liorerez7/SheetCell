@@ -5,9 +5,12 @@ import dto.permissions.PermissionLine;
 import dto.permissions.PermissionStatus;
 import dto.permissions.RequestPermission;
 import dto.permissions.RequestStatus;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.util.Duration;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import controller.main.MainController;
@@ -66,8 +69,8 @@ public class DashboardController {
     private Set<DtoSheetInfoLine> currentSheetInfoLines = new HashSet<>();
     private String currentUserName;
     private DashboardPopUpManager popUpManager;
-//    private int myPermissionResponses = 0;
     private final IntegerProperty myPermissionResponses = new SimpleIntegerProperty(0);
+    private Timeline manageAccessRequestsButtonTimeline;
 
 
 
@@ -83,6 +86,14 @@ public class DashboardController {
         // Bind manageAccessRequestsButton disable property
         BooleanBinding noPermissionResponses = myPermissionResponses.isEqualTo(0);
         manageAccessRequestsButton.disableProperty().bind(noPermissionResponses);
+
+        noPermissionResponses.addListener((obs, wasDisabled, isDisabled) -> {
+            if (!isDisabled) {
+                startButtonSparkEffect();
+            } else {
+                stopButtonSparkEffect();
+            }
+        });
     }
 
 
@@ -192,6 +203,35 @@ public class DashboardController {
     private void setMyPermissionResponses(Integer responsesCount) {
         // Update the myPermissionResponses property in the UI thread
         Platform.runLater(() -> myPermissionResponses.set(responsesCount));
+    }
+
+    private void startButtonSparkEffect() {
+        if (manageAccessRequestsButtonTimeline != null) {
+            manageAccessRequestsButtonTimeline.stop();
+        }
+
+        manageAccessRequestsButtonTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.5), event -> {
+                    String currentColor = manageAccessRequestsButton.getStyle();
+                    if (currentColor.contains("#2196F3")) {
+                        // Change to lighter color
+                        manageAccessRequestsButton.setStyle("-fx-background-color: #64B5F6;");
+                    } else {
+                        // Revert to original color
+                        manageAccessRequestsButton.setStyle("-fx-background-color: #2196F3;");
+                    }
+                })
+        );
+        manageAccessRequestsButtonTimeline.setCycleCount(Timeline.INDEFINITE);
+        manageAccessRequestsButtonTimeline.play();
+    }
+
+    private void stopButtonSparkEffect() {
+        if (manageAccessRequestsButtonTimeline != null) {
+            manageAccessRequestsButtonTimeline.stop();
+            // Reset to the original color when the button is disabled
+            manageAccessRequestsButton.setStyle("-fx-background-color: #2196F3;");
+        }
     }
 
     public void stopSheetNamesRefresher() {
@@ -423,16 +463,26 @@ public class DashboardController {
 
     @FXML
     private void onManageAccessRequestsButtonClicked(ActionEvent event) {
+        // Stop the spark effect while the popup is open
+        stopButtonSparkEffect();
+
         CompletableFuture.runAsync(() -> {
-
             try (Response myRequestsResponse = HttpRequestManager.sendGetSyncRequest(Constants.MY_RESPONSE_PERMISSION, new HashMap<>())) {
-
                 String myRequestsAsJson = myRequestsResponse.body().string();
                 Type myRequestsListType = new TypeToken<List<RequestPermission>>() {}.getType();
                 List<RequestPermission> myRequests = Constants.GSON_INSTANCE.fromJson(myRequestsAsJson, myRequestsListType);
 
                 Platform.runLater(() -> {
-                    popUpManager.showManageAccessRequestsPopup(myRequests);  // Use popup manager to show the popup
+                    // Show the popup
+                    Stage popupStage = popUpManager.showManageAccessRequestsPopup(myRequests);
+
+                    // Add a listener to detect when the popup is closed
+                    popupStage.setOnHiding(windowEvent -> {
+                        // When the popup is closed, resume the spark effect if the button is still enabled
+                        if (!manageAccessRequestsButton.isDisabled()) {
+                            startButtonSparkEffect();
+                        }
+                    });
                 });
 
             } catch (IOException e) {
@@ -440,6 +490,8 @@ public class DashboardController {
             }
         });
     }
+
+
 
     private void showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
         Stage popupStage = new Stage();
