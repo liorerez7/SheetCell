@@ -44,24 +44,47 @@ public class SheetInfosManager {
     }
 
 
+//    public synchronized void newUserLoggedIn(String userName) {
+//        // Initialize or retrieve the existing sheet info set for the new user
+//        Set<DtoSheetInfoLine> sheetInfos = usernameToSheetInfos.computeIfAbsent(userName, k -> new HashSet<>());
+//
+//        // Iterate over all existing users and their sheet info
+//        usernameToSheetInfos.forEach((existingUser, sheetInfoSet) -> {
+//            // For each sheet owned by other users, add a new entry for the logged-in user
+//            sheetInfoSet.forEach(sheetInfo -> {
+//                String sheetName = sheetInfo.getSheetName();
+//                String sheetSize = sheetNamesToSheetSize.get(sheetName);
+//
+//                sheetNamesToSheetOwner.put(sheetName, sheetInfo.getOwnerName());
+//
+//                // Add the sheet to the new user's sheet info with "NONE" as the permission status
+//                sheetInfos.add(new DtoSheetInfoLine(sheetInfo.getOwnerName(), sheetName, sheetSize, "NONE"));
+//            });
+//        });
+//    }
+
     public synchronized void newUserLoggedIn(String userName) {
-        // Initialize or retrieve the existing sheet info set for the new user
+        // Check if the user is new by using computeIfAbsent and storing the result
         Set<DtoSheetInfoLine> sheetInfos = usernameToSheetInfos.computeIfAbsent(userName, k -> new HashSet<>());
 
-        // Iterate over all existing users and their sheet info
-        usernameToSheetInfos.forEach((existingUser, sheetInfoSet) -> {
-            // For each sheet owned by other users, add a new entry for the logged-in user
-            sheetInfoSet.forEach(sheetInfo -> {
-                String sheetName = sheetInfo.getSheetName();
-                String sheetSize = sheetNamesToSheetSize.get(sheetName);
+        // If the user is new (i.e., the sheetInfos set was just created), proceed with adding sheet info
+        if (usernameToSheetInfos.get(userName).isEmpty()) {
+            // Iterate over all existing users and their sheet info
+            usernameToSheetInfos.forEach((existingUser, sheetInfoSet) -> {
+                // For each sheet owned by other users, add a new entry for the logged-in user
+                sheetInfoSet.forEach(sheetInfo -> {
+                    String sheetName = sheetInfo.getSheetName();
+                    String sheetSize = sheetNamesToSheetSize.get(sheetName);
 
-                sheetNamesToSheetOwner.put(sheetName, sheetInfo.getOwnerName());
+                    sheetNamesToSheetOwner.put(sheetName, sheetInfo.getOwnerName());
 
-                // Add the sheet to the new user's sheet info with "NONE" as the permission status
-                sheetInfos.add(new DtoSheetInfoLine(sheetInfo.getOwnerName(), sheetName, sheetSize, "NONE"));
+                    // Add the sheet to the new user's sheet info with "NONE" as the permission status
+                    sheetInfos.add(new DtoSheetInfoLine(sheetInfo.getOwnerName(), sheetName, sheetSize, "NONE"));
+                });
             });
-        });
+        }
     }
+
 
     public synchronized void removeSheet(String sheetName) {
         sheetNamesToSheetSize.remove(sheetName);

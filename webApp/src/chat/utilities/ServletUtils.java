@@ -23,11 +23,9 @@ public class ServletUtils {
 	private static final Object chatManagerLock = new Object();
 
 	public static UserManager getUserManager(ServletContext servletContext) {
-		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
-	}
-
-	public static SheetManager getEngine(ServletContext servletContext) {
-		return (SheetManager) servletContext.getAttribute(ENGINE_ATTRIBUTE_NAME);
+		Engine e = getEngineManager(servletContext);
+		return e.getUserManager();
+//		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
 	}
 
 	public static Engine getEngineManager(ServletContext servletContext) {
@@ -35,7 +33,9 @@ public class ServletUtils {
 	}
 
 	public static PermissionManager getPermissionManager(ServletContext servletContext) {
-		return (PermissionManager) servletContext.getAttribute("permissionManager");
+		Engine e = getEngineManager(servletContext);
+		return e.getPermissionManager();
+//		return (PermissionManager) servletContext.getAttribute("permissionManager");
 	}
 
 	// Helper method to extract the error message

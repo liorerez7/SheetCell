@@ -135,9 +135,49 @@ public class DashboardController {
 
     @FXML
     private void onLogoutButtonClicked(ActionEvent event) {
-        // Logic for logging out the user.
-        // For example, navigating back to the login screen or clearing user session data.
-        mainController.showLoginScreen();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("username", currentUserName);
+
+        HttpRequestManager.sendGetAsyncRequest(Constants.LOGOUT_PAGE, params, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() ->
+                        mainController.createErrorPopup("Something went wrong: " + e.getMessage(), "Error")
+                );
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            mainController.createErrorPopup("Something went wrong", "Error")
+                    );
+                } else {
+                    Platform.runLater(() -> {
+
+                        currentUserName = null;  // Clear the current username
+                        HttpRequestManager.removeCookiesOf(Constants.BASE_DOMAIN);
+
+                        // Clear the sheetsTable and permissionsTable data
+                        sheetsTable.getItems().clear();
+                        sheetsTable.getSelectionModel().clearSelection();
+                        permissionsTable.getItems().clear();
+
+                        // Clear other local data related to the user session
+                        fileEntries.clear();
+                        permissionEntries.clear();
+                        currentSheetInfoLines.clear();
+                        currentPermissions.clear();
+
+                        mainController.showLoginScreen();
+                    });
+                }
+            }
+        });
+
     }
 
     @FXML

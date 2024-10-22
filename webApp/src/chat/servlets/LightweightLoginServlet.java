@@ -1,5 +1,6 @@
 package chat.servlets;
 
+import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion;
 import engine.Engine;
 import chat.utilities.Constants;
 import chat.utilities.ServletUtils;
@@ -26,9 +27,6 @@ public class LightweightLoginServlet extends HttpServlet {
         UserManager userManager = engine.getUserManager();
         PermissionManager permissionManager = engine.getPermissionManager();
         SheetInfosManager sheetInfosManager = engine.getSheetInfosManager();
-
-//        UserManager userManager = ServletUtils.getUserManager(getServletContext());
-//        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
 
 
 

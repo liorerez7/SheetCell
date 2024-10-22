@@ -4,7 +4,8 @@
     /*-fx-padding: 10; !* Reduced padding to bring elements closer to the top *!*/
     /*-fx-hgap: 20;*/
     /*-fx-vgap: 8; !* Reduced vertical gap *!*/
-    -fx-background-color: #f4f4f4;
+    /*-fx-background-color: #f4f4f4;*/
+    -fx-background-color: #ffffff;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
     -fx-border-color: #d3d3d3;
@@ -42,6 +43,8 @@
     -fx-font-size: 12px;
     -fx-text-fill: #333333;
     -fx-background-color: #e6e6e6;
+    /*-fx-text-fill: #ffffff;*/
+    /*-fx-background-color: #4a4a4a; !* Muted dark grey *!*/
     -fx-border-color: #cccccc;
     -fx-border-radius: 5;
     -fx-padding: 6;
@@ -49,11 +52,19 @@
 
 .button:hover {
     -fx-background-color: #dcdcdc;
+    /*-fx-background-color: #6a6a6a; !* Slightly lighter on hover *!*/
+
 }
 
 .default-button {
-    -fx-background-color: #b0b0b0;
+    /*-fx-background-color: #b0b0b0;*/
+    -fx-background-color: #4a4a4a; /* Muted dark grey */
+
     -fx-text-fill: white;
+}
+
+.default-button:hover {
+    -fx-background-color: #6a6a6a; /* Slightly lighter on hover */
 }
 
 /* Back to Dashboard Button - Elegant Look */
@@ -70,8 +81,13 @@
 
 /* Style for ColorPicker */
 .color-picker {
+    -fx-background-color: #4a4a4a; /* Muted dark grey */
     -fx-border-color: #cccccc;
     -fx-border-radius: 5;
+}
+
+.color-picker:hover {
+    -fx-background-color: #6a6a6a; /* Slightly lighter on hover */
 }
 
 /* Labels */

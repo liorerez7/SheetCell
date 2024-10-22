@@ -49,3 +49,137 @@
 .separator {
     -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!* General Action Line Styling - Matching the Menu Style *!*/
+/*.UserInterfaceSection {*/
+/*    -fx-background-color: #f4f4f4; !* Light gray for consistency with the menu *!*/
+/*    -fx-background-radius: 8;*/
+/*    -fx-border-radius: 8;*/
+/*    -fx-border-color: #d3d3d3; !* Light border to match the menu *!*/
+/*    -fx-padding: 5;*/
+/*    -fx-hgap: 20;*/
+/*    -fx-vgap: 8;*/
+/*    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2); !* Subtle drop shadow *!*/
+/*}*/
+
+/*!* Uniform Size for Buttons *!*/
+/*.Button {*/
+/*    -fx-pref-height: 30px; !* Uniform height for all *!*/
+/*    -fx-pref-width: 140px; !* Uniform width for buttons *!*/
+/*}*/
+
+/*!* Buttons Styling - Modern and Matching Menu *!*/
+/*.ModernButton {*/
+/*    -fx-background-color: #4a4a4a; !* Muted dark grey for consistency with navigation button *!*/
+/*    -fx-text-fill: white;*/
+/*    -fx-font-family: 'Arial', sans-serif;*/
+/*    -fx-font-size: 14px;*/
+/*    -fx-padding: 6 12;*/
+/*    -fx-border-radius: 5px;*/
+/*    -fx-background-radius: 5px;*/
+/*    -fx-border-color: transparent;*/
+/*    -fx-cursor: hand;*/
+/*    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1);*/
+/*}*/
+
+/*.ModernButton:hover {*/
+/*    -fx-background-color: #6a6a6a; !* Slightly lighter gray on hover *!*/
+/*}*/
+
+/*.ModernButton:pressed {*/
+/*    -fx-background-color: #3a3a3a; !* Darker gray when pressed *!*/
+/*}*/
+
+/*!* TextField Styling - More Integrated with Menu Look *!*/
+/*.TextField {*/
+/*    -fx-background-color: #ffffff;*/
+/*    -fx-border-color: #cccccc;*/
+/*    -fx-border-width: 1;*/
+/*    -fx-border-radius: 5px;*/
+/*    -fx-padding: 5px;*/
+/*    -fx-font-family: 'Arial', sans-serif;*/
+/*    -fx-font-size: 14px;*/
+/*}*/
+
+/*.TextField:focused {*/
+/*    -fx-border-color: #4a4a4a; !* Gray border when focused *!*/
+/*    -fx-background-color: #f0f0f0;*/
+/*}*/
+
+/*!* Styling for the MenuButton *!*/
+/*.MenuButton {*/
+/*    -fx-background-color: #4a4a4a; !* Consistent with buttons in the menu *!*/
+/*    -fx-text-fill: white;*/
+/*    -fx-font-family: 'Arial', sans-serif;*/
+/*    -fx-font-size: 14px;*/
+/*    -fx-border-radius: 5px;*/
+/*    -fx-background-radius: 5px;*/
+/*    -fx-padding: 5px 10px;*/
+/*    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1);*/
+/*}*/
+
+/*.MenuButton:hover {*/
+/*    -fx-background-color: #6a6a6a;*/
+/*}*/
+
+/*.MenuButton:pressed {*/
+/*    -fx-background-color: #3a3a3a;*/
+/*}*/
+
+/*!* Separate section for ComboBox called Version *!*/
+/*.Version {*/
+/*    -fx-background-color: #4a4a4a; !* Muted dark grey similar to UpdateCell button *!*/
+/*    -fx-text-fill: white; !* White text like the button *!*/
+/*    -fx-border-color: transparent; !* No border to match the button style *!*/
+/*    -fx-border-radius: 5px; !* Rounded edges *!*/
+/*    -fx-font-family: 'Arial', sans-serif;*/
+/*    -fx-font-size: 14px; !* Same font size as buttons *!*/
+/*    -fx-padding: 0; !* Remove internal padding to match button *!*/
+/*    -fx-background-radius: 5px; !* Rounded background corners *!*/
+/*    -fx-pref-height: 30px; !* Match button height *!*/
+/*    -fx-pref-width: 120px; !* Reduced width to make it a bit smaller *!*/
+/*    -fx-cursor: hand; !* Pointer cursor *!*/
+/*    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1); !* Subtle shadow effect *!*/
+/*}*/
+
+/*!* ComboBox drop-down styling *!*/
+/*.Version .list-view {*/
+/*    -fx-background-color: #4a4a4a; !* Same color as the button *!*/
+/*}*/
+
+/*!* Hover effect for Version ComboBox *!*/
+/*.Version:hover {*/
+/*    -fx-background-color: #6a6a6a; !* Slightly lighter gray on hover, similar to ModernButton hover *!*/
+/*}*/
+
+/*!* Focus effect for Version ComboBox *!*/
+/*.Version:focused {*/
+/*    -fx-background-color: #3a3a3a; !* Darker gray when focused *!*/
+/*    -fx-border-color: #3a3a3a; !* Match the focused border color *!*/
+/*}*/
+
+/*!* Version ComboBox text styling *!*/
+/*.Version .text-field {*/
+/*    -fx-text-fill: white; !* White text to match button styling *!*/
+/*    -fx-prompt-text-fill: grey;*/
+/*}*/
+
+/*.Version:focused .text-field {*/
+/*    -fx-text-fill: white; !* Keep text white when focused *!*/
+/*    -fx-background-color: #3a3a3a; !* Match background color when focused *!*/
+/*}*/

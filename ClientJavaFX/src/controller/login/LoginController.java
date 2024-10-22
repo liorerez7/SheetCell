@@ -104,8 +104,6 @@ public class LoginController {
         });
     }
 
-
-
     private void updateHttpStatusLine(String data) {
        // mainController.updateHttpLine(data);
     }

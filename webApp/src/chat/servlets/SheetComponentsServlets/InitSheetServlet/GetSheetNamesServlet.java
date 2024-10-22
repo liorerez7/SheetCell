@@ -22,15 +22,10 @@ public class GetSheetNamesServlet extends HttpServlet {
 
         String userName = (String) request.getSession(false).getAttribute(Constants.USERNAME);
 
-
-
         try{
             Engine engine = ServletUtils.getEngineManager(getServletContext());
             Set<DtoSheetInfoLine> sheetInfos = engine.getSheetInfosManager().getSheetInfos(userName);
             String sheetInfosAsJson = Constants.GSON_INSTANCE.toJson(sheetInfos);
-
-            //Set<String> sheetNames = engine.getSheetNames();
-            //String sheetNamesAsJson = Constants.GSON_INSTANCE.toJson(sheetNames);
 
             if(sheetInfos == null){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
