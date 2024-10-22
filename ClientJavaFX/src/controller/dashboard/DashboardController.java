@@ -491,8 +491,6 @@ public class DashboardController {
         });
     }
 
-
-
     private void showManageAccessRequestsPopup(List<RequestPermission> myRequests) {
         Stage popupStage = new Stage();
         popupStage.setTitle("Request Permissions");
