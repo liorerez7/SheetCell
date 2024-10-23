@@ -678,8 +678,7 @@ public class PopUpWindowsHandler {
             DtoSheetCell sheetCellRunTime,
             int startingValue, int endingValue, int stepValue,
             double currentVal, char col, String row,
-            Model model, GridController gridScrollerController,
-            Runnable onCloseCallback) {
+            Model model, GridController gridScrollerController) {
 
         String title = "Run Time Analysis";
         Stage popupStage = new Stage();
@@ -734,11 +733,8 @@ public class PopUpWindowsHandler {
                         map.put("colLocation", col + "");
                         map.put("rowLocation", row);
 
-                        updateCellRequest(map);
-
-                        DtoSheetCell updatedSheetCell = fetchDtoSheetCell();
-
-                        Platform.runLater(() -> model.setPropertiesByDtoSheetCellRunTimeAnalsys(updatedSheetCell));
+                        DtoSheetCell newUpdatedSheetCell = runTimeHttpCall(map);
+                        Platform.runLater(() -> model.setPropertiesByDtoSheetCellRunTimeAnalsys(newUpdatedSheetCell));
 
                     } catch (Exception e) {
                         Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error updating cell"));
@@ -759,60 +755,31 @@ public class PopUpWindowsHandler {
             Scene popupScene = new Scene(contentScrollPane);
             popupStage.setScene(popupScene);
 
-            // Set an action when the popup window is closed
-            popupStage.setOnHidden(event -> {
-                if (onCloseCallback != null) {
-                    onCloseCallback.run();
-                }
-            });
-
             popupStage.showAndWait();
         });
     }
 
 
+    private DtoSheetCell runTimeHttpCall(Map<String,String> map){
 
+        DtoSheetCell dtoSheetCell = null;
 
-    private boolean updateCellRequest(Map<String, String> map) {
+        try (Response updateCellResponse = HttpRequestManager.sendPostSyncRequest(Constants.RUNTIME_ANALYSIS, map)) {
 
-//        try (Response updateCellResponse = HttpRequestManager.sendPostRequestSync(Constants.UPDATE_CELL_ENDPOINT, map)) {
-//            if (!updateCellResponse.isSuccessful()) {
-//                Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
-//                return false;
-//            }
-//            return true;
-
-        try (Response updateCellResponse = HttpRequestManager.sendPostSyncRequest(Constants.UPDATE_CELL_ENDPOINT, map)) {
             if (!updateCellResponse.isSuccessful()) {
-                String responseBody = updateCellResponse.body().string();
-                System.err.println("Error response: " + responseBody);
-                System.err.println("Status code: " + updateCellResponse.code());
-                Platform.runLater(() -> createErrorPopup("Failed to update cell: " + responseBody, "Error"));
-                return false;
-            }
-            return true;
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error saving current sheet cell state"));
-            return false;
-        }
-    }
-
-    // Helper method to fetch the DtoSheetCell from the server
-    private DtoSheetCell fetchDtoSheetCell() {
-        try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
-            if (!response.isSuccessful()) {
                 Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
                 return null;
             }
-            String dtoSheetCellAsJson = response.body().string();
-            return Constants.GSON_INSTANCE.fromJson(dtoSheetCellAsJson, DtoSheetCell.class);
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error fetching sheet cell data"));
-            return null;
+
+            String dtoSheetCellAsJson = updateCellResponse.body().string();
+            dtoSheetCell = Constants.GSON_INSTANCE.fromJson(dtoSheetCellAsJson, DtoSheetCell.class);
+
+        }catch (IOException e){
+            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error updating cell"));
         }
+
+        return dtoSheetCell;
     }
-
-
 
     public List<String> openGraphWindow(){
 

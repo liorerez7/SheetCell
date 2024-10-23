@@ -12,14 +12,14 @@ public class PermissionManager {
 
     private final Map<String, List<PermissionLine>> currentSheetNameToPermissionLines = new HashMap<>();
     private final Map<String, List<PermissionLine>> allHistorySheetNameToPermissionLines = new HashMap<>();
-    private final UserManager userManager;
+    //private final UserManager userManager;
     private final Map<String, List<RequestPermission>> userNameToHisRequestList = new HashMap<>();
     private final Map<String, List<ResponsePermission>> ownerNameToHisResponseList = new HashMap<>();
 
 
-    public PermissionManager(UserManager userManager) {
-        this.userManager = userManager;
-    }
+//    public PermissionManager(UserManager userManager) {
+//        this.userManager = userManager;
+//    }
 
     public synchronized void addPermission(String sheetName, String userName,
                                            PermissionStatus status, RequestStatus requestStatus) {
@@ -66,9 +66,9 @@ public class PermissionManager {
         }
     }
 
-    public UserManager getUserManager() {
-        return userManager;
-    }
+//    public UserManager getUserManager() {
+//        return userManager;
+//    }
 
     public synchronized void addRequestPermission(String sheetName, String userName, PermissionStatus permissionStatus) {
         // Find the owner of the sheet

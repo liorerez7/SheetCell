@@ -48,6 +48,10 @@
         <servlet-class>chat.servlets.sheet.cell.UpdateCellServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RunTimeAnalysisServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.cell.RunTimeAnalysisServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetUserNameLastUpdatedCellServlet</servlet-name>
         <servlet-class>chat.servlets.sheet.cell.GetUserNameLastUpdatedCellServlet</servlet-class>
     </servlet>
@@ -115,6 +119,10 @@
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/updateCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RunTimeAnalysisServlet</servlet-name>
+        <url-pattern>/runtimeAnalysis</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetUserNameLastUpdatedCellServlet</servlet-name>

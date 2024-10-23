@@ -13,9 +13,10 @@ public class SheetInfosManager {
     private UserManager userManager;
 
 
-    public SheetInfosManager(PermissionManager permissionManager) {
+    public SheetInfosManager(PermissionManager permissionManager, UserManager userManager) {
         this.permissionManager = permissionManager;
-        userManager = permissionManager.getUserManager();
+//        userManager = permissionManager.getUserManager();
+        this.userManager = userManager;
     }
 
 
@@ -42,26 +43,6 @@ public class SheetInfosManager {
             }
         });
     }
-
-
-//    public synchronized void newUserLoggedIn(String userName) {
-//        // Initialize or retrieve the existing sheet info set for the new user
-//        Set<DtoSheetInfoLine> sheetInfos = usernameToSheetInfos.computeIfAbsent(userName, k -> new HashSet<>());
-//
-//        // Iterate over all existing users and their sheet info
-//        usernameToSheetInfos.forEach((existingUser, sheetInfoSet) -> {
-//            // For each sheet owned by other users, add a new entry for the logged-in user
-//            sheetInfoSet.forEach(sheetInfo -> {
-//                String sheetName = sheetInfo.getSheetName();
-//                String sheetSize = sheetNamesToSheetSize.get(sheetName);
-//
-//                sheetNamesToSheetOwner.put(sheetName, sheetInfo.getOwnerName());
-//
-//                // Add the sheet to the new user's sheet info with "NONE" as the permission status
-//                sheetInfos.add(new DtoSheetInfoLine(sheetInfo.getOwnerName(), sheetName, sheetSize, "NONE"));
-//            });
-//        });
-//    }
 
     public synchronized void newUserLoggedIn(String userName) {
         // Check if the user is new by using computeIfAbsent and storing the result

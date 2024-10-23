@@ -559,45 +559,8 @@ public class MainController implements Closeable {
         gridScrollerController.changeTextColor(value, location);
     }
 
-    public void closeMenuButtonClicked() {
-        System.exit(0);
-    }
-
-    public void classicDisplayClicked() {
-        applyTheme(() -> themeManager.classicDisplayClicked(
-               // headerController::changeToClassicTheme,
-                rangesController::changeToClassicTheme,
-                actionLineController::changeToClassicTheme
-                //customizeController::changeToClassicTheme
-                ));
-    }
-
-    public void sunBurstDisplayClicked() {
-        applyTheme(() -> themeManager.sunBurstDisplayClicked(
-                //headerController::changeToSunBurstTheme,
-                rangesController::changeToSunBurstTheme,
-                actionLineController::changeToSunBurstTheme
-                //customizeController::changeToSunBurstTheme
-                ));
-    }
-
-    public void midNightDisplayClicked() {
-        applyTheme(() -> themeManager.midNightDisplayClicked(
-                //headerController::changeToDarkTheme,
-                rangesController::changeToDarkTheme,
-                actionLineController::changeToDarkTheme
-              //  customizeController::changeToDarkTheme
-                ));
-    }
-
-    private void applyTheme(Runnable themeMethod) {
-        themeManager.setMainPaneStyleClass(mainPane);
-        themeManager.setLeftCommandsStyleClass(leftCommands);
-        themeMethod.run();
-    }
-
     public void runtimeAnalysisClicked() {
-        // Step 1: Fetch runtime analysis data
+
         RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
         if (runTimeAnalysisData.getCellId().isEmpty()) {
             return;
@@ -611,21 +574,13 @@ public class MainController implements Closeable {
                 int stepValue = runTimeAnalysisData.getStepValue();
                 String currentValue;
 
-                // Step 2: Save the current sheet cell state through the server
-                if (!sendSaveSheetCellRequest()) {
-                    return;
-                }
 
-                // Step 3: Fetch sheet cell data from the server
-                //DtoSheetCell dtoSheetCell = fetchDtoSheetCell();
                 DtoSheetCell dtoSheetCell = dtoSheetCellAsDataParameter;
 
                 if (dtoSheetCell == null) {
                     return;
                 }
 
-                // Step 4: Fetch the requested cell data from the server
-                //DtoCell dtoCell = fetchRequestedCell(cellId);
                 DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(cellId);
 
                 if (dtoCell == null) {
@@ -634,24 +589,18 @@ public class MainController implements Closeable {
 
                 currentValue = dtoCell.getEffectiveValue().getValue().toString();
 
-                // Step 5: Validate the cell value
                 double currentVal = validateCellValue(currentValue, startingValue, endingValue);
                 if (Double.isNaN(currentVal)) {
                     return;
                 }
 
-                // Step 6: Extract column and row information
                 char col = cellId.charAt(0);
                 String row = cellId.substring(1);
 
                 Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
-                        dtoSheetCell, startingValue, endingValue, stepValue, currentVal, col, row, model, gridScrollerController,
-                        () -> CompletableFuture.runAsync(() -> {
-                            if (!sendRestoreSheetCellRequest()) {
-                                return;
-                            }
-                        })
-                ));
+                        dtoSheetCell, startingValue, endingValue,
+                        stepValue, currentVal, col, row, model, gridScrollerController)
+                );
 
             } catch (Exception e) {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error processing runtime analysis"));
@@ -659,40 +608,6 @@ public class MainController implements Closeable {
         });
     }
 
-    // Helper method to send a request to restore the sheet cell state
-    private boolean sendRestoreSheetCellRequest() {
-        try (Response response = HttpRequestManager.sendPostSyncRequest(Constants.RESTORE_CURRENT_SHEET_CELL_STATE_ENDPOINT, new HashMap<>())) {
-            if (!response.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to restore sheet cell state", "Error"));
-                return false;
-            }
-            else{
-                return true;
-            }
-
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error restoring sheet cell state"));
-            return false;
-        }
-    }
-
-    // Helper method to send a request to save the current sheet cell state
-    private boolean sendSaveSheetCellRequest() {
-        try (Response response = HttpRequestManager.sendPostSyncRequest(Constants.SAVE_CURRENT_SHEET_CELL_STATE_ENDPOINT, new HashMap<>())) {
-            if (!response.isSuccessful()) {
-                Platform.runLater(() -> createErrorPopup("Failed to save current sheet cell state", "Error"));
-                return false;
-            }
-            else{
-                return true;
-            }
-        } catch (IOException e) {
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error saving current sheet cell state"));
-            return false;
-        }
-    }
-
-    // Helper method to validate the cell value
     private double validateCellValue(String currentValue, int startingValue, int endingValue) {
         try {
             double currentVal = Double.parseDouble(currentValue);
@@ -705,7 +620,6 @@ public class MainController implements Closeable {
             return Double.NaN;  // Return NaN to indicate an invalid value
         }
     }
-
 
     public void makeGraphClicked(boolean isChartGraph) {
         // Step 1: Open the Graph Window and get the selected columns and titles
@@ -835,11 +749,6 @@ public class MainController implements Closeable {
         updateCurrentGridSheet(sheetName);
 
     }
-
-    public String getSheetName() {
-        return sheetName;
-    }
-
 
     public void startSheetNamesRefresher() {
 

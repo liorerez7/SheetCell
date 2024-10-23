@@ -20,8 +20,11 @@ public class Engine {
     private final Set<String> sheetNames = new HashSet<>();
     private final UserManager userManager = new UserManager();
     private final ChatManager chatManager = new ChatManager();
-    private final PermissionManager permissionManager = new PermissionManager(userManager);
-    private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager);
+//    private final PermissionManager permissionManager = new PermissionManager(userManager);
+    private final PermissionManager permissionManager = new PermissionManager();
+
+    private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager, userManager);
+
     private Map<String, Map<CellLocation, String>> sheetNameToCellLocationToUserName = new HashMap<>();
 
     public synchronized SheetManager getSheetCell(InputStream sheetInputStream, String userName) {

@@ -17,7 +17,9 @@ public class SaveCurrentSheetCellServlet extends HttpServlet {
         SheetManager sheetManager = ServletUtils.getSheetManager(getServletContext(), sheetName);
 
         try{
-            sheetManager.saveCurrentSheetCellState();
+            synchronized (sheetManager) {
+                sheetManager.saveCurrentSheetCellState();
+            }
             response.setStatus(HttpServletResponse.SC_OK);
         }catch (Exception e){
             response.setStatus(HttpServletResponse.SC_CONFLICT);

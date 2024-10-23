@@ -3,6 +3,7 @@ package chat.servlets.sheet.permissions;
 import dto.permissions.RequestStatus;
 import chat.utilities.Constants;
 import chat.utilities.ServletUtils;
+import engine.Engine;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,8 +19,9 @@ public class UpdateResponsePermissionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
 
-        PermissionManager permissionManager = ServletUtils.getPermissionManager(getServletContext());
-        SheetInfosManager sheetInfosManager = ServletUtils.getSheetInfosManager(getServletContext());
+        Engine engine = ServletUtils.getEngineManager(getServletContext());
+        PermissionManager permissionManager = engine.getPermissionManager();
+        SheetInfosManager sheetInfosManager = engine.getSheetInfosManager();
 
         String ownerName = (String) request.getSession(false).getAttribute(Constants.USERNAME);
 
@@ -36,13 +38,13 @@ public class UpdateResponsePermissionServlet extends HttpServlet {
             requestStatus = requestStatus.toUpperCase();
             RequestStatus requestStatusEnum = RequestStatus.valueOf(requestStatus);
 
-
-            synchronized (permissionManager) {
+            synchronized (engine) {  // Synchronize on the engine instead of individual managers
                 permissionManager.updateOwnerResponseForRequest(ownerName, sheetName, userName, permissionStatus, requestStatusEnum);
                 if(requestStatus.equals(RequestStatus.APPROVED.toString())){
                     sheetInfosManager.updateSheetPermissions(ownerName, sheetName, userName);
                 }
             }
+
             response.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception e) {

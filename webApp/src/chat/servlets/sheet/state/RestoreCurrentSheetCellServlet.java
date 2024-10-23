@@ -17,7 +17,9 @@ public class RestoreCurrentSheetCellServlet extends HttpServlet {
         SheetManager sheetManager = ServletUtils.getSheetManager(getServletContext(), sheetName);
 
         try{
-            sheetManager.restoreSheetCellState();
+            synchronized (sheetManager) {
+                sheetManager.restoreSheetCellState();
+            }
             response.setStatus(HttpServletResponse.SC_OK);
         }catch (Exception e){
             response.setStatus(HttpServletResponse.SC_CONFLICT);

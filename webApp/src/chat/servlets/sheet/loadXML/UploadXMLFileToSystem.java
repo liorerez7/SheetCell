@@ -26,8 +26,7 @@ public class UploadXMLFileToSystem extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         Engine engine = ServletUtils.getEngineManager(getServletContext());
-        PermissionManager permissionManager = engine.getPermissionManager();
-        SheetInfosManager sheetInfosManager = engine.getSheetInfosManager();
+
 
         String userName = SessionUtils.getUsername(request);
 
@@ -44,17 +43,22 @@ public class UploadXMLFileToSystem extends HttpServlet {
         }
 
         try (InputStream fileContent = filePart.getInputStream()) {
-            SheetManager sheetManager = engine.getSheetCell(fileContent, userName);
-            String sheetName = sheetManager.getSheetCell().getSheetName();
 
-            synchronized (permissionManager) {
+            synchronized (engine) {
+
+                SheetManager sheetManager = engine.getSheetCell(fileContent, userName);
+                String sheetName = sheetManager.getSheetCell().getSheetName();
+
+                PermissionManager permissionManager = engine.getPermissionManager();
+                SheetInfosManager sheetInfosManager = engine.getSheetInfosManager();
+
                 permissionManager.addPermission(sheetName, userName, PermissionStatus.OWNER, RequestStatus.APPROVED);
                 sheetInfosManager.newSheetWasCreated(sheetName, userName, sheetManager.getSheetCell().getSheetSize(), PermissionStatus.OWNER.toString());
-            }
 
-            String sheetNameAsJson = Constants.GSON_INSTANCE.toJson(sheetName);
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write(sheetNameAsJson);
+                String sheetNameAsJson = Constants.GSON_INSTANCE.toJson(sheetName);
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write(sheetNameAsJson);
+            }
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

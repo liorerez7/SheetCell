@@ -19,7 +19,10 @@ public class DeleteRangeServlet extends HttpServlet {
             String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
             SheetManager sheetManager = ServletUtils.getSheetManager(getServletContext(), sheetName);
 
-            sheetManager.deleteRange(name);
+            synchronized (sheetManager) {
+                sheetManager.deleteRange(name);
+            }
+
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

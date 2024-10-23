@@ -21,7 +21,9 @@ public class AddRangeServlet extends HttpServlet {
         SheetManager sheetManager = ServletUtils.getSheetManager(getServletContext(), sheetName);
 
         try{
-            sheetManager.UpdateNewRange(name, range);
+            synchronized (sheetManager) {
+                sheetManager.UpdateNewRange(name, range);
+            }
         }
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_CONFLICT);
