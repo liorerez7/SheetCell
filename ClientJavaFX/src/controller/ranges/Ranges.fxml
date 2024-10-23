@@ -11,16 +11,6 @@
    <children>
       <VBox fx:id="vBoxContainer" alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" minHeight="210.0" minWidth="290.0" prefHeight="210.0" prefWidth="340.0" styleClass="UserInterfaceSection" StackPane.alignment="CENTER_LEFT">
          <children>
-            <Button fx:id="filterDataButton" mnemonicParsing="false" onAction="#filterDataClicked" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="Filter Data">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="20.0" />
-               </VBox.margin>
-            </Button>
-            <Button fx:id="sortRowsButton" mnemonicParsing="false" onAction="#sortRowsClicked" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="Sort Rows">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="7.0" />
-               </VBox.margin>
-            </Button>
             <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="25.0" prefWidth="150.0" styleClass="RangeButton" stylesheets="@Ranges.css" text="Add range">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" top="7.0" />

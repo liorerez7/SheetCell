@@ -21,9 +21,6 @@ public class RangesController {
     MainController mainController;
 
     @FXML
-    private Button filterDataButton;
-
-    @FXML
     private ComboBox<Label> SystemRanges;
 
     @FXML
@@ -36,21 +33,7 @@ public class RangesController {
     private StackPane ranges;
 
     @FXML
-    private Button sortRowsButton;
-
-    @FXML
     private VBox vBoxContainer;
-
-
-    @FXML
-    void filterDataClicked(ActionEvent event) {
-        mainController.filterDataButtonClicked();
-    }
-
-    @FXML
-    void sortRowsClicked(ActionEvent event) {
-        mainController.sortRowsButtonClicked();
-    }
 
     @FXML
     void initialize(){
@@ -125,8 +108,6 @@ public class RangesController {
 
     private void setupBindings() {
         deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
-        filterDataButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
-        sortRowsButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         SystemRanges.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
     }
@@ -162,30 +143,24 @@ public class RangesController {
     public void changeToDarkTheme() {
         Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
         Utilities.switchStyleClass(vBoxContainer, "DarkUserInterfaceSection", "UserInterfaceSection", "RangeButtonSun");
-        Utilities.switchStyleClass(filterDataButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
         Utilities.switchStyleClass(addRangeButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
         Utilities.switchStyleClass(deleteRangeButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
-        Utilities.switchStyleClass(sortRowsButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
         Utilities.switchStyleClass(SystemRanges, "RangeButtonDark", "RangeButton", "RangeButtonSun");
     }
 
     public void changeToClassicTheme() {
         Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
         Utilities.switchStyleClass(vBoxContainer, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
-        Utilities.switchStyleClass(filterDataButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
         Utilities.switchStyleClass(addRangeButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
         Utilities.switchStyleClass(deleteRangeButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
-        Utilities.switchStyleClass(sortRowsButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
         Utilities.switchStyleClass(SystemRanges, "RangeButton", "RangeButtonDark", "RangeButtonSun");
     }
 
     public void changeToSunBurstTheme() {
         Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.BLACK);
         Utilities.switchStyleClass(vBoxContainer, "SunUserInterfaceSection", "DarkUserInterfaceSection", "UserInterfaceSection");
-        Utilities.switchStyleClass(filterDataButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
         Utilities.switchStyleClass(addRangeButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
         Utilities.switchStyleClass(deleteRangeButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
-        Utilities.switchStyleClass(sortRowsButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
         Utilities.switchStyleClass(SystemRanges, "RangeButtonSun", "RangeButtonDark", "RangeButton");
     }
 
@@ -201,8 +176,6 @@ public class RangesController {
     public void enableWriterButtons() {
         addRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
         deleteRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
-        //        deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
-//        addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
     }
 }
 

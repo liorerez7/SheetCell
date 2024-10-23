@@ -70,6 +70,10 @@ public class MainController implements Closeable {
     private PermissionStatus permissionStatus;
     private Map<CellLocation, String> cellLocationToUserName;
 
+    public static final int REFRESH_INTERVAL = 500;
+    public static final int INITIAL_DELAY = 0;
+
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -843,7 +847,7 @@ public class MainController implements Closeable {
                 NewVersionOfSheetIsAvailable(), this::getSheetVersion);
 
         timer = new Timer();
-        timer.schedule(refresher, 0, 2000); //
+        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL); //
     }
 
     public void NewVersionOfSheetIsAvailable(){

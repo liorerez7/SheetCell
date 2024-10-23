@@ -34,8 +34,11 @@ public class Constants {
     public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/loginShortResponse";
     public final static String USERS_LIST = FULL_SERVER_PATH + "/usersList";
     public final static String LOGOUT_PAGE = FULL_SERVER_PATH + "/logoutShortResponse";
-    public final static String SEND_CHAT_LINE = FULL_SERVER_PATH + "/pages/chatroom/sendChat";
     public final static String CHAT_LINES_LIST = FULL_SERVER_PATH + "/chat";
+    public final static String SEND_MESSAGE_URL = CHAT_LINES_LIST + "/sendMessage";
+    public final static String SEND_CHAT_LINE = CHAT_LINES_LIST + "/sendChat";
+
+
 
     public final static String INIT_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/xmlAddress";
     public static final String GET_SHEET_CELL_ENDPOINT = FULL_SERVER_PATH + "/sheetCell";

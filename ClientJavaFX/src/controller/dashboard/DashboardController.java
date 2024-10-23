@@ -78,6 +78,11 @@ public class DashboardController {
     @FXML private Button sendMessageButton;
     @FXML private TextArea chatMessagesArea;
     @FXML private TextField chatInputField;
+    private final IntegerProperty chatVersion = new SimpleIntegerProperty();
+    public final static String CHAT_LINE_FORMATTING = "%tH:%tM:%tS | %.10s: %s%n";
+    public final static int REFRESH_INTERVAL = 500;
+    public final static int INITIAL_DELAY = 0;
+
 
 
     @FXML
@@ -94,9 +99,48 @@ public class DashboardController {
         String message = chatInputField.getText();
         chatInputField.clear();
 
-        if (!message.isEmpty()) {
-            chatMessagesArea.appendText("You: " + message + "\n");
+        Map<String,String> params = new HashMap<>();
+        params.put("userstring", message);
+
+        HttpRequestManager.sendPostAsyncRequest(Constants.SEND_MESSAGE_URL, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> mainController.createErrorPopup("Failed to send message", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Platform.runLater(() -> mainController.createErrorPopup("Failed to send message", "Error"));
+                }
+            }
+        });
+    }
+
+    private void updateChatLines(ChatLinesWithVersion chatLinesWithVersion) {
+        if (chatLinesWithVersion.getVersion() != chatVersion.get()) {
+            String deltaChatLines = chatLinesWithVersion
+                    .getEntries()
+                    .stream()
+                    .map(singleChatLine -> {
+                        long time = singleChatLine.getTime();
+                        return String.format(CHAT_LINE_FORMATTING, time, time, time, singleChatLine.getUsername(), singleChatLine.getChatString());
+                    }).collect(Collectors.joining());
+
+            Platform.runLater(() -> {
+                chatVersion.set(chatLinesWithVersion.getVersion());
+                chatMessagesArea.appendText(deltaChatLines);
+                chatMessagesArea.setScrollTop(Double.MAX_VALUE);
+            });
         }
+    }
+
+    public void startListRefresher() {
+        ChatAreaRefresher chatAreaRefresher = new ChatAreaRefresher(
+                chatVersion,
+                this::updateChatLines);
+        timer = new Timer();
+        timer.schedule(chatAreaRefresher, INITIAL_DELAY, REFRESH_INTERVAL);
     }
 
     @FXML
@@ -104,6 +148,7 @@ public class DashboardController {
         initializeTables();
         startSheetNamesRefresher();
         startResponsesRefresher();
+        startListRefresher();
         setupSheetSelectionListener();
         popUpManager = new DashboardPopUpManager(this);
         viewSheetButton.setDisable(true);
@@ -120,8 +165,6 @@ public class DashboardController {
             }
         });
     }
-
-
 
     @FXML
     private void onViewSheetButtonClicked(ActionEvent event) {
@@ -256,13 +299,13 @@ public class DashboardController {
     public void startSheetNamesRefresher() {
         SheetNamesRefresher refresher = new SheetNamesRefresher(this::addAllSheetInfoLines, this::displayError);
         timer = new Timer();
-        timer.schedule(refresher, 0, 2000);
+        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
     }
 
     private void startResponsesRefresher() {
         ResponsesRefresher refresher = new ResponsesRefresher(this::setMyPermissionResponses);
         timer = new Timer();
-        timer.schedule(refresher, 0, 2000);
+        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
     }
 
     private void setMyPermissionResponses(Integer responsesCount) {
