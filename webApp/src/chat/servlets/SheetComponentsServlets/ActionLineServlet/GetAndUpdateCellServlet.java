@@ -27,7 +27,7 @@ public class GetAndUpdateCellServlet extends HttpServlet {
         String userName = SessionUtils.getUsername(request);
 
         // Synchronize on the engine or the sheet manager
-        synchronized (engine) {  // Alternatively, you can synchronize on sheetManager if it's a better fit
+        synchronized (engine) {
             SheetManager sheetManager = engine.getSheetCell(sheetName);
 
             try {

@@ -12,6 +12,14 @@
         <servlet-class>chat.servlets.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>SendChatMessageServlet</servlet-name>
+        <servlet-class>chat.servlets.SendChatMessageServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChatServlet</servlet-name>
+        <servlet-class>chat.servlets.ChatServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetSheetCellAndLoadXML</servlet-name>
         <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetCellAndLoadXML</servlet-class>
     </servlet>
@@ -86,6 +94,14 @@
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendChatMessageServlet</servlet-name>
+        <url-pattern>/chat/sendMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatServlet</servlet-name>
+        <url-pattern>/chat/sendChat</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
