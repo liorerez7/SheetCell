@@ -25,18 +25,17 @@ public class Constants {
     public static final String DASHBOARD_PAGE_FXML_RESOURCE_LOCATION = "/controller/dashboard/dashboard.fxml";
 
 
-    // Server resources locations
     public final static String BASE_DOMAIN = "localhost";
     private final static String BASE_URL = "http://" + BASE_DOMAIN + ":8080";
     private final static String CONTEXT_PATH = "/webApp_Web_exploded";
     private final static String FULL_SERVER_PATH = BASE_URL + CONTEXT_PATH;
 
-    public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/loginShortResponse";
-    public final static String USERS_LIST = FULL_SERVER_PATH + "/usersList";
-    public final static String LOGOUT_PAGE = FULL_SERVER_PATH + "/logoutShortResponse";
+    // Chat servlet constants
+    public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/login";
+    public final static String LOGOUT_ENDPOINT = FULL_SERVER_PATH + "/logout";
     public final static String CHAT_LINES_LIST = FULL_SERVER_PATH + "/chat";
-    public final static String SEND_MESSAGE_URL = CHAT_LINES_LIST + "/sendMessage";
-    public final static String SEND_CHAT_LINE = CHAT_LINES_LIST + "/sendChat";
+    public final static String POST_CHAT_MESSAGE_ENDPOINT = CHAT_LINES_LIST + "/sendMessage";
+    public final static String GET_CHAT_ENDPOINT = CHAT_LINES_LIST + "/getChat";
 
 
 

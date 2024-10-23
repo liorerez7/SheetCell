@@ -6,6 +6,7 @@ import dto.small_parts.CellLocationFactory;
 import dto.small_parts.EffectiveValue;
 import engine.core_parts.api.SheetManager;
 import engine.core_parts.impl.SheetManagerImpl;
+import engine.dashboard.chat.ChatManager;
 import engine.login.users.PermissionManager;
 import engine.login.users.SheetInfosManager;
 import engine.login.users.UserManager;
@@ -18,6 +19,7 @@ public class Engine {
     private final Map<String, SheetManagerImpl> sheetCells = new HashMap<>();
     private final Set<String> sheetNames = new HashSet<>();
     private final UserManager userManager = new UserManager();
+    private final ChatManager chatManager = new ChatManager();
     private final PermissionManager permissionManager = new PermissionManager(userManager);
     private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager);
     private Map<String, Map<CellLocation, String>> sheetNameToCellLocationToUserName = new HashMap<>();
@@ -66,6 +68,10 @@ public class Engine {
 
     public synchronized PermissionManager getPermissionManager() {
         return permissionManager;
+    }
+
+    public synchronized ChatManager getChatManager() {
+        return chatManager;
     }
 
     public synchronized Set<String> getUsers() {

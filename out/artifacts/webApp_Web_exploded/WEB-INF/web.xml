@@ -4,111 +4,100 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>chat.servlets.LoginServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>chat.servlets.LogoutServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>SendChatMessageServlet</servlet-name>
-        <servlet-class>chat.servlets.SendChatMessageServlet</servlet-class>
+        <servlet-class>chat.servlets.login.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ChatServlet</servlet-name>
-        <servlet-class>chat.servlets.ChatServlet</servlet-class>
+        <servlet-class>chat.servlets.dashboard.ChatServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetSheetCellAndLoadXML</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetCellAndLoadXML</servlet-class>
+        <servlet-class>chat.servlets.sheet.GetSheetCell</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UploadXMLFileToSystem</servlet-name>
+        <servlet-class>chat.servlets.sheet.loadXML.UploadXMLFileToSystem</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetMySheetNameServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetMySheetNameServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.name.GetMySheetNameServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetSheetNamesServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.InitSheetServlet.GetSheetNamesServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.name.GetSheetNamesServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>updateSheetNameParam</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.UpdateSeassionParams.updateSheetNameParam</servlet-class>
+        <servlet-name>SetSheetNameInSession</servlet-name>
+        <servlet-class>chat.servlets.sheet.SetSheetNameInSession</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SaveCurrentSheetCellServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.SheetStateServlet.SaveCurrentSheetCellServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.state.SaveCurrentSheetCellServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RestoreCurrentSheetCellServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.SheetStateServlet.RestoreCurrentSheetCellServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.state.RestoreCurrentSheetCellServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>IsSheetUpdatedServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.SheetStateServlet.IsSheetUpdatedServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.state.IsSheetUpdatedServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.ActionLineServlet.GetAndUpdateCellServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.cell.UpdateCellServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetUserNameLastUpdatedCellServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.ActionLineServlet.GetUserNameLastUpdatedCellServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.cell.GetUserNameLastUpdatedCellServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddRangeServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.AddRangeServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.range.AddRangeServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteRangeServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.DeleteRangeServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.range.DeleteRangeServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LoginShortResponseServlet</servlet-name>
-        <servlet-class>chat.servlets.LightweightLoginServlet</servlet-class>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>chat.servlets.login.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetRangeServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.RangeServlets.GetRangeServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.range.GetRangeServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetPermissionLinesForSheet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.GetPermissionLinesForSheet</servlet-class>
+        <servlet-class>chat.servlets.sheet.permissions.GetPermissionLinesForSheet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GetMyPermissionForSheet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.GetMyPermissionForSheet</servlet-class>
+        <servlet-class>chat.servlets.sheet.permissions.GetMyPermissionForSheet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RequestPermissionServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.RequestPermissionServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.permissions.RequestPermissionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateResponsePermissionServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.UpdateResponsePermissionServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.permissions.UpdateResponsePermissionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ResponsePermissionServlet</servlet-name>
-        <servlet-class>chat.servlets.SheetComponentsServlets.permissions.ResponsePermissionServlet</servlet-class>
+        <servlet-class>chat.servlets.sheet.permissions.ResponsePermissionServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/pages/signup/login</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SendChatMessageServlet</servlet-name>
-        <url-pattern>/chat/sendMessage</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ChatServlet</servlet-name>
-        <url-pattern>/chat/sendChat</url-pattern>
-    </servlet-mapping>
+        <servlet-mapping>
+            <servlet-name>ChatServlet</servlet-name>
+            <url-pattern>/chat/getChat</url-pattern>
+            <url-pattern>/chat/sendMessage</url-pattern>
+        </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/logoutShortResponse</url-pattern>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>updateSheetNameParam</servlet-name>
+        <servlet-name>SetSheetNameInSession</servlet-name>
         <url-pattern>/updateSheetNameInSession</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -146,8 +135,11 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetSheetCellAndLoadXML</servlet-name>
-        <url-pattern>/xmlAddress</url-pattern>
         <url-pattern>/sheetCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadXMLFileToSystem</servlet-name>
+        <url-pattern>/xmlAddress</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetSheetNamesServlet</servlet-name>
@@ -158,8 +150,8 @@
         <url-pattern>/mySheetName</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>LoginShortResponseServlet</servlet-name>
-        <url-pattern>/loginShortResponse</url-pattern>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetPermissionLinesForSheet</servlet-name>

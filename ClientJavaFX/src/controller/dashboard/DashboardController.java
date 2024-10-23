@@ -1,5 +1,10 @@
 package controller.dashboard;
 
+import controller.dashboard.utilities.popup.DashboardPopUpManager;
+import controller.dashboard.utilities.chat.ChatLinesWithVersion;
+import controller.dashboard.utilities.refresher.ChatAreaRefresher;
+import controller.dashboard.utilities.refresher.ResponsesRefresher;
+import controller.dashboard.utilities.refresher.SheetNamesRefresher;
 import dto.components.DtoSheetInfoLine;
 import dto.permissions.PermissionLine;
 import dto.permissions.PermissionStatus;
@@ -102,7 +107,7 @@ public class DashboardController {
         Map<String,String> params = new HashMap<>();
         params.put("userstring", message);
 
-        HttpRequestManager.sendPostAsyncRequest(Constants.SEND_MESSAGE_URL, params, new Callback() {
+        HttpRequestManager.sendPostAsyncRequest(Constants.POST_CHAT_MESSAGE_ENDPOINT, params, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> mainController.createErrorPopup("Failed to send message", "Error"));
@@ -207,7 +212,7 @@ public class DashboardController {
         Map<String, String> params = new HashMap<>();
         params.put("username", currentUserName);
 
-        HttpRequestManager.sendGetAsyncRequest(Constants.LOGOUT_PAGE, params, new Callback() {
+        HttpRequestManager.sendGetAsyncRequest(Constants.LOGOUT_ENDPOINT, params, new Callback() {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -560,11 +565,11 @@ public class DashboardController {
         HttpRequestManager.sendGetAsyncRequest(url, params, callback);
     }
 
-    protected void handleHttpFailure(IOException e, String errorMessage) {
+    public void handleHttpFailure(IOException e, String errorMessage) {
         Platform.runLater(() -> showErrorPopup(errorMessage + ": " + e.getMessage()));
     }
 
-    protected void handleHttpResponseFailure(Response response, String defaultErrorMessage) throws IOException {
+    public void handleHttpResponseFailure(Response response, String defaultErrorMessage) throws IOException {
         String errorMessage = Constants.GSON_INSTANCE.fromJson(response.body().string(), String.class);
         Platform.runLater(() -> showErrorPopup(defaultErrorMessage + ": " + errorMessage));
     }
@@ -667,7 +672,7 @@ public class DashboardController {
         popupStage.close();
     }
 
-    protected void forceRefreshPermissionTableForSheet(String sheetName) {
+    public void forceRefreshPermissionTableForSheet(String sheetName) {
         Map<String, String> params = new HashMap<>();
         params.put("sheetName", sheetName);
 
