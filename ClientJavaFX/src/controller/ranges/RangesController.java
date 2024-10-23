@@ -109,14 +109,22 @@ public class RangesController {
     // Delete a range by its name from the ComboBox
     public void deleteRange(String rangeName) {
         // Remove the label with the specified range name from the ComboBox
-        SystemRanges.getItems().removeIf(label ->
-                Objects.equals(label.getText(), rangeName)
-        );
+//        SystemRanges.getItems().removeIf(label ->
+//                Objects.equals(label.getText(), rangeName)
+//        );
+
+        RangeModel rangeModel = rangesTable.getSelectionModel().getSelectedItem();
+        if(isRangeExitsInTable(rangeModel.getRangeName())){
+            rangesTable.getItems().remove(rangeModel);
+        }
     }
 
     @FXML
     void deleteRangeClicked(ActionEvent event) {
-        mainController.rangeDeleteClicked();
+        RangeModel rangeModel = rangesTable.getSelectionModel().getSelectedItem();
+//        mainController.rangeDeleteClicked();
+        mainController.rangeDeleteClicked(rangeModel.getRangeName());
+
     }
 
     private void setupBindings() {
@@ -162,7 +170,9 @@ public class RangesController {
     public void setAllRanges(Map<String, List<CellLocation>> ranges) {
 
         ranges.forEach((rangeName, range) -> {
-            rangesTable.getItems().add(new RangeModel(rangeName));
+            if(!isRangeExitsInTable(rangeName)){
+                rangesTable.getItems().add(new RangeModel(rangeName));
+            }
         });
     }
 

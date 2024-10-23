@@ -361,6 +361,43 @@ public class MainController implements Closeable {
         }
     }
 
+
+
+    public void rangeDeleteClicked() {
+
+        CompletableFuture.runAsync(() -> {
+
+            try (Response allRangesResponse = HttpRequestManager.sendGetSyncRequest(Constants.GET_ALL_RANGES_ENDPOINT, new HashMap<>())) {
+                String allRangesAsJson = allRangesResponse.body().string();
+                Set<String> rangeNames = Constants.GSON_INSTANCE.fromJson(allRangesAsJson, new TypeToken<Set<String>>(){}.getType());
+
+                // Handle the next request inside Platform.runLater to stay on the UI thread
+                Platform.runLater(() -> {
+                    RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
+                    String name = rangeStringsData.getName();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("name", name);
+
+                    if (name != null) {
+                        CompletableFuture.runAsync(() -> {
+                            try (Response deleteRangeResponse = HttpRequestManager.sendPostSyncRequest(Constants.DELETE_RANGE_ENDPOINT, params)) {
+                                if (!deleteRangeResponse.isSuccessful()) {
+                                    Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
+                                } else {
+                                    Platform.runLater(() -> rangesController.deleteRange(name));
+                                }
+                            } catch (Exception e) {
+                                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+                            }
+                        });
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            }
+        });
+    }
+
     public void rangeAddClicked(String name, String range) {
 
         if(name != null) //in case when just shutting the window without entering anything
@@ -402,39 +439,28 @@ public class MainController implements Closeable {
         }
     }
 
-    public void rangeDeleteClicked() {
+    public void rangeDeleteClicked(String name) {
 
-        CompletableFuture.runAsync(() -> {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", name);
 
-            try (Response allRangesResponse = HttpRequestManager.sendGetSyncRequest(Constants.GET_ALL_RANGES_ENDPOINT, new HashMap<>())) {
-                String allRangesAsJson = allRangesResponse.body().string();
-                Set<String> rangeNames = Constants.GSON_INSTANCE.fromJson(allRangesAsJson, new TypeToken<Set<String>>(){}.getType());
+        HttpRequestManager.sendPostAsyncRequest(Constants.DELETE_RANGE_ENDPOINT, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
+            }
 
-                // Handle the next request inside Platform.runLater to stay on the UI thread
-                Platform.runLater(() -> {
-                    RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
-                    String name = rangeStringsData.getName();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("name", name);
-
-                    if (name != null) {
-                        CompletableFuture.runAsync(() -> {
-                            try (Response deleteRangeResponse = HttpRequestManager.sendPostSyncRequest(Constants.DELETE_RANGE_ENDPOINT, params)) {
-                                if (!deleteRangeResponse.isSuccessful()) {
-                                    Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
-                                } else {
-                                    Platform.runLater(() -> rangesController.deleteRange(name));
-                                }
-                            } catch (Exception e) {
-                                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-                            }
-                        });
-                    }
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
+                }
+                else {
+                    Platform.runLater(() -> rangesController.deleteRange(name));
+                }
             }
         });
+
     }
 
     public void handleRangeClick(String rangeName) {
@@ -450,13 +476,53 @@ public class MainController implements Closeable {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (response) {
-                    String requestedRangeAsJson = response.body().string();
-                    List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
-                    Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
-                }
+                String requestedRangeAsJson = response.body().string();
+                List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
+                Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
             }
 
+        });
+    }
+
+    public void sortRowsButtonClicked() {
+
+        SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
+        String columns = sortRowsData.getColumnsToSortBy();
+        String range = sortRowsData.getRange();
+
+        if(columns == null || range == null || columns.isEmpty() || range.isEmpty()){
+            return;
+        }
+
+        DtoContainerData dtoContainerData = dtoSheetCellAsDataParameter.sortSheetCell(range,columns);
+        Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
+    }
+
+    public void filterDataButtonClicked() {
+        // Open the filter data window and retrieve user input
+        FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
+        String range = filterGridData.getRange();
+        String filterColumn = filterGridData.getColumnsToFilterBy();
+
+        // Validate user input
+        if (range == null || filterColumn == null || filterColumn.isEmpty()) {
+            return; // Exit if input is invalid
+        }
+
+        Map<Character, Set<String>> columnValues = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(filterColumn,range);
+
+        Platform.runLater(() -> {
+            Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
+            boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
+
+            // Proceed only if the filter is not empty
+            if (!isFilterEmpty) {
+                // Pass the filter and range information in the second HTTP request
+                DtoContainerData filteredSheetCell = dtoSheetCellAsDataParameter.filterSheetCell(range, filter);
+                if (filteredSheetCell != null) {
+                    Platform.runLater(() -> createFilterGridPopUpp(filteredSheetCell));
+                }
+            }
         });
     }
 
@@ -486,8 +552,6 @@ public class MainController implements Closeable {
         });
     }
 
-
-
     public void specificVersionClicked(int versionNumber) {
 
         Map<String,String> params = new HashMap<>();
@@ -501,61 +565,17 @@ public class MainController implements Closeable {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (response) {
-                    String requestedVersionAsJson = response.body().string();
-                    DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
-                    Platform.runLater(() -> {
-                        popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
-                    });
-                }
+                String requestedVersionAsJson = response.body().string();
+                DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
+                Platform.runLater(() -> {
+                    popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
+                });
             }
         });
-    }
-
-    public void sortRowsButtonClicked() {
-
-        SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
-        String columns = sortRowsData.getColumnsToSortBy();
-        String range = sortRowsData.getRange();
-
-        if(columns == null || range == null || columns.isEmpty() || range.isEmpty()){
-            return;
-        }
-
-        DtoContainerData dtoContainerData = dtoSheetCellAsDataParameter.sortSheetCell(range,columns);
-        Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
     }
 
     private void createSortGridPopUp(DtoContainerData dtoContainerData) {
     popUpWindowsHandler.openSortGridPopUp(dtoContainerData, gridScrollerController);
-    }
-
-    public void filterDataButtonClicked() {
-        // Open the filter data window and retrieve user input
-        FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
-        String range = filterGridData.getRange();
-        String filterColumn = filterGridData.getColumnsToFilterBy();
-
-        // Validate user input
-        if (range == null || filterColumn == null || filterColumn.isEmpty()) {
-            return; // Exit if input is invalid
-        }
-
-        Map<Character, Set<String>> columnValues = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(filterColumn,range);
-
-        Platform.runLater(() -> {
-            Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
-            boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
-
-            // Proceed only if the filter is not empty
-            if (!isFilterEmpty) {
-                // Pass the filter and range information in the second HTTP request
-                DtoContainerData filteredSheetCell = dtoSheetCellAsDataParameter.filterSheetCell(range, filter);
-                if (filteredSheetCell != null) {
-                    Platform.runLater(() -> createFilterGridPopUpp(filteredSheetCell));
-                }
-            }
-        });
     }
 
     private void createFilterGridPopUpp(DtoContainerData filteredSheetCell) {

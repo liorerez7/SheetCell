@@ -21,14 +21,14 @@
                <children>
       
                   <!-- Buttons Area -->
-                  <VBox alignment="CENTER" prefHeight="195.0" prefWidth="330.0" spacing="10.0">
-                     <TextField fx:id="rangeNameTextFeild" maxWidth="100.0" prefHeight="31.0" prefWidth="100.0">
+                  <VBox alignment="CENTER_LEFT" prefHeight="195.0" prefWidth="330.0" spacing="10.0">
+                     <TextField fx:id="rangeNameTextFeild" alignment="CENTER" maxWidth="147.0" prefHeight="31.0" prefWidth="51.0" promptText="Range name">
                         <VBox.margin>
                            <Insets top="10.0" />
                         </VBox.margin>
                      </TextField>
-                     <TextField fx:id="topLeftRangeTextFeild" maxWidth="100.0" prefWidth="20.0" VBox.vgrow="NEVER" />
-                     <TextField fx:id="rightButtonRangeTextFeild" maxWidth="100.0" />
+                     <TextField fx:id="topLeftRangeTextFeild" alignment="CENTER" maxWidth="145.0" prefHeight="31.0" prefWidth="128.0" promptText="A3" VBox.vgrow="NEVER" />
+                     <TextField fx:id="rightButtonRangeTextFeild" alignment="CENTER" maxWidth="141.0" prefHeight="31.0" prefWidth="141.0" promptText="C5" />
                      <ComboBox fx:id="SystemRanges" prefWidth="150.0" promptText="Ranges" styleClass="RangeButton" stylesheets="@Ranges.css" visible="false">
                         <VBox.margin>
                            <Insets bottom="7.0" left="5.0" right="5.0" top="7.0" />
@@ -57,6 +57,9 @@
                      <VBox.margin>
                         <Insets right="10.0" />
                      </VBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </VBox>
                </children>
             </VBox>
