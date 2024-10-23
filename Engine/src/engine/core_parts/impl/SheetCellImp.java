@@ -265,6 +265,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
             }
         }
 
+        range = range.toUpperCase();
         String[] cells = range.split("\\.\\.");
 
         // Validate the range format

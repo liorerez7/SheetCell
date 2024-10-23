@@ -361,6 +361,47 @@ public class MainController implements Closeable {
         }
     }
 
+    public void rangeAddClicked(String name, String range) {
+
+        if(name != null) //in case when just shutting the window without entering anything
+        {
+            Map<String,String> params = new HashMap<>();
+            params.put("name",name);
+            params.put("range",range);
+
+            CompletableFuture.runAsync(() -> {
+
+                try {
+
+                    try (Response postResponse = HttpRequestManager.sendPostSyncRequest(Constants.ADD_RANGE_ENDPOINT, params)) {
+                        if (!postResponse.isSuccessful()) {
+                            String errorMessageAsJson = postResponse.body().string(); // Get the error message sent by the server
+                            String errorMessage = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                            Platform.runLater(() -> createErrorPopup(errorMessage, "Error"));
+                            return;
+                        }
+                    }
+
+                    try (Response getResponse = HttpRequestManager.sendGetSyncRequest(Constants.GET_REQUESTED_RANGE_ENDPOINT, params)) {
+                        if (!getResponse.isSuccessful()) {
+                            String errorMessageAsJson = getResponse.body().string(); // Get the error message sent by the server
+                            String errorMessage = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                            Platform.runLater(() -> createErrorPopup(errorMessage, "Error"));
+                            return;
+                        }
+
+                        String requestedRangeAsJson = getResponse.body().string();
+                        List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
+                        rangesController.addRange(requestedRange,name);
+                    }
+                }
+                catch (Exception e) {
+                    createErrorPopup(e.getMessage(), "Error");
+                }
+            });
+        }
+    }
+
     public void rangeDeleteClicked() {
 
         CompletableFuture.runAsync(() -> {
@@ -396,6 +437,29 @@ public class MainController implements Closeable {
         });
     }
 
+    public void handleRangeClick(String rangeName) {
+        gridScrollerController.clearAllHighlights();
+
+        Map<String,String> params = new HashMap<>();
+        params.put("name",rangeName);
+        HttpRequestManager.sendGetAsyncRequest(Constants.GET_REQUESTED_RANGE_ENDPOINT, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> createErrorPopup("Failed to get range", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try (response) {
+                    String requestedRangeAsJson = response.body().string();
+                    List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
+                    Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
+                }
+            }
+
+        });
+    }
+
     public void cellClicked(String location) {
 
         DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(location);
@@ -422,28 +486,7 @@ public class MainController implements Closeable {
         });
     }
 
-    public void handleRangeClick(String rangeName) {
-        gridScrollerController.clearAllHighlights();
 
-        Map<String,String> params = new HashMap<>();
-        params.put("name",rangeName);
-        HttpRequestManager.sendGetAsyncRequest(Constants.GET_REQUESTED_RANGE_ENDPOINT, params, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> createErrorPopup("Failed to get range", "Error"));
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (response) {
-                    String requestedRangeAsJson = response.body().string();
-                    List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
-                    Platform.runLater(() -> gridScrollerController.showAffectedCells(requestedRange));
-                }
-            }
-
-        });
-    }
 
     public void specificVersionClicked(int versionNumber) {
 

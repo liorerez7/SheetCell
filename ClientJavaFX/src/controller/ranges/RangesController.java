@@ -1,6 +1,8 @@
 package controller.ranges;
 
 import controller.main.MainController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import utilities.javafx.Utilities;
 
 import javafx.event.ActionEvent;
@@ -18,27 +20,43 @@ import java.util.Objects;
 
 public class RangesController {
 
+    @FXML private ComboBox<Label> SystemRanges;
+    @FXML private Button addRangeButton;
+    @FXML private Button deleteRangeButton;
+    @FXML private StackPane ranges;
+    @FXML private VBox vBoxContainer;
+    @FXML private TableView<RangeModel> rangesTable;
+    @FXML private TableColumn<RangeModel, String> rangeNameColumn;
+    @FXML private TextField rangeNameTextFeild;
+    @FXML private TextField topLeftRangeTextFeild;
+    @FXML private TextField rightButtonRangeTextFeild;
+
     MainController mainController;
-
-    @FXML
-    private ComboBox<Label> SystemRanges;
-
-    @FXML
-    private Button addRangeButton;
-
-    @FXML
-    private Button deleteRangeButton;
-
-    @FXML
-    private StackPane ranges;
-
-    @FXML
-    private VBox vBoxContainer;
 
     @FXML
     void initialize(){
         initializeComboBox(SystemRanges, "Ranges");
         Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
+        rangesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Add listener to the table to detect selection
+        rangesTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<RangeModel>() {
+            @Override
+            public void changed(ObservableValue<? extends RangeModel> observable, RangeModel oldValue, RangeModel newValue) {
+                if (newValue != null) {
+                    // Handle the selected item here
+                    handleRangeSelection(newValue);
+                }
+            }
+        });
+    }
+
+
+
+    private void handleRangeSelection(RangeModel newValue) {
+        String rangeName = newValue.getRangeName();
+        mainController.handleRangeClick(rangeName);
+
     }
 
     private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
@@ -78,14 +96,9 @@ public class RangesController {
 
     // Add a new range label to the ComboBox
     public void addRange(List<CellLocation> ranges, String rangeName) {
-        // Create the label for the range
-        Label rangeLabel = new Label(rangeName);
-
-        // Add CSS or styling to the label if necessary
-        rangeLabel.getStyleClass().add("range-item");
-
-        // Add the label to the ComboBox
-        SystemRanges.getItems().add(rangeLabel);
+        if(!isRangeExitsInTable(rangeName)){
+            rangesTable.getItems().add(new RangeModel(rangeName));
+        }
     }
 
     // Method that gets called when a range label is clicked/selected
@@ -114,7 +127,17 @@ public class RangesController {
 
     @FXML
     void addRangeClicked(ActionEvent event) {
-        mainController.rangeAddClicked();
+        String rangeName = rangeNameTextFeild.getText();
+        String topLeftRange = topLeftRangeTextFeild.getText();
+        String rightButtonRange = rightButtonRangeTextFeild.getText();
+
+        String range = topLeftRange + ".." + rightButtonRange;
+
+        if(isRangeExitsInTable(rangeName)){
+            mainController.createErrorPopup("Range name already exists", "Error");
+        }
+
+        mainController.rangeAddClicked(rangeName, range);
     }
 
     public void setMainController(MainController mainController) {
@@ -137,7 +160,10 @@ public class RangesController {
     }
 
     public void setAllRanges(Map<String, List<CellLocation>> ranges) {
-        ranges.forEach((rangeName, range) -> addRange(range, rangeName));
+
+        ranges.forEach((rangeName, range) -> {
+            rangesTable.getItems().add(new RangeModel(rangeName));
+        });
     }
 
     public void changeToDarkTheme() {
@@ -176,6 +202,15 @@ public class RangesController {
     public void enableWriterButtons() {
         addRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
         deleteRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
+    }
+
+    private boolean isRangeExitsInTable(String rangeName){
+        for(RangeModel rangeModel : rangesTable.getItems()){
+            if(rangeModel.getRangeName().equals(rangeName)){
+                return true;
+            }
+        }
+        return false;
     }
 }
 
