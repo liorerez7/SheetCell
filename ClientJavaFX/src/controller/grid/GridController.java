@@ -78,9 +78,6 @@ public class GridController {
         }
     }
 
-
-
-
     public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
         neighborsHandler = new NeighborsHandler();
 
@@ -133,8 +130,6 @@ public class GridController {
 
         return cellLocationToLabel;
     }
-
-
 
     private void setupColumnConstraints(GridPane grid, int numCols, int cellWidth) {
         for (int i = 0; i < numCols + 1; i++) { // +1 for header column
