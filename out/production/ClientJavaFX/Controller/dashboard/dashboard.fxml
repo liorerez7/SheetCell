@@ -52,6 +52,7 @@
                             <TableColumn fx:id="usernameColumn" prefWidth="100.0" text="User Name" />
                             <TableColumn fx:id="permissionStatusColumn" prefWidth="100.0" text="Permission Type" />
                             <TableColumn fx:id="approvedByOwnerColumn" prefWidth="100.0" text="Permission Status" />
+                            <TableColumn fx:id="timestampColumn" prefWidth="100.0" text="Timestamp" />
                         </columns>
                     </TableView>
 

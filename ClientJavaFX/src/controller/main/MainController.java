@@ -36,6 +36,7 @@ import dto.small_parts.CellLocation;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -470,12 +471,31 @@ public class MainController implements Closeable {
         });
     }
 
+//    public void specificVersionClicked(int versionNumber) {
+//
+//        Map<String,String> params = new HashMap<>();
+//        params.put("versionNumber",versionNumber + "");
+//
+//        HttpRequestManager.sendGetAsyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, params, new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Platform.runLater(() -> createErrorPopup("Failed to get version", "Error"));
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                String requestedVersionAsJson = response.body().string();
+//                DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
+//                Platform.runLater(() -> {
+//                    popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
+//                });
+//            }
+//        });
+//    }
+
     public void specificVersionClicked(int versionNumber) {
 
-        Map<String,String> params = new HashMap<>();
-        params.put("versionNumber",versionNumber + "");
-
-        HttpRequestManager.sendGetAsyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, params, new Callback() {
+        HttpRequestManager.sendGetAsyncRequest(Constants.GET_ALL_SHEET_CELL_VERSIONS_ENDPOINT, new HashMap<>(), new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> createErrorPopup("Failed to get version", "Error"));
@@ -484,12 +504,21 @@ public class MainController implements Closeable {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String requestedVersionAsJson = response.body().string();
-                DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
+
+                // Use TypeToken to define the structure of the Map<Integer, DtoSheetCell>
+                Type mapType = new TypeToken<Map<Integer, DtoSheetCell>>() {}.getType();
+
+                // Deserialize the JSON into a Map using the specified Type
+                Map<Integer, DtoSheetCell> dtoVersions = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, mapType);
+
                 Platform.runLater(() -> {
-                    popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
+                    popUpWindowsHandler.showVersionsPopup(dtoVersions,
+                            dtoSheetCellAsDataParameter.getLatestVersion(), gridScrollerController);
                 });
             }
         });
+
+       ;
     }
 
     private void createSortGridPopUp(DtoContainerData dtoContainerData) {

@@ -272,6 +272,8 @@ public class GridController {
 
         initializeEmptyGrid(sheetCell, grid, true);
 
+        applyGridColors(grid);
+
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
@@ -321,6 +323,8 @@ public class GridController {
         DtoSheetCell sheetCell = dtoContainerData.getDtoSheetCell();
 
         initializeEmptyGrid(sheetCell, grid, true);
+
+        applyGridColors(grid);
 
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
@@ -545,6 +549,9 @@ public class GridController {
         DtoSheetCell sheetCell = dtoContainerData.getDtoSheetCell();
 
         initializeEmptyGrid(sheetCell, grid, true);
+
+        applyGridColors(grid);
+
         int numCols = sheetCell.getNumberOfColumns();
         int numRows = sheetCell.getNumberOfRows();
         int cellWidth = sheetCell.getCellWidth();
@@ -644,6 +651,11 @@ public class GridController {
             }
         }
         return cellLocationToLabel;
+    }
+
+    private void applyGridColors(GridPane grid) {
+        gridScroller.setStyle("-fx-background-color: #e8f0f6;"); // Replace with your desired color
+        grid.setStyle("-fx-background-color: #e8f0f6;");
     }
 }
 

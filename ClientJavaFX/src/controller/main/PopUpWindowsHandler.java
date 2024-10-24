@@ -1,6 +1,9 @@
 package controller.main;
 
 import controller.grid.GridController;
+import okhttp3.Call;
+import okhttp3.Callback;
+import org.jetbrains.annotations.NotNull;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import utilities.javafx.smallparts.FilterGridData;
@@ -1074,6 +1077,104 @@ public class PopUpWindowsHandler {
         // Return the map of selected values
         return selectedValues;
     }
+
+
+    public void showVersionsPopup(
+            Map<Integer, DtoSheetCell> allDtoSheetVersions, // Map of all sheet versions
+            int lastVersion,
+            GridController gridScrollerController) {
+
+        String title = "Versions";
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle(title);
+
+        // Set the size of the popup stage to be larger
+        popupStage.setWidth(1200);  // Set a wider stage width
+        popupStage.setHeight(700);  // Set a taller stage height
+
+        // Create a label that will show the version number
+        Label versionLabel = new Label("Version Number " + lastVersion);
+        versionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+
+        // Create a GridPane for the specific version selected via the slider
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
+
+        // Wrap the GridPane inside a ScrollPane
+        ScrollPane gridScrollPane = new ScrollPane(popupGrid);
+        gridScrollPane.setFitToWidth(true);
+        gridScrollPane.setFitToHeight(true);
+
+        // Initialize the grid with the latest version upon opening the popup
+        DtoSheetCell initialVersion = allDtoSheetVersions.get(lastVersion);
+        gridScrollerController.initializeVersionPopupGrid(popupGrid, initialVersion);
+
+        // Create a slider to switch between versions, placed under the grid
+        Slider valueSlider = new Slider(1, lastVersion, lastVersion);
+        valueSlider.setBlockIncrement(1);
+        valueSlider.setMajorTickUnit(1);  // Keep smooth sliding
+        valueSlider.setMinorTickCount(0);  // No minor ticks
+
+        valueSlider.setShowTickMarks(true);
+        valueSlider.setShowTickLabels(true);
+
+        // Style the slider with the desired background color
+        valueSlider.setStyle("-fx-control-inner-background: #e8f0f6; " +
+                "-fx-tick-mark-fill: #4a4a4a; " +
+                "-fx-tick-label-fill: #4a4a4a; " +
+                "-fx-border-color: #4a4a4a; " +
+                "-fx-border-radius: 5px;");
+
+        // Background color for the whole screen
+        String backgroundColorStyle = "-fx-background-color: #e8f0f6;";
+
+        // Apply background color to root container
+        VBox contentBox = new VBox(10, versionLabel, gridScrollPane, valueSlider);
+        contentBox.setAlignment(Pos.CENTER_LEFT);
+        contentBox.setPadding(new Insets(10));
+        contentBox.setStyle(backgroundColorStyle);
+
+        // Create a Scene with the ScrollPane
+        ScrollPane contentScrollPane = new ScrollPane(contentBox);
+        contentScrollPane.setFitToWidth(true);
+        contentScrollPane.setFitToHeight(true);
+        contentScrollPane.setStyle(backgroundColorStyle);
+
+        Scene popupScene = new Scene(contentScrollPane);
+        popupStage.setScene(popupScene);
+
+        // Throttling slider changes to avoid freezing due to frequent grid updates
+        final int[] lastVersionNumber = {lastVersion};
+        final long[] lastUpdateTime = {System.currentTimeMillis()};
+
+        valueSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            int versionNumber = newVal.intValue();
+
+            // Only update if the slider is not moving too fast (throttle updates)
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastUpdateTime[0] > 200 || versionNumber != lastVersionNumber[0]) {  // Update every 200ms
+                lastVersionNumber[0] = versionNumber;
+                lastUpdateTime[0] = currentTime;
+
+                // Update the version label with the selected version number
+                versionLabel.setText("Version Number " + versionNumber);
+
+                DtoSheetCell selectedSheetCellVersion = allDtoSheetVersions.get(versionNumber);
+                if (selectedSheetCellVersion != null) {
+                    Platform.runLater(() -> {
+                        gridScrollerController.initializeVersionPopupGrid(popupGrid, selectedSheetCellVersion);
+                    });
+                } else {
+                    Platform.runLater(() -> createErrorPopup("Version not available", "Error"));
+                }
+            }
+        });
+
+        // Show the popup window
+        popupStage.showAndWait();
+    }
+
 }
 
 

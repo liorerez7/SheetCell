@@ -16,6 +16,10 @@
         <servlet-class>chat.servlets.sheet.GetSheetCell</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AllVersionsSheets</servlet-name>
+        <servlet-class>chat.servlets.sheet.AllVersionsSheets</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>UploadXMLFileToSystem</servlet-name>
         <servlet-class>chat.servlets.sheet.loadXML.UploadXMLFileToSystem</servlet-class>
     </servlet>
@@ -144,6 +148,10 @@
     <servlet-mapping>
         <servlet-name>GetSheetCellAndLoadXML</servlet-name>
         <url-pattern>/sheetCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AllVersionsSheets</servlet-name>
+        <url-pattern>/allSheetCellVersions</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UploadXMLFileToSystem</servlet-name>

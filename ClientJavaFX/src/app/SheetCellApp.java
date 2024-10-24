@@ -51,10 +51,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
-//TODO: 4. create a "timestamp" to the permission table view" button
-//      5. create a "create new sheet" button
+//TODO: 5. create a "create new sheet" button
 //      6. create a scroller to view the versions
-//
 
 
 

@@ -78,6 +78,7 @@ public class ActionLineController {
         });
     }
 
+    //TODO !
     private void updateVersionMenuItems(int latestVersion) {
         VersionScroller.getItems().clear();
         Utilities.setMenuButtonTextColor(VersionScroller, Color.WHITE);
@@ -109,18 +110,6 @@ public class ActionLineController {
                 stopUpdateSheetAnimation();
             }
         });
-
-//        updateCellButton.disableProperty().bind(
-//                Bindings.createBooleanBinding(
-//                        () -> mainController.getNewerVersionOfSheetProperty().getValue() ||
-//                                !(mainController.getIsCellLabelClickedProperty().getValue()))
-//        );
-
-//        updateCellButton.disableProperty().bind(
-//                Bindings.createBooleanBinding(
-//                        () -> !updateSheet.isDisabled() ||
-//                                !(mainController.getIsCellLabelClickedProperty().getValue()))
-//        );
     }
 
     private void setupUpdateSheetAnimation() {

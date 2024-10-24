@@ -60,6 +60,8 @@ public class Constants {
     public static final String GET_MY_PERMISSION_FOR_SHEET = FULL_SERVER_PATH + "/myPermissionForSheet";
     public static final String GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT = FULL_SERVER_PATH + "/userNameThatLastUpdatedCell";
     public static final String RUNTIME_ANALYSIS = FULL_SERVER_PATH + "/runtimeAnalysis";
+    public static final String GET_ALL_SHEET_CELL_VERSIONS_ENDPOINT = FULL_SERVER_PATH + "/allSheetCellVersions";
+
 
 
 
