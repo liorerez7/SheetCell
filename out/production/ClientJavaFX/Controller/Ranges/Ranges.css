@@ -1,110 +1,104 @@
+/* General Layout Wrapping for Ranges Section - Similar to Customize Component */
+.RangesSection {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-background-radius: 8; /* Rounded corners */
+    -fx-border-radius: 8; /* Rounded corners */
+    -fx-border-color: #d3d3d3; /* Light grey border */
+    -fx-padding: 5; /* Padding inside the container */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2); /* Subtle drop shadow */
+    -fx-pref-width: 340px; /* Set the same width as Customize */
+    -fx-max-width: 340px; /* Restrict the maximum width to match Customize */
+}
+
+/* Button Style - Matching the Modern Button Style */
 .RangeButton {
-    -fx-background-color: rgba(0, 120, 212, 0.75); /* Primary blue color, similar to Excel */
+    -fx-background-color: #4a4a4a; /* Muted dark grey like other buttons */
     -fx-text-fill: white; /* White text color */
-    -fx-font-family: 'Segoe UI'; /* Modern font similar to Excel's UI */
-    -fx-font-size: 12px; /* Suitable font size */
+    -fx-font-family: 'Arial', sans-serif; /* Match the font */
+    -fx-font-size: 14px; /* Font size matching other buttons */
     -fx-border-radius: 5px; /* Rounded corners */
-    -fx-background-radius: 5px; /* Rounded corners */
-    -fx-border-color: transparent; /* No border by default */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow for depth */
-    -fx-cursor: hand; /* Pointer cursor on hover */
-    -fx-focus-color: transparent; /* Remove focus border color */
+    -fx-background-radius: 5px; /* Rounded background corners */
+    -fx-border-color: transparent; /* No border */
+    -fx-cursor: hand; /* Pointer cursor */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 6, 0, 2, 2); /* 3D shadow effect */
+    -fx-pref-width: 130px; /* Make buttons narrower to match Customize buttons */
 }
 
-
-
-
-
-/* Style for button hover effect */
-
+/* Button Hover State */
 .RangeButton:hover {
-    -fx-background-color: #005a9e; /* Darker blue when hovered */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
+    -fx-background-color: #6a6a6a; /* Slightly lighter grey on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0, 2, 2); /* Stronger shadow on hover */
 }
 
-/* Style for button pressed effect */
+/* Button Pressed State */
 .RangeButton:pressed {
-    -fx-background-color: #004080; /* Even darker blue when pressed */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
+    -fx-background-color: #3a3a3a; /* Darker grey when pressed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 1, 1); /* Deeper shadow when pressed */
 }
 
+/* ComboBox Styling */
 .RangeButton .combo-box {
-    -fx-text-fill: white; /* White text color for ComboBox itself */
+    -fx-background-color: #4a4a4a; /* Dark grey to match buttons */
+    -fx-text-fill: white; /* White text color */
 }
 
-/* Apply custom style to the main ComboBox button */
+/* ComboBox Text Field Styling */
 .RangeButton .combo-box .text-field {
     -fx-text-fill: white; /* White text for the ComboBox header */
+    -fx-prompt-text-fill: grey; /* Grey prompt text */
 }
 
-
-
-
+/* Dark Theme Button - Similar to ModernButton */
 .RangeButtonDark {
-    -fx-background-color: rgba(18, 18, 18, 0.66); /* Dark background color */
-    -fx-text-fill: #e0e0e0;         /* Light text color */
-    -fx-font-family: 'Segoe UI';
-    -fx-font-size: 12px;
+    -fx-background-color: #4a4a4a; /* Muted dark grey */
+    -fx-text-fill: white; /* White text */
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-size: 14px;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
     -fx-border-color: transparent;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 0, 2);
     -fx-cursor: hand;
-    -fx-focus-color: transparent;
-    -fx-font-weight: bold;
-
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 6, 0, 2, 2); /* 3D shadow effect */
 }
 
-
+/* Hover state for Dark Button */
 .RangeButtonDark:hover {
-    -fx-background-color: #555555;  /* Darker grey on hover */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
+    -fx-background-color: #6a6a6a; /* Lighter grey on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0, 2, 2); /* Stronger shadow */
 }
 
-/* Style for button pressed effect */
+/* Pressed state for Dark Button */
 .RangeButtonDark:pressed {
-    -fx-background-color: #495257; /* Even darker blue when pressed */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
+    -fx-background-color: #3a3a3a; /* Darker grey when pressed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 1, 1); /* Deeper shadow */
 }
 
-
-/* Apply custom style to the main ComboBox button */
-.RangeButton .combo-box .text-field {
-    -fx-text-fill: #1f57d1; /* White text for the ComboBox header */
-}
-
-
+/* Sunburst Button - Matching the Button Style */
 .RangeButtonSun {
-    -fx-background-color: rgba(255, 215, 0, 0.75); /* Sunburst yellow color */
-    -fx-text-fill: black; /* Black text color for contrast */
-    -fx-font-family: 'Segoe UI'; /* Modern font */
-    -fx-font-size: 12px; /* Font size */
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-background-radius: 5px; /* Rounded corners */
-    -fx-border-color: transparent; /* No border by default */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2); /* Subtle shadow */
-    -fx-cursor: hand; /* Pointer cursor on hover */
-    -fx-focus-color: transparent; /* Remove focus border color */
+    -fx-background-color: #ffc107; /* Bright yellow like Sunburst */
+    -fx-text-fill: black; /* Black text for contrast */
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 6, 0, 2, 2); /* 3D shadow effect */
 }
 
-/* Hover state for Sunburst Range Button */
+/* Hover state for Sunburst Button */
 .RangeButtonSun:hover {
-    -fx-background-color: #ffd700; /* Brighter yellow when hovered */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2); /* Stronger shadow on hover */
+    -fx-background-color: #ffca28; /* Brighter yellow when hovered */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0, 2, 2); /* Stronger shadow */
 }
 
-/* Pressed state for Sunburst Range Button */
+/* Pressed state for Sunburst Button */
 .RangeButtonSun:pressed {
-    -fx-background-color: #ffa500; /* Darker orange-yellow when pressed */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1); /* Lighter shadow on press */
+    -fx-background-color: #ffa000; /* Darker yellow when pressed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 1, 1); /* Deeper shadow */
 }
 
-/* Custom style for ComboBox within RangeButtonSun */
-.RangeButtonSun .combo-box {
-    -fx-text-fill: black; /* Black text color for ComboBox itself */
-}
-
-/* Custom style for the main ComboBox button */
-.RangeButtonSun .combo-box .text-field {
-    -fx-text-fill: black; /* Black text for the ComboBox header */
+/* Text Field Styling */
+.TextField {
+    -fx-pref-width: 120px; /* Ensure the text fields align with buttons */
 }
