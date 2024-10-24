@@ -88,66 +88,6 @@ public class DashboardController {
     public final static int REFRESH_INTERVAL = 500;
     public final static int INITIAL_DELAY = 0;
 
-
-
-    @FXML
-    private void onOpenChatButtonClicked() {
-        if (chatArea.isVisible()) {
-            chatArea.setVisible(false);  // Hide the chat area
-        } else {
-            chatArea.setVisible(true);   // Show the chat area
-        }
-    }
-
-    @FXML
-    private void onSendMessageClicked() {
-        String message = chatInputField.getText();
-        chatInputField.clear();
-
-        Map<String,String> params = new HashMap<>();
-        params.put("userstring", message);
-
-        HttpRequestManager.sendPostAsyncRequest(Constants.POST_CHAT_MESSAGE_ENDPOINT, params, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> mainController.createErrorPopup("Failed to send message", "Error"));
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    Platform.runLater(() -> mainController.createErrorPopup("Failed to send message", "Error"));
-                }
-            }
-        });
-    }
-
-    private void updateChatLines(ChatLinesWithVersion chatLinesWithVersion) {
-        if (chatLinesWithVersion.getVersion() != chatVersion.get()) {
-            String deltaChatLines = chatLinesWithVersion
-                    .getEntries()
-                    .stream()
-                    .map(singleChatLine -> {
-                        long time = singleChatLine.getTime();
-                        return String.format(CHAT_LINE_FORMATTING, time, time, time, singleChatLine.getUsername(), singleChatLine.getChatString());
-                    }).collect(Collectors.joining());
-
-            Platform.runLater(() -> {
-                chatVersion.set(chatLinesWithVersion.getVersion());
-                chatMessagesArea.appendText(deltaChatLines);
-                chatMessagesArea.setScrollTop(Double.MAX_VALUE);
-            });
-        }
-    }
-
-    public void startListRefresher() {
-        ChatAreaRefresher chatAreaRefresher = new ChatAreaRefresher(
-                chatVersion,
-                this::updateChatLines);
-        timer = new Timer();
-        timer.schedule(chatAreaRefresher, INITIAL_DELAY, REFRESH_INTERVAL);
-    }
-
     @FXML
     public void initialize() {
         initializeTables();
@@ -277,6 +217,7 @@ public class DashboardController {
         usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
         permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
         approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
+
     }
 
     private void setupTableColumns() {
@@ -299,6 +240,64 @@ public class DashboardController {
                 updatePermissionTableForSheet(newSelection.getSheetName());
             }
         });
+    }
+
+    @FXML
+    private void onOpenChatButtonClicked() {
+        if (chatArea.isVisible()) {
+            chatArea.setVisible(false);  // Hide the chat area
+        } else {
+            chatArea.setVisible(true);   // Show the chat area
+        }
+    }
+
+    @FXML
+    private void onSendMessageClicked() {
+        String message = chatInputField.getText();
+        chatInputField.clear();
+
+        Map<String,String> params = new HashMap<>();
+        params.put("userstring", message);
+
+        HttpRequestManager.sendPostAsyncRequest(Constants.POST_CHAT_MESSAGE_ENDPOINT, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> mainController.createErrorPopup("Failed to send message", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Platform.runLater(() -> mainController.createErrorPopup("Failed to send message", "Error"));
+                }
+            }
+        });
+    }
+
+    private void updateChatLines(ChatLinesWithVersion chatLinesWithVersion) {
+        if (chatLinesWithVersion.getVersion() != chatVersion.get()) {
+            String deltaChatLines = chatLinesWithVersion
+                    .getEntries()
+                    .stream()
+                    .map(singleChatLine -> {
+                        long time = singleChatLine.getTime();
+                        return String.format(CHAT_LINE_FORMATTING, time, time, time, singleChatLine.getUsername(), singleChatLine.getChatString());
+                    }).collect(Collectors.joining());
+
+            Platform.runLater(() -> {
+                chatVersion.set(chatLinesWithVersion.getVersion());
+                chatMessagesArea.appendText(deltaChatLines);
+                chatMessagesArea.setScrollTop(Double.MAX_VALUE);
+            });
+        }
+    }
+
+    public void startListRefresher() {
+        ChatAreaRefresher chatAreaRefresher = new ChatAreaRefresher(
+                chatVersion,
+                this::updateChatLines);
+        timer = new Timer();
+        timer.schedule(chatAreaRefresher, INITIAL_DELAY, REFRESH_INTERVAL);
     }
 
     public void startSheetNamesRefresher() {

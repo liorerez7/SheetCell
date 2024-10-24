@@ -51,12 +51,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
-//TODO: 1. make ranges area look better with TableView
-//      2. make the grid area look better
-//      3. finish the sheet screen in terms of css
-//      4. create a "timestamp" to the permission table view" button
+//TODO: 4. create a "timestamp" to the permission table view" button
 //      5. create a "create new sheet" button
 //      6. create a scroller to view the versions
+//
+
 
 
 
