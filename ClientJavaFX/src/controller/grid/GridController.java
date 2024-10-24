@@ -38,6 +38,7 @@ public class GridController {
     @FXML
     private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
     private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = new HashMap<>();
+    private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellsOnlyForColors = new HashMap<>();
 
     private MainController mainController;
     private NeighborsHandler neighborsHandler;
@@ -105,13 +106,26 @@ public class GridController {
         for (int row = 1; row <= numRows; row++) {
             for (int col = 1; col <= numCols; col++) {
                 Label cell = new Label();
-                //cell.getStyleClass().add("cell-label");
+
+                cell.getStyleClass().add("cell-label");
                 CustomCellLabel customCellLabel = new CustomCellLabel(cell);
                 customCellLabel.applyDefaultStyles();
                 customCellLabel.setAlignment(Pos.CENTER);
                 customCellLabel.setTextAlignment(TextAlignment.CENTER);
                 cellLocationToCustomCellLabel.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
 
+
+                CustomCellLabel customCellLabelNew = cellLocationToCustomCellLabel.get(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)));
+                cellLocationToCustomCellsOnlyForColors.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
+
+                if(customCellLabelNew != null){
+                    customCellLabel = new CustomCellLabel(cell);
+                    customCellLabel.applyDefaultStyles();
+                    customCellLabel.setAlignment(Pos.CENTER);
+                    customCellLabel.setTextAlignment(TextAlignment.CENTER);
+
+                    cellLocationToCustomCellsOnlyForColors.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
+                }
 
                 setLabelSize(cell, cellWidth, cellLength);
                 // Bind the Label's textProperty to the EffectiveValue
@@ -128,7 +142,7 @@ public class GridController {
                 }
 
                 cell.setOnMouseEntered(event -> onCellMouseEntered(cell.getId()));
-                cell.setOnMouseExited(event -> onCellMouseExited(cell.getId()));  // Use MOUSE_EXITED to reset border color
+                cell.setOnMouseExited(event -> onCellMouseExited(cell.getId()));
                 cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
                 cellLocationToLabel.put(location, cell);
                 grid.add(cell,col, row);
@@ -292,7 +306,6 @@ public class GridController {
                 String location = colChar + rowString;
                 CellLocation cellLocation = CellLocationFactory.fromCellId(location);
 
-
                 Label newCellLabel = new Label();
                 CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
 
@@ -379,24 +392,6 @@ public class GridController {
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
         grid.getChildren().clear();
-    }
-
-    public void hideGrid() {
-        // Hide all children of the grid except the progress bar
-        for (Node child : grid.getChildren()) {
-            if (!(child instanceof ProgressBar)) {
-                child.setVisible(false);
-                child.setManaged(false); // Prevent taking up space in layout
-            }
-        }
-    }
-
-    public void showGrid() {
-        // Show all children of the grid
-        for (Node child : grid.getChildren()) {
-            child.setVisible(true);
-            child.setManaged(true); // Ensure layout space is managed properly
-        }
     }
 
     public void showAffectedCells(List<CellLocation> requestedRange) {
@@ -656,6 +651,21 @@ public class GridController {
     private void applyGridColors(GridPane grid) {
         gridScroller.setStyle("-fx-background-color: #e8f0f6;"); // Replace with your desired color
         grid.setStyle("-fx-background-color: #e8f0f6;");
+    }
+
+    public void restoreCustomizations() {
+        cellLocationToCustomCellLabel.forEach((cellLocation, customCellLabel) -> {
+            CustomCellLabel customCellLabel1 = cellLocationToCustomCellsOnlyForColors.get(cellLocation);
+            Pos pos = customCellLabel1.getAlignment();
+            Color backgroundColor = customCellLabel1.getBackgroundColor();
+            Color textColor = customCellLabel1.getTextColor();
+            TextAlignment textAlignment = customCellLabel1.getTextAlignment();
+
+            customCellLabel.setTextColor(textColor);
+            customCellLabel.setBackgroundColor(backgroundColor);
+            customCellLabel.setAlignment(pos);
+            customCellLabel.setTextAlignment(textAlignment);
+        });
     }
 }
 

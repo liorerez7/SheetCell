@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 
 public class PopUpWindowsHandler {
 
-
     public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, GridController gridScrollerController , List<CellLocation> cycle) {
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -97,140 +96,6 @@ public class PopUpWindowsHandler {
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(scene);
         popupStage.show();
-    }
-
-//    public RangeStringsData openDeleteRangeWindow() {
-//
-//        Stage popupStage = new Stage();
-//        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-//        popupStage.setTitle("Insert range to delete");
-//
-//        // Create a GridPane layout for the popup
-//        GridPane gridPane = new GridPane();
-//        gridPane.setHgap(10);
-//        gridPane.setVgap(10);
-//
-//        // Create and add the labels and text fields
-//        Label nameLabel = new Label("Range Name:");
-//        TextField nameField = new TextField();
-//
-//        gridPane.add(nameLabel, 0, 0);
-//        gridPane.add(nameField, 1, 0);
-//
-//        // Create and add the submit button
-//        Button submitButton = new Button("Submit");
-//        gridPane.add(submitButton, 1, 2);
-//        RangeStringsData rangeStringsData = new RangeStringsData();
-//        submitButton.setOnAction(e -> {
-//            String rangeName = nameField.getText();
-//            // Handle the submission of the range name and range here
-//            // For now, we just close the popup
-//            rangeStringsData.setName(rangeName);
-//            rangeStringsData.setRange(null);
-//            popupStage.close();
-//        });
-//        // Set the scene and show the popup window
-//        Scene scene = new Scene(gridPane, 300, 200);
-//        popupStage.setScene(scene);
-//        popupStage.showAndWait();
-//        return rangeStringsData;
-//    }
-
-
-    public RangeStringsData openDeleteRangeWindow(Set<String> rangeNames) {
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-        popupStage.setTitle("Insert range to delete");
-
-        // Create a GridPane layout for the popup
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-
-        // Create and add the label and ComboBox
-        Label nameLabel = new Label("Select Range:");
-        ComboBox<String> rangeComboBox = new ComboBox<>();
-        rangeComboBox.getItems().addAll(rangeNames); // Add range names to ComboBox
-
-        gridPane.add(nameLabel, 0, 0);
-        gridPane.add(rangeComboBox, 1, 0);
-
-        // Create and add the submit button
-        Button submitButton = new Button("Submit");
-        gridPane.add(submitButton, 1, 2);
-
-        RangeStringsData rangeStringsData = new RangeStringsData();
-        submitButton.setOnAction(e -> {
-            String selectedRangeName = rangeComboBox.getValue();
-            // Handle the submission of the selected range name
-            if (selectedRangeName != null) {
-                rangeStringsData.setName(selectedRangeName);
-                rangeStringsData.setRange(null); // Assuming you still want to set this to null
-                popupStage.close();
-            } else {
-                // Optionally, handle the case when no selection is made
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a range to delete.", ButtonType.OK);
-                alert.showAndWait();
-            }
-        });
-
-        // Set the scene and show the popup window
-        Scene scene = new Scene(gridPane, 300, 200);
-        popupStage.setScene(scene);
-        popupStage.showAndWait();
-        return rangeStringsData;
-    }
-
-
-    public RangeStringsData openAddRangeWindow() {
-        // Create a new stage (window)
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block other windows until this one is closed
-        popupStage.setTitle("Insert Range");
-
-        // Create a GridPane layout for the popup
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-
-        // Create and add the labels and text fields for Range-From and Range-To
-        Label nameLabel = new Label("Range Name:");
-        TextField nameField = new TextField();
-        Label rangeFromLabel = new Label("Range-From (example, A2):");
-        TextField rangeFromField = new TextField();
-        Label rangeToLabel = new Label("Range-To (example, C5):");
-        TextField rangeToField = new TextField();
-
-        // Add the elements to the grid
-        gridPane.add(nameLabel, 0, 0);
-        gridPane.add(nameField, 1, 0);
-        gridPane.add(rangeFromLabel, 0, 1);
-        gridPane.add(rangeFromField, 1, 1);
-        gridPane.add(rangeToLabel, 0, 2);
-        gridPane.add(rangeToField, 1, 2);
-
-        // Create and add the submit button
-        Button submitButton = new Button("Submit");
-        gridPane.add(submitButton, 1, 3);
-        RangeStringsData rangeStringsData = new RangeStringsData();
-        submitButton.setOnAction(e -> {
-            String rangeName = nameField.getText();
-            String rangeFrom = rangeFromField.getText();
-            String rangeTo = rangeToField.getText();
-            String range = rangeFrom + ".." + rangeTo; // Combine Range-From and Range-To into a single range
-
-            // Set the data in the RangeStringsData object
-            rangeStringsData.setRange(range);
-            rangeStringsData.setName(rangeName);
-
-            popupStage.close();
-        });
-
-        // Set the scene and show the popup window
-        Scene scene = new Scene(gridPane, 350, 150);
-        popupStage.setScene(scene);
-        popupStage.showAndWait();
-        return rangeStringsData;
     }
 
     public SortRowsData openSortRowsWindow() {
@@ -553,7 +418,6 @@ public class PopUpWindowsHandler {
         return selectedValues;
     }
 
-    // Helper method to create a popup grid
     private void openGridPopUp(String title, GridController gridScrollerController,
                                Consumer<GridPane> gridInitializer) {
 
@@ -584,7 +448,6 @@ public class PopUpWindowsHandler {
         popupStage.showAndWait();
     }
 
-    // Refactored methods
     public void openFilterGridPopUp(DtoContainerData dtoContainerData, GridController gridScrollerController) {
         openGridPopUp("Filter Grid", gridScrollerController,
                 popupGrid -> gridScrollerController.initializeFilterPopupGrid(popupGrid, dtoContainerData));
@@ -593,11 +456,6 @@ public class PopUpWindowsHandler {
     public void openSortGridPopUp(DtoContainerData dtoContainerData, GridController gridScrollerController) {
         openGridPopUp("Sorted Rows", gridScrollerController,
                 popupGrid -> gridScrollerController.initializeSortPopupGrid(popupGrid, dtoContainerData));
-    }
-
-    public void openVersionGridPopUp(DtoSheetCell dtoSheetCell, int versionNumber, GridController gridScrollerController) {
-        openGridPopUp("Version Grid " + versionNumber, gridScrollerController,
-                popupGrid -> gridScrollerController.initializeVersionPopupGrid(popupGrid, dtoSheetCell));
     }
 
     public RunTimeAnalysisData openRunTimeAnalysisWindow() {
@@ -674,8 +532,6 @@ public class PopUpWindowsHandler {
         // Return the collected data
         return runTimeAnalysisData;
     }
-
-
 
     public void showRuntimeAnalysisPopup(
             DtoSheetCell sheetCellRunTime,
@@ -953,7 +809,6 @@ public class PopUpWindowsHandler {
         }
     }
 
-    // Helper method to convert Color to hex string
     private String toHexString(Color color) {
         return String.format("#%02x%02x%02x",
                 (int) (color.getRed() * 255),
@@ -1077,7 +932,6 @@ public class PopUpWindowsHandler {
         // Return the map of selected values
         return selectedValues;
     }
-
 
     public void showVersionsPopup(
             Map<Integer, DtoSheetCell> allDtoSheetVersions, // Map of all sheet versions

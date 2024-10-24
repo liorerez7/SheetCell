@@ -18,7 +18,7 @@ public class ActionLineController {
     @FXML private GridPane actionLine;
     @FXML private Label cellidLabel;
     @FXML private Button updateCellButton;
-    @FXML private MenuButton VersionScroller;
+    @FXML private Button PreviousVersionsButton;
     @FXML private TextField newValueText;
     @FXML private Label originalValue;
     @FXML private Label lastUpdatedVersion;
@@ -32,7 +32,6 @@ public class ActionLineController {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         initializeBindings();
-        initializeVersionScroller();
         setupUpdateSheetAnimation();
     }
 
@@ -71,32 +70,8 @@ public class ActionLineController {
         mainController.setNewerVersionOfSheetProperty(false);
     }
 
-    private void initializeVersionScroller() {
-        mainController.getTotalVersionsProperty().addListener((observable, oldValue, newValue) -> {
-            int latestVersion = Integer.parseInt(newValue);
-            updateVersionMenuItems(latestVersion);
-        });
-    }
-
-    //TODO !
-    private void updateVersionMenuItems(int latestVersion) {
-        VersionScroller.getItems().clear();
-        Utilities.setMenuButtonTextColor(VersionScroller, Color.WHITE);
-        VersionScroller.setTextFill(Color.WHITE);
-        for (int i = 1; i <= latestVersion; i++) {
-            final int versionNumber = i;
-            MenuItem menuItem = new MenuItem("Version " + versionNumber);
-            menuItem.setOnAction(e -> {
-                handleVersionClick(versionNumber);
-            });
-            VersionScroller.getItems().add(menuItem);
-        }
-    }
-
     private void initializeBindings() {
-        VersionScroller.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         newValueText.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
-//        updateCellButton.disableProperty().bind(mainController.getIsCellLabelClickedProperty().not());
         updateCellButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
         lastUpdatedVersion.textProperty().bind(Bindings.concat("Last Version: ", mainController.getVersionProperty()));
         originalValue.textProperty().bind(mainController.getOriginalValueLabelProperty());
@@ -140,43 +115,9 @@ public class ActionLineController {
         }
     }
 
-
-    private void handleVersionClick(int versionNumber) {
-        mainController.specificVersionClicked(versionNumber);
-    }
-
-
-
-    public void changeToDarkTheme() {
-
-        Utilities.setMenuButtonTextColor(VersionScroller, Color.WHITE);
-        VersionScroller.setTextFill(Color.WHITE);
-
-        Utilities.switchStyleClass(VersionScroller, "DarkModernButton", "ModernButton", "SunModernButton");
-        Utilities.switchStyleClass(actionLine, "DarkUserInterfaceSection", "UserInterfaceSection", "SunUserInterfaceSection");
-        Utilities.switchStyleClass(updateCellButton, "DarkModernButton", "SunModernButton", "ModernButton");
-        Utilities.switchStyleClass(updateSheet, "DarkModernButton", "SunModernButton", "ModernButton");
-    }
-
-    public void changeToClassicTheme() {
-        Utilities.setMenuButtonTextColor(VersionScroller, Color.WHITE);
-        VersionScroller.setTextFill(Color.WHITE);
-
-        Utilities.switchStyleClass(VersionScroller, "ModernButton", "DarkModernButton", "SunModernButton");
-        Utilities.switchStyleClass(actionLine, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
-        Utilities.switchStyleClass(updateCellButton, "ModernButton", "SunModernButton", "DarkModernButton");
-        Utilities.switchStyleClass(updateSheet, "ModernButton", "SunModernButton", "DarkModernButton");
-    }
-
-    public void changeToSunBurstTheme() {
-        Utilities.setMenuButtonTextColor(VersionScroller, Color.BLACK);
-        VersionScroller.setTextFill(Color.BLACK);
-
-        Utilities.switchStyleClass(actionLine, "SunUserInterfaceSection", "UserInterfaceSection", "DarkUserInterfaceSection");
-        Utilities.switchStyleClass(VersionScroller, "SunModernButton", "ModernButton", "DarkModernButton");
-        Utilities.switchStyleClass(updateCellButton, "SunModernButton", "ModernButton", "DarkModernButton");
-        Utilities.switchStyleClass(updateSheet, "SunModernButton", "ModernButton", "DarkModernButton");
-
+    @FXML
+    void OnPreviousVersionsButtonClicked(ActionEvent event) {
+        mainController.specificVersionClicked();
     }
 
     public void disableWriterButtons() {

@@ -61,23 +61,9 @@ public class Constants {
     public static final String GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT = FULL_SERVER_PATH + "/userNameThatLastUpdatedCell";
     public static final String RUNTIME_ANALYSIS = FULL_SERVER_PATH + "/runtimeAnalysis";
     public static final String GET_ALL_SHEET_CELL_VERSIONS_ENDPOINT = FULL_SERVER_PATH + "/allSheetCellVersions";
-
-
-
-
-
-
-
-
-
-
-
     public static final String CANT_UPDATE_CELL_NO_CLICK_ON_LABEL = "first click on the cell \nyou wish to modify its value";
 
-//    public static final String CANT_UPDATE_CELL_NEWER_VERSION_MESSAGE =  NEWER_VERSION__ERROR_MESSAGE + "update cells";
-//
-//    public static final String CANT_ADD_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "add ranges";
-//    public static final String CANT_DELETE_RANGE_NEWER_VERSION_MESSAGE = NEWER_VERSION__ERROR_MESSAGE + "delete ranges";
+
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new GsonBuilder()
@@ -88,6 +74,4 @@ public class Constants {
             .serializeSpecialFloatingPointValues()  // This allows serialization of NaN and Infinity
             .setPrettyPrinting()
             .create();
-
-    //public final static Gson GSON_INSTANCE = new Gson();
 }

@@ -27,7 +27,8 @@ public class AllVersionsSheets extends HttpServlet {
 
         synchronized (sheetManager) {
 
-            int latestVersion = sheetManager.getSheetCell().getLatestVersion();
+            String latestVersionStr = request.getParameter("versionNumber");
+            int latestVersion = Integer.parseInt(latestVersionStr);
 
             for(int i = 1; i<=latestVersion; i++){
 

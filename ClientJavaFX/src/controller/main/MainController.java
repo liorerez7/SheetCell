@@ -208,6 +208,7 @@ public class MainController implements Closeable {
     private void updateUIWithNewSheetCell(DtoSheetCell newDtoSheetCell) {
         //headerController.FileHasBeenLoaded(absolutePath);
         Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
+        gridScrollerController.restoreCustomizations();
         rangesController.clearAllRanges();
         model.setReadingXMLSuccess(true);
         model.setCellLabelToProperties(cellLocationLabelMap);
@@ -301,10 +302,6 @@ public class MainController implements Closeable {
 
     public StringProperty getOriginalValueLabelProperty() {
         return model.getOriginalValueLabelProperty();
-    }
-
-    public StringProperty getTotalVersionsProperty() {
-        return model.getTotalVersionsProperty();
     }
 
     public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
@@ -471,31 +468,12 @@ public class MainController implements Closeable {
         });
     }
 
-//    public void specificVersionClicked(int versionNumber) {
-//
-//        Map<String,String> params = new HashMap<>();
-//        params.put("versionNumber",versionNumber + "");
-//
-//        HttpRequestManager.sendGetAsyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, params, new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Platform.runLater(() -> createErrorPopup("Failed to get version", "Error"));
-//            }
-//
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                String requestedVersionAsJson = response.body().string();
-//                DtoSheetCell requestedVersion = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, DtoSheetCell.class);
-//                Platform.runLater(() -> {
-//                    popUpWindowsHandler.openVersionGridPopUp(requestedVersion, versionNumber, gridScrollerController);
-//                });
-//            }
-//        });
-//    }
+    public void specificVersionClicked() {
 
-    public void specificVersionClicked(int versionNumber) {
+        Map<String,String> parmas = new HashMap<>();
+        parmas.put("versionNumber",dtoSheetCellAsDataParameter.getLatestVersion() + "");
 
-        HttpRequestManager.sendGetAsyncRequest(Constants.GET_ALL_SHEET_CELL_VERSIONS_ENDPOINT, new HashMap<>(), new Callback() {
+        HttpRequestManager.sendGetAsyncRequest(Constants.GET_ALL_SHEET_CELL_VERSIONS_ENDPOINT, parmas, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> createErrorPopup("Failed to get version", "Error"));
