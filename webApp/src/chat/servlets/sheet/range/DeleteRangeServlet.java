@@ -19,14 +19,23 @@ public class DeleteRangeServlet extends HttpServlet {
             String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
             SheetManager sheetManager = ServletUtils.getSheetManager(getServletContext(), sheetName);
 
-            synchronized (sheetManager) {
-                sheetManager.deleteRange(name);
-            }
+            try{
+                synchronized (sheetManager) {
+                    sheetManager.deleteRange(name);
+                }
+                response.setStatus(HttpServletResponse.SC_OK);
 
-            response.setStatus(HttpServletResponse.SC_OK);
+            }catch (Exception e){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                String errorMessage = ServletUtils.extractErrorMessage(e);
+                String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(errorMessageAsJson);
+                response.getWriter().flush();
+            }
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().print("Invalid range name");
         }
     }
 }

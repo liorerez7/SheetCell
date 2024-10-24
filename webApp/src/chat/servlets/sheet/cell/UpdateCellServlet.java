@@ -7,6 +7,7 @@ import engine.core_parts.api.SheetManager;
 import engine.Engine;
 import chat.utilities.Constants;
 import chat.utilities.ServletUtils;
+import engine.utilities.exception.CycleDetectedException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,6 +41,9 @@ public class UpdateCellServlet extends HttpServlet {
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String errorMessage = ServletUtils.extractErrorMessage(e);
+                if(e instanceof CycleDetectedException){
+                    errorMessage = "Cycle detected: " + errorMessage;
+                }
                 String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");

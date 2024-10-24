@@ -20,7 +20,6 @@ import java.util.Objects;
 
 public class RangesController {
 
-    @FXML private ComboBox<Label> SystemRanges;
     @FXML private Button addRangeButton;
     @FXML private Button deleteRangeButton;
     @FXML private StackPane ranges;
@@ -35,8 +34,6 @@ public class RangesController {
 
     @FXML
     void initialize(){
-        initializeComboBox(SystemRanges, "Ranges");
-        Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
         rangesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Add listener to the table to detect selection
@@ -49,6 +46,18 @@ public class RangesController {
                 }
             }
         });
+
+        // Disable addRangeButton until all text fields are filled
+        addRangeButton.disableProperty().bind(
+                rangeNameTextFeild.textProperty().isEmpty()
+                        .or(topLeftRangeTextFeild.textProperty().isEmpty())
+                        .or(rightButtonRangeTextFeild.textProperty().isEmpty())
+        );
+
+        // Disable deleteRangeButton until an item is selected in the table
+        deleteRangeButton.disableProperty().bind(
+                rangesTable.getSelectionModel().selectedItemProperty().isNull()
+        );
     }
 
 
@@ -59,40 +68,7 @@ public class RangesController {
 
     }
 
-    private void initializeComboBox(ComboBox<Label> comboBox, String defaultText) {
 
-        comboBox.setCellFactory(cb -> new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getText());
-                    setTextFill(Color.BLACK); // Set default text color for dropdown items
-                }
-            }
-        });
-        comboBox.setButtonCell(new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(defaultText);
-                } else {
-                    setText(item.getText());
-                }
-                setTextFill(Color.WHITE); // Set text color for the ComboBox header
-            }
-        });
-        SystemRanges.setOnAction(event -> {
-            Label selectedLabel = SystemRanges.getSelectionModel().getSelectedItem();
-            if (selectedLabel != null) {
-                handleRangeLabelClick(selectedLabel.getText());
-            }
-        });
-        comboBox.setPromptText(defaultText);
-    }
 
     // Add a new range label to the ComboBox
     public void addRange(List<CellLocation> ranges, String rangeName) {
@@ -130,7 +106,6 @@ public class RangesController {
     private void setupBindings() {
         deleteRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
         addRangeButton.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
-        SystemRanges.disableProperty().bind(mainController.getReadingXMLSuccessProperty().not());
     }
 
     @FXML
@@ -146,6 +121,10 @@ public class RangesController {
         }
 
         mainController.rangeAddClicked(rangeName, range);
+
+        rangeNameTextFeild.clear();
+        topLeftRangeTextFeild.clear();
+        rightButtonRangeTextFeild.clear();
     }
 
     public void setMainController(MainController mainController) {
@@ -154,17 +133,11 @@ public class RangesController {
 
     }
 
-    // Reset the ComboBox to its default state when clicking other cell on grid
-    public void resetComboBox() {
-        SystemRanges.getSelectionModel().clearSelection(); // Clear the current selection
-        SystemRanges.setPromptText("Ranges"); // Set default text after clearing selection
 
-    }
 
     // Clear all ranges from the ComboBox when loading another XML file
     public void clearAllRanges() {
-        SystemRanges.getItems().clear(); // Clear all items from the ComboBox
-        resetComboBox(); // Reset the ComboBox to its default state
+        rangesTable.getItems().clear();
     }
 
     public void setAllRanges(Map<String, List<CellLocation>> ranges) {
@@ -176,31 +149,6 @@ public class RangesController {
         });
     }
 
-    public void changeToDarkTheme() {
-        Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
-        Utilities.switchStyleClass(vBoxContainer, "DarkUserInterfaceSection", "UserInterfaceSection", "RangeButtonSun");
-        Utilities.switchStyleClass(addRangeButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
-        Utilities.switchStyleClass(deleteRangeButton, "RangeButtonDark", "RangeButton", "RangeButtonSun");
-        Utilities.switchStyleClass(SystemRanges, "RangeButtonDark", "RangeButton", "RangeButtonSun");
-    }
-
-    public void changeToClassicTheme() {
-        Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.WHITE);
-        Utilities.switchStyleClass(vBoxContainer, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
-        Utilities.switchStyleClass(addRangeButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
-        Utilities.switchStyleClass(deleteRangeButton, "RangeButton", "RangeButtonDark", "RangeButtonSun");
-        Utilities.switchStyleClass(SystemRanges, "RangeButton", "RangeButtonDark", "RangeButtonSun");
-    }
-
-    public void changeToSunBurstTheme() {
-        Utilities.setComboBoxHeaderTextColor(SystemRanges, Color.BLACK);
-        Utilities.switchStyleClass(vBoxContainer, "SunUserInterfaceSection", "DarkUserInterfaceSection", "UserInterfaceSection");
-        Utilities.switchStyleClass(addRangeButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
-        Utilities.switchStyleClass(deleteRangeButton, "RangeButtonSun", "RangeButtonDark", "RangeButton");
-        Utilities.switchStyleClass(SystemRanges, "RangeButtonSun", "RangeButtonDark", "RangeButton");
-    }
-
-
     public void disableWriterButtons() {
         addRangeButton.disableProperty().unbind();
         deleteRangeButton.disableProperty().unbind();
@@ -210,8 +158,18 @@ public class RangesController {
     }
 
     public void enableWriterButtons() {
-        addRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
-        deleteRangeButton.disableProperty().bind(mainController.getNewerVersionOfSheetProperty());
+        // Reapply the original binding that disables the buttons based on the sheet property
+        addRangeButton.disableProperty().bind(
+                mainController.getNewerVersionOfSheetProperty()
+                        .or(rangeNameTextFeild.textProperty().isEmpty())
+                        .or(topLeftRangeTextFeild.textProperty().isEmpty())
+                        .or(rightButtonRangeTextFeild.textProperty().isEmpty())
+        );
+
+        deleteRangeButton.disableProperty().bind(
+                mainController.getNewerVersionOfSheetProperty()
+                        .or(rangesTable.getSelectionModel().selectedItemProperty().isNull())
+        );
     }
 
     private boolean isRangeExitsInTable(String rangeName){

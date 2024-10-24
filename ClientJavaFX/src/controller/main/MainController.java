@@ -314,90 +314,6 @@ public class MainController implements Closeable {
         popUpWindowsHandler.createErrorPopup(message, title);
     }
 
-    public void rangeAddClicked() {
-
-        RangeStringsData rangeStringsData = popUpWindowsHandler.openAddRangeWindow();
-        String name = rangeStringsData.getName();
-        String range = rangeStringsData.getRange();
-
-        if(name != null) //in case when just shutting the window without entering anything
-        {
-            try {
-                Map<String,String> params = new HashMap<>();
-                params.put("name",name);
-                params.put("range",range);
-                HttpRequestManager.sendPostAsyncRequest(Constants.ADD_RANGE_ENDPOINT, params, new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        if (!response.isSuccessful()) {
-                            Platform.runLater(() -> createErrorPopup("Failed to update cell", "Error"));
-                        }
-                    }
-                });
-
-               HttpRequestManager.sendGetAsyncRequest(Constants.GET_REQUESTED_RANGE_ENDPOINT, params, new Callback() {
-                   @Override
-                   public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                       Platform.runLater(() -> createErrorPopup("Failed to get range", "Error"));
-                   }
-
-                   @Override
-                   public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                       String requestedRangeAsJson = response.body().string();
-                       List<CellLocation> requestedRange = Constants.GSON_INSTANCE.fromJson(requestedRangeAsJson, new TypeToken<List<CellLocation>>(){}.getType());
-                       rangesController.addRange(requestedRange,name);
-                   }
-               });
-                //engine.UpdateNewRange(name,rangeStringsData.getRange());
-            }
-            catch (Exception e) {
-                createErrorPopup(e.getMessage(), "Error");
-            }
-        }
-    }
-
-
-
-    public void rangeDeleteClicked() {
-
-        CompletableFuture.runAsync(() -> {
-
-            try (Response allRangesResponse = HttpRequestManager.sendGetSyncRequest(Constants.GET_ALL_RANGES_ENDPOINT, new HashMap<>())) {
-                String allRangesAsJson = allRangesResponse.body().string();
-                Set<String> rangeNames = Constants.GSON_INSTANCE.fromJson(allRangesAsJson, new TypeToken<Set<String>>(){}.getType());
-
-                // Handle the next request inside Platform.runLater to stay on the UI thread
-                Platform.runLater(() -> {
-                    RangeStringsData rangeStringsData = popUpWindowsHandler.openDeleteRangeWindow(rangeNames);
-                    String name = rangeStringsData.getName();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("name", name);
-
-                    if (name != null) {
-                        CompletableFuture.runAsync(() -> {
-                            try (Response deleteRangeResponse = HttpRequestManager.sendPostSyncRequest(Constants.DELETE_RANGE_ENDPOINT, params)) {
-                                if (!deleteRangeResponse.isSuccessful()) {
-                                    Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
-                                } else {
-                                    Platform.runLater(() -> rangesController.deleteRange(name));
-                                }
-                            } catch (Exception e) {
-                                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-                            }
-                        });
-                    }
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-            }
-        });
-    }
-
     public void rangeAddClicked(String name, String range) {
 
         if(name != null) //in case when just shutting the window without entering anything
@@ -453,7 +369,9 @@ public class MainController implements Closeable {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    Platform.runLater(() -> createErrorPopup("Failed to delete range", "Error"));
+                    String errorAsJson = response.body().string();
+                    String errorMessage = Constants.GSON_INSTANCE.fromJson(errorAsJson, String.class);
+                    Platform.runLater(() -> createErrorPopup(errorMessage, "Error"));
                 }
                 else {
                     Platform.runLater(() -> rangesController.deleteRange(name));
@@ -538,7 +456,7 @@ public class MainController implements Closeable {
             actionLineController.updateCssWhenUpdatingCell(location);
             gridScrollerController.clearAllHighlights();
             gridScrollerController.showNeighbors(dtoCell);
-            rangesController.resetComboBox();
+//            rangesController.resetComboBox();
 
 
            // customizeController.resetComboBox();

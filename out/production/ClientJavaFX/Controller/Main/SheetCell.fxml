@@ -39,9 +39,9 @@
             </GridPane>
         </top>
         <left>
-            <VBox fx:id="leftCommands" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" prefHeight="600.0" styleClass="Background" stylesheets="@../customize/BasicExcel.css">
+            <VBox fx:id="leftCommands" maxHeight="580.0" maxWidth="354.0" minHeight="540.0" prefWidth="354.0">
                 <children>
-                    <VBox maxWidth="1.7976931348623157E308" minHeight="345.0" prefHeight="345.0" prefWidth="340.0" VBox.vgrow="ALWAYS">
+                    <VBox maxWidth="340.0" minHeight="345.0" prefHeight="345.0" prefWidth="340.0" VBox.vgrow="ALWAYS">
                         <children>
                             <fx:include fx:id="customize" source="../customize/Customize.fxml" />
                         </children>
@@ -52,7 +52,7 @@
                             <Insets top="5.0" />
                         </padding>
                     </VBox>
-                    <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minHeight="190.0" VBox.vgrow="ALWAYS">
+                    <VBox alignment="CENTER_LEFT" maxWidth="340.0" minHeight="190.0" prefHeight="190.0" prefWidth="327.0" VBox.vgrow="ALWAYS">
                         <children>
                             <fx:include fx:id="ranges" source="../ranges/Ranges.fxml" />
                         </children>
@@ -67,6 +67,9 @@
                 <BorderPane.margin>
                     <Insets top="10.0" />
                 </BorderPane.margin>
+            <padding>
+               <Insets top="10.0" />
+            </padding>
             </VBox>
         </left>
         <center>

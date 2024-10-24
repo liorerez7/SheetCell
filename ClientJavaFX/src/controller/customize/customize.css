@@ -1,8 +1,15 @@
 /* General settings for the VBox */
 #customize {
-    -fx-padding: 10px;
-    -fx-background-color: #f5f5f5; /* Light neutral background */
+    -fx-padding: 5;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2); /* Subtle drop shadow */
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+
+
 }
+
 
 /* Styling the GridPane */
 #customizeGridPane {

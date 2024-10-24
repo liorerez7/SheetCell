@@ -26,8 +26,13 @@ public class AddRangeServlet extends HttpServlet {
             }
         }
         catch (Exception e){
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
-            response.getOutputStream().print("Error: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            String errorMessage = ServletUtils.extractErrorMessage(e);
+            String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(errorMessageAsJson);
+            response.getWriter().flush();
         }
 
         response.setStatus(HttpServletResponse.SC_OK);

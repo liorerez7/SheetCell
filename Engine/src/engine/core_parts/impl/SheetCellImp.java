@@ -288,6 +288,11 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
             throw new IllegalArgumentException("Invalid range: start cell must be before end cell.");
         }
 
+        if(endCol > ('A' + currentNumberOfCols - 1) || endRow > currentNumberOfRows)
+        {
+            throw new IllegalArgumentException("Invalid range: end cell exceeds the current number of rows or columns.");
+        }
+
         // Create a set to hold all CellLocation objects in the range
         Set<Ref> cellLocations = new HashSet<>();
 
