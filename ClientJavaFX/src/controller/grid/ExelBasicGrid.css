@@ -1,18 +1,13 @@
-.DarkModeBackground {
-    -fx-background-color: #e8f0f6; /* Light gray background color */
-    -fx-padding: 10; /* Padding creates space between the StackPane and the GridPane */
-
-}
 
 /* General Background for the ScrollPane */
 .Background {
-    -fx-background-color: #e8f0f6; /* Light gray background for ScrollPane itself */
+    -fx-background-color: transparent; /* Set ScrollPane background to transparent */
     -fx-padding: 10; /* Optional padding */
 }
 
 /* Targeting the internal viewport of the ScrollPane */
 .ScrollPane .viewport {
-    -fx-background-color: #e8f0f6; /* Same background as ScrollPane */
+    -fx-background-color: transparent; /* Set ScrollPane background to transparent */
 }
 
 /* Optional: You can style the ScrollBar as well */
