@@ -3,6 +3,9 @@ package engine.login.users;
 import dto.permissions.*;
 import dto.permissions.RequestStatus;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,14 +15,8 @@ public class PermissionManager {
 
     private final Map<String, List<PermissionLine>> currentSheetNameToPermissionLines = new HashMap<>();
     private final Map<String, List<PermissionLine>> allHistorySheetNameToPermissionLines = new HashMap<>();
-    //private final UserManager userManager;
     private final Map<String, List<RequestPermission>> userNameToHisRequestList = new HashMap<>();
     private final Map<String, List<ResponsePermission>> ownerNameToHisResponseList = new HashMap<>();
-
-
-//    public PermissionManager(UserManager userManager) {
-//        this.userManager = userManager;
-//    }
 
     public synchronized void addPermission(String sheetName, String userName,
                                            PermissionStatus status, RequestStatus requestStatus) {
@@ -168,6 +165,7 @@ public class PermissionManager {
                 if(permissionLine.getUserName().equals(userName) && permissionLine.getRequestStatus().equals(RequestStatus.PENDING)
                 && permissionLine.getPermissionStatus().equals(permissionStatus)) {
 
+                    permissionLine.setTimeStamp(getCurrentDateTime());
                     permissionLine.setRequestStatus(requestStatus);
                     foundInAllHistory = true;
                 }
@@ -191,5 +189,16 @@ public class PermissionManager {
         }
 
         return PermissionStatus.NONE;
+    }
+
+    private String getCurrentDateTime() {
+        // Get the current date and time
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // Create a formatter for the date and time in the desired format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+        // Format the current date and time
+        return currentDateTime.format(formatter);
     }
 }

@@ -20,7 +20,6 @@ public class Engine {
     private final Set<String> sheetNames = new HashSet<>();
     private final UserManager userManager = new UserManager();
     private final ChatManager chatManager = new ChatManager();
-//    private final PermissionManager permissionManager = new PermissionManager(userManager);
     private final PermissionManager permissionManager = new PermissionManager();
 
     private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager, userManager);

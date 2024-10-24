@@ -1,6 +1,8 @@
 package controller.dashboard.utilities.popup;
 
 import controller.dashboard.DashboardController;
+import dto.permissions.PermissionLine;
+import dto.permissions.PermissionStatus;
 import dto.permissions.RequestPermission;
 import dto.permissions.RequestStatus;
 import javafx.animation.PauseTransition;
@@ -23,6 +25,7 @@ import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,6 +152,11 @@ public class DashboardPopUpManager {
                     if (!response.isSuccessful()) {
                         dashboardController.handleHttpResponseFailure(response, "Failed to request permission");
                     }
+
+
+
+
+
                     dashboardController.forceRefreshPermissionTableForSheet(selectedSheet);
 
                     // Show success message after the request is successfully sent

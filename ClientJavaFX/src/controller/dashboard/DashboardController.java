@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -59,12 +60,17 @@ public class DashboardController {
     @FXML private TableColumn<PermissionRow, String> usernameColumn;
     @FXML private TableColumn<PermissionRow, String> permissionStatusColumn;
     @FXML private TableColumn<PermissionRow, String> approvedByOwnerColumn;
+    @FXML private TableColumn<PermissionRow, String> timestampColumn;
     @FXML private Button viewSheetButton;
     @FXML private Button requestPermissionButton;
     @FXML private Button manageAccessRequestsButton;
     @FXML private Button logoutButton;
     @FXML private Button exitButton;
     @FXML private Button openChatButton;
+    @FXML private VBox chatArea;
+    @FXML private Button sendMessageButton;
+    @FXML private TextArea chatMessagesArea;
+    @FXML private TextField chatInputField;
 
     private MainController mainController;
     private ObservableList<SheetInfo> fileEntries;  // Updated to SheetInfo
@@ -77,12 +83,10 @@ public class DashboardController {
     private DashboardPopUpManager popUpManager;
     private final IntegerProperty myPermissionResponses = new SimpleIntegerProperty(0);
     private Timeline manageAccessRequestsButtonTimeline;
+    private Map<PermissionLine, String> permissionLineToTimestamp = new HashMap<>();
 
 
-    @FXML private VBox chatArea;
-    @FXML private Button sendMessageButton;
-    @FXML private TextArea chatMessagesArea;
-    @FXML private TextField chatInputField;
+
     private final IntegerProperty chatVersion = new SimpleIntegerProperty();
     public final static String CHAT_LINE_FORMATTING = "%tH:%tM:%tS | %.10s: %s%n";
     public final static int REFRESH_INTERVAL = 500;
@@ -217,7 +221,7 @@ public class DashboardController {
         usernameColumn.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
         permissionStatusColumn.setCellValueFactory(cellData -> cellData.getValue().permissionStatusProperty());
         approvedByOwnerColumn.setCellValueFactory(cellData -> cellData.getValue().approvedByOwnerProperty());
-
+        timestampColumn.setCellValueFactory(cellData -> cellData.getValue().timestampProperty()); // Bind the timestamp
     }
 
     private void setupTableColumns() {
@@ -400,8 +404,8 @@ public class DashboardController {
         fileEntries.add(new SheetInfo(sheetInfoLine.getOwnerName(), sheetInfoLine.getSheetName(), sheetInfoLine.getSheetSize(), sheetInfoLine.getMyPermission()));
     }
 
-    public void addLine(String username, String permissionStatus, String requestStatus) {
-        PermissionRow newRow = new PermissionRow(username, permissionStatus, requestStatus);
+    public void addLine(String username, String permissionStatus, String requestStatus, String timeStamp) {
+        PermissionRow newRow = new PermissionRow(username, permissionStatus, requestStatus, timeStamp);
         permissionEntries.add(newRow);
     }
 
@@ -467,9 +471,14 @@ public class DashboardController {
                 String username = permission.getUserName();
                 String permissionStatus = permission.getPermissionStatus().toString();
                 String requestStatus = permission.getRequestStatus().toString();
-                addLine(username, permissionStatus, requestStatus);
+                String timeStamp = permission.getTimestamp();
+                addLine(username, permissionStatus, requestStatus, timeStamp);
             });
         });
+    }
+
+    public Map<PermissionLine,String> getPermissionLineToTimestamp(){
+        return permissionLineToTimestamp;
     }
 
     private boolean arePermissionsEqual(List<PermissionLine> oldPermissions, List<PermissionLine> newPermissions) {
@@ -704,11 +713,13 @@ public class DashboardController {
         private final StringProperty username;
         private final StringProperty permissionStatus;
         private final StringProperty requestStatus;
+        private final StringProperty timestamp;
 
-        public PermissionRow(String username, String permissionStatus, String approvedByOwner) {
+        public PermissionRow(String username, String permissionStatus, String approvedByOwner, String timeStamp) {
             this.username = new SimpleStringProperty(username);
             this.permissionStatus = new SimpleStringProperty(permissionStatus);
             this.requestStatus = new SimpleStringProperty(approvedByOwner);
+            this.timestamp = new SimpleStringProperty(timeStamp);
         }
 
         public StringProperty usernameProperty() {
@@ -723,9 +734,15 @@ public class DashboardController {
             return requestStatus;
         }
 
+        public StringProperty timestampProperty(){
+            return timestamp;
+        }
+
         public String getUsername() {
             return username.get();
         }
+
+
 
         public String getPermissionStatus() {
             return permissionStatus.get();
