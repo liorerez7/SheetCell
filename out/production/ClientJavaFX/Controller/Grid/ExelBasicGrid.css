@@ -1,25 +1,25 @@
-/* General Background for the ScrollPane */
-.ScrollPane {
-    -fx-background-color: #9903e6; /* Transparent background for the outer ScrollPane */
-    -fx-padding: 0;
-}
+/*!* General Background for the ScrollPane *!*/
+/*.ScrollPane {*/
+/*    -fx-background-color: #9903e6; !* Transparent background for the outer ScrollPane *!*/
+/*    -fx-padding: 0;*/
+/*}*/
 
-/* Targeting the internal viewport of the ScrollPane */
-.ScrollPane .viewport {
-    -fx-background-color: #ff00a6; /* Light gray-blue background color matching the rest of the screen */
-}
+/*!* Targeting the internal viewport of the ScrollPane *!*/
+/*.ScrollPane .viewport {*/
+/*    -fx-background-color: #ff00a6; !* Light gray-blue background color matching the rest of the screen *!*/
+/*}*/
 
-/* Optional: Customize ScrollBar */
-.ScrollPane .scroll-bar {
-    -fx-background-color: transparent; /* Make the ScrollBar's background transparent */
-}
+/*!* Optional: Customize ScrollBar *!*/
+/*.ScrollPane .scroll-bar {*/
+/*    -fx-background-color: transparent; !* Make the ScrollBar's background transparent *!*/
+/*}*/
 
-/* ScrollBar thumb (draggable part) */
-.ScrollPane .scroll-bar:vertical .thumb,
-.ScrollPane .scroll-bar:horizontal .thumb {
-    -fx-background-color: #4a4a4a; /* Dark gray for modern look */
-}
-/* Ensure that other containers (like VBox and BorderPane) adopt the correct background */
-.VBox, .BorderPane {
-    -fx-background-color: #ff005a; /* Light gray background color */
-}
+/*!* ScrollBar thumb (draggable part) *!*/
+/*.ScrollPane .scroll-bar:vertical .thumb,*/
+/*.ScrollPane .scroll-bar:horizontal .thumb {*/
+/*    -fx-background-color: #4a4a4a; !* Dark gray for modern look *!*/
+/*}*/
+/*!* Ensure that other containers (like VBox and BorderPane) adopt the correct background *!*/
+/*.VBox, .BorderPane {*/
+/*    -fx-background-color: #ff005a; !* Light gray background color *!*/
+/*}*/

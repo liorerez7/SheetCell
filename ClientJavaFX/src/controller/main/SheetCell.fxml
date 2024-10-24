@@ -74,7 +74,7 @@
         </left>
         <center>
             <!-- Add a VBox container around the fx:include to apply margin -->
-            <VBox spacing="20" styleClass="Background" stylesheets="@../cssAdujsments/ExcelCssLayout.css" BorderPane.alignment="TOP_LEFT">
+            <VBox spacing="20" BorderPane.alignment="TOP_LEFT">
                 <VBox.margin>
                     <Insets top="50.0" /> <!-- This moves the ScrollPane 50px lower -->
                 </VBox.margin>
