@@ -46,6 +46,13 @@ public class GridController {
     private final static int MAX_CELL_SIZE = 300;
     private final static int CELL_SIZE_CHANGE = 10;
 
+   // create a fxml initilize method:
+   @FXML
+   public void initialize() {
+       gridScroller.setStyle("-fx-background-color: #e8f0f6;"); // Replace with your desired color
+       grid.setStyle("-fx-background-color: #e8f0f6;");
+   }
+
 
     public GridPane getGrid() {
         return grid;

@@ -1,39 +1,25 @@
-
 /* General Background for the ScrollPane */
-.Background {
-    -fx-background-color: transparent; /* Set ScrollPane background to transparent */
-    -fx-padding: 10; /* Optional padding */
+.ScrollPane {
+    -fx-background-color: #9903e6; /* Transparent background for the outer ScrollPane */
+    -fx-padding: 0;
 }
 
 /* Targeting the internal viewport of the ScrollPane */
 .ScrollPane .viewport {
-    -fx-background-color: transparent; /* Set ScrollPane background to transparent */
+    -fx-background-color: #ff00a6; /* Light gray-blue background color matching the rest of the screen */
 }
 
-/* Optional: You can style the ScrollBar as well */
+/* Optional: Customize ScrollBar */
 .ScrollPane .scroll-bar {
-    -fx-background-color: transparent; /* Transparent background for scrollbar */
+    -fx-background-color: transparent; /* Make the ScrollBar's background transparent */
 }
 
-/* Optional: Customize header and cell styles */
-.header-label {
-    -fx-font-weight: bold;
-    -fx-alignment: CENTER;
-    -fx-text-alignment: CENTER;
-    -fx-background-color: #e4e4e4;
-    -fx-border-color: black;
-    -fx-border-width: 1px;
-    -fx-padding: 0;
-    -fx-margin: 0;
+/* ScrollBar thumb (draggable part) */
+.ScrollPane .scroll-bar:vertical .thumb,
+.ScrollPane .scroll-bar:horizontal .thumb {
+    -fx-background-color: #4a4a4a; /* Dark gray for modern look */
 }
-
-/*.cell-label {*/
-/*    !*-fx-background-color: white;*!*/
-/*    -fx-background-color: #061fff;*/
-/*    -fx-border-color: black;*/
-/*    -fx-border-width: 1px;*/
-/*    -fx-padding: 5px; !* Padding to make the clickable area larger *!*/
-/*    -fx-wrap-text: false; !* Prevent text wrapping *!*/
-/*}*/
-
-
+/* Ensure that other containers (like VBox and BorderPane) adopt the correct background */
+.VBox, .BorderPane {
+    -fx-background-color: #ff005a; /* Light gray background color */
+}
