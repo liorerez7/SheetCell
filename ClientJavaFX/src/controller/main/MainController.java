@@ -643,6 +643,9 @@ public class MainController implements Closeable {
         });
     }
 
+    public String getSheetName() {
+        return sheetName;
+    }
 
     public void ChartGraphClicked() {
         makeGraphClicked(true);
@@ -779,7 +782,7 @@ public class MainController implements Closeable {
         System.exit(0);
     }
 
-    public BooleanProperty getColorProperty() {
+    public BooleanProperty getColorPropethirty() {
         return model.getColorProperty();
     }
 }
