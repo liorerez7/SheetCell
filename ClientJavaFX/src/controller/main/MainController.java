@@ -208,7 +208,7 @@ public class MainController implements Closeable {
     private void updateUIWithNewSheetCell(DtoSheetCell newDtoSheetCell) {
         //headerController.FileHasBeenLoaded(absolutePath);
         Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
-        gridScrollerController.restoreCustomizations();
+//        gridScrollerController.restoreCustomizations();
         rangesController.clearAllRanges();
         model.setReadingXMLSuccess(true);
         model.setCellLabelToProperties(cellLocationLabelMap);

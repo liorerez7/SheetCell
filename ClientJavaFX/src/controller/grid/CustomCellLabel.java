@@ -131,6 +131,11 @@ public class CustomCellLabel {
         label.setAlignment(alignment);
     }
 
+    public void applyStoredAlignments() {
+        label.setAlignment(alignment);
+        label.setTextAlignment(textAlignment);
+    }
+
     // Getters and Setters for Text Alignment
     public TextAlignment getTextAlignment() {
         return textAlignment;
