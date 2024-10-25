@@ -47,12 +47,12 @@ public class GridController {
     private final static int MAX_CELL_SIZE = 300;
     private final static int CELL_SIZE_CHANGE = 10;
 
-   // create a fxml initilize method:
-   @FXML
-   public void initialize() {
-       gridScroller.setStyle("-fx-background-color: #e8f0f6;"); // Replace with your desired color
-       grid.setStyle("-fx-background-color: #e8f0f6;");
-   }
+    // create a fxml initilize method:
+    @FXML
+    public void initialize() {
+        gridScroller.setStyle("-fx-background-color: #e8f0f6;"); // Replace with your desired color
+        grid.setStyle("-fx-background-color: #e8f0f6;");
+    }
 
 
     public GridPane getGrid() {
@@ -87,104 +87,50 @@ public class GridController {
     }
 
 //    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
-//        neighborsHandler = new NeighborsHandler();
 //
-//        initializeEmptyGrid(sheetCell,grid, false);
+//        neighborsHandler = new NeighborsHandler();
+//        initializeEmptyGrid(sheetCell, grid, false);
 //
 //        int numCols = sheetCell.getNumberOfColumns();
 //        int numRows = sheetCell.getNumberOfRows();
-//        int cellWidth = sheetCell.getCellWidth();
-//        int cellLength = sheetCell.getCellLength();
+//        int baseCellWidth = sheetCell.getCellWidth() * DELTA_EXTENSION_GRID;
+//        int baseCellLength = sheetCell.getCellLength() * DELTA_EXTENSION_GRID;
 //
-//        cellWidth = cellWidth * DELTA_EXTENSION_GRID;
-//        cellLength = cellLength * DELTA_EXTENSION_GRID ;
-//
+//        int baseCellWidthForCol = 0;
+//        int baseCellLengthForRow = 0;
 //
 //        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
 //
-//        // Add cells with Label
+//        // Set column and row sizes from deltas if available
+//        for (int col = 1; col <= numCols; col++) {
+//            String columnKey = Character.toString((char) ('A' + col - 1));
+//            int adjustedWidth = columnToWidthDelta.getOrDefault(columnKey, baseCellWidthForCol);
+//            updateColumnConstraints(col, adjustedWidth);
+//        }
+//        for (int row = 1; row <= numRows; row++) {
+//            String rowKey = String.valueOf(row);
+//            int adjustedHeight = rowToHeightDelta.getOrDefault(rowKey, baseCellLengthForRow);
+//            updateRowConstraints(row, adjustedHeight);
+//        }
+//
+//        // Add labels to grid with adjusted sizes
 //        for (int row = 1; row <= numRows; row++) {
 //            for (int col = 1; col <= numCols; col++) {
+//                CellLocation location = CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row));
+//                Label cellLabel = cellLocationToLabel.get(location);
 //
-//                Label cell = new Label();
-//
-//                cell.getStyleClass().add("cell-label");
-//                CustomCellLabel customCellLabel = new CustomCellLabel(cell);
-//                customCellLabel.applyDefaultStyles();
-//                customCellLabel.setAlignment(Pos.CENTER);
-//                customCellLabel.setTextAlignment(TextAlignment.CENTER);
-//                cellLocationToCustomCellLabel.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
-//
-//                setLabelSize(cell, cellWidth, cellLength);
-//                // Bind the Label's textProperty to the EffectiveValue
-//                char colChar = (char) ('A' + col - 1);
-//                String rowString = String.valueOf(row);
-//                cell.setId(colChar + rowString);
-//
-//                CellLocation location = new CellLocation(colChar, rowString);
-//                EffectiveValue effectiveValue = viewSheetCell.get(location);
-//
-//                if (effectiveValue != null) {
-//                    String textForLabel = StringParser.convertValueToLabelText(effectiveValue);
-//                    cell.setText(textForLabel);
+//                if (cellLabel == null) {
+//                    cellLabel = createNewLabel(location, viewSheetCell, baseCellWidth, baseCellLength, row, col);
+//                } else {
+//                    updateExistingLabel(cellLabel, location, viewSheetCell);
 //                }
 //
-//                cell.setOnMouseEntered(event -> onCellMouseEntered(cell.getId()));
-//                cell.setOnMouseExited(event -> onCellMouseExited(cell.getId()));
-//                cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
-//                cellLocationToLabel.put(location, cell);
-//                grid.add(cell,col, row);
+//                grid.add(cellLabel, col, row);
 //            }
 //        }
 //
 //        return cellLocationToLabel;
 //    }
-
-
-    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
-        neighborsHandler = new NeighborsHandler();
-        initializeEmptyGrid(sheetCell, grid, false);
-
-        int numCols = sheetCell.getNumberOfColumns();
-        int numRows = sheetCell.getNumberOfRows();
-        int baseCellWidth = sheetCell.getCellWidth() * DELTA_EXTENSION_GRID;
-        int baseCellLength = sheetCell.getCellLength() * DELTA_EXTENSION_GRID;
-
-        int baseCellWidthForCol = 0;
-        int baseCellLengthForRow = 0;
-
-        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
-
-        // Set column and row sizes from deltas if available
-        for (int col = 1; col <= numCols; col++) {
-            String columnKey = Character.toString((char) ('A' + col - 1));
-            int adjustedWidth = columnToWidthDelta.getOrDefault(columnKey, baseCellWidthForCol);
-            updateColumnConstraints(col, adjustedWidth);
-        }
-        for (int row = 1; row <= numRows; row++) {
-            String rowKey = String.valueOf(row);
-            int adjustedHeight = rowToHeightDelta.getOrDefault(rowKey, baseCellLengthForRow);
-            updateRowConstraints(row, adjustedHeight);
-        }
-
-        // Add labels to grid with adjusted sizes
-        for (int row = 1; row <= numRows; row++) {
-            for (int col = 1; col <= numCols; col++) {
-                CellLocation location = CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row));
-                Label cellLabel = cellLocationToLabel.get(location);
-
-                if (cellLabel == null) {
-                    cellLabel = createNewLabel(location, viewSheetCell, baseCellWidth, baseCellLength, row, col);
-                } else {
-                    updateExistingLabel(cellLabel, location, viewSheetCell);
-                }
-
-                grid.add(cellLabel, col, row);
-            }
-        }
-
-        return cellLocationToLabel;
-    }
 
     private Label createNewLabel(CellLocation location, Map<CellLocation, EffectiveValue> viewSheetCell,
                                  int cellWidth, int cellLength, int row, int col) {
@@ -222,7 +168,6 @@ public class GridController {
         }
 
         CustomCellLabel customCellLabel = cellLocationToCustomCellLabel.get(location);
-        customCellLabel.applyStoredAlignments();
     }
 
     private void onCellMouseEntered(String location) {
@@ -249,7 +194,6 @@ public class GridController {
         mainController.cellClicked(location);
     }
 
-
     public void changeTextAlignment(String alignment, String selectedColumnLabel) {
         int selectedColumnIndex = selectedColumnLabel.charAt(0) - 'A' + 1;
         Pos pos = determinePos(alignment);
@@ -268,7 +212,6 @@ public class GridController {
             }
         }
     }
-
 
     private Pos determinePos(String alignment) {
         switch (alignment.toLowerCase()) {
@@ -292,13 +235,9 @@ public class GridController {
         }
     }
 
-
-
-
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
-
 
     private void setupColumnConstraints(GridPane grid, int numCols, int cellWidth) {
         for (int i = 0; i < numCols + 1; i++) { // +1 for header column
@@ -412,8 +351,6 @@ public class GridController {
         label.setPadding(Insets.EMPTY);  // Removes padding
     }
 
-
-
     public void initializeVersionPopupGrid(GridPane grid, DtoSheetCell sheetCell) {
 
         initializeEmptyGrid(sheetCell, grid, true);
@@ -491,7 +428,7 @@ public class GridController {
 
 
                 CellLocation oldCellLocation = dtoContainerData.getOldCellLocation(cellLocation);
-                if(oldCellLocation == null){
+                if (oldCellLocation == null) {
                     oldCellLocation = cellLocation;
                 }
 
@@ -549,7 +486,7 @@ public class GridController {
         if (isColumn) {
             updateColumnConstraints(index, valueToChange);
 
-            if(columnToWidthDelta.containsKey(RowOrColumn)){
+            if (columnToWidthDelta.containsKey(RowOrColumn)) {
                 columnToWidthDelta.put(RowOrColumn, columnToWidthDelta.get(RowOrColumn) + valueToChange);
             } else {
                 columnToWidthDelta.put(RowOrColumn, valueToChange);
@@ -558,7 +495,7 @@ public class GridController {
         } else {
             updateRowConstraints(index, valueToChange);
 
-            if(rowToHeightDelta.containsKey(RowOrColumn)){
+            if (rowToHeightDelta.containsKey(RowOrColumn)) {
                 rowToHeightDelta.put(RowOrColumn, rowToHeightDelta.get(RowOrColumn) + valueToChange);
             } else {
                 rowToHeightDelta.put(RowOrColumn, valueToChange);
@@ -622,15 +559,13 @@ public class GridController {
         }
     }
 
-
-
     public void changeBackgroundTextColor(Color value, String location) {
 
         Label cell = cellLocationToLabel.get(CellLocationFactory.fromCellId(location));
         Pos alignment = cell.getAlignment();
 
         CustomCellLabel customCellLabel = cellLocationToCustomCellLabel.get(CellLocationFactory.fromCellId(location));
-       // CustomCellLabel customCellLabel = new CustomCellLabel(cell);
+        // CustomCellLabel customCellLabel = new CustomCellLabel(cell);
         customCellLabel.setBackgroundColor(value);
         customCellLabel.setAlignment(alignment);
     }
@@ -673,7 +608,7 @@ public class GridController {
 
 
                 CellLocation oldCellLocation = dtoContainerData.getOldCellLocation(cellLocation);
-                if(oldCellLocation == null){
+                if (oldCellLocation == null) {
                     oldCellLocation = cellLocation;
                 }
 
@@ -681,7 +616,7 @@ public class GridController {
                 CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
 
                 newCustomCellLabel.applyDefaultStyles();
-                if(cellLocationToCustomCellLabel.get(oldCellLocation) != null){
+                if (cellLocationToCustomCellLabel.get(oldCellLocation) != null) {
                     newCustomCellLabel.setAlignment(cellLocationToCustomCellLabel.get(oldCellLocation).getAlignment());
                     newCustomCellLabel.setTextAlignment(cellLocationToCustomCellLabel.get(oldCellLocation).getTextAlignment());
                     newCustomCellLabel.setBackgroundColor(cellLocationToCustomCellLabel.get(oldCellLocation).getBackgroundColor());
@@ -759,6 +694,58 @@ public class GridController {
         grid.setStyle("-fx-background-color: #e8f0f6;");
     }
 
+
+    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
+        neighborsHandler = new NeighborsHandler();
+
+        initializeEmptyGrid(sheetCell, grid, false);
+
+        int numCols = sheetCell.getNumberOfColumns();
+        int numRows = sheetCell.getNumberOfRows();
+        int cellWidth = sheetCell.getCellWidth();
+        int cellLength = sheetCell.getCellLength();
+
+        cellWidth = cellWidth * DELTA_EXTENSION_GRID;
+        cellLength = cellLength * DELTA_EXTENSION_GRID;
+
+
+        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
+
+        // Add cells with Label
+        for (int row = 1; row <= numRows; row++) {
+            for (int col = 1; col <= numCols; col++) {
+
+                Label cell = new Label();
+
+                cell.getStyleClass().add("cell-label");
+                CustomCellLabel customCellLabel = new CustomCellLabel(cell);
+                customCellLabel.applyDefaultStyles();
+                customCellLabel.setAlignment(Pos.CENTER);
+                customCellLabel.setTextAlignment(TextAlignment.CENTER);
+                cellLocationToCustomCellLabel.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
+
+                setLabelSize(cell, cellWidth, cellLength);
+                // Bind the Label's textProperty to the EffectiveValue
+                char colChar = (char) ('A' + col - 1);
+                String rowString = String.valueOf(row);
+                cell.setId(colChar + rowString);
+
+                CellLocation location = new CellLocation(colChar, rowString);
+                EffectiveValue effectiveValue = viewSheetCell.get(location);
+
+                if (effectiveValue != null) {
+                    String textForLabel = StringParser.convertValueToLabelText(effectiveValue);
+                    cell.setText(textForLabel);
+                }
+
+                cell.setOnMouseEntered(event -> onCellMouseEntered(cell.getId()));
+                cell.setOnMouseExited(event -> onCellMouseExited(cell.getId()));
+                cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
+                cellLocationToLabel.put(location, cell);
+                grid.add(cell, col, row);
+            }
+        }
+
+        return cellLocationToLabel;
+    }
 }
-
-

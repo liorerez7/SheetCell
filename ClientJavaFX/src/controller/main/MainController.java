@@ -454,7 +454,6 @@ public class MainController implements Closeable {
             actionLineController.updateCssWhenUpdatingCell(location);
             gridScrollerController.clearAllHighlights();
             gridScrollerController.showNeighbors(dtoCell);
-//            rangesController.resetComboBox();
 
 
            // customizeController.resetComboBox();
