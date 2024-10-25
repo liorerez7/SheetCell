@@ -15,12 +15,12 @@
 }
 
 
-.cell-label {
-    -fx-background-color: white; /* White background for cells */
-    -fx-border-color: black;     /* Color of the border around cells */
-    -fx-border-width: 1px;       /* Width of the border around cells */
-    -fx-alignment: center;
-}
+/*.cell-label {*/
+/*    -fx-background-color: white; !* White background for cells *!*/
+/*    -fx-border-color: black;     !* Color of the border around cells *!*/
+/*    -fx-border-width: 1px;       !* Width of the border around cells *!*/
+/*    -fx-alignment: center;*/
+/*}*/
 
 .custom-slider {
     -fx-background-color: #e0e0e0;

@@ -2,10 +2,10 @@
 package controller.grid;
 
 import controller.main.MainController;
-import utilities.javafx.smallparts.StringParser;
-
 import dto.components.DtoCell;
 import dto.components.DtoContainerData;
+import utilities.javafx.smallparts.StringParser;
+
 import dto.components.DtoSheetCell;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -39,10 +39,10 @@ public class GridController {
     private Map<String, Integer> columnToWidthDelta;
     private Map<String, Integer> rowToHeightDelta;
     private Map<String, SheetCustomization> sheetNameToCustomization;
+    private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel;
 //    private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = new HashMap<>();
 
     private MainController mainController;
-    private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = sheetNameToCustomization.get(mainController.getSheetName()).getCellLocationToCustomCellLabel();
 
     private NeighborsHandler neighborsHandler;
     private final static int DELTA_EXTENSION_GRID = 2;
@@ -67,10 +67,26 @@ public class GridController {
         columnToWidthDelta = new HashMap<>();
         rowToHeightDelta = new HashMap<>();
         sheetNameToCustomization = new HashMap<>();
-        cellLocationToCustomCellLabel = new HashMap<>();
         neighborsHandler = new NeighborsHandler();
 
+
+
+
     }
+
+    public void setCustomization(String sheetName){
+
+        if(!sheetNameToCustomization.containsKey(sheetName)){
+            sheetNameToCustomization.put(sheetName, new SheetCustomization());
+        }
+        cellLocationToCustomCellLabel = sheetNameToCustomization.get(sheetName).getCellLocationToCustomCellLabel();
+        columnToWidthDelta = sheetNameToCustomization.get(sheetName).getColumnToWidthDelta();
+        rowToHeightDelta = sheetNameToCustomization.get(sheetName).getRowToHeightDelta();
+        cellLocationToLabel = sheetNameToCustomization.get(sheetName).getCellLocationToLabel();
+    }
+
+
+
     public GridPane getGrid() {
         return grid;
     }

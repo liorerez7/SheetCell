@@ -687,6 +687,9 @@ public class MainController implements Closeable {
     public void updateCurrentGridSheet(String sheetName) {
 
         this.sheetName = sheetName;
+
+        gridScrollerController.setCustomization(sheetName);
+
         Map<String,String> params = new HashMap<>();
         params.put("sheetName",sheetName);
 
@@ -782,7 +785,7 @@ public class MainController implements Closeable {
         System.exit(0);
     }
 
-    public BooleanProperty getColorPropethirty() {
+    public BooleanProperty getColorProperty() {
         return model.getColorProperty();
     }
 }

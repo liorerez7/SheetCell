@@ -1,6 +1,7 @@
 package controller.grid;
 
 import dto.small_parts.CellLocation;
+import javafx.scene.control.Label;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,17 +12,11 @@ public class SheetCustomization {
     private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = new HashMap<>();
     private Map<String, Integer> columnToWidthDelta = new HashMap<>();
     private Map<String, Integer> rowToHeightDelta = new HashMap<>();
+    private Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
 
-    public SheetCustomization(Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel,
-                              Map<String, Integer> columnToWidthDelta,
-                              Map<String, Integer> rowToHeightDelta) {
-        this.cellLocationToCustomCellLabel = cellLocationToCustomCellLabel;
-        this.columnToWidthDelta = columnToWidthDelta;
-        this.rowToHeightDelta = rowToHeightDelta;
-    }
 
-    public SheetCustomization(Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel) {
-        this.cellLocationToCustomCellLabel = cellLocationToCustomCellLabel;
+    public Map<CellLocation, Label> getCellLocationToLabel() {
+        return cellLocationToLabel;
     }
 
     public Map<CellLocation, CustomCellLabel> getCellLocationToCustomCellLabel() {
