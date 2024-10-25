@@ -68,10 +68,6 @@ public class GridController {
         rowToHeightDelta = new HashMap<>();
         sheetNameToCustomization = new HashMap<>();
         neighborsHandler = new NeighborsHandler();
-
-
-
-
     }
 
     public void setCustomization(String sheetName){

@@ -51,8 +51,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
-//TODO: 5. create a "create new sheet" button
-//      6. create a scroller to view the versions
+//TODO: 1. create a "create new sheet" button
+//      2. finish scroller for versions
+//      3. create a "save" button
+//      4. create a "load" button
+//      5. finish customization on grid that it will be by user and not by client.
 
 
 
