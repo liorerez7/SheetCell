@@ -71,6 +71,7 @@ public class MainController {
     private String userName;
     private PermissionStatus permissionStatus;
     private Map<CellLocation, String> cellLocationToUserName;
+    private Timer sheetNameRefresher;
 
     public static final int REFRESH_INTERVAL = 500;
     public static final int INITIAL_DELAY = 0;
@@ -93,6 +94,30 @@ public class MainController {
         progressManager = new ProgressManager();
 
         adjustScrollPanePosition();
+    }
+
+//    public void startSheetNamesRefresher() {
+//
+//        SheetGridRefresher refresher = new SheetGridRefresher(v ->
+//                NewVersionOfSheetIsAvailable(), this::getSheetVersion);
+//
+//        timer = new Timer();
+//        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
+//    }
+
+    public void startSheetNamesRefresher() {
+        SheetGridRefresher refresher = new SheetGridRefresher(v ->
+                NewVersionOfSheetIsAvailable(), this::getSheetVersion);
+
+        sheetNameRefresher = new Timer();
+        sheetNameRefresher.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
+    }
+
+    public void stopSheetNamesRefresher() {
+        if (sheetNameRefresher != null) {
+            sheetNameRefresher.cancel(); // Stops the timer and prevents further execution
+            sheetNameRefresher = null; // Optionally, reset to null for later re-initialization
+        }
     }
 
     private void adjustScrollPanePosition() {
@@ -509,7 +534,9 @@ public class MainController {
 
     public void showDashBoardScreen(String userName) {
         if (app != null) {
-            app.showDashBoardScreen(userName);  // Switch to main app screen using the app reference
+            app.showDashBoardScreen(userName);
+            dashController.setActive();
+            stopSheetNamesRefresher();
         }
     }
 
@@ -544,6 +571,7 @@ public class MainController {
                             startSheetNamesRefresher();
                         }
                     });
+
                 } else {
                     model.setNewerVersionOfSheet(false);
                     fetchDtoSheetCellAsync();
@@ -576,15 +604,6 @@ public class MainController {
         this.permissionStatus = permissionStatus;
         updateCurrentGridSheet(sheetName);
 
-    }
-
-    public void startSheetNamesRefresher() {
-
-        SheetGridRefresher refresher = new SheetGridRefresher(v ->
-                NewVersionOfSheetIsAvailable(), this::getSheetVersion);
-
-        timer = new Timer();
-        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL); //
     }
 
     public void NewVersionOfSheetIsAvailable(){
@@ -646,5 +665,9 @@ public class MainController {
 
     public BooleanProperty getNewerVersionOfSheetProperty(){
         return model.getNewerVersionOfSheetProperty();
+    }
+
+    public void resetCustomizationInGrid() {
+        gridScrollerController.resetCustomizationInAllSheets();
     }
 }

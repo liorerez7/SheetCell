@@ -38,9 +38,8 @@ public class GridController {
     private Map<CellLocation, Label> cellLocationToLabel;
     private Map<String, Integer> columnToWidthDelta;
     private Map<String, Integer> rowToHeightDelta;
-    private Map<String, SheetCustomization> sheetNameToCustomization;
     private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel;
-//    private Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = new HashMap<>();
+    private Map<String, SheetCustomization> sheetNameToCustomization;
 
     private MainController mainController;
 
@@ -725,6 +724,16 @@ public class GridController {
     private void applyGridColors(GridPane grid) {
         gridScroller.setStyle("-fx-background-color: #e8f0f6;"); // Replace with your desired color
         grid.setStyle("-fx-background-color: #e8f0f6;");
+    }
+
+    public void resetCustomizationInAllSheets() {
+        sheetNameToCustomization.forEach((sheetName, customization) -> {
+            customization.getCellLocationToCustomCellLabel().clear();
+            customization.getColumnToWidthDelta().clear();
+            customization.getRowToHeightDelta().clear();
+            customization.getCellLocationToLabel().clear();
+            sheetName = null;
+        });
     }
 
 

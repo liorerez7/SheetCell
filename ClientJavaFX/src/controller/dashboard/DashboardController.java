@@ -84,6 +84,9 @@ public class DashboardController {
     private final IntegerProperty myPermissionResponses = new SimpleIntegerProperty(0);
     private Timeline manageAccessRequestsButtonTimeline;
     private Map<PermissionLine, String> permissionLineToTimestamp = new HashMap<>();
+    private Timer sheetNamesTimer;
+    private Timer responsesTimer;
+    private Timer chatAreaTimer;
 
 
 
@@ -95,9 +98,10 @@ public class DashboardController {
     @FXML
     public void initialize() {
         initializeTables();
-        startSheetNamesRefresher();
-        startResponsesRefresher();
-        startListRefresher();
+//        startSheetNamesRefresher();
+//        startResponsesRefresher();
+//        startListRefresher();
+//        setActive();
         setupSheetSelectionListener();
         popUpManager = new DashboardPopUpManager(this);
         viewSheetButton.setDisable(true);
@@ -113,6 +117,61 @@ public class DashboardController {
                 stopButtonSparkEffect();
             }
         });
+    }
+
+    public void startSheetNamesRefresher() {
+        SheetNamesRefresher refresher = new SheetNamesRefresher(this::addAllSheetInfoLines, this::displayError);
+        timer = new Timer();
+        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
+    }
+
+    private void startResponsesRefresher() {
+        ResponsesRefresher refresher = new ResponsesRefresher(this::setMyPermissionResponses);
+        timer = new Timer();
+        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
+    }
+
+    public void startListRefresher() {
+        ChatAreaRefresher chatAreaRefresher = new ChatAreaRefresher(
+                chatVersion,
+                this::updateChatLines);
+        timer = new Timer();
+        timer.schedule(chatAreaRefresher, INITIAL_DELAY, REFRESH_INTERVAL);
+    }
+
+    public void setActive() {
+        startRefreshers();
+    }
+
+    public void setUnActive() {
+        stopRefreshers();
+    }
+
+    private void startRefreshers() {
+        if (sheetNamesTimer == null) {
+            startSheetNamesRefresher();
+        }
+        if (responsesTimer == null) {
+            startResponsesRefresher();
+        }
+        if (chatAreaTimer == null) {
+            startListRefresher();
+        }
+    }
+
+    private void stopRefreshers() {
+        if (sheetNamesTimer != null) {
+            sheetNamesTimer.cancel();
+            sheetNamesTimer = null;
+        }
+        if (responsesTimer != null) {
+            responsesTimer.cancel();
+            responsesTimer = null;
+        }
+        if (chatAreaTimer != null) {
+            chatAreaTimer.cancel();
+            chatAreaTimer = null;
+        }
     }
 
     @FXML
@@ -131,6 +190,7 @@ public class DashboardController {
                     case READER:
                         mainController.updateCurrentGridSheet(sheetName, status);
                         mainController.showMainAppScreen();
+                        setUnActive();
                         break;
                     case NONE:
                         mainController.createErrorPopup("You do not have permission to view this sheet", "Error");
@@ -189,7 +249,10 @@ public class DashboardController {
                         currentSheetInfoLines.clear();
                         currentPermissions.clear();
 
+                        setUnActive();
+
                         mainController.showLoginScreen();
+                        mainController.resetCustomizationInGrid();
                     });
                 }
             }
@@ -303,25 +366,9 @@ public class DashboardController {
         }
     }
 
-    public void startListRefresher() {
-        ChatAreaRefresher chatAreaRefresher = new ChatAreaRefresher(
-                chatVersion,
-                this::updateChatLines);
-        timer = new Timer();
-        timer.schedule(chatAreaRefresher, INITIAL_DELAY, REFRESH_INTERVAL);
-    }
 
-    public void startSheetNamesRefresher() {
-        SheetNamesRefresher refresher = new SheetNamesRefresher(this::addAllSheetInfoLines, this::displayError);
-        timer = new Timer();
-        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
-    }
 
-    private void startResponsesRefresher() {
-        ResponsesRefresher refresher = new ResponsesRefresher(this::setMyPermissionResponses);
-        timer = new Timer();
-        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
-    }
+
 
     private void setMyPermissionResponses(Integer responsesCount) {
         // Update the myPermissionResponses property in the UI thread
@@ -354,12 +401,6 @@ public class DashboardController {
             manageAccessRequestsButtonTimeline.stop();
             // Reset to the original color when the button is disabled
             manageAccessRequestsButton.setStyle("-fx-background-color: #2196F3;");
-        }
-    }
-
-    public void stopSheetNamesRefresher() {
-        if (timer != null) {
-            timer.cancel();
         }
     }
 
