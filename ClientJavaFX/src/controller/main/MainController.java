@@ -61,6 +61,7 @@ public class MainController {
     private SheetCellApp app;  // Reference to the main application
     private final Model model;
     private final PopUpWindowsHandler popUpWindowsHandler;
+    private final OperationHandler operationHandler;
     private final ThemeManager themeManager;
     private ProgressManager progressManager;
     private DashboardController dashController;
@@ -73,7 +74,6 @@ public class MainController {
 
     public static final int REFRESH_INTERVAL = 500;
     public static final int INITIAL_DELAY = 0;
-
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -104,6 +104,7 @@ public class MainController {
     public MainController() {
         model = new Model(null);
         popUpWindowsHandler = new PopUpWindowsHandler();
+        operationHandler = new OperationHandler(popUpWindowsHandler, gridScrollerController, dtoSheetCellAsDataParameter, model);
         themeManager = new ThemeManager(mainPane, leftCommands);
     }
 
@@ -289,10 +290,6 @@ public class MainController {
         });
     }
 
-    public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
-        popUpWindowsHandler.createErrorPopUpCircularDependency(dtoSheetCell, gridScrollerController, cycle);
-    }
-
     public void createErrorPopup(String message, String title) {
         popUpWindowsHandler.createErrorPopup(message, title);
     }
@@ -385,48 +382,6 @@ public class MainController {
         });
     }
 
-    public void sortRowsButtonClicked() {
-
-        SortRowsData sortRowsData = popUpWindowsHandler.openSortRowsWindow();
-        String columns = sortRowsData.getColumnsToSortBy();
-        String range = sortRowsData.getRange();
-
-        if(columns == null || range == null || columns.isEmpty() || range.isEmpty()){
-            return;
-        }
-
-        DtoContainerData dtoContainerData = dtoSheetCellAsDataParameter.sortSheetCell(range,columns);
-        Platform.runLater(() -> createSortGridPopUp(dtoContainerData));
-    }
-
-    public void filterDataButtonClicked() {
-        // Open the filter data window and retrieve user input
-        FilterGridData filterGridData = popUpWindowsHandler.openFilterDataWindow();
-        String range = filterGridData.getRange();
-        String filterColumn = filterGridData.getColumnsToFilterBy();
-
-        // Validate user input
-        if (range == null || filterColumn == null || filterColumn.isEmpty()) {
-            return; // Exit if input is invalid
-        }
-
-        Map<Character, Set<String>> columnValues = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(filterColumn,range);
-
-        Platform.runLater(() -> {
-            Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
-            boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
-
-            // Proceed only if the filter is not empty
-            if (!isFilterEmpty) {
-                // Pass the filter and range information in the second HTTP request
-                DtoContainerData filteredSheetCell = dtoSheetCellAsDataParameter.filterSheetCell(range, filter);
-                if (filteredSheetCell != null) {
-                    Platform.runLater(() -> createFilterGridPopUpp(filteredSheetCell));
-                }
-            }
-        });
-    }
-
     public void cellClicked(String location) {
 
         DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(location);
@@ -483,14 +438,6 @@ public class MainController {
        ;
     }
 
-    private void createSortGridPopUp(DtoContainerData dtoContainerData) {
-    popUpWindowsHandler.openSortGridPopUp(dtoContainerData, gridScrollerController);
-    }
-
-    private void createFilterGridPopUpp(DtoContainerData filteredSheetCell) {
-        popUpWindowsHandler.openFilterGridPopUp(filteredSheetCell, gridScrollerController);
-    }
-
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
         gridScrollerController.changingGridConstraints(rowOrCol,toIncreaseOrDecrease);
     }
@@ -520,112 +467,32 @@ public class MainController {
     }
 
     public void runtimeAnalysisClicked() {
-
-        RunTimeAnalysisData runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
-        if (runTimeAnalysisData.getCellId().isEmpty()) {
-            return;
-        }
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                String cellId = runTimeAnalysisData.getCellId().toUpperCase();
-                int startingValue = runTimeAnalysisData.getStartingValue();
-                int endingValue = runTimeAnalysisData.getEndingValue();
-                int stepValue = runTimeAnalysisData.getStepValue();
-                String currentValue;
-
-
-                DtoSheetCell dtoSheetCell = dtoSheetCellAsDataParameter;
-
-                if (dtoSheetCell == null) {
-                    return;
-                }
-
-                DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(cellId);
-
-                if (dtoCell == null) {
-                    return;
-                }
-
-                currentValue = dtoCell.getEffectiveValue().getValue().toString();
-
-                double currentVal = validateCellValue(currentValue, startingValue, endingValue);
-                if (Double.isNaN(currentVal)) {
-                    return;
-                }
-
-                char col = cellId.charAt(0);
-                String row = cellId.substring(1);
-
-                Platform.runLater(() -> popUpWindowsHandler.showRuntimeAnalysisPopup(
-                        dtoSheetCell, startingValue, endingValue,
-                        stepValue, currentVal, col, row, model, gridScrollerController)
-                );
-
-            } catch (Exception e) {
-                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error processing runtime analysis"));
-            }
-        });
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.runTimeAnalysis();
     }
 
-    private double validateCellValue(String currentValue, int startingValue, int endingValue) {
-        try {
-            double currentVal = Double.parseDouble(currentValue);
-            if (currentVal < startingValue || currentVal > endingValue) {
-                return startingValue;  // Out of range, reset to starting value
-            }
-            return currentVal;
-        } catch (NumberFormatException e) {
-            Platform.runLater(() -> createErrorPopup("Cell value must be a number", "Error"));
-            return Double.NaN;  // Return NaN to indicate an invalid value
-        }
+    public void ChartGraphClicked() {
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.makeGraph(true);
     }
 
-    public void makeGraphClicked(boolean isChartGraph) {
-        // Step 1: Open the Graph Window and get the selected columns and titles
-        List<String> columnsForXYaxis = popUpWindowsHandler.openGraphWindow();
+    public void linearGraphClicked() {
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.makeGraph(false);
+    }
 
-        if (columnsForXYaxis == null || columnsForXYaxis.size() != 4) {
-            return;
-        }
+    public void sortRowsButtonClicked() {
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.sortRows();
+    }
 
-        char xAxis = columnsForXYaxis.get(0).charAt(0);
-        char yAxis = columnsForXYaxis.get(1).charAt(0);
-        List<Character> columns = new ArrayList<>();
-        columns.add(xAxis);
-        columns.add(yAxis);
-
-        String xTitle = columnsForXYaxis.get(2);
-        String yTitle = columnsForXYaxis.get(3);
-
-        Map<Character, Set<String>> columnsXYaxisToStrings = dtoSheetCellAsDataParameter.getUniqueStringsInColumn(columns,isChartGraph);
-
-        if (columnsXYaxisToStrings == null) {
-            return;
-        }
-
-        // Open the filter popup and get the filtered columns
-        Platform.runLater(() -> {
-            Map<Character, List<String>> filteredColumnsXYaxisToStrings = popUpWindowsHandler.openFilterDataWithOrderPopUp(
-                    xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
-
-            if (filteredColumnsXYaxisToStrings != null) {
-                Platform.runLater(() -> popUpWindowsHandler.openGraphPopUp(
-                        xAxis, xTitle, yTitle, filteredColumnsXYaxisToStrings, isChartGraph));
-            }
-        });
+    public void filterDataButtonClicked() {
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.filterGrid();
     }
 
     public String getSheetName() {
         return sheetName;
-    }
-
-    public void ChartGraphClicked() {
-        makeGraphClicked(true);
-    }
-
-    public void linearGraphClicked() {
-        makeGraphClicked(false);
     }
 
     public void showLoginScreen() {
@@ -741,13 +608,9 @@ public class MainController {
         return userName;
     }
 
-
-
     public void exitApplication() {
         System.exit(0);
     }
-
-
 
     public StringProperty getOriginalValueLabelProperty() {
         return model.getOriginalValueLabelProperty();
@@ -784,5 +647,4 @@ public class MainController {
     public BooleanProperty getNewerVersionOfSheetProperty(){
         return model.getNewerVersionOfSheetProperty();
     }
-
 }
