@@ -113,13 +113,6 @@ public class MainController {
         sheetNameRefresher.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
     }
 
-    public void stopSheetNamesRefresher() {
-        if (sheetNameRefresher != null) {
-            sheetNameRefresher.cancel(); // Stops the timer and prevents further execution
-            sheetNameRefresher = null; // Optionally, reset to null for later re-initialization
-        }
-    }
-
     private void adjustScrollPanePosition() {
         if (gridScroller != null) {
             BorderPane.setMargin(gridScroller, new Insets(20, 0, 20, 10)); // Adjust the top margin to position lower
@@ -536,7 +529,6 @@ public class MainController {
         if (app != null) {
             app.showDashBoardScreen(userName);
             dashController.setActive();
-            stopSheetNamesRefresher();
         }
     }
 

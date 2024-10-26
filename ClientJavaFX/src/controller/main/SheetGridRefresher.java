@@ -52,8 +52,6 @@ public class SheetGridRefresher extends TimerTask {
                         Platform.runLater(() -> updateSheetCallback.accept(null));
                     }
                 } else {
-                    // Handle non-successful HTTP response codes
-                    System.err.println("Server returned an error: " + response.code());
                 }
             }
         });

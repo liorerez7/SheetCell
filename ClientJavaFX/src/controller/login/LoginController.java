@@ -104,6 +104,11 @@ public class LoginController {
         });
     }
 
+    @FXML
+    void quitButtonClicked(ActionEvent event) {
+        Platform.exit();
+    }
+
     private void updateHttpStatusLine(String data) {
        // mainController.updateHttpLine(data);
     }
