@@ -230,3 +230,74 @@
     -fx-padding: 10px;
     -fx-effect: innershadow(two-pass-box, rgba(0, 0, 0, 0.1), 6, 0, 0, 2);
 }
+
+/* Popup background styling to match dashboard screen */
+.popup-container {
+    -fx-background-color: #e0e7ff; /* Matching dashboard background */
+    -fx-background-radius: 15px;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 15px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 12, 0, 0, 6);
+}
+
+/* Enhanced header styling for popup */
+.popup-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4e54c8; /* Complementary dark blue */
+    -fx-padding-bottom: 15px;
+    -fx-alignment: center;
+}
+
+/* Styling for TextField in popup */
+.popup-textfield {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #b0b0b0; /* Subtle prompt text color */
+}
+
+/* Styling for Spinners in popup */
+.popup-spinner {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-padding: 4px;
+}
+
+.popup-spinner .increment-arrow,
+.popup-spinner .decrement-arrow {
+    -fx-background-color: #4e54c8; /* Matching blue for arrows */
+    -fx-text-fill: white;
+}
+
+/* Styling for the submit button */
+.popup-submit-button {
+    -fx-background-color: #4CAF50; /* Green for positive action */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 20px;
+    -fx-max-width: 160px;
+    -fx-cursor: hand;
+}
+
+.popup-submit-button:hover {
+    -fx-background-color: #43a047; /* Slightly darker green on hover */
+}
+
+.popup-submit-button:pressed {
+    -fx-background-color: #388e3c; /* Darker green on press */
+}
+
+/* Label styling for popup input fields */
+.popup-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333; /* Dark text for readability */
+}
+
+

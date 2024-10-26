@@ -297,4 +297,94 @@ public class DashboardPopUpManager {
             return false;
         });
     }
+
+    public void showCreateNewSheetPopup() {
+        // Create the popup stage
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Create New Sheet");
+        popupStage.setResizable(false); // Disable resizing
+
+        // Create header
+        Label headerLabel = new Label("Create New Sheet");
+        headerLabel.getStyleClass().add("popup-header");
+
+        // Create input fields
+        TextField sheetNameField = new TextField();
+        sheetNameField.setPromptText("Enter sheet name");
+        sheetNameField.getStyleClass().add("popup-textfield");
+
+        Spinner<Integer> cellWidthSpinner = new Spinner<>(10, 50, 10);
+        Spinner<Integer> cellLengthSpinner = new Spinner<>(10, 50, 10);
+        Spinner<Integer> columnsSpinner = new Spinner<>(1, 24, 1); // Max columns set to 24
+        Spinner<Integer> rowsSpinner = new Spinner<>(1, 1000, 1);
+
+        // Styling spinners
+        cellWidthSpinner.getStyleClass().add("popup-spinner");
+        cellLengthSpinner.getStyleClass().add("popup-spinner");
+        columnsSpinner.getStyleClass().add("popup-spinner");
+        rowsSpinner.getStyleClass().add("popup-spinner");
+
+        // Create labels for input fields
+        Label nameLabel = new Label("Sheet Name:");
+        Label widthLabel = new Label("Cell Width (10-50):");
+        Label lengthLabel = new Label("Cell Length (10-50):");
+        Label columnsLabel = new Label("Number of Columns:");
+        Label rowsLabel = new Label("Number of Rows:");
+
+        // Create Submit button
+        Button submitButton = new Button("Create Sheet");
+        submitButton.getStyleClass().add("popup-submit-button");
+
+        submitButton.setOnAction(e -> {
+            String sheetName = sheetNameField.getText();
+            int cellWidth = cellWidthSpinner.getValue();
+            int cellLength = cellLengthSpinner.getValue();
+            int numColumns = columnsSpinner.getValue();
+            int numRows = rowsSpinner.getValue();
+
+            if (sheetName.isEmpty()) {
+                showAlert("Error", "Sheet name cannot be empty.");
+            } else {
+                dashboardController.createNewSheet(sheetName, cellWidth, cellLength, numColumns, numRows);
+                popupStage.close();
+            }
+        });
+
+        // Arrange fields in a layout
+        VBox layout = new VBox(12);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.getStyleClass().add("popup-container");
+        layout.setMinWidth(350); // Minimum and fixed width
+        layout.setMinHeight(550); // Minimum and fixed height
+        layout.getChildren().addAll(
+                headerLabel, nameLabel, sheetNameField,
+                widthLabel, cellWidthSpinner,
+                lengthLabel, cellLengthSpinner,
+                columnsLabel, columnsSpinner,
+                rowsLabel, rowsSpinner,
+                submitButton
+        );
+
+        // Set the scene directly with the layout
+        Scene scene = new Scene(layout, 350, 550); // Fixed dimensions
+        scene.getStylesheets().add(getClass().getResource("/controller/dashboard/dashboard.css").toExternalForm());
+
+        popupStage.setScene(scene);
+        popupStage.show();
+    }
+
+
+
+
+
+
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }

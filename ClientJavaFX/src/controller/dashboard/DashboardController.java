@@ -71,6 +71,8 @@ public class DashboardController {
     @FXML private Button sendMessageButton;
     @FXML private TextArea chatMessagesArea;
     @FXML private TextField chatInputField;
+    @FXML private Button createNewSheetButton;
+
 
     private MainController mainController;
     private ObservableList<SheetInfo> fileEntries;  // Updated to SheetInfo
@@ -208,6 +210,12 @@ public class DashboardController {
         if (selectedFile != null) {
             mainController.initializeGridBasedOnXML(selectedFile, selectedFile.getAbsolutePath());
         }
+    }
+
+
+    @FXML
+    void onCreateNewSheetButton(ActionEvent event) {
+        popUpManager.showCreateNewSheetPopup();
     }
 
     @FXML
@@ -365,10 +373,6 @@ public class DashboardController {
             });
         }
     }
-
-
-
-
 
     private void setMyPermissionResponses(Integer responsesCount) {
         // Update the myPermissionResponses property in the UI thread
@@ -755,6 +759,10 @@ public class DashboardController {
                 refreshPermissionTable(newPermissions);
             }
         });
+    }
+
+    public void createNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows) {
+        int x = 5 ;
     }
 
     public static class PermissionRow {
