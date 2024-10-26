@@ -41,7 +41,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 
-public class MainController implements Closeable {
+public class MainController {
 
     @FXML private HeaderController headerController;
     @FXML private GridPane header;  // Updated from VBox to GridPane
@@ -75,7 +75,6 @@ public class MainController implements Closeable {
     public static final int INITIAL_DELAY = 0;
 
 
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -102,14 +101,6 @@ public class MainController implements Closeable {
         }
     }
 
-    public StringProperty getVersionProperty() {
-        return model.getLatestUpdatedVersionProperty();
-    }
-
-    public BooleanProperty getIsCellLabelClickedProperty() {
-        return model.getIsCellLebalClickedProperty();
-    }
-
     public MainController() {
         model = new Model(null);
         popUpWindowsHandler = new PopUpWindowsHandler();
@@ -134,7 +125,6 @@ public class MainController implements Closeable {
         }
     }
 
-    // Helper method to fetch the DtoSheetCell asynchronously
     private void fetchDtoSheetCellAsync() {
         HttpRequestManager.sendGetAsyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>(), new Callback() {
             @Override
@@ -204,7 +194,6 @@ public class MainController implements Closeable {
         });
     }
 
-    // Helper method to update the UI with the newly loaded DtoSheetCell
     private void updateUIWithNewSheetCell(DtoSheetCell newDtoSheetCell) {
         //headerController.FileHasBeenLoaded(absolutePath);
         Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeGrid(newDtoSheetCell);
@@ -298,10 +287,6 @@ public class MainController implements Closeable {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
         });
-    }
-
-    public StringProperty getOriginalValueLabelProperty() {
-        return model.getOriginalValueLabelProperty();
     }
 
     public void createErrorPopUpCircularDependency(DtoSheetCell dtoSheetCell, List<CellLocation> cycle) {
@@ -518,18 +503,6 @@ public class MainController implements Closeable {
         model.setRowSelected(true);
     }
 
-    public BooleanProperty getIsColumnSelectedProperty() {
-        return model.getIsColumnSelectedProperty();
-    }
-
-    public BooleanProperty getIsRowSelectedProperty() {
-        return model.getIsRowSelectedProperty();
-    }
-
-    public BooleanProperty getReadingXMLSuccessProperty() {
-        return model.getReadingXMLSuccess();
-    }
-
     public void changeTextAlignment(String alignment, Label selectedColumnLabel) {
         gridScrollerController.changeTextAlignment(alignment, selectedColumnLabel.getText());
     }
@@ -655,11 +628,6 @@ public class MainController implements Closeable {
         makeGraphClicked(false);
     }
 
-    @Override
-    public void close() throws IOException {
-
-    }
-
     public void showLoginScreen() {
         if (app != null) {
             app.showLoginScreen();  // Switch to login screen using the app reference
@@ -756,10 +724,6 @@ public class MainController implements Closeable {
         model.setNewerVersionOfSheet(true);
     }
 
-    public BooleanProperty getNewerVersionOfSheetProperty(){
-        return model.getNewerVersionOfSheetProperty();
-    }
-
     public String getSheetVersion() {
         return dtoSheetCellAsDataParameter.getLatestVersion() + "";
     }
@@ -777,15 +741,48 @@ public class MainController implements Closeable {
         return userName;
     }
 
-    public StringProperty getLastUpdatedUserNameProperty() {
-        return model.getUserNameProperty();
-    }
+
 
     public void exitApplication() {
         System.exit(0);
     }
 
+
+
+    public StringProperty getOriginalValueLabelProperty() {
+        return model.getOriginalValueLabelProperty();
+    }
+
+    public BooleanProperty getIsColumnSelectedProperty() {
+        return model.getIsColumnSelectedProperty();
+    }
+
+    public BooleanProperty getIsRowSelectedProperty() {
+        return model.getIsRowSelectedProperty();
+    }
+
+    public BooleanProperty getReadingXMLSuccessProperty() {
+        return model.getReadingXMLSuccess();
+    }
+
     public BooleanProperty getColorProperty() {
         return model.getColorProperty();
     }
+
+    public StringProperty getVersionProperty() {
+        return model.getLatestUpdatedVersionProperty();
+    }
+
+    public BooleanProperty getIsCellLabelClickedProperty() {
+        return model.getIsCellLebalClickedProperty();
+    }
+
+    public StringProperty getLastUpdatedUserNameProperty() {
+        return model.getUserNameProperty();
+    }
+
+    public BooleanProperty getNewerVersionOfSheetProperty(){
+        return model.getNewerVersionOfSheetProperty();
+    }
+
 }
