@@ -248,6 +248,13 @@ public class DashboardController {
 
     @FXML
     private void onOpenChatButtonClicked() {
+
+        if(openChatButton.getText().equals("Open Chat")){
+            openChatButton.setText("Close Chat");
+        }else {
+            openChatButton.setText("Open Chat");
+        }
+
         if (chatArea.isVisible()) {
             chatArea.setVisible(false);  // Hide the chat area
         } else {
