@@ -44,10 +44,7 @@ public class Constants {
     public static final String UPDATE_CELL_ENDPOINT = FULL_SERVER_PATH + "/updateCell";
     public static final String ADD_RANGE_ENDPOINT = FULL_SERVER_PATH + "/addRange";
     public static final String GET_REQUESTED_RANGE_ENDPOINT = FULL_SERVER_PATH + "/requestedRange";
-    public static final String GET_ALL_RANGES_ENDPOINT = FULL_SERVER_PATH + "/allRanges";
     public static final String DELETE_RANGE_ENDPOINT = FULL_SERVER_PATH + "/deleteRange";
-    public static final String SAVE_CURRENT_SHEET_CELL_STATE_ENDPOINT = FULL_SERVER_PATH + "/saveCurrentSheetCellState";
-    public static final String RESTORE_CURRENT_SHEET_CELL_STATE_ENDPOINT = FULL_SERVER_PATH + "/restoreCurrentSheetCellState";
     public static final String UPDATE_SHEET_NAME_IN_SEASSION_ENDPOINT = FULL_SERVER_PATH + "/updateSheetNameInSession";
     public static final String GET_ALL_SHEET_NAMES = FULL_SERVER_PATH + "/allSheetNames";
     public static final String GET_IS_SHEET_UPDATED = FULL_SERVER_PATH + "/isSheetUpdated";
@@ -61,6 +58,8 @@ public class Constants {
     public static final String GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT = FULL_SERVER_PATH + "/userNameThatLastUpdatedCell";
     public static final String RUNTIME_ANALYSIS = FULL_SERVER_PATH + "/runtimeAnalysis";
     public static final String GET_ALL_SHEET_CELL_VERSIONS_ENDPOINT = FULL_SERVER_PATH + "/allSheetCellVersions";
+    public static final String CREATE_NEW_SHEET_ENDPOINT = FULL_SERVER_PATH + "/createNewSheet";
+
     public static final String CANT_UPDATE_CELL_NO_CLICK_ON_LABEL = "first click on the cell \nyou wish to modify its value";
 
 

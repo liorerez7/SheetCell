@@ -20,6 +20,7 @@
                 <VBox alignment="TOP_CENTER" prefWidth="200" spacing="20" style="-fx-padding: 15;" styleClass="left-pane">
                     <Label fx:id="helloUserLabel" styleClass="dashboard-label" text="Hello" />
                     <Button fx:id="loadSheetFileButton" onAction="#onLoadSheetFileButtonClicked" styleClass="dashboard-load-button" text="Upload File" />
+               <Button fx:id="createNewSheetButton" onAction="#onCreateNewSheetButton" styleClass="dashboard-load-button" text="Create New Sheet" />
                     <Button fx:id="viewSheetButton" onAction="#onViewSheetButtonClicked" styleClass="dashboard-button" text="View Sheet" />
                     <Button fx:id="requestPermissionButton" onAction="#onRequestPermissionButtonClicked" styleClass="dashboard-button" text="Request Permission" />
                     <Button fx:id="manageAccessRequestsButton" onAction="#onManageAccessRequestsButtonClicked" styleClass="dashboard-button" text="Manage Access Requests" />

@@ -96,15 +96,6 @@ public class MainController {
         adjustScrollPanePosition();
     }
 
-//    public void startSheetNamesRefresher() {
-//
-//        SheetGridRefresher refresher = new SheetGridRefresher(v ->
-//                NewVersionOfSheetIsAvailable(), this::getSheetVersion);
-//
-//        timer = new Timer();
-//        timer.schedule(refresher, INITIAL_DELAY, REFRESH_INTERVAL);
-//    }
-
     public void startSheetNamesRefresher() {
         SheetGridRefresher refresher = new SheetGridRefresher(v ->
                 NewVersionOfSheetIsAvailable(), this::getSheetVersion);
@@ -126,7 +117,7 @@ public class MainController {
         themeManager = new ThemeManager(mainPane, leftCommands);
     }
 
-    public void initializeGridBasedOnXML(File xmlFile, String absolutePath) {
+    public void initializeGridBasedOnXML(File xmlFile) {
 
         try {
             try (Response uploadFileResponse = HttpRequestManager.sendFileSync(Constants.INIT_SHEET_CELL_ENDPOINT, xmlFile)) {
@@ -142,6 +133,34 @@ public class MainController {
         } catch (IOException e) {
             Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
         }
+    }
+
+    public void createNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows) {
+
+        Map<String,String> params = new HashMap<>();
+        params.put("sheetName",sheetName);
+        params.put("cellWidth",cellWidth + "");
+        params.put("cellLength",cellLength + "");
+        params.put("numColumns",numColumns + "");
+        params.put("numRows",numRows + "");
+
+        HttpRequestManager.sendPostAsyncRequest(Constants.CREATE_NEW_SHEET_ENDPOINT, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> createErrorPopup("Failed to create new sheet", "Error"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try(response){
+                    if (!response.isSuccessful()) {
+                        String errorAsJson = response.body().string();
+                        String errorMessage = Constants.GSON_INSTANCE.fromJson(errorAsJson, String.class);
+                        Platform.runLater(() -> createErrorPopup(errorMessage, "Error"));
+                    }
+                }
+            }
+        });
     }
 
     private void fetchDtoSheetCellAsync() {
@@ -412,16 +431,15 @@ public class MainController {
             actionLineController.updateCssWhenUpdatingCell(location);
             gridScrollerController.clearAllHighlights();
             gridScrollerController.showNeighbors(dtoCell);
-
-
-           // customizeController.resetComboBox();
             headerController.resetComboBox();
-
             model.setColumnSelected(false);
             model.setRowSelected(false);
             model.setCellLocationProperty(location);
             String userNameThatUpdatedTheCell = cellLocationToUserName.get(new CellLocation(location.charAt(0), location.substring(1)));
-            model.setUserNameProperty(userNameThatUpdatedTheCell);
+
+            if(userNameThatUpdatedTheCell != null){
+                model.setUserNameProperty(userNameThatUpdatedTheCell);
+            }
         });
     }
 

@@ -141,4 +141,14 @@ public class Engine {
         CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
         return cellLocationToUserName.get(cellLocation);
     }
+
+    public synchronized void createNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows, String userName) {
+        SheetManagerImpl sheetManager = new SheetManagerImpl();
+        sheetManager.createEmptyNewSheet(sheetName, cellWidth, cellLength, numColumns, numRows);
+        DtoSheetCell dtoSheetCell = sheetManager.getSheetCell();
+        initializeCellLocationToUserName(dtoSheetCell, userName);
+        sheetNames.add(sheetName);
+        sheetCells.put(sheetName, sheetManager);
+        sheetInfosManager.AddSheet(sheetName, dtoSheetCell.getSheetSize());
+    }
 }

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GetUserNameLastUpdatedCellServlet extends HttpServlet {
@@ -22,6 +23,11 @@ public class GetUserNameLastUpdatedCellServlet extends HttpServlet {
         try {
             synchronized (engine) {
                 Map<CellLocation,String> cellLocationToUserName = engine.getCellLocationToUserName(sheetName);
+
+                if(cellLocationToUserName == null){
+                    cellLocationToUserName = new HashMap<>();
+                }
+
                 String mapAsJson = Constants.GSON_INSTANCE.toJson(cellLocationToUserName);
                 response.getWriter().write(mapAsJson);
                 response.getWriter().flush();

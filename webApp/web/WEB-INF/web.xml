@@ -24,6 +24,10 @@
         <servlet-class>chat.servlets.sheet.loadXML.UploadXMLFileToSystem</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>CreateNewSheetServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.loadXML.CreateNewSheetServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetMySheetNameServlet</servlet-name>
         <servlet-class>chat.servlets.sheet.name.GetMySheetNameServlet</servlet-class>
     </servlet>
@@ -156,6 +160,10 @@
     <servlet-mapping>
         <servlet-name>UploadXMLFileToSystem</servlet-name>
         <url-pattern>/xmlAddress</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateNewSheetServlet</servlet-name>
+        <url-pattern>/createNewSheet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetSheetNamesServlet</servlet-name>

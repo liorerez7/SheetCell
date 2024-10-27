@@ -208,7 +208,7 @@ public class DashboardController {
     private void onLoadSheetFileButtonClicked(ActionEvent event) {
         File selectedFile = openXMLFileChooser((Stage) loadSheetFileButton.getScene().getWindow());
         if (selectedFile != null) {
-            mainController.initializeGridBasedOnXML(selectedFile, selectedFile.getAbsolutePath());
+            mainController.initializeGridBasedOnXML(selectedFile);
         }
     }
 
@@ -762,7 +762,7 @@ public class DashboardController {
     }
 
     public void createNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows) {
-        int x = 5 ;
+        mainController.createNewSheet(sheetName, cellWidth, cellLength, numColumns, numRows);
     }
 
     public static class PermissionRow {

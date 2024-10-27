@@ -217,4 +217,8 @@ public class SheetManagerImpl implements SheetManager {
     public Set<String> getAllRangeNames() {
         return sheetCell.getAllRangeNames();
     }
+
+    public void createEmptyNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows) {
+        sheetCell = new SheetCellImp(numRows, numColumns, sheetName, cellLength, cellWidth, null);
+    }
 }
