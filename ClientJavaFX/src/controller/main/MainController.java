@@ -525,10 +525,6 @@ public class MainController {
         operationHandler.filterGrid();
     }
 
-    public String getSheetName() {
-        return sheetName;
-    }
-
     public void showLoginScreen() {
         if (app != null) {
             app.showLoginScreen();  // Switch to login screen using the app reference

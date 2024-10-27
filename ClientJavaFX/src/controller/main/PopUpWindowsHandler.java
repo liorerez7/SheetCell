@@ -549,7 +549,9 @@ public class PopUpWindowsHandler {
         popupGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
 
         Platform.runLater(() -> {
-            Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController.initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime);
+            Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController
+                    .initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime);
+
             model.setCellLabelToPropertiesRunTimeAnalysis(cellLocationLabelMap);
             model.bindCellLabelToPropertiesRunTimeAnalysis();
             model.setPropertiesByDtoSheetCellRunTimeAnalsys(sheetCellRunTime);
@@ -616,6 +618,10 @@ public class PopUpWindowsHandler {
 
             popupStage.showAndWait();
         });
+    }
+
+    private void onCellClicked(String location) {
+
     }
 
 

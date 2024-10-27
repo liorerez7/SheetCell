@@ -51,8 +51,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
-//TODO: 1. create a "create new sheet" button
+//TODO:
+//      1. runtime bonus implementation
 //      2. finish scroller for versions
+//      3. develop miniMenu in grid screen
+//      4. remove permissions ability
+//      5. 'auto complete' ability in column/row
+
 
 
 

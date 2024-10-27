@@ -25,6 +25,7 @@ import dto.small_parts.CellLocationFactory;
 import dto.small_parts.EffectiveValue;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 
 public class GridController {
@@ -288,10 +289,6 @@ public class GridController {
             grid.getRowConstraints().add(rowConstraints);
         }
     }
-
-
-
-
 
     private void addColumnHeaders(GridPane grid, int numCols, int cellWidth, int cellLength) {
         for (int col = 1; col <= numCols; col++) {
@@ -670,7 +667,8 @@ public class GridController {
         }
     }
 
-    public Map<CellLocation, Label> initializeRunTimeAnalysisPopupGrid(GridPane grid, DtoSheetCell sheetCell) {
+    public Map<CellLocation, Label> initializeRunTimeAnalysisPopupGrid(GridPane grid,
+                                                                       DtoSheetCell sheetCell) {
 
         Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
 
@@ -707,7 +705,6 @@ public class GridController {
 
                 setLabelSize(newCellLabel, cellWidth, cellLength);
 
-                // Bind the Label's textProperty to the EffectiveValue
                 newCellLabel.setId(location);
                 EffectiveValue effectiveValue = viewSheetCell.get(cellLocation);
                 if (effectiveValue != null) {
@@ -720,6 +717,7 @@ public class GridController {
         }
         return cellLocationToLabel;
     }
+
 
     private void applyGridColors(GridPane grid) {
         gridScroller.setStyle("-fx-background-color: #e8f0f6;"); // Replace with your desired color
@@ -736,58 +734,4 @@ public class GridController {
         });
     }
 
-
-//    public Map<CellLocation, Label> initializeGrid(DtoSheetCell sheetCell) {
-//        neighborsHandler = new NeighborsHandler();
-//
-//        initializeEmptyGrid(sheetCell, grid, false);
-//
-//        int numCols = sheetCell.getNumberOfColumns();
-//        int numRows = sheetCell.getNumberOfRows();
-//        int cellWidth = sheetCell.getCellWidth();
-//        int cellLength = sheetCell.getCellLength();
-//
-//        cellWidth = cellWidth * DELTA_EXTENSION_GRID;
-//        cellLength = cellLength * DELTA_EXTENSION_GRID;
-//
-//
-//        Map<CellLocation, EffectiveValue> viewSheetCell = sheetCell.getViewSheetCell();
-//
-//        // Add cells with Label
-//        for (int row = 1; row <= numRows; row++) {
-//            for (int col = 1; col <= numCols; col++) {
-//
-//                Label cell = new Label();
-//
-//                cell.getStyleClass().add("cell-label");
-//                CustomCellLabel customCellLabel = new CustomCellLabel(cell);
-//                customCellLabel.applyDefaultStyles();
-//                customCellLabel.setAlignment(Pos.CENTER);
-//                customCellLabel.setTextAlignment(TextAlignment.CENTER);
-//                cellLocationToCustomCellLabel.put(CellLocationFactory.fromCellId((char) ('A' + col - 1), String.valueOf(row)), customCellLabel);
-//
-//                setLabelSize(cell, cellWidth, cellLength);
-//                // Bind the Label's textProperty to the EffectiveValue
-//                char colChar = (char) ('A' + col - 1);
-//                String rowString = String.valueOf(row);
-//                cell.setId(colChar + rowString);
-//
-//                CellLocation location = new CellLocation(colChar, rowString);
-//                EffectiveValue effectiveValue = viewSheetCell.get(location);
-//
-//                if (effectiveValue != null) {
-//                    String textForLabel = StringParser.convertValueToLabelText(effectiveValue);
-//                    cell.setText(textForLabel);
-//                }
-//
-//                cell.setOnMouseEntered(event -> onCellMouseEntered(cell.getId()));
-//                cell.setOnMouseExited(event -> onCellMouseExited(cell.getId()));
-//                cell.setOnMouseClicked(event -> onCellClicked(cell.getId()));
-//                cellLocationToLabel.put(location, cell);
-//                grid.add(cell, col, row);
-//            }
-//        }
-//
-//        return cellLocationToLabel;
-//    }
 }
