@@ -300,4 +300,44 @@
     -fx-text-fill: #333; /* Dark text for readability */
 }
 
+/* ComboBox styling for popup with modern look */
+.popup-combobox {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-color: #c5c5d6; /* Subtle grey border for a refined look */
+    -fx-border-radius: 8px; /* Slightly rounded corners */
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 10px; /* Padding for a comfortable touch area */
+    -fx-font-size: 14px;
+    -fx-max-width: 280px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.15), 3, 0, 0, 2); /* Soft shadow */
+}
 
+.popup-combobox:hover {
+    -fx-border-color: #8a8ab6; /* Subtle blue-grey on hover */
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 3); /* Slightly stronger shadow */
+}
+
+.popup-combobox .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #4a4a4a; /* Slightly darker text color for readability */
+    -fx-font-size: 13px;
+    -fx-padding: 6px 8px;
+}
+
+.popup-combobox .list-cell:hover {
+    -fx-background-color: #e6ebf5; /* Soft blue on hover */
+    -fx-text-fill: #333; /* Darker text on hover */
+}
+
+
+
+/* Arrow button styling inside the ComboBox */
+.popup-combobox .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2px;
+}
+
+.popup-combobox .arrow-button .arrow {
+    -fx-background-color: #8a8ab6; /* Matching arrow color */
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Modern arrow shape */
+}

@@ -32,7 +32,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     VersionControlManager versionControlManager;
     private RefGraphBuilder refGraphBuilder;
     private final String name;
-    private int versionNumber = 1;
+    private int versionNumber = 0;
     private static final int maxRows = 50;
     private static final int maxCols = 20;
     private int currentNumberOfRows;
@@ -248,7 +248,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
             expression.evaluate(this);
             cell.setEffectiveValue(expression);
             cell.setActualValue(this);
-            cell.updateVersion(getLatestVersion());
+            cell.updateVersion(1);
         });
         versionControlManager.versionControl();
         updateEffectedByAndOnLists();

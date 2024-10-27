@@ -302,7 +302,7 @@ public class DashboardPopUpManager {
         // Create the popup stage
         Stage popupStage = new Stage();
         popupStage.setTitle("Create New Sheet");
-        popupStage.setResizable(false); // Disable resizing
+        popupStage.setResizable(false);
 
         // Create header
         Label headerLabel = new Label("Create New Sheet");
@@ -313,72 +313,92 @@ public class DashboardPopUpManager {
         sheetNameField.setPromptText("Enter sheet name");
         sheetNameField.getStyleClass().add("popup-textfield");
 
-        Spinner<Integer> cellWidthSpinner = new Spinner<>(10, 50, 10);
-        Spinner<Integer> cellLengthSpinner = new Spinner<>(10, 50, 10);
-        Spinner<Integer> columnsSpinner = new Spinner<>(1, 24, 1); // Max columns set to 24
-        Spinner<Integer> rowsSpinner = new Spinner<>(1, 1000, 1);
+        ComboBox<String> cellSizeComboBox = new ComboBox<>();
+        cellSizeComboBox.getItems().addAll("Small", "Medium", "Large");
+        cellSizeComboBox.getSelectionModel().selectFirst(); // Default to "Small"
+        cellSizeComboBox.getStyleClass().add("popup-combobox");
 
-        // Styling spinners
-        cellWidthSpinner.getStyleClass().add("popup-spinner");
-        cellLengthSpinner.getStyleClass().add("popup-spinner");
+        // Enable text entry in the columns and rows spinners
+        Spinner<Integer> columnsSpinner = new Spinner<>(1, 24, 1);
+        columnsSpinner.setEditable(true);
         columnsSpinner.getStyleClass().add("popup-spinner");
+
+        Spinner<Integer> rowsSpinner = new Spinner<>(1, 1000, 1);
+        rowsSpinner.setEditable(true);
         rowsSpinner.getStyleClass().add("popup-spinner");
 
-        // Create labels for input fields
+        // Event handler to restrict columns and rows input to max values
+        columnsSpinner.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            try {
+                int value = Integer.parseInt(newValue);
+                if (value > 24) columnsSpinner.getEditor().setText("24");
+            } catch (NumberFormatException e) {
+                columnsSpinner.getEditor().setText("1");
+            }
+        });
+
+        rowsSpinner.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            try {
+                int value = Integer.parseInt(newValue);
+                if (value > 1000) rowsSpinner.getEditor().setText("1000");
+            } catch (NumberFormatException e) {
+                rowsSpinner.getEditor().setText("1");
+            }
+        });
+
+        // Create labels
         Label nameLabel = new Label("Sheet Name:");
-        Label widthLabel = new Label("Cell Width (10-50):");
-        Label lengthLabel = new Label("Cell Length (10-50):");
+        Label sizeLabel = new Label("Cell Size:");
         Label columnsLabel = new Label("Number of Columns:");
         Label rowsLabel = new Label("Number of Rows:");
 
-        // Create Submit button
+        // Submit button
         Button submitButton = new Button("Create Sheet");
         submitButton.getStyleClass().add("popup-submit-button");
 
         submitButton.setOnAction(e -> {
             String sheetName = sheetNameField.getText();
-            int cellWidth = cellWidthSpinner.getValue();
-            int cellLength = cellLengthSpinner.getValue();
-            int numColumns = columnsSpinner.getValue();
-            int numRows = rowsSpinner.getValue();
+            String cellSize = cellSizeComboBox.getValue();
+            int numColumns = Integer.parseInt(columnsSpinner.getEditor().getText());
+            int numRows = Integer.parseInt(rowsSpinner.getEditor().getText());
 
             if (sheetName.isEmpty()) {
                 showAlert("Error", "Sheet name cannot be empty.");
             } else {
+                int cellWidth, cellLength;
+                switch (cellSize) {
+                    case "Small": cellWidth = 50; cellLength = 15; break;
+                    case "Medium": cellWidth = 65; cellLength = 20; break;
+                    case "Large": cellWidth = 100; cellLength = 30; break;
+                    default: cellWidth = 50; cellLength = 15;
+                }
+
                 dashboardController.createNewSheet(sheetName, cellWidth, cellLength, numColumns, numRows);
                 popupStage.close();
             }
         });
 
-        // Arrange fields in a layout
+        // Arrange layout
         VBox layout = new VBox(12);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.TOP_CENTER);
         layout.getStyleClass().add("popup-container");
-        layout.setMinWidth(350); // Minimum and fixed width
-        layout.setMinHeight(550); // Minimum and fixed height
+        layout.setMinWidth(350);
+        layout.setMinHeight(550);
         layout.getChildren().addAll(
                 headerLabel, nameLabel, sheetNameField,
-                widthLabel, cellWidthSpinner,
-                lengthLabel, cellLengthSpinner,
+                sizeLabel, cellSizeComboBox,
                 columnsLabel, columnsSpinner,
                 rowsLabel, rowsSpinner,
                 submitButton
         );
 
-        // Set the scene directly with the layout
-        Scene scene = new Scene(layout, 350, 550); // Fixed dimensions
+        Scene scene = new Scene(layout, 350, 550);
         scene.getStylesheets().add(getClass().getResource("/controller/dashboard/dashboard.css").toExternalForm());
 
         popupStage.setScene(scene);
         popupStage.show();
     }
-
-
-
-
-
-
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -386,5 +406,7 @@ public class DashboardPopUpManager {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 
 }

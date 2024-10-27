@@ -10,7 +10,6 @@ import controller.menu.HeaderController;
 import controller.ranges.RangesController;
 import controller.actionLine.ActionLineController;
 import dto.components.DtoCell;
-import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import app.SheetCellApp;
 import utilities.javafx.smallparts.*;
@@ -33,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import dto.small_parts.CellLocation;
 
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -443,7 +441,7 @@ public class MainController {
         });
     }
 
-    public void specificVersionClicked() {
+    public void previousVersionsClicked() {
 
         Map<String,String> parmas = new HashMap<>();
         parmas.put("versionNumber",dtoSheetCellAsDataParameter.getLatestVersion() + "");

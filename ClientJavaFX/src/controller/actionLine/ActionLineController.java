@@ -4,14 +4,12 @@ import controller.main.MainController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import utilities.javafx.Utilities;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 public class ActionLineController {
 
@@ -117,7 +115,7 @@ public class ActionLineController {
 
     @FXML
     void OnPreviousVersionsButtonClicked(ActionEvent event) {
-        mainController.specificVersionClicked();
+        mainController.previousVersionsClicked();
     }
 
     public void disableWriterButtons() {
