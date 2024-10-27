@@ -22,6 +22,7 @@ public class Engine {
     private final UserManager userManager = new UserManager();
     private final ChatManager chatManager = new ChatManager();
     private final PermissionManager permissionManager = new PermissionManager();
+    private Map<String, SheetManagerImpl> usernameToTemporarySheetManager = new HashMap<>();
 
     private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager, userManager);
 
@@ -152,7 +153,20 @@ public class Engine {
         sheetInfosManager.AddSheet(sheetName, dtoSheetCell.getSheetSize());
     }
 
-    public synchronized SheetCellImp createSheetCellOnlyForRunTime(String sheetName, int versionNumber) {
+    public synchronized SheetManagerImpl createSheetCellOnlyForRunTime(String sheetName, int versionNumber) {
         return sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber);
+    }
+
+    public void removeTemporarySheet(String username) {
+        SheetManager sheetManager = usernameToTemporarySheetManager.get(username);
+        sheetManager = null;
+    }
+
+    public void addTemporarySheet(String username, int versionNumber, String sheetName) {
+        usernameToTemporarySheetManager.put(username, sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber));
+    }
+
+    public SheetManager getTemporarySheetManager(String username) {
+        return usernameToTemporarySheetManager.get(username);
     }
 }

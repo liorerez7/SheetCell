@@ -26,5 +26,4 @@ public interface SheetCell extends
 
     Set<String> getAllRangeNames();
 
-    SheetCellImp restoreSheetCellOnlyForRunTimeAnalysis(int versionNumber);
 }

@@ -4,8 +4,16 @@ import controller.grid.GridController;
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import javafx.application.Platform;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
+import utilities.Constants;
+import utilities.http.manager.HttpRequestManager;
 import utilities.javafx.Model;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,7 +82,30 @@ public class OperationHandler {
 
     public void runTimeAnalysis() {
 
-        popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, model, gridController);
+        Map<String,String> params = new HashMap<>();
+        params.put("versionNumber", String.valueOf(dtoSheetCell.getLatestVersion()));
+        params.put("createOrDelete", "create");
+
+
+        HttpRequestManager.sendPostAsyncRequest(Constants.POST_TEMP_SHEET_IN_SERVLET, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try(response){
+                    if (!response.isSuccessful()) {
+
+                    }
+                    Platform.runLater(() -> {
+                        popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, model, gridController);
+                    });
+                }
+            }
+        });
+
+
 
 
 //        var runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();

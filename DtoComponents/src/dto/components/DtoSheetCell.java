@@ -16,7 +16,6 @@ import java.util.*;
 public class DtoSheetCell implements Serializable {
 
     private Map<CellLocation, EffectiveValue> cellLocationToEffectiveValue = new HashMap<>();
-   // private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
     private Map<String,List<CellLocation>> ranges = new HashMap<>();
     private Map<String,DtoCell> cellIdToDtoCell = new HashMap<>();
 

@@ -60,6 +60,10 @@
         <servlet-class>chat.servlets.sheet.cell.RunTimeAnalysisServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>PostTempSheetServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.cell.PostTempSheetServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetUserNameLastUpdatedCellServlet</servlet-name>
         <servlet-class>chat.servlets.sheet.cell.GetUserNameLastUpdatedCellServlet</servlet-class>
     </servlet>
@@ -131,6 +135,10 @@
     <servlet-mapping>
         <servlet-name>RunTimeAnalysisServlet</servlet-name>
         <url-pattern>/runtimeAnalysis</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostTempSheetServlet</servlet-name>
+        <url-pattern>/postTempSheet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetUserNameLastUpdatedCellServlet</servlet-name>

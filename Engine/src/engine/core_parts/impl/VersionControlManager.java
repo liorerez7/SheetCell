@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class VersionControlManager implements Serializable {
     private Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges;
-    private Map<Integer, Map<CellLocation, String>> versionToCellsChangesOriginalValues = new HashMap<>();
     private SheetCellImp sheetCell;
 
     public VersionControlManager(Map<Integer, Map<CellLocation, EffectiveValue>> versionToCellsChanges, SheetCellImp sheetCell) {
@@ -22,10 +21,8 @@ public class VersionControlManager implements Serializable {
     public void versionControl() {
         int sheetCellLatestVersion = sheetCell.getLatestVersion();
         versionToCellsChanges.put(sheetCellLatestVersion, new HashMap<>());
-        versionToCellsChangesOriginalValues.put(sheetCellLatestVersion, new HashMap<>());
 
         Map<CellLocation, EffectiveValue> changedCells = versionToCellsChanges.get(sheetCellLatestVersion);
-        Map<CellLocation, String> changedCellsOriginalValues = versionToCellsChangesOriginalValues.get(sheetCellLatestVersion);
 
         for (Map.Entry<CellLocation, Cell> entry : sheetCell.getSheetCell().entrySet()) {
             CellLocation location = entry.getKey();
@@ -33,7 +30,6 @@ public class VersionControlManager implements Serializable {
             // Check if the cell's latest version matches the sheet's latest version
             if (cell.getLatestVersion() == sheetCellLatestVersion) {   // Assuming Cell has a getVersion() method// Replace with your logic to calculate the effective value
                 changedCells.put(location, cell.getEffectiveValue().evaluate(sheetCell));
-                changedCellsOriginalValues.put(location, cell.getOriginalValue());
             }
         }
     }
@@ -45,10 +41,6 @@ public class VersionControlManager implements Serializable {
 
     public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions() {
         return versionToCellsChanges;
-    }
-
-    public Map<Integer, Map<CellLocation, String>> getOriginalVersions() {
-        return versionToCellsChangesOriginalValues;
     }
 }
 

@@ -24,26 +24,34 @@ public class RunTimeAnalysisServlet extends HttpServlet {
                 String row = request.getParameter("rowLocation");
                 int versionNumber = Integer.parseInt(request.getParameter("versionNumber"));
 
+
                 Engine engine = ServletUtils.getEngineManager(getServletContext());
                 String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+
 
                 synchronized (engine) {
 
                         try{
-                                SheetCellImp runTimeSheetCell = engine.createSheetCellOnlyForRunTime(sheetName, versionNumber);
-                                SheetManager sheetManager = engine.getSheetCell(sheetName);
+//                                SheetManager runTimeSheetCell = engine.createSheetCellOnlyForRunTime(sheetName, versionNumber);
+                                String username = (String) request.getSession(false).getAttribute(Constants.USERNAME);
 
-                                sheetManager.saveCurrentSheetCellState();
+                                SheetManager runTimeSheetCell = engine.getTemporarySheetManager(username);
 
-                                sheetManager.updateCell(cellValue, columnOfCell, row);
+                                runTimeSheetCell.saveCurrentSheetCellState();
 
-                                DtoSheetCell dtoSheetCell = sheetManager.getSheetCell();
+                                runTimeSheetCell.updateCell(cellValue, columnOfCell, row);
+
+                                DtoSheetCell dtoSheetCell = runTimeSheetCell.getSheetCell();
+
                                 PrintWriter out = response.getWriter();
+
                                 String jsonResponse = Constants.GSON_INSTANCE.toJson(dtoSheetCell);
+
                                 out.print(jsonResponse);
+
                                 out.flush();
 
-                                sheetManager.restoreSheetCellState();
+                                runTimeSheetCell.restoreSheetCellState();
 
                                 response.setStatus(HttpServletResponse.SC_OK);
 

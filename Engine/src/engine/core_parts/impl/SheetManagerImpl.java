@@ -4,7 +4,6 @@ import engine.core_parts.api.Cell;
 import engine.core_parts.api.sheet.SheetCell;
 import engine.core_parts.api.SheetConvertor;
 import dto.components.DtoCell;
-import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import ex2.STLSheet;
 import engine.utilities.CellUtils;
@@ -19,9 +18,6 @@ import dto.small_parts.CellLocation;
 import dto.small_parts.CellLocationFactory;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,18 +37,14 @@ public class SheetManagerImpl implements SheetManager {
         sheetCellVersions.put(0, sheetCellInVersionZero);
     }
 
-
-    public DtoCell getRequestedCell(String cellId) {
-        if (sheetCell.isCellPresent(CellLocationFactory.fromCellId(cellId))) {
-            return new DtoCell(getCell(CellLocationFactory.fromCellId(cellId)));
-        } else {
-            return null;
-        }
+    public SheetManagerImpl(SheetCellImp sheetCell) {
+        this.sheetCell = sheetCell;
     }
 
     @Override
-    public SheetCellImp createSheetCellOnlyForRunTime(int versionNumber) {
-        return sheetCell.restoreSheetCellOnlyForRunTimeAnalysis(versionNumber);
+    public SheetManagerImpl createSheetCellOnlyForRunTime(int versionNumber) {
+        SheetCellImp sheetCellOnVersion =  sheetCellVersions.get(versionNumber);
+        return new SheetManagerImpl(sheetCellOnVersion);
     }
 
     public DtoSheetCell getSheetCell() {
@@ -82,6 +74,8 @@ public class SheetManagerImpl implements SheetManager {
             sheetCell.clearVersionNumber();
             getSheetFromSTL(path);
             sheetCell.setUpSheet();
+
+            saveSheetVersionUsingSerialize();
 
         } catch (Exception e) {
             restoreSheetCellState(savedSheetCellState);
@@ -123,8 +117,7 @@ public class SheetManagerImpl implements SheetManager {
             sheetCell.performGraphOperations();
             sheetCell.versionControl();
 
-            SheetCellImp sheetCellInVersionZero = restoreSheetCellState(savedSheetCellState, true);
-            sheetCellVersions.put(sheetCell.getLatestVersion(), sheetCellInVersionZero);
+            saveSheetVersionUsingSerialize();
 
         } catch (Exception e) {
             restoreSheetCellState(savedSheetCellState);
@@ -142,47 +135,6 @@ public class SheetManagerImpl implements SheetManager {
     @Override
     public void restoreSheetCellState() {
         restoreSheetCellState(savedSheetCellState);
-    }
-
-    public void save(String path) throws Exception, IOException, IllegalArgumentException {
-
-        Path filePath = Paths.get(path);
-        // Check if the path is absolute
-        if (!filePath.isAbsolute()) {
-            throw new IllegalArgumentException("Provided path is not absolute. Please provide a full path.");
-        }
-
-        if (Files.exists(filePath)) {
-            if (!Files.isWritable(filePath)) {
-                throw new IOException("No write permission for file: " + filePath.toString());
-            }
-        }
-        try (FileOutputStream fileOut = new FileOutputStream(path);
-             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(sheetCell);
-            out.flush();
-        } catch (IOException e) {
-            throw new Exception("Error saving data to " + path + ": " + e.getMessage(), e);
-        }
-    }
-
-    public DtoContainerData sortSheetCell(String range, String args) {
-
-        DtoSheetCell dtoSheetCell = getSheetCell();
-        return EngineUtilities.sortSheetCell(range, args, dtoSheetCell);
-    }
-
-    public Map<Character,Set<String>> getUniqueStringsInColumn(String filterColumn, String range) {
-        return sheetCell.getUniqueStringsInColumn(filterColumn, range);
-    }
-
-    public Map<Character,Set<String>> getUniqueStringsInColumn(List<Character> columnsForXYaxis, boolean isChartGraph){
-        return sheetCell.getUniqueStringsInColumn(columnsForXYaxis, isChartGraph);
-    }
-
-    public DtoContainerData filterSheetCell(String range, Map<Character, Set<String>> filter) {
-        DtoSheetCell dtoSheetCell = getSheetCell();
-        return EngineUtilities.filterSheetCell(range, filter, dtoSheetCell);
     }
 
     private void restoreSheetCellState(byte[] savedSheetCellState) throws IllegalStateException {
@@ -210,20 +162,6 @@ public class SheetManagerImpl implements SheetManager {
         return null;
     }
 
-    public void load(String path) throws Exception, NoSuchFieldException {
-        Path filePath = Paths.get(path);
-        // Check if the path is absolute
-        if (!filePath.isAbsolute()) {
-            throw new Exception("Provided path is not absolute. Please provide a full path.");
-        }
-        try (FileInputStream fileIn = new FileInputStream(new File(path));
-             ObjectInputStream in = new ObjectInputStream(fileIn)) {
-            sheetCell = (SheetCellImp) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new NoSuchFieldException("file not found at this path: " + path);
-        }
-    }
-
     public Cell getCell(CellLocation location) {
         // Fetch the cell directly from the map in SheetCellImp
         return sheetCell.getCell(location);
@@ -247,5 +185,11 @@ public class SheetManagerImpl implements SheetManager {
 
     public void createEmptyNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows) {
         sheetCell = new SheetCellImp(numRows, numColumns, sheetName, cellLength, cellWidth, null);
+    }
+
+    private void saveSheetVersionUsingSerialize(){
+        byte[] savedVersion = sheetCell.saveSheetCellState();
+        SheetCellImp sheetCellInVersionZero = restoreSheetCellState(savedVersion, true);
+        sheetCellVersions.put(sheetCell.getLatestVersion(), sheetCellInVersionZero);
     }
 }

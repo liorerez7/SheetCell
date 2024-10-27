@@ -742,6 +742,7 @@ public class PopUpWindowsHandler {
                 colRef.set(cellLocation.getVisualColumn());
                 rowRef.set(cellLocation.getVisualRow());
                 cellIdLabel.setText("Cell ID: " + colRef.get() + rowRef.get());
+
                 if (cell != null && cell.getEffectiveValue() != null){
 
                     if(cell.getEffectiveValue().getValue() instanceof Double) {
@@ -762,8 +763,20 @@ public class PopUpWindowsHandler {
                         // Hide warning label
                         warningLabel.setVisible(false);
                     }
-                } else {
-                    // Disable fields for non-numeric cells
+                    else{
+                        // Disable fields for non-numeric cells
+                        startingValueField.clear();
+                        endingValueField.clear();
+                        stepValueField.clear();
+                        startingValueField.setDisable(true);
+                        endingValueField.setDisable(true);
+                        stepValueField.setDisable(true);
+                        valueSlider.setDisable(true);
+
+                        // Show warning label for non-numeric cells
+                        warningLabel.setVisible(true);
+                    }
+                }else{
                     startingValueField.clear();
                     endingValueField.clear();
                     stepValueField.clear();

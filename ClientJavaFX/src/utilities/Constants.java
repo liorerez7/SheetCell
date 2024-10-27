@@ -59,6 +59,8 @@ public class Constants {
     public static final String RUNTIME_ANALYSIS = FULL_SERVER_PATH + "/runtimeAnalysis";
     public static final String GET_ALL_SHEET_CELL_VERSIONS_ENDPOINT = FULL_SERVER_PATH + "/allSheetCellVersions";
     public static final String CREATE_NEW_SHEET_ENDPOINT = FULL_SERVER_PATH + "/createNewSheet";
+    public static final String POST_TEMP_SHEET_IN_SERVLET = FULL_SERVER_PATH + "/postTempSheet";
+
 
     public static final String CANT_UPDATE_CELL_NO_CLICK_ON_LABEL = "first click on the cell \nyou wish to modify its value";
 

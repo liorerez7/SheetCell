@@ -57,56 +57,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         }
     }
 
-    public SheetCellImp restoreSheetCellOnlyForRunTimeAnalysis(int versionNumber) {
-        SheetCellImp sheetCellForRunTimeAnalysis = new SheetCellImp(currentNumberOfRows,
-                currentNumberOfCols, name, currentCellLength, currentCellWidth, null);
-
-        // from the current updated sheet - pull the versionControl manager inorder to retrieve the original values
-        // of the previous version
-
-        Set<CellLocation> markedLocations = new HashSet<>();
-        Map<CellLocation,String> cellLocationToOriginalValue = versionControlManager.getOriginalVersions().get(versionNumber);
-        Map<CellLocation, String> result = new HashMap<>();
-
-        while (versionNumber > 0) {
-            for (Map.Entry<CellLocation, String> entry : cellLocationToOriginalValue.entrySet()) {
-                CellLocation location = entry.getKey();
-                if(markedLocations.contains(location)) {
-                    continue;
-                }
-                result.put(location, entry.getValue());
-                markedLocations.add(location);
-            }
-
-            versionNumber--;
-            cellLocationToOriginalValue = versionControlManager.getOriginalVersions().get(versionNumber);
-        }
-
-        Map<CellLocation,Cell> cellLocationToCell = sheetCellForRunTimeAnalysis.getSheetCell();
-        result.forEach((location, originalValue) -> {
-            Cell cell = new CellImp(location);
-            cell.setOriginalValue(originalValue);
-            cellLocationToCell.put(location, cell);
-        });
-
-        createRefDependencyGraph(sheetCellForRunTimeAnalysis);
-        List<Cell> topologicalOrder = sheetCellForRunTimeAnalysis.getRefDependencyGraph().getTopologicalSortOfExpressions();
-
-        topologicalOrder.forEach(cell -> {
-            Expression expression = CellUtils.processExpressionRec(cell.getOriginalValue(), cell, sheetCellForRunTimeAnalysis, false);
-            expression.evaluate(sheetCellForRunTimeAnalysis);
-            cell.setEffectiveValue(expression);
-            cell.setActualValue(sheetCellForRunTimeAnalysis);
-            cell.updateVersion(1);
-        });
-
-        sheetCellForRunTimeAnalysis.getVersionControlManager().versionControl();
-
-        updateEffectedByAndOnLists(sheetCellForRunTimeAnalysis.getRefDependencyGraph(), cellLocationToCell);
-
-        return sheetCellForRunTimeAnalysis;
-    }
-
     private VersionControlManager getVersionControlManager() {
         return versionControlManager;
     }
@@ -308,8 +258,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     @Override
     public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions() {return versionControlManager.getVersions();}
 
-    @Override
-    public Map<Integer, Map<CellLocation, String>> getOriginalVersions() {return versionControlManager.getOriginalVersions();}
+
 
     @Override
     public void setUpSheet() throws CycleDetectedException, CellCantBeEvaluatedException {
