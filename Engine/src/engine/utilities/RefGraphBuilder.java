@@ -44,8 +44,6 @@ public class RefGraphBuilder implements Serializable {
             Cell refCell = sheetCell.getCell(refLocation);
             if (refCell != null) {
                 dependencyGraph.addDependency(cell, refCell);
-                // newDependencies.add(refCell);
-
             }
         }
 
@@ -112,64 +110,4 @@ public class RefGraphBuilder implements Serializable {
             processCell(cell);
         }
     }
-
-
-//    private List<CellLocation> extractReferencesFromExpression(String expression) {
-//        List<CellLocation> references = new ArrayList<>();
-//        // Example parsing logic for "{REF, A5}"
-//        int index = 0;
-//        while (index < expression.length()) {
-//            if (expression.regionMatches(true, index, "{REF", 0, 4)) {
-//                int start = expression.indexOf(',', index) + 1;
-//                int end = expression.indexOf('}', start);
-//                if (start != -1 && end != -1) {
-//                    String cellId = expression.substring(start, end).trim();
-//                    char col = cellId.charAt(0);
-//                    char row = cellId.charAt(1);
-//                    references.add(CellLocationFactory.fromCellId(cellId));
-//                }
-//            }
-//            index++;
-//        }
-//
-//
-//        index = 0;
-//        while (index < expression.length()) {
-//            if (expression.regionMatches(true, index, "{SUM", 0, 4)) {
-//                int start = expression.indexOf(',', index) + 1;
-//                int end = expression.indexOf('}', start);
-//                if (start != -1 && end != -1) {
-//                    String rangeName = expression.substring(start, end).trim();
-//
-//                    if (sheetCell.isRangePresent(rangeName)) {
-//                        Range range = sheetCell.getRange(rangeName);
-//                        //TODO:chnged
-//                        if (range != null) {
-//                            Set<Ref> rangeRefs = range.getRangeRefs();
-//                            rangeRefs.forEach(ref -> references.add(ref.getCellLocation()));
-//                        }
-//                    }
-//                }
-//            }
-//            // Handle AVG
-//            else if (expression.regionMatches(true, index, "{AVERAGE", 0, 4)) {
-//                int start = expression.indexOf(',', index) + 1;
-//                int end = expression.indexOf('}', start);
-//                if (start != -1 && end != -1) {
-//                    String rangeName = expression.substring(start, end).trim();
-//
-//                    if (sheetCell.isRangePresent(rangeName)) {
-//                        Range range = sheetCell.getRange(rangeName);
-//                        if (range != null) {
-//                            Set<Ref> rangeRefs = range.getRangeRefs();
-//                            rangeRefs.forEach(ref -> references.add(ref.getCellLocation()));
-//                        }
-//                    }
-//                }
-//            }
-//            index++;
-//        }
-//
-//        return references;
-//    }
 }

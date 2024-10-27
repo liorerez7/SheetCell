@@ -1,13 +1,11 @@
 package controller.main;
 
 import controller.grid.GridController;
-import okhttp3.Call;
-import okhttp3.Callback;
-import org.jetbrains.annotations.NotNull;
+import dto.components.DtoCell;
+import dto.small_parts.EffectiveValue;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import utilities.javafx.smallparts.FilterGridData;
-import utilities.javafx.smallparts.RangeStringsData;
 import utilities.javafx.smallparts.RunTimeAnalysisData;
 import utilities.javafx.smallparts.SortRowsData;
 
@@ -32,6 +30,7 @@ import dto.small_parts.CellLocation;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -533,10 +532,96 @@ public class PopUpWindowsHandler {
         return runTimeAnalysisData;
     }
 
+//    public void showRuntimeAnalysisPopup(
+//            DtoSheetCell sheetCellRunTime,
+//            int startingValue, int endingValue, int stepValue,
+//            double currentVal, char col, String row,
+//            Model model, GridController gridScrollerController) {
+//
+//        String title = "Run Time Analysis";
+//        Stage popupStage = new Stage();
+//        popupStage.initModality(Modality.APPLICATION_MODAL);
+//        popupStage.setTitle(title);
+//
+//        // Create a new GridPane for the popup
+//        GridPane popupGrid = new GridPane();
+//        popupGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
+//
+//        Platform.runLater(() -> {
+//            Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController
+//                    .initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime);
+//
+//            model.setCellLabelToPropertiesRunTimeAnalysis(cellLocationLabelMap);
+//            model.bindCellLabelToPropertiesRunTimeAnalysis();
+//            model.setPropertiesByDtoSheetCellRunTimeAnalsys(sheetCellRunTime);
+//
+//            VBox sliderBox = new VBox(10);
+//            sliderBox.setAlignment(Pos.CENTER);
+//
+//            Label cellIdLabel = new Label("Cell ID: " + col + row);
+//            cellIdLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+//
+//            Slider valueSlider = new Slider(startingValue, endingValue, currentVal);
+//            valueSlider.setBlockIncrement(stepValue);
+//            valueSlider.setMajorTickUnit(stepValue);
+//
+//            if ((endingValue - startingValue) / stepValue - 1 > 5) {
+//                valueSlider.setMinorTickCount((endingValue - startingValue) / stepValue - 1);
+//            } else {
+//                valueSlider.setMinorTickCount(5);
+//            }
+//            valueSlider.setSnapToTicks(true);
+//            valueSlider.setShowTickMarks(true);
+//            valueSlider.setShowTickLabels(true);
+//
+//            Label valueLabel = new Label("Value: " + currentVal);
+//            valueLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #000000;");
+//
+//            valueSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+//                int newValue = (int) Math.round(newVal.doubleValue() / stepValue) * stepValue;
+//                if (newValue > endingValue) {
+//                    newValue -= stepValue;
+//                }
+//                valueSlider.setValue(newValue);
+//                valueLabel.setText("Value: " + newValue);
+//
+//                String newValueStr = String.valueOf(newValue);
+//                CompletableFuture.runAsync(() -> {
+//                    try {
+//                        Map<String, String> map = new HashMap<>();
+//                        map.put("newValue", newValueStr);
+//                        map.put("colLocation", col + "");
+//                        map.put("rowLocation", row);
+//
+//                        DtoSheetCell newUpdatedSheetCell = runTimeHttpCall(map);
+//                        Platform.runLater(() -> model.setPropertiesByDtoSheetCellRunTimeAnalsys(newUpdatedSheetCell));
+//
+//                    } catch (Exception e) {
+//                        Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error updating cell"));
+//                    }
+//                });
+//            });
+//
+//            sliderBox.getChildren().addAll(cellIdLabel, valueSlider, valueLabel);
+//
+//            VBox contentBox = new VBox(10, popupGrid, sliderBox);
+//            contentBox.setAlignment(Pos.CENTER_LEFT);
+//            contentBox.setPadding(new Insets(10));
+//
+//            ScrollPane contentScrollPane = new ScrollPane(contentBox);
+//            contentScrollPane.setFitToWidth(true);
+//            contentScrollPane.setFitToHeight(true);
+//
+//            Scene popupScene = new Scene(contentScrollPane);
+//            popupStage.setScene(popupScene);
+//
+//            popupStage.showAndWait();
+//        });
+//    }
+
+
     public void showRuntimeAnalysisPopup(
             DtoSheetCell sheetCellRunTime,
-            int startingValue, int endingValue, int stepValue,
-            double currentVal, char col, String row,
             Model model, GridController gridScrollerController) {
 
         String title = "Run Time Analysis";
@@ -544,43 +629,174 @@ public class PopUpWindowsHandler {
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(title);
 
-        // Create a new GridPane for the popup
+        // Create the main grid pane and apply styles
         GridPane popupGrid = new GridPane();
         popupGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
 
+        // Wrap popupGrid in a ScrollPane to manage scroll within boundaries
+        ScrollPane gridScrollPane = new ScrollPane(popupGrid);
+        gridScrollPane.setFitToWidth(true);
+        gridScrollPane.setFitToHeight(true);
+
+        // Set preferred size for gridScrollPane; scroll bars appear if grid exceeds this size
+        gridScrollPane.setPrefViewportWidth(600);  // Adjust width as needed
+        gridScrollPane.setPrefViewportHeight(400); // Adjust height as needed
+
         Platform.runLater(() -> {
+
+            // Initial instruction label
+            Label instructionLabel = new Label("To begin runtime analysis, please select a numeric cell.");
+            instructionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555555; -fx-font-style: italic;");
+
+            // Create slider and disable it initially
+            Slider valueSlider = new Slider();
+            valueSlider.setDisable(true);
+            valueSlider.getStyleClass().add("custom-slider");
+
+            // Create TextFields with prompt text and disable them initially
+            TextField startingValueField = new TextField();
+            startingValueField.setPromptText("Enter starting value");
+            startingValueField.setDisable(true);
+            startingValueField.getStyleClass().add("custom-text-field");
+
+            TextField endingValueField = new TextField();
+            endingValueField.setPromptText("Enter ending value");
+            endingValueField.setDisable(true);
+            endingValueField.getStyleClass().add("custom-text-field");
+
+            TextField stepValueField = new TextField();
+            stepValueField.setPromptText("Enter step value");
+            stepValueField.setDisable(true);
+            stepValueField.getStyleClass().add("custom-text-field");
+
+            Button submitButton = new Button("Submit");
+            submitButton.setDisable(true); // Initially disabled
+            submitButton.getStyleClass().add("custom-button");
+
+            Runnable updateSubmitButtonState = () -> submitButton.setDisable(
+                    startingValueField.getText().trim().isEmpty() ||
+                            endingValueField.getText().trim().isEmpty() ||
+                            stepValueField.getText().trim().isEmpty()
+            );
+
+            startingValueField.textProperty().addListener((obs, oldText, newText) -> updateSubmitButtonState.run());
+            endingValueField.textProperty().addListener((obs, oldText, newText) -> updateSubmitButtonState.run());
+            stepValueField.textProperty().addListener((obs, oldText, newText) -> updateSubmitButtonState.run());
+
+
+            // Label to display the current value of the slider
+            Label valueLabel = new Label("Value: N/A");
+            valueLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #000000;");
+
+            // AtomicReferences to hold the col, row, and cell current value
+            AtomicReference<Character> colRef = new AtomicReference<>();
+            AtomicReference<String> rowRef = new AtomicReference<>();
+            AtomicReference<Double> currentCellValueRef = new AtomicReference<>();
+
+            // Label for cell ID (always visible)
+            Label cellIdLabel = new Label("Cell ID: ");
+            cellIdLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+
+            // Warning label for non-numeric cells (initially hidden)
+            Label warningLabel = new Label("Runtime analysis is only available for numeric cells.");
+            warningLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
+            warningLabel.setVisible(false); // Start hidden
+
+            // VBox to hold all elements related to the slider and input fields
+            VBox sliderBox = new VBox(10);
+            sliderBox.setAlignment(Pos.CENTER);
+
+            // Submit button to enable the slider
+
+            submitButton.setOnAction(event -> {
+                try {
+                    int startingValue = Integer.parseInt(startingValueField.getText());
+                    int endingValue = Integer.parseInt(endingValueField.getText());
+                    int stepValue = Integer.parseInt(stepValueField.getText());
+
+                    if (stepValue > 0 && startingValue < endingValue) {
+                        // Configure and enable the slider
+                        valueSlider.setMin(startingValue);
+                        valueSlider.setMax(endingValue);
+                        valueSlider.setBlockIncrement(stepValue);
+                        valueSlider.setMajorTickUnit(stepValue);
+
+                        // Set slider's initial value based on current cell value
+                        double cellValue = currentCellValueRef.get();
+                        double adjustedValue = Math.max(startingValue, Math.min(cellValue, endingValue));
+                        valueSlider.setValue(adjustedValue); // Set to cell value within range
+                        valueSlider.setDisable(false); // Enable slider after valid input
+                    } else {
+                        createErrorPopup("Invalid input values", "Error");
+                    }
+                } catch (NumberFormatException e) {
+                    createErrorPopup("Please enter valid numbers", "Input Error");
+                }
+            });
+
+            // Define Consumer to enable fields and update display based on cell click
+            Consumer<CellLocation> labelClickConsumer = cellLocation -> {
+                DtoCell cell = sheetCellRunTime.getRequestedCell(cellLocation.getCellId());
+
+                // Retrieve cell information for ID display
+                colRef.set(cellLocation.getVisualColumn());
+                rowRef.set(cellLocation.getVisualRow());
+                cellIdLabel.setText("Cell ID: " + colRef.get() + rowRef.get());
+                if (cell != null && cell.getEffectiveValue() != null){
+
+                    if(cell.getEffectiveValue().getValue() instanceof Double) {
+
+                        // Enable the text fields and submit button for numeric cells
+                        startingValueField.clear();
+                        endingValueField.clear();
+                        stepValueField.clear();
+                        startingValueField.setDisable(false);
+                        endingValueField.setDisable(false);
+                        stepValueField.setDisable(false);
+
+                        // Store current cell value and update display
+                        double currentVal = (Double) cell.getEffectiveValue().getValue();
+                        currentCellValueRef.set(currentVal);
+                        valueLabel.setText("Value: " + currentVal);
+
+                        // Hide warning label
+                        warningLabel.setVisible(false);
+                    }
+                } else {
+                    // Disable fields for non-numeric cells
+                    startingValueField.clear();
+                    endingValueField.clear();
+                    stepValueField.clear();
+                    startingValueField.setDisable(true);
+                    endingValueField.setDisable(true);
+                    stepValueField.setDisable(true);
+                    valueSlider.setDisable(true);
+
+                    // Show warning label for non-numeric cells
+                    warningLabel.setVisible(true);
+                }
+
+                instructionLabel.setVisible(false);
+
+                // Add elements to sliderBox if not already added
+                if (!sliderBox.getChildren().contains(cellIdLabel)) {
+                    sliderBox.getChildren().setAll(cellIdLabel, warningLabel, startingValueField, endingValueField, stepValueField, submitButton, valueSlider, valueLabel);
+                }
+            };
+
+            // Initialize grid and bind model
             Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController
-                    .initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime);
+                    .initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime, labelClickConsumer);
 
             model.setCellLabelToPropertiesRunTimeAnalysis(cellLocationLabelMap);
             model.bindCellLabelToPropertiesRunTimeAnalysis();
             model.setPropertiesByDtoSheetCellRunTimeAnalsys(sheetCellRunTime);
 
-            VBox sliderBox = new VBox(10);
-            sliderBox.setAlignment(Pos.CENTER);
-
-            Label cellIdLabel = new Label("Cell ID: " + col + row);
-            cellIdLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;");
-
-            Slider valueSlider = new Slider(startingValue, endingValue, currentVal);
-            valueSlider.setBlockIncrement(stepValue);
-            valueSlider.setMajorTickUnit(stepValue);
-
-            if ((endingValue - startingValue) / stepValue - 1 > 5) {
-                valueSlider.setMinorTickCount((endingValue - startingValue) / stepValue - 1);
-            } else {
-                valueSlider.setMinorTickCount(5);
-            }
-            valueSlider.setSnapToTicks(true);
-            valueSlider.setShowTickMarks(true);
-            valueSlider.setShowTickLabels(true);
-
-            Label valueLabel = new Label("Value: " + currentVal);
-            valueLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #000000;");
-
+            // Slider value listener
             valueSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                int stepValue = Integer.parseInt(stepValueField.getText());
                 int newValue = (int) Math.round(newVal.doubleValue() / stepValue) * stepValue;
-                if (newValue > endingValue) {
+                if (newValue > Integer.parseInt(endingValueField.getText())) {
                     newValue -= stepValue;
                 }
                 valueSlider.setValue(newValue);
@@ -591,8 +807,9 @@ public class PopUpWindowsHandler {
                     try {
                         Map<String, String> map = new HashMap<>();
                         map.put("newValue", newValueStr);
-                        map.put("colLocation", col + "");
-                        map.put("rowLocation", row);
+                        map.put("colLocation", String.valueOf(colRef.get())); // Use updated col reference
+                        map.put("rowLocation", rowRef.get()); // Use updated row reference
+                        map.put("versionNumber", sheetCellRunTime.getLatestVersion() + "");
 
                         DtoSheetCell newUpdatedSheetCell = runTimeHttpCall(map);
                         Platform.runLater(() -> model.setPropertiesByDtoSheetCellRunTimeAnalsys(newUpdatedSheetCell));
@@ -603,9 +820,7 @@ public class PopUpWindowsHandler {
                 });
             });
 
-            sliderBox.getChildren().addAll(cellIdLabel, valueSlider, valueLabel);
-
-            VBox contentBox = new VBox(10, popupGrid, sliderBox);
+            VBox contentBox = new VBox(10, gridScrollPane, instructionLabel, sliderBox);
             contentBox.setAlignment(Pos.CENTER_LEFT);
             contentBox.setPadding(new Insets(10));
 
@@ -614,8 +829,8 @@ public class PopUpWindowsHandler {
             contentScrollPane.setFitToHeight(true);
 
             Scene popupScene = new Scene(contentScrollPane);
+            popupScene.getStylesheets().add("controller/main/popup.css"); // Make sure this path is correct
             popupStage.setScene(popupScene);
-
             popupStage.showAndWait();
         });
     }

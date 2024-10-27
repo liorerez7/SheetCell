@@ -8,6 +8,7 @@ import java.util.Map;
 
 public interface VersionControl {
     Map<Integer, Map<CellLocation, EffectiveValue>> getVersions();
+    Map<Integer, Map<CellLocation, String>> getOriginalVersions();
     void updateVersions(Cell targetCell);
     void versionControl();
     byte[] saveSheetCellState();

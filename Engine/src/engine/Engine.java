@@ -5,6 +5,7 @@ import dto.small_parts.CellLocation;
 import dto.small_parts.CellLocationFactory;
 import dto.small_parts.EffectiveValue;
 import engine.core_parts.api.SheetManager;
+import engine.core_parts.impl.SheetCellImp;
 import engine.core_parts.impl.SheetManagerImpl;
 import engine.dashboard.chat.ChatManager;
 import engine.login.users.PermissionManager;
@@ -135,7 +136,6 @@ public class Engine {
         }
     }
 
-
     public String getUserNameThatLastUpdatedCell(String sheetName, String cellId) {
         Map<CellLocation, String> cellLocationToUserName = sheetNameToCellLocationToUserName.get(sheetName);
         CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
@@ -150,5 +150,9 @@ public class Engine {
         sheetNames.add(sheetName);
         sheetCells.put(sheetName, sheetManager);
         sheetInfosManager.AddSheet(sheetName, dtoSheetCell.getSheetSize());
+    }
+
+    public synchronized SheetCellImp createSheetCellOnlyForRunTime(String sheetName, int versionNumber) {
+        return sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber);
     }
 }

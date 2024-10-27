@@ -49,27 +49,55 @@ public class OperationHandler {
         });
     }
 
+//    public void runTimeAnalysis() {
+//        var runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
+//        String cellId = runTimeAnalysisData.getCellId().toUpperCase();
+//
+//        if (cellId.isEmpty() || dtoSheetCell == null) {
+//            return;
+//        }
+//
+//        Platform.runLater(() -> {
+//            double currentVal = validateCellValue(dtoSheetCell.getRequestedCell(cellId).getEffectiveValue().getValue().toString(),
+//                    runTimeAnalysisData.getStartingValue(), runTimeAnalysisData.getEndingValue());
+//
+//            if (!Double.isNaN(currentVal)) {
+//                char col = cellId.charAt(0);
+//                String row = cellId.substring(1);
+//
+//                popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, runTimeAnalysisData.getStartingValue(),
+//                        runTimeAnalysisData.getEndingValue(), runTimeAnalysisData.getStepValue(),
+//                        currentVal, col, row, model, gridController);
+//            }
+//        });
+//    }
+
     public void runTimeAnalysis() {
-        var runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
-        String cellId = runTimeAnalysisData.getCellId().toUpperCase();
 
-        if (cellId.isEmpty() || dtoSheetCell == null) {
-            return;
-        }
+        popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, model, gridController);
 
-        Platform.runLater(() -> {
-            double currentVal = validateCellValue(dtoSheetCell.getRequestedCell(cellId).getEffectiveValue().getValue().toString(),
-                    runTimeAnalysisData.getStartingValue(), runTimeAnalysisData.getEndingValue());
 
-            if (!Double.isNaN(currentVal)) {
-                char col = cellId.charAt(0);
-                String row = cellId.substring(1);
-
-                popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, runTimeAnalysisData.getStartingValue(),
-                        runTimeAnalysisData.getEndingValue(), runTimeAnalysisData.getStepValue(),
-                        currentVal, col, row, model, gridController);
-            }
-        });
+//        var runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
+//        String cellId = runTimeAnalysisData.getCellId().toUpperCase();
+//
+//        if (cellId.isEmpty() || dtoSheetCell == null) {
+//            return;
+//        }
+//
+//        Platform.runLater(() -> {
+//            double currentVal = validateCellValue(dtoSheetCell.getRequestedCell(cellId).getEffectiveValue().getValue().toString(),
+//                    runTimeAnalysisData.getStartingValue(), runTimeAnalysisData.getEndingValue());
+//
+//            if (!Double.isNaN(currentVal)) {
+//                char col = cellId.charAt(0);
+//                String row = cellId.substring(1);
+//
+//                popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, runTimeAnalysisData.getStartingValue(),
+//                        runTimeAnalysisData.getEndingValue(), runTimeAnalysisData.getStepValue(),
+//                        currentVal, col, row, model, gridController);
+////                popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, model, gridController);
+//            }
+//        });
     }
 
     public void sortRows() {

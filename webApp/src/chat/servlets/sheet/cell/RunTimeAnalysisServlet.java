@@ -6,6 +6,7 @@ import chat.utilities.SessionUtils;
 import dto.components.DtoSheetCell;
 import engine.Engine;
 import engine.core_parts.api.SheetManager;
+import engine.core_parts.impl.SheetCellImp;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ public class RunTimeAnalysisServlet extends HttpServlet {
                 String cellValue = request.getParameter("newValue");
                 char columnOfCell = request.getParameter("colLocation").charAt(0);
                 String row = request.getParameter("rowLocation");
+                int versionNumber = Integer.parseInt(request.getParameter("versionNumber"));
 
                 Engine engine = ServletUtils.getEngineManager(getServletContext());
                 String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
@@ -28,6 +30,7 @@ public class RunTimeAnalysisServlet extends HttpServlet {
                 synchronized (engine) {
 
                         try{
+                                SheetCellImp runTimeSheetCell = engine.createSheetCellOnlyForRunTime(sheetName, versionNumber);
                                 SheetManager sheetManager = engine.getSheetCell(sheetName);
 
                                 sheetManager.saveCurrentSheetCellState();

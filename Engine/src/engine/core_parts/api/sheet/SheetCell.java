@@ -1,6 +1,7 @@
 package engine.core_parts.api.sheet;
 
 import engine.core_parts.api.Cell;
+import engine.core_parts.impl.SheetCellImp;
 import engine.expression.impl.Range;
 import dto.small_parts.CellLocation;
 
@@ -25,4 +26,5 @@ public interface SheetCell extends
 
     Set<String> getAllRangeNames();
 
+    SheetCellImp restoreSheetCellOnlyForRunTimeAnalysis(int versionNumber);
 }

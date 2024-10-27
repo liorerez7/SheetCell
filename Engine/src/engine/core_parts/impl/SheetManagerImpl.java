@@ -32,9 +32,13 @@ public class SheetManagerImpl implements SheetManager {
 
     private SheetCell sheetCell;
     private byte[] savedSheetCellState;
+    private Map<Integer, SheetCellImp> sheetCellVersions = new HashMap<>();
 
     public SheetManagerImpl() {
         sheetCell = new SheetCellImp(0, 0, "Sheet1", 0, 0, null);
+        byte[] savedVersion = sheetCell.saveSheetCellState();
+        SheetCellImp sheetCellInVersionZero = restoreSheetCellState(savedVersion, true);
+        sheetCellVersions.put(0, sheetCellInVersionZero);
     }
 
 
@@ -44,6 +48,11 @@ public class SheetManagerImpl implements SheetManager {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public SheetCellImp createSheetCellOnlyForRunTime(int versionNumber) {
+        return sheetCell.restoreSheetCellOnlyForRunTimeAnalysis(versionNumber);
     }
 
     public DtoSheetCell getSheetCell() {
@@ -114,8 +123,13 @@ public class SheetManagerImpl implements SheetManager {
             sheetCell.performGraphOperations();
             sheetCell.versionControl();
 
+            SheetCellImp sheetCellInVersionZero = restoreSheetCellState(savedSheetCellState, true);
+            sheetCellVersions.put(sheetCell.getLatestVersion(), sheetCellInVersionZero);
+
         } catch (Exception e) {
             restoreSheetCellState(savedSheetCellState);
+
+
             throw e;
         }
     }
@@ -181,6 +195,19 @@ public class SheetManagerImpl implements SheetManager {
         } catch (Exception restoreEx) {
             throw new IllegalStateException("Failed to restore the original sheetCell state", restoreEx);
         }
+    }
+
+    private SheetCellImp restoreSheetCellState(byte[] savedSheetCellState, boolean b) throws IllegalStateException {
+        try {
+            if (savedSheetCellState != null) {
+                ByteArrayInputStream bais = new ByteArrayInputStream(savedSheetCellState);
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                return (SheetCellImp) ois.readObject(); // Restore the original sheetCell
+            }
+        } catch (Exception restoreEx) {
+            throw new IllegalStateException("Failed to restore the original sheetCell state", restoreEx);
+        }
+        return null;
     }
 
     public void load(String path) throws Exception, NoSuchFieldException {

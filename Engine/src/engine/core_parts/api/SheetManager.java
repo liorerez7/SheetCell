@@ -4,6 +4,7 @@ package engine.core_parts.api;
 import dto.components.DtoSheetCell;
 
 import dto.small_parts.CellLocation;
+import engine.core_parts.impl.SheetCellImp;
 
 import java.io.InputStream;
 import java.util.List;
@@ -20,4 +21,5 @@ public interface SheetManager {
     List<CellLocation> getRequestedRange(String name);
     void deleteRange(String name);
     Set<String> getAllRangeNames();
+    SheetCellImp createSheetCellOnlyForRunTime(int versionNumber);
 }

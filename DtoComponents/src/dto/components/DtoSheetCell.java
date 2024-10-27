@@ -272,4 +272,8 @@ public class DtoSheetCell implements Serializable {
             return null;
         }
     }
+
+    public void setViewSheetCell(Map<CellLocation, EffectiveValue> result) {
+        cellLocationToEffectiveValue = result;
+    }
 }
