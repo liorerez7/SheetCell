@@ -35,31 +35,7 @@ public class OperationHandler {
     }
 
     public void makeGraph(boolean isChartGraph) {
-
-
         popUpWindowsManager.openConsolidatedGraphPopup(isChartGraph, dtoSheetCell);
-
-//        List<String> columnsForXYaxis = popUpWindowsManager.openGraphWindow();
-//
-//        if (columnsForXYaxis == null || columnsForXYaxis.size() != 4) {
-//            return;
-//        }
-//
-//        char xAxis = columnsForXYaxis.get(0).charAt(0);
-//        char yAxis = columnsForXYaxis.get(1).charAt(0);
-//        String xTitle = columnsForXYaxis.get(2);
-//        String yTitle = columnsForXYaxis.get(3);
-//
-//        Map<Character, Set<String>> columnsXYaxisToStrings = dtoSheetCell.getUniqueStringsInColumn(List.of(xAxis, yAxis), isChartGraph);
-//
-//        Platform.runLater(() -> {
-//            Map<Character, List<String>> filteredColumns = popUpWindowsManager.openAvailableGraphValuesPopUp(
-//                    xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
-//
-//            if (filteredColumns != null) {
-//                popUpWindowsManager.openGraphPopUp(xAxis, xTitle, yTitle, filteredColumns, isChartGraph);
-//            }
-//        });
     }
 
     public void runTimeAnalysis() {
@@ -98,6 +74,7 @@ public class OperationHandler {
     }
 
     public void filterGrid() {
+
         var filterGridData = popUpWindowsManager.openFilterDataWindow();
         String range = filterGridData.getRange();
         String filterColumn = filterGridData.getColumnsToFilterBy();

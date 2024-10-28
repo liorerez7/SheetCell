@@ -4,10 +4,7 @@ import controller.grid.GridController;
 import controller.popup.filter.AvailableFilterValuesPopup;
 import controller.popup.filter.FilterDataPopup;
 import controller.popup.filter.FilterGridPopupHandler;
-import controller.popup.graph.AvailableGraphValuesPopup;
 import controller.popup.graph.ConsolidatedGraphPopup;
-import controller.popup.graph.GraphPopup;
-import controller.popup.graph.GraphPreWindow;
 import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
 import controller.popup.sort.SortGridPopupHandler;
 import controller.popup.sort.SortRowsPopup;
@@ -115,21 +112,6 @@ public class PopUpWindowsManager {
     public void openSortGridPopUp(DtoContainerData dtoContainerData, GridController gridScrollerController) {
         SortGridPopupHandler sortGridPopupHandler = new SortGridPopupHandler(gridScrollerController, dtoContainerData);
         sortGridPopupHandler.show();
-    }
-
-    public Map<Character, List<String>> openAvailableGraphValuesPopUp(char xAxis, char yAxis, String xTitle, String yTitle, Map<Character, Set<String>> stringsInChosenColumn) {
-        AvailableGraphValuesPopup availableGraphValuesPopup = new AvailableGraphValuesPopup(xAxis, yAxis, xTitle, yTitle, stringsInChosenColumn);
-        return availableGraphValuesPopup.show();
-    }
-
-    public void openGraphPopUp(char xAxis, String xTitle, String yTitle, Map<Character, List<String>> columnsForXYaxis, boolean isBarChart) {
-        GraphPopup graphPopup = new GraphPopup(xAxis, xTitle, yTitle, columnsForXYaxis, isBarChart);
-        graphPopup.show();
-    }
-
-    public List<String> openGraphWindow(){
-        GraphPreWindow graphPreWindow = new GraphPreWindow();
-        return graphPreWindow.show();
     }
 
     public void showVersionsPopup(
