@@ -5,6 +5,7 @@ import controller.popup.filter.AvailableFilterValuesPopup;
 import controller.popup.filter.FilterDataPopup;
 import controller.popup.filter.FilterGridPopupHandler;
 import controller.popup.graph.AvailableGraphValuesPopup;
+import controller.popup.graph.ConsolidatedGraphPopup;
 import controller.popup.graph.GraphPopup;
 import controller.popup.graph.GraphPreWindow;
 import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
@@ -143,6 +144,11 @@ public class PopUpWindowsManager {
     public void showRuntimeAnalysisPopup(DtoSheetCell sheetCellRunTime, Model model, GridController gridScrollerController) {
         RunTimeAnalysisPopupHandler runTimeAnalysisPopupHandler = new RunTimeAnalysisPopupHandler(sheetCellRunTime, model, gridScrollerController);
         runTimeAnalysisPopupHandler.show();
+    }
+
+    public void openConsolidatedGraphPopup(boolean isChartGraph, DtoSheetCell dtoSheetCell) {
+        ConsolidatedGraphPopup graphPopup = new ConsolidatedGraphPopup(isChartGraph, dtoSheetCell);
+        graphPopup.show();
     }
 }
 
