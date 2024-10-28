@@ -3,6 +3,7 @@ package controller.main;
 import controller.customize.CustomizeController;
 import controller.dashboard.DashboardController;
 import controller.grid.GridController;
+import controller.popup.PopUpWindowsManager;
 import dto.permissions.PermissionStatus;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
@@ -58,7 +59,7 @@ public class MainController {
     private Stage stage;
     private SheetCellApp app;  // Reference to the main application
     private final Model model;
-    private final PopUpWindowsHandler popUpWindowsHandler;
+    private final PopUpWindowsManager popUpWindowsManager;
     private final OperationHandler operationHandler;
     private final ThemeManager themeManager;
     private ProgressManager progressManager;
@@ -110,8 +111,8 @@ public class MainController {
 
     public MainController() {
         model = new Model(null);
-        popUpWindowsHandler = new PopUpWindowsHandler();
-        operationHandler = new OperationHandler(popUpWindowsHandler, gridScrollerController, dtoSheetCellAsDataParameter, model);
+        popUpWindowsManager = new PopUpWindowsManager();
+        operationHandler = new OperationHandler(popUpWindowsManager, gridScrollerController, dtoSheetCellAsDataParameter, model);
         themeManager = new ThemeManager(mainPane, leftCommands);
     }
 
@@ -326,7 +327,7 @@ public class MainController {
     }
 
     public void createErrorPopup(String message, String title) {
-        popUpWindowsHandler.createErrorPopup(message, title);
+        popUpWindowsManager.createErrorPopup(message, title);
     }
 
     public void rangeAddClicked(String name, String range) {
@@ -463,7 +464,7 @@ public class MainController {
                 Map<Integer, DtoSheetCell> dtoVersions = Constants.GSON_INSTANCE.fromJson(requestedVersionAsJson, mapType);
 
                 Platform.runLater(() -> {
-                    popUpWindowsHandler.showVersionsPopup(dtoVersions,
+                    popUpWindowsManager.showVersionsPopup(dtoVersions,
                             dtoSheetCellAsDataParameter.getLatestVersion(), gridScrollerController);
                 });
             }

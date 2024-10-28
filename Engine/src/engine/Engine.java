@@ -82,10 +82,6 @@ public class Engine {
         return Collections.unmodifiableSet(sheetNames);
     }
 
-    public Set<String> getSheetNames() {
-        return sheetNames;
-    }
-
     public SheetInfosManager getSheetInfosManager() {
         return sheetInfosManager;
     }
@@ -137,11 +133,11 @@ public class Engine {
         }
     }
 
-    public String getUserNameThatLastUpdatedCell(String sheetName, String cellId) {
-        Map<CellLocation, String> cellLocationToUserName = sheetNameToCellLocationToUserName.get(sheetName);
-        CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
-        return cellLocationToUserName.get(cellLocation);
-    }
+//    public String getUserNameThatLastUpdatedCell(String sheetName, String cellId) {
+//        Map<CellLocation, String> cellLocationToUserName = sheetNameToCellLocationToUserName.get(sheetName);
+//        CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
+//        return cellLocationToUserName.get(cellLocation);
+//    }
 
     public synchronized void createNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows, String userName) {
         SheetManagerImpl sheetManager = new SheetManagerImpl();
@@ -151,10 +147,6 @@ public class Engine {
         sheetNames.add(sheetName);
         sheetCells.put(sheetName, sheetManager);
         sheetInfosManager.AddSheet(sheetName, dtoSheetCell.getSheetSize());
-    }
-
-    public synchronized SheetManagerImpl createSheetCellOnlyForRunTime(String sheetName, int versionNumber) {
-        return sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber);
     }
 
     public void removeTemporarySheet(String username) {

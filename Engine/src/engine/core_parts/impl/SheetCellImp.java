@@ -32,7 +32,7 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     VersionControlManager versionControlManager;
     private RefGraphBuilder refGraphBuilder;
     private final String name;
-    private int versionNumber = 1;
+    private int versionNumber = 0;
     private static final int maxRows = 50;
     private static final int maxCols = 20;
     private int currentNumberOfRows;
@@ -229,17 +229,6 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         });
     }
 
-    public void updateEffectedByAndOnLists(RefDependencyGraph refDependencyGraph, Map<CellLocation, Cell> sheetCell) {
-        Map<Cell,Set<Cell>> adjacencyList= refDependencyGraph.getadjacencyList();
-        Map<Cell,Set<Cell>> reverseAdjacencyList = refDependencyGraph.getreverseAdjacencyList();
-        sheetCell.forEach((location, cell) -> {
-            if(adjacencyList.containsKey(cell))
-                cell.setEffectingOn(adjacencyList.get(cell));
-            if(reverseAdjacencyList.containsKey(cell))
-                cell.setAffectedBy(reverseAdjacencyList.get(cell));
-        });
-    }
-
     public byte[] saveSheetCellState() throws IllegalStateException {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -258,12 +247,15 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
     @Override
     public Map<Integer, Map<CellLocation, EffectiveValue>> getVersions() {return versionControlManager.getVersions();}
 
-
-
     @Override
     public void setUpSheet() throws CycleDetectedException, CellCantBeEvaluatedException {
         createRefDependencyGraph();
         List<Cell> topologicalOrder = refDependencyGraph.getTopologicalSortOfExpressions();
+
+        if(!topologicalOrder.isEmpty()){
+            versionNumber++;
+        }
+
         topologicalOrder.forEach(cell -> {
             Expression expression = CellUtils.processExpressionRec(cell.getOriginalValue(), cell, this, false);
             expression.evaluate(this);

@@ -14,8 +14,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CellImp implements Cell ,Serializable
-{
+public class CellImp implements Cell ,Serializable {
     private static final long serialVersionUID = 1L; // Add serialVersionUID
     private Expression effectiveValue;
     private EffectiveValue actualValue = new EffectiveValue(null,null);
@@ -26,24 +25,23 @@ public class CellImp implements Cell ,Serializable
     private Set<Cell> affectingOn = new HashSet<>();
 
     public CellImp(Expression effectiveValue,String originalValue) {
-    this.effectiveValue = effectiveValue;
-    this.originalValue = originalValue;
-}
-
-public void setActualValue(SheetCellViewOnly sheet) {
-    try{
-       actualValue = effectiveValue.evaluate(sheet);
+        this.effectiveValue = effectiveValue;
+        this.originalValue = originalValue;
     }
-    catch(AvgWithNoNumericCellsException e){
-        throw e;
-    }
-    catch (Exception e){
-        throw new CellCantBeEvaluatedException(this);
-    }
-}
 
+    public void setActualValue(SheetCellViewOnly sheet) {
+        try{
+           actualValue = effectiveValue.evaluate(sheet);
+        }
+        catch(AvgWithNoNumericCellsException e){
+            throw e;
+        }
+        catch (Exception e){
+            throw new CellCantBeEvaluatedException(this);
+        }
+    }
 
-public void setActualValue(EffectiveValue effectiveValue) {
+    public void setActualValue(EffectiveValue effectiveValue) {
     this.actualValue = effectiveValue;
 }
 
@@ -62,14 +60,6 @@ public void setActualValue(EffectiveValue effectiveValue) {
         this.location = location;
         this.originalValue = originalValue;
         effectiveValue = null;
-    }
-
-    public boolean isCellAffectedBy(Cell cell) {
-        return affectedBy.contains(cell);
-    }
-
-    public boolean isCellAffectingOn(Cell cell) {
-        return affectingOn.contains(cell);
     }
 
     @Override
@@ -98,29 +88,12 @@ public void setActualValue(EffectiveValue effectiveValue) {
         return originalValue;
     }
 
-
-    public void addCellToAffectingOn(Cell cell) {
-        affectingOn.add(cell);
-    }
-
     public void setEffectingOn(Set<Cell> cells) {
         affectingOn = cells;
     }
 
     public void setAffectedBy(Set<Cell> cells) {
         affectedBy = cells;
-    }
-
-    public void addCellToAffectedBy(Cell cell) {
-        affectedBy.add(cell);
-    }
-
-    public void removeCellFromAffectingOn(Cell cell) {
-        affectingOn.remove(cell);
-    }
-
-    public void removeCellFromAffectedBy(Cell cell) {
-        affectedBy.remove(cell);
     }
 
     public CellLocation getLocation() {
@@ -135,6 +108,4 @@ public void setActualValue(EffectiveValue effectiveValue) {
     public int getLatestVersion() {
         return latestVersion;
     }
-
-
 }

@@ -1,6 +1,7 @@
 package controller.main;
 
 import controller.grid.GridController;
+import controller.popup.PopUpWindowsManager;
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import javafx.application.Platform;
@@ -20,21 +21,21 @@ import java.util.Set;
 
 public class OperationHandler {
 
-    private  PopUpWindowsHandler popUpWindowsHandler;
+    private PopUpWindowsManager popUpWindowsManager;
     private  GridController gridController;
     private  DtoSheetCell dtoSheetCell;
     private  Model model;
 
-    public OperationHandler(PopUpWindowsHandler popUpWindowsHandler,
+    public OperationHandler(PopUpWindowsManager popUpWindowsManager,
                             GridController gridController, DtoSheetCell dtoSheetCell, Model model) {
-        this.popUpWindowsHandler = popUpWindowsHandler;
+        this.popUpWindowsManager = popUpWindowsManager;
         this.gridController = gridController;
         this.dtoSheetCell = dtoSheetCell;
         this.model = model;
     }
 
     public void makeGraph(boolean isChartGraph) {
-        List<String> columnsForXYaxis = popUpWindowsHandler.openGraphWindow();
+        List<String> columnsForXYaxis = popUpWindowsManager.openGraphWindow();
 
         if (columnsForXYaxis == null || columnsForXYaxis.size() != 4) {
             return;
@@ -48,11 +49,11 @@ public class OperationHandler {
         Map<Character, Set<String>> columnsXYaxisToStrings = dtoSheetCell.getUniqueStringsInColumn(List.of(xAxis, yAxis), isChartGraph);
 
         Platform.runLater(() -> {
-            Map<Character, List<String>> filteredColumns = popUpWindowsHandler.openFilterDataWithOrderPopUp(
+            Map<Character, List<String>> filteredColumns = popUpWindowsManager.openAvailableGraphValuesPopUp(
                     xAxis, yAxis, xTitle, yTitle, columnsXYaxisToStrings);
 
             if (filteredColumns != null) {
-                popUpWindowsHandler.openGraphPopUp(xAxis, xTitle, yTitle, filteredColumns, isChartGraph);
+                popUpWindowsManager.openGraphPopUp(xAxis, xTitle, yTitle, filteredColumns, isChartGraph);
             }
         });
     }
@@ -99,7 +100,7 @@ public class OperationHandler {
 
                     }
                     Platform.runLater(() -> {
-                        popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, model, gridController);
+                        popUpWindowsManager.showRuntimeAnalysisPopup(dtoSheetCell, model, gridController);
                     });
                 }
             }
@@ -132,18 +133,18 @@ public class OperationHandler {
     }
 
     public void sortRows() {
-        var sortRowsData = popUpWindowsHandler.openSortRowsWindow();
+        var sortRowsData = popUpWindowsManager.openSortRowsWindow();
         String columns = sortRowsData.getColumnsToSortBy();
         String range = sortRowsData.getRange();
 
         if (columns != null && !columns.isEmpty() && range != null && !range.isEmpty()) {
             DtoContainerData sortedData = dtoSheetCell.sortSheetCell(range, columns);
-            Platform.runLater(() -> popUpWindowsHandler.openSortGridPopUp(sortedData, gridController));
+            Platform.runLater(() -> popUpWindowsManager.openSortGridPopUp(sortedData, gridController));
         }
     }
 
     public void filterGrid() {
-        var filterGridData = popUpWindowsHandler.openFilterDataWindow();
+        var filterGridData = popUpWindowsManager.openFilterDataWindow();
         String range = filterGridData.getRange();
         String filterColumn = filterGridData.getColumnsToFilterBy();
 
@@ -153,12 +154,12 @@ public class OperationHandler {
 
         Map<Character, Set<String>> columnValues = dtoSheetCell.getUniqueStringsInColumn(filterColumn, range);
         Platform.runLater(() -> {
-            Map<Character, Set<String>> filter = popUpWindowsHandler.openFilterDataPopUp(columnValues);
+            Map<Character, Set<String>> filter = popUpWindowsManager.openAvailableFilterValuesPopUp(columnValues);
             boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
 
             if (!isFilterEmpty) {
                 DtoContainerData filteredData = dtoSheetCell.filterSheetCell(range, filter);
-                Platform.runLater(() -> popUpWindowsHandler.openFilterGridPopUp(filteredData, gridController));
+                Platform.runLater(() -> popUpWindowsManager.openFilterGridPopUp(filteredData, gridController));
             }
         });
     }
@@ -168,7 +169,7 @@ public class OperationHandler {
             double currentVal = Double.parseDouble(currentValue);
             return (currentVal >= startingValue && currentVal <= endingValue) ? currentVal : startingValue;
         } catch (NumberFormatException e) {
-            Platform.runLater(() -> popUpWindowsHandler.createErrorPopup("Cell value must be a number", "Error"));
+            Platform.runLater(() -> popUpWindowsManager.createErrorPopup("Cell value must be a number", "Error"));
             return Double.NaN;
         }
     }

@@ -1,7 +1,6 @@
-package controller.popup.type;
+package controller.popup.runtime_analysis;
 
 import controller.grid.GridController;
-import controller.popup.PopUpManager;
 import dto.components.DtoCell;
 import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;

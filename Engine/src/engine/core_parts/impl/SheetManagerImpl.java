@@ -185,6 +185,9 @@ public class SheetManagerImpl implements SheetManager {
 
     public void createEmptyNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows) {
         sheetCell = new SheetCellImp(numRows, numColumns, sheetName, cellLength, cellWidth, null);
+        byte[] savedVersion = sheetCell.saveSheetCellState();
+        SheetCellImp sheetCellInVersionZero = restoreSheetCellState(savedVersion, true);
+        sheetCellVersions.put(0, sheetCellInVersionZero);
     }
 
     private void saveSheetVersionUsingSerialize(){
