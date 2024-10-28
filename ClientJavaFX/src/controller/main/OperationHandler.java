@@ -62,7 +62,6 @@ public class OperationHandler {
 
         Map<String,String> params = new HashMap<>();
         params.put("versionNumber", String.valueOf(dtoSheetCell.getLatestVersion()));
-//        params.put("createOrDelete", "create");
 
         HttpRequestManager.sendPostAsyncRequest(Constants.POST_TEMP_SHEET_IN_SERVLET, params, new Callback() {
             @Override

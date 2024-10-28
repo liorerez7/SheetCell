@@ -11,7 +11,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import okhttp3.Response;
@@ -35,6 +38,11 @@ public class RunTimeAnalysisPopupHandler {
     private final AtomicReference<String> rowRef = new AtomicReference<>();
     private final AtomicReference<Double> currentCellValueRef = new AtomicReference<>();
 
+    // Labels for dynamic values
+    private Label pureNumericValueLabel;
+    private Label affectsCellsLabel;
+    private Label affectedByCellsLabel;
+
     public RunTimeAnalysisPopupHandler(DtoSheetCell sheetCellRunTime, Model model, GridController gridScrollerController) {
         this.sheetCellRunTime = sheetCellRunTime;
         this.model = model;
@@ -49,6 +57,7 @@ public class RunTimeAnalysisPopupHandler {
         ScrollPane gridScrollPane = wrapGridInScrollPane(popupGrid);
 
         Platform.runLater(() -> {
+            VBox infoBox = createInfoBox(cellLocationsOfRunTimeAnalysisCells);
             Label instructionLabel = createInstructionLabel();
             Slider valueSlider = createValueSlider();
             TextField startingValueField = createTextField("Enter starting value");
@@ -63,13 +72,44 @@ public class RunTimeAnalysisPopupHandler {
 
             Consumer<CellLocation> labelClickConsumer = createLabelClickConsumer(startingValueField, endingValueField, stepValueField, submitButton, valueSlider, valueLabel, cellIdLabel, warningLabel, instructionLabel, sliderBox, cellLocationsOfRunTimeAnalysisCells);
 
+
+
             initializeGridAndModelBinding(popupGrid, labelClickConsumer, cellLocationsOfRunTimeAnalysisCells);
             setupSliderValueListener(valueSlider, startingValueField, stepValueField, endingValueField, valueLabel);
 
-            Scene popupScene = createPopupScene(gridScrollPane, instructionLabel, sliderBox);
+            Scene popupScene = createPopupScene(gridScrollPane, instructionLabel, infoBox, sliderBox);
             popupStage.setScene(popupScene);
             popupStage.showAndWait();
         });
+    }
+
+    private VBox createInfoBox(List<CellLocation> cellLocationsOfRunTimeAnalysisCells) {
+
+        StringJoiner pureNumericCells = new StringJoiner(", ");
+        for (CellLocation location : cellLocationsOfRunTimeAnalysisCells) {
+            pureNumericCells.add(location.getCellId());
+        }
+        String result = pureNumericCells.toString();
+
+
+        VBox infoBox = new VBox(10);
+        infoBox.setAlignment(Pos.CENTER_LEFT);
+
+        HBox pureNumericBox = createInfoLine(Color.GRAY, "Pure numeric value cells:", pureNumericValueLabel = new Label(result));
+        HBox affectsBox = createInfoLine(Color.LIGHTGREEN, "Cells that this cell affects:", affectsCellsLabel = new Label("N/A"));
+        HBox affectedByBox = createInfoLine(Color.LIGHTBLUE, "Cells that affect this cell:", affectedByCellsLabel = new Label("N/A"));
+
+        infoBox.getChildren().addAll(pureNumericBox, affectsBox, affectedByBox);
+        return infoBox;
+    }
+
+
+    private HBox createInfoLine(Color color, String description, Label valueLabel) {
+        Circle icon = new Circle(5, color);
+        Label descriptionLabel = new Label(description);
+        HBox lineBox = new HBox(10, icon, descriptionLabel, valueLabel);
+        lineBox.setAlignment(Pos.CENTER_LEFT);
+        return lineBox;
     }
 
     // Private helper methods
@@ -91,8 +131,8 @@ public class RunTimeAnalysisPopupHandler {
         ScrollPane gridScrollPane = new ScrollPane(popupGrid);
         gridScrollPane.setFitToWidth(true);
         gridScrollPane.setFitToHeight(true);
-        gridScrollPane.setPrefViewportWidth(600);
-        gridScrollPane.setPrefViewportHeight(400);
+        gridScrollPane.setPrefViewportWidth(1200);
+        gridScrollPane.setPrefViewportHeight(300);
         return gridScrollPane;
     }
 
@@ -186,6 +226,23 @@ public class RunTimeAnalysisPopupHandler {
                 rowRef.set(cellLocation.getVisualRow());
                 cellIdLabel.setText("Cell ID: " + colRef.get() + rowRef.get());
 
+
+                Set<CellLocation> affectedBy = cell.getAffectedBy();
+                StringJoiner affectedByCells = new StringJoiner(", ");
+                for (CellLocation location : affectedBy) {
+                    affectedByCells.add(location.getCellId());
+                }
+                String resultAffectedByCells = affectedByCells.toString();
+
+                Set<CellLocation> effectsOn = cell.getAffectingOn();
+                StringJoiner effectsOnCells = new StringJoiner(", ");
+                for (CellLocation location : effectsOn) {
+                    effectsOnCells.add(location.getCellId());
+                }
+                String resultEffectsOnCells = effectsOnCells.toString();
+
+                updateInfoLabels(null, resultEffectsOnCells, resultAffectedByCells);
+
                 if (cellLocationsOfRunTimeAnalysisCells.contains(cellLocation)) {
                     enableNumericFields(startingValueField, endingValueField, stepValueField, submitButton, valueSlider);
                     currentCellValueRef.set((Double) cell.getEffectiveValue().getValue());
@@ -208,8 +265,7 @@ public class RunTimeAnalysisPopupHandler {
         startingValueField.setDisable(false);
         endingValueField.setDisable(false);
         stepValueField.setDisable(false);
-        submitButton.setDisable(false);
-        valueSlider.setDisable(false);
+
     }
 
     private void disableNonNumericFields(TextField startingValueField, TextField endingValueField, TextField stepValueField, Button submitButton, Slider valueSlider, Label warningLabel) {
@@ -229,6 +285,18 @@ public class RunTimeAnalysisPopupHandler {
         model.setCellLabelToPropertiesRunTimeAnalysis(cellLocationLabelMap);
         model.bindCellLabelToPropertiesRunTimeAnalysis();
         model.setPropertiesByDtoSheetCellRunTimeAnalsys(sheetCellRunTime);
+    }
+
+    private Scene createPopupScene(ScrollPane gridScrollPane, Label instructionLabel, VBox infoBox, VBox sliderBox) {
+        VBox contentBox = new VBox(10, gridScrollPane, instructionLabel, infoBox, sliderBox);
+        contentBox.setAlignment(Pos.CENTER_LEFT);
+        contentBox.setPadding(new Insets(10));
+        ScrollPane contentScrollPane = new ScrollPane(contentBox);
+        contentScrollPane.setFitToWidth(true);
+        contentScrollPane.setFitToHeight(true);
+        Scene popupScene = new Scene(contentScrollPane);
+        popupScene.getStylesheets().add("controller/main/popup.css");
+        return popupScene;
     }
 
     private void setupSliderValueListener(Slider valueSlider, TextField startingValueField, TextField stepValueField, TextField endingValueField, Label valueLabel) {
@@ -267,19 +335,6 @@ public class RunTimeAnalysisPopupHandler {
         }
     }
 
-    private Scene createPopupScene(ScrollPane gridScrollPane, Label instructionLabel, VBox sliderBox) {
-        VBox contentBox = new VBox(10, gridScrollPane, instructionLabel, sliderBox);
-        contentBox.setAlignment(Pos.CENTER_LEFT);
-        contentBox.setPadding(new Insets(10));
-        ScrollPane contentScrollPane;
-        contentScrollPane = new ScrollPane(contentBox);
-        contentScrollPane.setFitToWidth(true);
-        contentScrollPane.setFitToHeight(true);
-        Scene popupScene = new Scene(contentScrollPane);
-        popupScene.getStylesheets().add("controller/main/popup.css");
-        return popupScene;
-    }
-
     private List<CellLocation> extractCellLocations() {
         List<CellLocation> cellLocations = new ArrayList<>();
         sheetCellRunTime.getViewSheetCell().forEach((location, effectiveValue) -> {
@@ -308,5 +363,20 @@ public class RunTimeAnalysisPopupHandler {
 //            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error updating cell"));
         }
         return dtoSheetCell;
+    }
+
+    private void updateInfoLabels(String pureNumericValue, String affectsCells, String affectedByCells) {
+
+        if(pureNumericValue != null){
+            pureNumericValueLabel.setText(pureNumericValue);
+        }
+
+        if(affectsCells != null){
+            affectsCellsLabel.setText(affectsCells);
+        }
+
+        if(affectedByCells != null){
+            affectedByCellsLabel.setText(affectedByCells);
+        }
     }
 }
