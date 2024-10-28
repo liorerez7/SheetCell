@@ -88,7 +88,7 @@
         <ComboBox fx:id="ThemeColorComboBox" prefHeight="33.0" prefWidth="149.0" promptText="Theme Color" GridPane.columnIndex="8" GridPane.columnSpan="2" />
 
         <!-- Cool Welcome Label -->
-        <Label fx:id="welcomeLabel" styleClass="cool-welcome" text="Welcome Lior!" GridPane.columnSpan="2" GridPane.rowSpan="2">
+        <Label fx:id="welcomeLabel" styleClass="cool-welcome" text="Welcome Lior!" GridPane.columnSpan="2">
             <GridPane.margin>
                 <Insets bottom="5.0" top="5.0" />
             </GridPane.margin>
@@ -99,5 +99,6 @@
                 <Insets />
             </GridPane.margin>
         </Button>
+      <Label fx:id="permissionLabel" styleClass="cool-welcome" text="Permission: " GridPane.columnSpan="2" GridPane.rowIndex="1" />
     </children>
 </GridPane>
