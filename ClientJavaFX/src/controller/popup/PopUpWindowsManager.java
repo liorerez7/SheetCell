@@ -2,8 +2,9 @@ package controller.popup;
 
 import controller.grid.GridController;
 import controller.popup.filter.AvailableFilterValuesPopup;
-import controller.popup.filter.FilterDataPopup;
+
 import controller.popup.filter.FilterGridPopupHandler;
+import controller.popup.filter.FilterPopup;
 import controller.popup.graph.ConsolidatedGraphPopup;
 import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
 import controller.popup.sort.SortGridPopupHandler;
@@ -93,10 +94,10 @@ public class PopUpWindowsManager {
         return sortRowsPopup.show();
     }
 
-    public FilterGridData openFilterDataWindow() {
-        FilterDataPopup filterDataPopup = new FilterDataPopup();
-        return filterDataPopup.show();
-    }
+//    public FilterGridData openFilterDataWindow() {
+//        FilterDataPopup filterDataPopup = new FilterDataPopup();
+//        return filterDataPopup.show();
+//    }
 
     public Map<Character, Set<String>> openAvailableFilterValuesPopUp(Map<Character, Set<String>> stringsInChosenColumn) {
         AvailableFilterValuesPopup availableFilterValuesPopup = new AvailableFilterValuesPopup(stringsInChosenColumn);
@@ -131,6 +132,11 @@ public class PopUpWindowsManager {
     public void openConsolidatedGraphPopup(boolean isChartGraph, DtoSheetCell dtoSheetCell) {
         ConsolidatedGraphPopup graphPopup = new ConsolidatedGraphPopup(isChartGraph, dtoSheetCell);
         graphPopup.show();
+    }
+
+    public void openFilterPopup(DtoSheetCell dtoSheetCell, GridController gridScrollerController) {
+        FilterPopup filterData = new FilterPopup(dtoSheetCell, gridScrollerController);
+        filterData.show();
     }
 }
 

@@ -75,24 +75,27 @@ public class OperationHandler {
 
     public void filterGrid() {
 
-        var filterGridData = popUpWindowsManager.openFilterDataWindow();
-        String range = filterGridData.getRange();
-        String filterColumn = filterGridData.getColumnsToFilterBy();
 
-        if (range == null || filterColumn == null || filterColumn.isEmpty()) {
-            return;
-        }
+        popUpWindowsManager.openFilterPopup(dtoSheetCell, gridController);
 
-        Map<Character, Set<String>> columnValues = dtoSheetCell.getUniqueStringsInColumn(filterColumn, range);
-        Platform.runLater(() -> {
-            Map<Character, Set<String>> filter = popUpWindowsManager.openAvailableFilterValuesPopUp(columnValues);
-            boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
-
-            if (!isFilterEmpty) {
-                DtoContainerData filteredData = dtoSheetCell.filterSheetCell(range, filter);
-                Platform.runLater(() -> popUpWindowsManager.openFilterGridPopUp(filteredData, gridController));
-            }
-        });
+//        var filterGridData = popUpWindowsManager.openFilterDataWindow();
+//        String range = filterGridData.getRange();
+//        String filterColumn = filterGridData.getColumnsToFilterBy();
+//
+//        if (range == null || filterColumn == null || filterColumn.isEmpty()) {
+//            return;
+//        }
+//
+//        Map<Character, Set<String>> columnValues = dtoSheetCell.getUniqueStringsInColumn(filterColumn, range);
+//        Platform.runLater(() -> {
+//            Map<Character, Set<String>> filter = popUpWindowsManager.openAvailableFilterValuesPopUp(columnValues);
+//            boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
+//
+//            if (!isFilterEmpty) {
+//                DtoContainerData filteredData = dtoSheetCell.filterSheetCell(range, filter);
+//                Platform.runLater(() -> popUpWindowsManager.openFilterGridPopUp(filteredData, gridController));
+//            }
+//        });
     }
 
     public void applyChangesInParameters(DtoSheetCell dtoSheetCellAsDataParameter, Model model, GridController gridScrollerController) {
