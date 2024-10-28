@@ -58,35 +58,11 @@ public class OperationHandler {
         });
     }
 
-//    public void runTimeAnalysis() {
-//        var runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
-//        String cellId = runTimeAnalysisData.getCellId().toUpperCase();
-//
-//        if (cellId.isEmpty() || dtoSheetCell == null) {
-//            return;
-//        }
-//
-//        Platform.runLater(() -> {
-//            double currentVal = validateCellValue(dtoSheetCell.getRequestedCell(cellId).getEffectiveValue().getValue().toString(),
-//                    runTimeAnalysisData.getStartingValue(), runTimeAnalysisData.getEndingValue());
-//
-//            if (!Double.isNaN(currentVal)) {
-//                char col = cellId.charAt(0);
-//                String row = cellId.substring(1);
-//
-//                popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, runTimeAnalysisData.getStartingValue(),
-//                        runTimeAnalysisData.getEndingValue(), runTimeAnalysisData.getStepValue(),
-//                        currentVal, col, row, model, gridController);
-//            }
-//        });
-//    }
-
     public void runTimeAnalysis() {
 
         Map<String,String> params = new HashMap<>();
         params.put("versionNumber", String.valueOf(dtoSheetCell.getLatestVersion()));
-        params.put("createOrDelete", "create");
-
+//        params.put("createOrDelete", "create");
 
         HttpRequestManager.sendPostAsyncRequest(Constants.POST_TEMP_SHEET_IN_SERVLET, params, new Callback() {
             @Override
@@ -105,31 +81,6 @@ public class OperationHandler {
                 }
             }
         });
-
-
-
-
-//        var runTimeAnalysisData = popUpWindowsHandler.openRunTimeAnalysisWindow();
-//        String cellId = runTimeAnalysisData.getCellId().toUpperCase();
-//
-//        if (cellId.isEmpty() || dtoSheetCell == null) {
-//            return;
-//        }
-//
-//        Platform.runLater(() -> {
-//            double currentVal = validateCellValue(dtoSheetCell.getRequestedCell(cellId).getEffectiveValue().getValue().toString(),
-//                    runTimeAnalysisData.getStartingValue(), runTimeAnalysisData.getEndingValue());
-//
-//            if (!Double.isNaN(currentVal)) {
-//                char col = cellId.charAt(0);
-//                String row = cellId.substring(1);
-//
-//                popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, runTimeAnalysisData.getStartingValue(),
-//                        runTimeAnalysisData.getEndingValue(), runTimeAnalysisData.getStepValue(),
-//                        currentVal, col, row, model, gridController);
-////                popUpWindowsHandler.showRuntimeAnalysisPopup(dtoSheetCell, model, gridController);
-//            }
-//        });
     }
 
     public void sortRows() {
@@ -162,16 +113,6 @@ public class OperationHandler {
                 Platform.runLater(() -> popUpWindowsManager.openFilterGridPopUp(filteredData, gridController));
             }
         });
-    }
-
-    private double validateCellValue(String currentValue, int startingValue, int endingValue) {
-        try {
-            double currentVal = Double.parseDouble(currentValue);
-            return (currentVal >= startingValue && currentVal <= endingValue) ? currentVal : startingValue;
-        } catch (NumberFormatException e) {
-            Platform.runLater(() -> popUpWindowsManager.createErrorPopup("Cell value must be a number", "Error"));
-            return Double.NaN;
-        }
     }
 
     public void applyChangesInParameters(DtoSheetCell dtoSheetCellAsDataParameter, Model model, GridController gridScrollerController) {

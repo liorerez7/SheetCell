@@ -17,7 +17,7 @@ public class PostTempSheetServlet extends HttpServlet {
 
 
         int versionNumber = Integer.parseInt(request.getParameter("versionNumber"));
-        String createOrDelete = request.getParameter("createOrDelete");
+//        String createOrDelete = request.getParameter("createOrDelete");
         Engine engine = ServletUtils.getEngineManager(getServletContext());
         String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
         String userName = (String) request.getSession(false).getAttribute(Constants.USERNAME);
@@ -25,7 +25,7 @@ public class PostTempSheetServlet extends HttpServlet {
 
             synchronized (engine) {
 
-                if(createOrDelete.equals("create")){
+//                if(createOrDelete.equals("create")){
                     try {
                         engine.addTemporarySheet(userName,versionNumber, sheetName);
                     }catch (Exception e){
@@ -36,22 +36,22 @@ public class PostTempSheetServlet extends HttpServlet {
                         response.setCharacterEncoding("UTF-8");
                         response.getWriter().write(errorMessageAsJson);
                     }
-                }
-                else{
-                    try {
-                        engine.removeTemporarySheet(userName);
-                    }catch (Exception e){
-                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        String errorMessage = ServletUtils.extractErrorMessage(e);
-                        String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
-                        response.setContentType("application/json");
-                        response.setCharacterEncoding("UTF-8");
-                        response.getWriter().write(errorMessageAsJson);
-                    }
+//                }
+////                else{
+//                    try {
+//                        engine.removeTemporarySheet(userName);
+//                    }catch (Exception e){
+//                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//                        String errorMessage = ServletUtils.extractErrorMessage(e);
+//                        String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
+//                        response.setContentType("application/json");
+//                        response.setCharacterEncoding("UTF-8");
+//                        response.getWriter().write(errorMessageAsJson);
+//                    }
             }
 
 
-        }
+        //}
 
     }
 }

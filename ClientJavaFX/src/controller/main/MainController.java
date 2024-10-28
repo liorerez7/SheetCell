@@ -64,7 +64,6 @@ public class MainController {
     private final ThemeManager themeManager;
     private ProgressManager progressManager;
     private DashboardController dashController;
-    private Timer timer;
     private DtoSheetCell dtoSheetCellAsDataParameter;
     private String sheetName;
     private String userName;

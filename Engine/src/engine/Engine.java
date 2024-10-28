@@ -149,11 +149,6 @@ public class Engine {
         sheetInfosManager.AddSheet(sheetName, dtoSheetCell.getSheetSize());
     }
 
-    public void removeTemporarySheet(String username) {
-        SheetManager sheetManager = usernameToTemporarySheetManager.get(username);
-        sheetManager = null;
-    }
-
     public void addTemporarySheet(String username, int versionNumber, String sheetName) {
         usernameToTemporarySheetManager.put(username, sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber));
     }
