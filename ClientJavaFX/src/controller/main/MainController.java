@@ -607,6 +607,7 @@ public class MainController {
     public void updateCurrentGridSheet(String sheetName, PermissionStatus permissionStatus) {
         this.permissionStatus = permissionStatus;
         updateCurrentGridSheet(sheetName);
+        headerController.setPermissionLabel(permissionStatus);
 
     }
 

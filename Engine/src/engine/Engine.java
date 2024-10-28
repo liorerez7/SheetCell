@@ -133,12 +133,6 @@ public class Engine {
         }
     }
 
-//    public String getUserNameThatLastUpdatedCell(String sheetName, String cellId) {
-//        Map<CellLocation, String> cellLocationToUserName = sheetNameToCellLocationToUserName.get(sheetName);
-//        CellLocation cellLocation = CellLocationFactory.fromCellId(cellId);
-//        return cellLocationToUserName.get(cellLocation);
-//    }
-
     public synchronized void createNewSheet(String sheetName, int cellWidth, int cellLength, int numColumns, int numRows, String userName) {
         SheetManagerImpl sheetManager = new SheetManagerImpl();
         sheetManager.createEmptyNewSheet(sheetName, cellWidth, cellLength, numColumns, numRows);

@@ -1,6 +1,7 @@
 package controller.menu;
 
 import controller.main.MainController;
+import dto.permissions.PermissionStatus;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,6 +32,8 @@ public class HeaderController {
     @FXML private ComboBox<Label> ThemeColorComboBox;
     @FXML private Button backDashBoard;
     @FXML private Label welcomeLabel;
+    @FXML private Label permissionLabel;
+
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -273,5 +276,9 @@ public class HeaderController {
 
     public void setupName(String name) {
         welcomeLabel.setText("Welcome " + name + "!");
+    }
+
+    public void setPermissionLabel(PermissionStatus permissionStatus) {
+        permissionLabel.setText("Permission: " + permissionStatus.toString());
     }
 }
