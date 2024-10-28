@@ -770,7 +770,6 @@ public class GridController {
 
                 DtoCell dtoCell = sheetCell.getRequestedCell(location);
 
-//                newCellLabel.setOnMouseClicked(event -> labelClickConsumer.accept(cellLocation));
                 newCellLabel.setOnMouseClicked(event -> onRunTimeCellClicked(dtoCell, cellLocationToLabel,
                         cellLocationToCustomCellLabel, labelClickConsumer, cellLocation));
 
