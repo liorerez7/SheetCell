@@ -754,7 +754,7 @@ public class PopUpWindowsHandler {
     }
 
     public void showVersionsPopup(
-            Map<Integer, DtoSheetCell> allDtoSheetVersions, // Map of all sheet versions
+            Map<Integer, DtoSheetCell> allDtoSheetVersions,
             int lastVersion,
             GridController gridScrollerController) {
 
