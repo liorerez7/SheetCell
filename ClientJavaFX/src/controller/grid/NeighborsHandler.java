@@ -65,7 +65,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class NeighborsHandler {
-    Label cellLabel;
 
     public void showNeighbors(DtoCell cell, Map<CellLocation, Label> cellLocationToLabel, Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel) {
 

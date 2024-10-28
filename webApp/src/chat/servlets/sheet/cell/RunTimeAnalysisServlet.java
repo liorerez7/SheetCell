@@ -37,7 +37,7 @@ public class RunTimeAnalysisServlet extends HttpServlet {
 
                                 SheetManager runTimeSheetCell = engine.getTemporarySheetManager(username);
 
-                                runTimeSheetCell.saveCurrentSheetCellState();
+                                //runTimeSheetCell.saveCurrentSheetCellState();
 
                                 runTimeSheetCell.updateCell(cellValue, columnOfCell, row);
 
@@ -53,7 +53,7 @@ public class RunTimeAnalysisServlet extends HttpServlet {
 
                                 runTimeSheetCell.restoreSheetCellState();
 
-                                response.setStatus(HttpServletResponse.SC_OK);
+                                //response.setStatus(HttpServletResponse.SC_OK);
 
                         }catch (Exception e) {
                                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -2,6 +2,7 @@ package controller.main;
 
 import controller.grid.GridController;
 import dto.components.DtoCell;
+import dto.small_parts.CellLocationFactory;
 import dto.small_parts.EffectiveValue;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
@@ -629,6 +630,8 @@ public class PopUpWindowsHandler {
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(title);
 
+        List<CellLocation> cellLocationsOfRunTimeAnalysisCells = extractCellLocations(sheetCellRunTime);
+
         // Create the main grid pane and apply styles
         GridPane popupGrid = new GridPane();
         popupGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
@@ -698,7 +701,7 @@ public class PopUpWindowsHandler {
             cellIdLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;");
 
             // Warning label for non-numeric cells (initially hidden)
-            Label warningLabel = new Label("Runtime analysis is only available for numeric cells.");
+            Label warningLabel = new Label("Runtime analysis is only available for pure numeric cells.");
             warningLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
             warningLabel.setVisible(false); // Start hidden
 
@@ -743,9 +746,12 @@ public class PopUpWindowsHandler {
                 rowRef.set(cellLocation.getVisualRow());
                 cellIdLabel.setText("Cell ID: " + colRef.get() + rowRef.get());
 
+//                gridScrollerController.clearAllHighlights();
+//                gridScrollerController.showNeighbors(cell);
+
                 if (cell != null && cell.getEffectiveValue() != null){
 
-                    if(cell.getEffectiveValue().getValue() instanceof Double) {
+                    if(cellLocationsOfRunTimeAnalysisCells.contains(cellLocation)){
 
                         // Enable the text fields and submit button for numeric cells
                         startingValueField.clear();
@@ -799,7 +805,7 @@ public class PopUpWindowsHandler {
 
             // Initialize grid and bind model
             Map<CellLocation, Label> cellLocationLabelMap = gridScrollerController
-                    .initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime, labelClickConsumer);
+                    .initializeRunTimeAnalysisPopupGrid(popupGrid, sheetCellRunTime, labelClickConsumer, cellLocationsOfRunTimeAnalysisCells);
 
             model.setCellLabelToPropertiesRunTimeAnalysis(cellLocationLabelMap);
             model.bindCellLabelToPropertiesRunTimeAnalysis();
@@ -848,9 +854,23 @@ public class PopUpWindowsHandler {
         });
     }
 
-    private void onCellClicked(String location) {
+    private List<CellLocation> extractCellLocations(DtoSheetCell sheetCellRunTime) {
+        List<CellLocation> cellLocations = new ArrayList<>();
+        sheetCellRunTime.getViewSheetCell().forEach((location, effectiveValue) -> {
+            DtoCell dtoCell = sheetCellRunTime.getRequestedCell(location.getCellId());
 
+            try{
+                Double doubleVal = Double.parseDouble(dtoCell.getOriginalValue());
+                cellLocations.add(CellLocationFactory.fromCellId(location.getCellId()));
+            }catch (Exception e){
+                // Do nothing
+            }
+        });
+
+        return cellLocations;
     }
+
+
 
 
     private DtoSheetCell runTimeHttpCall(Map<String,String> map){

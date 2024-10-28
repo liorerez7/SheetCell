@@ -719,9 +719,11 @@ public class GridController {
 //    }
 
     public Map<CellLocation, Label> initializeRunTimeAnalysisPopupGrid(GridPane grid,
-                                                                       DtoSheetCell sheetCell, Consumer<CellLocation> labelClickConsumer) {
+                                                                       DtoSheetCell sheetCell,
+                                                                       Consumer<CellLocation> labelClickConsumer, List<CellLocation> cellLocations) {
 
         Map<CellLocation, Label> cellLocationToLabel = new HashMap<>();
+        Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel = new HashMap<>();
 
         initializeEmptyGrid(sheetCell, grid, true);
 
@@ -743,9 +745,9 @@ public class GridController {
                 String location = colChar + rowString;
                 CellLocation cellLocation = CellLocationFactory.fromCellId(location);
 
-
                 Label newCellLabel = new Label();
                 CustomCellLabel newCustomCellLabel = new CustomCellLabel(newCellLabel);
+                cellLocationToCustomCellLabel.put(cellLocation, newCustomCellLabel);
 
                 newCustomCellLabel.applyDefaultStyles();
                 newCustomCellLabel.setBackgroundColor(Color.WHITE);
@@ -753,6 +755,9 @@ public class GridController {
                 newCustomCellLabel.setAlignment(Pos.CENTER);
                 newCustomCellLabel.setTextAlignment(TextAlignment.CENTER);
 
+                if(cellLocations.contains(cellLocation)){
+                    newCustomCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+                }
 
                 setLabelSize(newCellLabel, cellWidth, cellLength);
 
@@ -763,12 +768,30 @@ public class GridController {
                     newCellLabel.setText(textForLabel);
                 }
 
-                newCellLabel.setOnMouseClicked(event -> labelClickConsumer.accept(cellLocation));
+                DtoCell dtoCell = sheetCell.getRequestedCell(location);
+
+//                newCellLabel.setOnMouseClicked(event -> labelClickConsumer.accept(cellLocation));
+                newCellLabel.setOnMouseClicked(event -> onRunTimeCellClicked(dtoCell, cellLocationToLabel,
+                        cellLocationToCustomCellLabel, labelClickConsumer, cellLocation));
+
                 cellLocationToLabel.put(cellLocation, newCellLabel);
                 grid.add(newCellLabel, col, row);
             }
         }
         return cellLocationToLabel;
+    }
+
+    private void onRunTimeCellClicked(DtoCell dtoCell, Map<CellLocation,
+            Label> cellLocationToLabel,
+                                      Map<CellLocation, CustomCellLabel> cellLocationToCustomCellLabel,
+                                      Consumer<CellLocation> labelClickConsumer, CellLocation cellLocation) {
+
+        if (dtoCell != null) {
+            neighborsHandler.clearAllHighlights(cellLocationToLabel, cellLocationToCustomCellLabel); // clears highlighted cells
+            neighborsHandler.showNeighbors(dtoCell, cellLocationToLabel, cellLocationToCustomCellLabel); // highlight neighbors in green color
+        }
+
+        labelClickConsumer.accept(cellLocation);
     }
 
 
