@@ -4,6 +4,7 @@ import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;
 import dto.small_parts.CellLocationFactory;
 import dto.small_parts.EffectiveValue;
+import dto.small_parts.UpdateCellInfo;
 import engine.core_parts.api.SheetManager;
 import engine.core_parts.impl.SheetCellImp;
 import engine.core_parts.impl.SheetManagerImpl;
@@ -23,10 +24,15 @@ public class Engine {
     private final ChatManager chatManager = new ChatManager();
     private final PermissionManager permissionManager = new PermissionManager();
     private Map<String, SheetManagerImpl> usernameToTemporarySheetManager = new HashMap<>();
+    private Map<Integer, UpdateCellInfo> versionToCellInfo = new HashMap<>();
 
     private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager, userManager);
 
     private Map<String, Map<CellLocation, String>> sheetNameToCellLocationToUserName = new HashMap<>();
+
+    public Map<Integer, UpdateCellInfo> getVersionToCellInfo() {
+        return versionToCellInfo;
+    }
 
     public synchronized SheetManager getSheetCell(InputStream sheetInputStream, String userName) {
 

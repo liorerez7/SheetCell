@@ -1,7 +1,11 @@
 package chat.servlets.sheet.cell;
 
 import chat.utilities.SessionUtils;
+import dto.components.DtoCell;
 import dto.components.DtoSheetCell;
+import dto.small_parts.CellLocation;
+import dto.small_parts.CellLocationFactory;
+import dto.small_parts.UpdateCellInfo;
 import engine.core_parts.api.SheetManager;
 
 import engine.Engine;
@@ -24,18 +28,28 @@ public class UpdateCellServlet extends HttpServlet {
         String row = request.getParameter("rowLocation");
 
         Engine engine = ServletUtils.getEngineManager(getServletContext());
-        String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
-        String userName = SessionUtils.getUsername(request);
+
 
         // Synchronize on the engine or the sheet manager
         synchronized (engine) {
+
+            String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
+            String userName = SessionUtils.getUsername(request);
             SheetManager sheetManager = engine.getSheetCell(sheetName);
 
             try {
                 DtoSheetCell beforeUpdateDtoSheetCell = sheetManager.getSheetCell();
+                DtoCell beforeUpdateCell = beforeUpdateDtoSheetCell.getRequestedCell(columnOfCell + row);
+
                 sheetManager.updateCell(cellValue, columnOfCell, row);
+
                 DtoSheetCell afterUpdateDtoSheetCell = sheetManager.getSheetCell();
+                DtoCell afterUpdateCell = afterUpdateDtoSheetCell.getRequestedCell(columnOfCell + row);
+
                 engine.updateUsersInCells(beforeUpdateDtoSheetCell, afterUpdateDtoSheetCell, userName);
+
+                updateVersionToCellInfo(beforeUpdateCell, afterUpdateCell, userName, engine);
+
 
                 response.setStatus(HttpServletResponse.SC_OK);
             } catch (Exception e) {
@@ -51,5 +65,26 @@ public class UpdateCellServlet extends HttpServlet {
                 response.getWriter().flush();
             }
         }
+    }
+
+    private void updateVersionToCellInfo(DtoCell beforeUpdateCell, DtoCell afterUpdateCell, String userName, Engine engine) {
+
+        String newActualValue = afterUpdateCell.getEffectiveValue().getValue().toString();
+        String newOriginalValue = afterUpdateCell.getOriginalValue();
+        int versionNumber = afterUpdateCell.getLatestVersion();
+        CellLocation location = afterUpdateCell.getLocation();
+
+        String oldActualValue = "";
+        String oldOriginalValue = "";
+
+        if(beforeUpdateCell != null){
+            oldActualValue = beforeUpdateCell.getEffectiveValue().getValue().toString();
+            oldOriginalValue = beforeUpdateCell.getOriginalValue();
+        }
+
+        engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo(oldActualValue,
+                newActualValue, oldOriginalValue,
+                newOriginalValue, versionNumber, userName, location));
+
     }
 }

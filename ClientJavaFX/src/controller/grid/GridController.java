@@ -380,10 +380,10 @@ public class GridController {
         label.setPadding(Insets.EMPTY);  // Removes padding
     }
 
-    public void initializeVersionPopupGrid(GridPane grid, DtoSheetCell sheetCell) {
+    public Map<CellLocation,CustomCellLabel> initializeVersionPopupGrid(GridPane grid, DtoSheetCell sheetCell) {
 
         initializeEmptyGrid(sheetCell, grid, true);
-
+        Map<CellLocation,CustomCellLabel> cellLocationCustomCellLabelMap = new HashMap<>();
         applyGridColors(grid);
 
         int numCols = sheetCell.getNumberOfColumns();
@@ -424,9 +424,11 @@ public class GridController {
                     newCellLabel.setText(textForLabel);
                 }
 
+                cellLocationCustomCellLabelMap.put(cellLocation, newCustomCellLabel);
                 grid.add(newCellLabel, col, row);
             }
         }
+        return cellLocationCustomCellLabelMap;
     }
 
     public Map<CellLocation, CustomCellLabel> initializeOriginalPopupGrid(GridPane grid, DtoSheetCell sheetCell) {

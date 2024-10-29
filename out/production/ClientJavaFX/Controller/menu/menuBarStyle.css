@@ -9,7 +9,7 @@
     -fx-background-radius: 8;
     -fx-border-radius: 8;
     -fx-border-color: #d3d3d3;
-    -fx-padding: 10; /* Reduced padding to bring elements closer to the top */
+    -fx-padding: 5; /* Reduced padding to bring elements closer to the top */
     -fx-hgap: 20;
     -fx-vgap: 8; /* Reduced vertical gap */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);

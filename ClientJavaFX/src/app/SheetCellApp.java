@@ -52,7 +52,6 @@ import javafx.stage.Stage;
 
 
 //TODO:
-//      1. runtime bonus implementation
 //      2. finish scroller for versions
 //      3. develop miniMenu in grid screen
 //      4. remove permissions ability

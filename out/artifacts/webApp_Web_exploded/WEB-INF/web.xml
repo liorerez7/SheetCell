@@ -56,6 +56,10 @@
         <servlet-class>chat.servlets.sheet.cell.UpdateCellServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GetVersionToCellInfoServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.cell.GetVersionToCellInfoServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RunTimeAnalysisServlet</servlet-name>
         <servlet-class>chat.servlets.sheet.cell.RunTimeAnalysisServlet</servlet-class>
     </servlet>
@@ -131,6 +135,10 @@
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/updateCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetVersionToCellInfoServlet</servlet-name>
+        <url-pattern>/versionToCellInfo</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RunTimeAnalysisServlet</servlet-name>

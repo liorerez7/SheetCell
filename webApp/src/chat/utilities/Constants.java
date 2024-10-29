@@ -1,17 +1,15 @@
 package chat.utilities;
 
 
-import chat.utilities.jsonSerializableClasses.CellLocationToStringMapSerializer;
+import chat.utilities.jsonSerializableClasses.*;
 import dto.components.DtoContainerData;
-import chat.utilities.jsonSerializableClasses.CellLocationMapSerializer;
-import chat.utilities.jsonSerializableClasses.DtoContainerDataSerializer;
-import chat.utilities.jsonSerializableClasses.DtoSheetCellSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dto.small_parts.CellLocation;
 import dto.small_parts.EffectiveValue;
 import dto.components.DtoSheetCell;
+import dto.small_parts.UpdateCellInfo;
 
 
 import java.util.Map;
@@ -30,6 +28,8 @@ public class Constants {
             .registerTypeAdapter(new TypeToken<Map<CellLocation, String>>() {}.getType(), new CellLocationToStringMapSerializer())
             .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellSerializer())
             .registerTypeAdapter(DtoContainerData.class, new DtoContainerDataSerializer())
+//            .registerTypeAdapter(UpdateCellInfo.class, new UpdateCellInfoSerializer())
+//            .registerTypeAdapter(new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType(), new VersionToCellInfoMapSerializer()) // Serializer for Map<Integer, UpdateCellInfo>
             .serializeSpecialFloatingPointValues()
             .setPrettyPrinting()
             .create();

@@ -7,6 +7,7 @@ import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
 import controller.popup.sort.SortRowsPopup;
 import controller.popup.versions.VersionsPopupHandler;
 import dto.components.DtoSheetCell;
+import dto.small_parts.UpdateCellInfo;
 import utilities.javafx.Model;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -89,9 +90,9 @@ public class PopUpWindowsManager {
     public void showVersionsPopup(
             Map<Integer, DtoSheetCell> allDtoSheetVersions,
             int lastVersion,
-            GridController gridScrollerController) {
+            GridController gridScrollerController, Map<Integer, UpdateCellInfo> versionToUpdateCellInfo) {
 
-        VersionsPopupHandler versionsPopupHandler = new VersionsPopupHandler(allDtoSheetVersions, lastVersion, gridScrollerController);
+        VersionsPopupHandler versionsPopupHandler = new VersionsPopupHandler(allDtoSheetVersions, lastVersion, gridScrollerController, versionToUpdateCellInfo);
         versionsPopupHandler.show();
     }
 

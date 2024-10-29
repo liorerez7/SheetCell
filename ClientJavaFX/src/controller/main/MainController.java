@@ -5,6 +5,7 @@ import controller.dashboard.DashboardController;
 import controller.grid.GridController;
 import controller.popup.PopUpWindowsManager;
 import dto.permissions.PermissionStatus;
+import dto.small_parts.UpdateCellInfo;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import controller.menu.HeaderController;
@@ -70,6 +71,8 @@ public class MainController {
     private PermissionStatus permissionStatus;
     private Map<CellLocation, String> cellLocationToUserName;
     private Timer sheetNameRefresher;
+    private Map<Integer, UpdateCellInfo> versionToCellInfo = new HashMap<>();
+
 
     public static final int REFRESH_INTERVAL = 500;
     public static final int INITIAL_DELAY = 0;
@@ -319,6 +322,14 @@ public class MainController {
 
                 }
 
+               try(Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_VERSION_TO_CELL_INFO_MAP, params)) {
+
+                    String versionToCellInfoAsJson = response.body().string();
+                   versionToCellInfo = Constants.GSON_INSTANCE.fromJson(versionToCellInfoAsJson,
+                           new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType());
+
+               }
+
             } catch (IOException e) {
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
@@ -464,7 +475,7 @@ public class MainController {
 
                 Platform.runLater(() -> {
                     popUpWindowsManager.showVersionsPopup(dtoVersions,
-                            dtoSheetCellAsDataParameter.getLatestVersion(), gridScrollerController);
+                            dtoSheetCellAsDataParameter.getLatestVersion(), gridScrollerController, versionToCellInfo);
                 });
             }
         });
