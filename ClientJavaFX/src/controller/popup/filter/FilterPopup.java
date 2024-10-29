@@ -1,8 +1,10 @@
 package controller.popup.filter;
 
+import controller.grid.CustomCellLabel;
 import controller.grid.GridController;
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
+import dto.small_parts.CellLocation;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,21 +30,23 @@ public class FilterPopup {
     private final Button applyFilterButton;
     private final Button removeButton;
     private final Button rangeSubmitButton;
+    private final Button showFilteredGridButton;
     private final DtoSheetCell dtoSheetCell;
+    private final GridController gridController;
     private DtoContainerData filteredData;
     private HBox lastClickedCellBox;
     private Character lastClickedColumn;
     private int lastClickedRowIndex;
     private boolean isUniqueDataSectionAdded = false;
     private boolean isCriteriaSectionAdded = false;
-    private final Button showFilteredGridButton;
-    private final GridController gridController; // Add GridController instance
-
+    private VBox originalGridContainer; // Holds the original grid
+    private VBox filteredGridContainer; // Holds the filtered grid for later addition
+    private Map<CellLocation, CustomCellLabel> cellLocationCustomCellLabelMap = new HashMap<>();
 
 
     public FilterPopup(DtoSheetCell dtoSheetCell, GridController gridController) {
         this.dtoSheetCell = dtoSheetCell;
-        this.gridController = gridController; // Store GridController instance
+        this.gridController = gridController;
         popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Filter Data");
@@ -57,30 +62,99 @@ public class FilterPopup {
         applyFilterButton = new Button("Apply Filter");
         removeButton = new Button("Remove");
         rangeSubmitButton = new Button("Next");
+        rangeSubmitButton.setDisable(true);  // Initially disabled
+        showFilteredGridButton = new Button("Show Filtered Grid");
 
-        showFilteredGridButton = new Button("Show Filtered Grid"); // Initialize the new button
-        removeButton.setDisable(true);
-        showFilteredGridButton.setDisable(true); // Initially disabled
+        // Add listeners to enable rangeSubmitButton only when both text fields are populated
+        rangeFromField.textProperty().addListener((observable, oldValue, newValue) -> updateRangeSubmitButtonState());
+        rangeToField.textProperty().addListener((observable, oldValue, newValue) -> updateRangeSubmitButtonState());
 
         removeButton.setOnAction(e -> handleRemoveButton());
-        showFilteredGridButton.setOnAction(e -> showFilteredGrid()); // Set up the button action
+        showFilteredGridButton.setOnAction(e -> showFilteredGrid());
 
         initializeStage();
     }
+
+    private void updateRangeSubmitButtonState() {
+        boolean isEnabled = !rangeFromField.getText().isEmpty() && !rangeToField.getText().isEmpty();
+        rangeSubmitButton.setDisable(!isEnabled);
+    }
+
 
     public void show() {
         popupStage.showAndWait();
     }
 
     private void initializeStage() {
+        // Create original grid container with a title label
+        Label originalGridTitle = new Label("Original Grid");
+        originalGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        originalGridContainer = new VBox(10, originalGridTitle, createOriginalGrid());
+
+        // Create filtered grid container with a title label, initially empty
+        Label filteredGridTitle = new Label("Filtered Grid");
+        filteredGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        filteredGridContainer = new VBox(10, filteredGridTitle);
+        filteredGridContainer.setPadding(new Insets(10));
+        filteredGridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
+        filteredGridContainer.setPrefSize(1000, 300);  // Adjusted height to give space for title
+
+        // Layout structure to hold both grids on the right
+        VBox gridSection = new VBox(20, originalGridContainer, filteredGridContainer);
+
+        // Filter section on the left
         mainLayout.getChildren().add(createRangeSelectionPanel());
 
-        Scene scene = new Scene(new ScrollPane(mainLayout), 600, 700);
+        // Wrap everything in HBox
+        HBox contentLayout = new HBox(20, mainLayout, gridSection);
+        contentLayout.setPadding(new Insets(10));
+
+        // Set up the scene with the combined layout
+        Scene scene = new Scene(new ScrollPane(contentLayout), 1450, 700);
         scene.getStylesheets().add(getClass().getResource("filterpopup.css").toExternalForm());
         popupStage.setScene(scene);
 
-        filterCriteriaTable.setSelectionModel(null); // Disable row selection
+        filterCriteriaTable.setSelectionModel(null);
     }
+
+    // Method to create the original grid as a VBox
+    private VBox createOriginalGrid() {
+        GridPane originalGrid = new GridPane();
+        originalGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
+
+        cellLocationCustomCellLabelMap = gridController.initializeOriginalPopupGrid(originalGrid, dtoSheetCell);
+
+        ScrollPane gridScrollPane = new ScrollPane(originalGrid);
+        gridScrollPane.setFitToWidth(true);
+        gridScrollPane.setFitToHeight(true);
+        gridScrollPane.setPrefSize(1000, 320);
+
+        VBox gridContainer = new VBox(gridScrollPane);
+        gridContainer.setPadding(new Insets(10));
+        gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
+
+        return gridContainer;
+    }
+
+    // Method to create the filtered grid as a VBox
+    private VBox createFilterGrid(DtoContainerData dtoContainerData) {
+        GridPane filterGrid = new GridPane();
+        filterGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
+
+        gridController.initializeFilterPopupGrid(filterGrid, dtoContainerData);
+
+        ScrollPane gridScrollPane = new ScrollPane(filterGrid);
+        gridScrollPane.setFitToWidth(true);
+        gridScrollPane.setFitToHeight(true);
+        gridScrollPane.setPrefSize(1000, 320);
+
+        VBox gridContainer = new VBox(gridScrollPane);
+        gridContainer.setPadding(new Insets(10));
+        gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
+
+        return gridContainer;
+    }
+
 
     private GridPane createRangeSelectionPanel() {
         GridPane rangePane = new GridPane();
@@ -100,10 +174,13 @@ public class FilterPopup {
         return rangePane;
     }
 
+
     private void handleRangeSubmission() {
         if (!rangeFromField.getText().isEmpty() && !rangeToField.getText().isEmpty()) {
             rangeFromField.setText(rangeFromField.getText().toUpperCase());
             rangeToField.setText(rangeToField.getText().toUpperCase());
+
+            setGrayBackgroundForCells(rangeFromField.getText(), rangeToField.getText());
 
             // Disable range fields
             rangeFromField.setDisable(true);
@@ -119,6 +196,52 @@ public class FilterPopup {
         }
     }
 
+    private void setGrayBackgroundForCells(String rangeFrom, String rangeTo) {
+        rangeFrom = rangeFrom.toUpperCase();
+        rangeTo = rangeTo.toUpperCase();
+
+        char rangeFromCol = rangeFrom.charAt(0);
+        int rangeFromRow = Integer.parseInt(rangeFrom.substring(1));
+        char rangeToCol = rangeTo.charAt(0);
+        int rangeToRow = Integer.parseInt(rangeTo.substring(1));
+
+        cellLocationCustomCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+            char col = cellLocation.getVisualColumn();
+            int row = Integer.parseInt(cellLocation.getVisualRow());
+
+            // Check if the cell is within the range bounds
+            boolean isWithinColumnRange = col >= rangeFromCol && col <= rangeToCol;
+            boolean isWithinRowRange = row >= rangeFromRow && row <= rangeToRow;
+
+            if (isWithinColumnRange && isWithinRowRange) {
+                customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+            }
+        });
+    }
+
+    private void setWhiteBackgroundForCells(String rangeFrom, String rangeTo) {
+        rangeFrom = rangeFrom.toUpperCase();
+        rangeTo = rangeTo.toUpperCase();
+
+        char rangeFromCol = rangeFrom.charAt(0);
+        int rangeFromRow = Integer.parseInt(rangeFrom.substring(1));
+        char rangeToCol = rangeTo.charAt(0);
+        int rangeToRow = Integer.parseInt(rangeTo.substring(1));
+
+        cellLocationCustomCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+            char col = cellLocation.getVisualColumn();
+            int row = Integer.parseInt(cellLocation.getVisualRow());
+
+            // Check if the cell is within the range bounds
+            boolean isWithinColumnRange = col >= rangeFromCol && col <= rangeToCol;
+            boolean isWithinRowRange = row >= rangeFromRow && row <= rangeToRow;
+
+            if (isWithinColumnRange && isWithinRowRange) {
+                customCellLabel.setBackgroundColor(Color.WHITE);
+            }
+        });
+    }
+
     private HBox createColumnSelectionPanel() {
         HBox columnSelectionPane = new HBox(10);
         columnSelectionPane.setPadding(new Insets(10));
@@ -132,6 +255,7 @@ public class FilterPopup {
         columnSelectionPane.getChildren().addAll(new Label("Column to filter by:"), columnComboBox);
         return columnSelectionPane;
     }
+
 
     private void handleColumnSelection() {
         Character selectedColumn = columnComboBox.getValue();
@@ -179,17 +303,21 @@ public class FilterPopup {
         return uniqueDataPane;
     }
 
-    // Method to handle "Back to Choose Ranges" action
     private void handleBackToChooseRanges() {
         // Enable range fields and the "Next" button
         rangeFromField.setDisable(false);
         rangeToField.setDisable(false);
-        rangeSubmitButton.setDisable(false); // Re-enable the "Next" button
+        rangeSubmitButton.setDisable(false);
 
         // Clear the filter criteria table and reset the criteria section
         filterCriteriaTable.getItems().clear();
         filterCriteriaTable.getColumns().clear();
         mainLayout.getChildren().removeIf(node -> node != rangeFromField.getParent());
+
+        // Clear the filtered grid container to hide the filtered grid
+        filteredGridContainer.getChildren().clear();
+
+        setWhiteBackgroundForCells(rangeFromField.getText(), rangeToField.getText());
 
         // Reset flags for section addition
         isUniqueDataSectionAdded = false;
@@ -197,6 +325,7 @@ public class FilterPopup {
         removeButton.setDisable(true);
         showFilteredGridButton.setDisable(true);
     }
+
 
     private void populateUniqueDataList(char column) {
         uniqueDataListView.getItems().clear();
@@ -344,11 +473,15 @@ public class FilterPopup {
     private void showFilteredGrid() {
         DtoContainerData filteredData = applyFilter();
         if (filteredData != null) {
-            FilterGridPopupHandler filterGridPopupHandler = new FilterGridPopupHandler(gridController, filteredData);
-            filterGridPopupHandler.show(); // Opens the filtered grid scene
+            VBox filteredGrid = createFilterGrid(filteredData);
+
+            // Clear old content and add the filtered grid
+            filteredGridContainer.getChildren().clear();
+            filteredGridContainer.getChildren().addAll(
+                    new Label("Filtered Grid"), filteredGrid
+            );
         }
     }
-
     private DtoContainerData applyFilter() {
         String range = rangeFromField.getText() + ".." + rangeToField.getText();
         Map<Character, Set<String>> filterCriteria = new HashMap<>();
@@ -369,25 +502,6 @@ public class FilterPopup {
         // Apply filter with multiple columns and their respective values
         filteredData = dtoSheetCell.filterSheetCell(range, filterCriteria);
         return filteredData;
-    }
-
-    //how to create original grid
-    private void methodToCreateTheOriginalGrid(){
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL);
-
-        GridPane popupGrid = new GridPane();
-        popupGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
-
-        gridController.initializeOriginalPopupGrid(popupGrid, dtoSheetCell);
-
-        ScrollPane gridScrollPane = new ScrollPane(popupGrid);
-        gridScrollPane.setFitToWidth(true);
-        gridScrollPane.setFitToHeight(true);
-
-        Scene popupScene = new Scene(gridScrollPane);
-        popupStage.setScene(popupScene);
-        popupStage.showAndWait();
     }
 }
 
