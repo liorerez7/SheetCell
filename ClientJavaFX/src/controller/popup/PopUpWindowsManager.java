@@ -4,11 +4,8 @@ import controller.grid.GridController;
 import controller.popup.filter.FilterPopup;
 import controller.popup.graph.ConsolidatedGraphPopup;
 import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
-import controller.popup.sort.SortGridPopupHandler;
 import controller.popup.sort.SortRowsPopup;
 import controller.popup.versions.VersionsPopupHandler;
-import utilities.javafx.smallparts.SortRowsData;
-import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import utilities.javafx.Model;
 import javafx.geometry.Insets;
@@ -84,14 +81,9 @@ public class PopUpWindowsManager {
         popupStage.show();
     }
 
-    public SortRowsData openSortRowsWindow(DtoSheetCell dtoSheetCell, GridController gridController) {
+    public void openSortRowsPopup(DtoSheetCell dtoSheetCell, GridController gridController) {
         SortRowsPopup sortRowsPopup = new SortRowsPopup(dtoSheetCell, gridController);
-        return sortRowsPopup.show();
-    }
-
-    public void openSortGridPopUp(DtoContainerData dtoContainerData, GridController gridScrollerController) {
-        SortGridPopupHandler sortGridPopupHandler = new SortGridPopupHandler(gridScrollerController, dtoContainerData);
-        sortGridPopupHandler.show();
+        sortRowsPopup.show();
     }
 
     public void showVersionsPopup(

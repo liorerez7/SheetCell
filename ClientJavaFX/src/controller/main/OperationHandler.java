@@ -2,7 +2,6 @@ package controller.main;
 
 import controller.grid.GridController;
 import controller.popup.PopUpWindowsManager;
-import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import javafx.application.Platform;
 import okhttp3.Call;
@@ -15,9 +14,7 @@ import utilities.javafx.Model;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class OperationHandler {
 
@@ -63,14 +60,7 @@ public class OperationHandler {
     }
 
     public void sortRows() {
-        var sortRowsData = popUpWindowsManager.openSortRowsWindow(dtoSheetCell, gridController);
-//        String columns = sortRowsData.getColumnsToSortBy();
-//        String range = sortRowsData.getRange();
-//
-//        if (columns != null && !columns.isEmpty() && range != null && !range.isEmpty()) {
-//            DtoContainerData sortedData = dtoSheetCell.sortSheetCell(range, columns);
-//            Platform.runLater(() -> popUpWindowsManager.openSortGridPopUp(sortedData, gridController));
-//        }
+        popUpWindowsManager.openSortRowsPopup(dtoSheetCell, gridController);
     }
 
     public void filterGrid() {
