@@ -26,6 +26,7 @@ public class FilterPopup {
     private final TableView<Map<Character, String>> filterCriteriaTable;
     private final Button applyFilterButton;
     private final Button removeButton;
+    private final Button rangeSubmitButton;
     private final DtoSheetCell dtoSheetCell;
     private DtoContainerData filteredData;
     private HBox lastClickedCellBox;
@@ -55,6 +56,8 @@ public class FilterPopup {
         filterCriteriaTable = new TableView<>();
         applyFilterButton = new Button("Apply Filter");
         removeButton = new Button("Remove");
+        rangeSubmitButton = new Button("Next");
+
         showFilteredGridButton = new Button("Show Filtered Grid"); // Initialize the new button
         removeButton.setDisable(true);
         showFilteredGridButton.setDisable(true); // Initially disabled
@@ -91,7 +94,6 @@ public class FilterPopup {
         rangePane.add(new Label("To (e.g., E8):"), 0, 1);
         rangePane.add(rangeToField, 1, 1);
 
-        Button rangeSubmitButton = new Button("Next");
         rangeSubmitButton.setOnAction(e -> handleRangeSubmission());
         rangePane.add(rangeSubmitButton, 1, 2);
 
@@ -102,6 +104,11 @@ public class FilterPopup {
         if (!rangeFromField.getText().isEmpty() && !rangeToField.getText().isEmpty()) {
             rangeFromField.setText(rangeFromField.getText().toUpperCase());
             rangeToField.setText(rangeToField.getText().toUpperCase());
+
+            // Disable range fields
+            rangeFromField.setDisable(true);
+            rangeToField.setDisable(true);
+            rangeSubmitButton.setDisable(true);
 
             populateColumnComboBox();
             columnComboBox.setDisable(false);
@@ -127,14 +134,16 @@ public class FilterPopup {
     }
 
     private void handleColumnSelection() {
-        char selectedColumn = Character.toUpperCase(columnComboBox.getValue());
-        populateUniqueDataList(selectedColumn);
-
-        if (!isUniqueDataSectionAdded) {
-            mainLayout.getChildren().add(createUniqueDataDisplay());
-            isUniqueDataSectionAdded = true;
+        Character selectedColumn = columnComboBox.getValue();
+        if (selectedColumn != null) {
+            populateUniqueDataList(Character.toUpperCase(selectedColumn));
+            if (!isUniqueDataSectionAdded) {
+                mainLayout.getChildren().add(createUniqueDataDisplay());
+                isUniqueDataSectionAdded = true;
+            }
         }
     }
+
 
     private void populateColumnComboBox() {
         columnComboBox.getItems().clear();
@@ -162,8 +171,31 @@ public class FilterPopup {
             addDataButton.setDisable(newVal == null);
         });
 
-        uniqueDataPane.getChildren().add(addDataButton);
+        // Add "Back to Choose Ranges" button
+        Button backToChooseRangesButton = new Button("Back to Choose Ranges");
+        backToChooseRangesButton.setOnAction(e -> handleBackToChooseRanges());
+
+        uniqueDataPane.getChildren().addAll(addDataButton, backToChooseRangesButton);
         return uniqueDataPane;
+    }
+
+    // Method to handle "Back to Choose Ranges" action
+    private void handleBackToChooseRanges() {
+        // Enable range fields and the "Next" button
+        rangeFromField.setDisable(false);
+        rangeToField.setDisable(false);
+        rangeSubmitButton.setDisable(false); // Re-enable the "Next" button
+
+        // Clear the filter criteria table and reset the criteria section
+        filterCriteriaTable.getItems().clear();
+        filterCriteriaTable.getColumns().clear();
+        mainLayout.getChildren().removeIf(node -> node != rangeFromField.getParent());
+
+        // Reset flags for section addition
+        isUniqueDataSectionAdded = false;
+        isCriteriaSectionAdded = false;
+        removeButton.setDisable(true);
+        showFilteredGridButton.setDisable(true);
     }
 
     private void populateUniqueDataList(char column) {
@@ -272,16 +304,28 @@ public class FilterPopup {
         return filterCriteriaPane;
     }
 
-    // Modify handleRemoveButton to disable "Show Filtered Grid" if the table is empty
+    // Modify handleRemoveButton to shift values up after removal
     private void handleRemoveButton() {
         if (lastClickedColumn != null && lastClickedRowIndex >= 0) {
+            // Get the column and remove the item from the specified row index
             Map<Character, String> rowData = filterCriteriaTable.getItems().get(lastClickedRowIndex);
             rowData.remove(lastClickedColumn);
+
+            // Shift all rows in the column up by one position, starting from the removed row
+            for (int i = lastClickedRowIndex; i < filterCriteriaTable.getItems().size() - 1; i++) {
+                Map<Character, String> currentRow = filterCriteriaTable.getItems().get(i);
+                Map<Character, String> nextRow = filterCriteriaTable.getItems().get(i + 1);
+                currentRow.put(lastClickedColumn, nextRow.get(lastClickedColumn));
+            }
+
+            // Remove the last row, as its data has been shifted up
+            filterCriteriaTable.getItems().get(filterCriteriaTable.getItems().size() - 1).remove(lastClickedColumn);
+
+            // Refresh the table to reflect changes
             filterCriteriaTable.refresh();
 
-            if (rowData.values().stream().allMatch(Objects::isNull)) {
-                filterCriteriaTable.getItems().remove(rowData);
-            }
+            // Remove empty rows if they no longer contain any values
+            filterCriteriaTable.getItems().removeIf(row -> row.values().stream().allMatch(Objects::isNull));
 
             if (filterCriteriaTable.getItems().isEmpty()) {
                 mainLayout.getChildren().remove(createFilterCriteriaPanel());
@@ -289,6 +333,7 @@ public class FilterPopup {
                 showFilteredGridButton.setDisable(true); // Disable "Show Filtered Grid" when table is empty
             }
 
+            // Reset the last clicked cell information
             lastClickedCellBox = null;
             lastClickedColumn = null;
             lastClickedRowIndex = -1;
@@ -304,8 +349,6 @@ public class FilterPopup {
         }
     }
 
-
-    // Adjusted applyFilter to use all columns from filterCriteriaTable instead of a single column
     private DtoContainerData applyFilter() {
         String range = rangeFromField.getText() + ".." + rangeToField.getText();
         Map<Character, Set<String>> filterCriteria = new HashMap<>();
@@ -328,6 +371,28 @@ public class FilterPopup {
         return filteredData;
     }
 
+    //how to create original grid
+    private void methodToCreateTheOriginalGrid(){
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+
+        GridPane popupGrid = new GridPane();
+        popupGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
+
+        gridController.initializeOriginalPopupGrid(popupGrid, dtoSheetCell);
+
+        ScrollPane gridScrollPane = new ScrollPane(popupGrid);
+        gridScrollPane.setFitToWidth(true);
+        gridScrollPane.setFitToHeight(true);
+
+        Scene popupScene = new Scene(gridScrollPane);
+        popupStage.setScene(popupScene);
+        popupStage.showAndWait();
+    }
 }
+
+
+
+
 
 
