@@ -1,18 +1,13 @@
 package controller.popup;
 
 import controller.grid.GridController;
-import controller.popup.filter.AvailableFilterValuesPopup;
-
-import controller.popup.filter.FilterGridPopupHandler;
 import controller.popup.filter.FilterPopup;
 import controller.popup.graph.ConsolidatedGraphPopup;
 import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
 import controller.popup.sort.SortGridPopupHandler;
 import controller.popup.sort.SortRowsPopup;
 import controller.popup.versions.VersionsPopupHandler;
-import utilities.javafx.smallparts.FilterGridData;
 import utilities.javafx.smallparts.SortRowsData;
-
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import utilities.javafx.Model;
@@ -89,25 +84,9 @@ public class PopUpWindowsManager {
         popupStage.show();
     }
 
-    public SortRowsData openSortRowsWindow() {
-        SortRowsPopup sortRowsPopup = new SortRowsPopup();
+    public SortRowsData openSortRowsWindow(DtoSheetCell dtoSheetCell, GridController gridController) {
+        SortRowsPopup sortRowsPopup = new SortRowsPopup(dtoSheetCell, gridController);
         return sortRowsPopup.show();
-    }
-
-//    public FilterGridData openFilterDataWindow() {
-//        FilterDataPopup filterDataPopup = new FilterDataPopup();
-//        return filterDataPopup.show();
-//    }
-
-    public Map<Character, Set<String>> openAvailableFilterValuesPopUp(Map<Character, Set<String>> stringsInChosenColumn) {
-        AvailableFilterValuesPopup availableFilterValuesPopup = new AvailableFilterValuesPopup(stringsInChosenColumn);
-        return availableFilterValuesPopup.show();
-    }
-
-    public void openFilterGridPopUp(DtoContainerData dtoContainerData, GridController gridScrollerController) {
-        FilterGridPopupHandler filterGridPopupHandler = new FilterGridPopupHandler(gridScrollerController, dtoContainerData);
-        filterGridPopupHandler.show();
-
     }
 
     public void openSortGridPopUp(DtoContainerData dtoContainerData, GridController gridScrollerController) {

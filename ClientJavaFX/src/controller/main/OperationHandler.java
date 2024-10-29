@@ -63,39 +63,18 @@ public class OperationHandler {
     }
 
     public void sortRows() {
-        var sortRowsData = popUpWindowsManager.openSortRowsWindow();
-        String columns = sortRowsData.getColumnsToSortBy();
-        String range = sortRowsData.getRange();
-
-        if (columns != null && !columns.isEmpty() && range != null && !range.isEmpty()) {
-            DtoContainerData sortedData = dtoSheetCell.sortSheetCell(range, columns);
-            Platform.runLater(() -> popUpWindowsManager.openSortGridPopUp(sortedData, gridController));
-        }
+        var sortRowsData = popUpWindowsManager.openSortRowsWindow(dtoSheetCell, gridController);
+//        String columns = sortRowsData.getColumnsToSortBy();
+//        String range = sortRowsData.getRange();
+//
+//        if (columns != null && !columns.isEmpty() && range != null && !range.isEmpty()) {
+//            DtoContainerData sortedData = dtoSheetCell.sortSheetCell(range, columns);
+//            Platform.runLater(() -> popUpWindowsManager.openSortGridPopUp(sortedData, gridController));
+//        }
     }
 
     public void filterGrid() {
-
-
         popUpWindowsManager.openFilterPopup(dtoSheetCell, gridController);
-
-//        var filterGridData = popUpWindowsManager.openFilterDataWindow();
-//        String range = filterGridData.getRange();
-//        String filterColumn = filterGridData.getColumnsToFilterBy();
-//
-//        if (range == null || filterColumn == null || filterColumn.isEmpty()) {
-//            return;
-//        }
-//
-//        Map<Character, Set<String>> columnValues = dtoSheetCell.getUniqueStringsInColumn(filterColumn, range);
-//        Platform.runLater(() -> {
-//            Map<Character, Set<String>> filter = popUpWindowsManager.openAvailableFilterValuesPopUp(columnValues);
-//            boolean isFilterEmpty = filter.values().stream().allMatch(Set::isEmpty);
-//
-//            if (!isFilterEmpty) {
-//                DtoContainerData filteredData = dtoSheetCell.filterSheetCell(range, filter);
-//                Platform.runLater(() -> popUpWindowsManager.openFilterGridPopUp(filteredData, gridController));
-//            }
-//        });
     }
 
     public void applyChangesInParameters(DtoSheetCell dtoSheetCellAsDataParameter, Model model, GridController gridScrollerController) {
