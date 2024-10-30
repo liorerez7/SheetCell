@@ -27,7 +27,6 @@
 .label {
     -fx-font-size: 14px;
     -fx-text-fill: #333333;
-    -fx-font-weight: bold;
 }
 
 /* Text field styling */
@@ -77,6 +76,5 @@
 #sortedGridContainer > .label {
     -fx-font-size: 14px;
     -fx-text-fill: #333333;
-    -fx-font-weight: bold;
     -fx-padding: 5;
 }

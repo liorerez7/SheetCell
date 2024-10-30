@@ -1,23 +1,35 @@
 package controller.popup.find_and_replace;
 
+import com.google.gson.reflect.TypeToken;
 import controller.grid.CustomCellLabel;
 import controller.grid.GridController;
+import controller.main.MainController;
 import dto.components.DtoCell;
 import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;
 import dto.small_parts.EffectiveValue;
-import dto.small_parts.ReturnedValueType;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import okhttp3.Callback;
+import okhttp3.Response;
+import utilities.Constants;
+import utilities.http.manager.HttpRequestManager;
+import utilities.javafx.Model;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public class FindReplacePopup {
 
@@ -32,21 +44,31 @@ public class FindReplacePopup {
     private final TextField replaceValueField;
     private final Button replaceButton;
     private final Button backToRangeButton;
+    private final Button applyOnCurrentGridButton;
     private VBox originalGridContainer;
+    private VBox replacedGridContainer;
     private VBox controlPanel;
-    private VBox replaceSection; // Added to control replace section visibility
+    private VBox replaceSection;
     private Map<CellLocation, CustomCellLabel> cellLocationCustomOriginalCellLabelMap = new HashMap<>();
+    private Map<CellLocation, CustomCellLabel> cellLocationCustomNewCellLabelMap = new HashMap<>();
     private Set<CellLocation> newValueLocations = new HashSet<>();
+    private final Model model;
+    private final MainController mainController;
+    private boolean isApplyWasSuccessful = false;
+    private FindAndReplacePopupResult result;
 
-    public FindReplacePopup(DtoSheetCell dtoSheetCell, GridController gridController) {
+    public FindReplacePopup(DtoSheetCell dtoSheetCell,
+                            GridController gridController, Model model, MainController mainController) {
+
         this.dtoSheetCell = dtoSheetCell;
         this.gridController = gridController;
+        this.model = model;
+        this.mainController = mainController;
 
         popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Find and Replace");
 
-        // Initializing fields
         findValueField = new TextField();
         findValueField.setPromptText("Enter value to find");
 
@@ -60,7 +82,6 @@ public class FindReplacePopup {
         findButton = new Button("Find");
         findButton.setDisable(true);
 
-        // Replace section fields (initially hidden)
         replaceValueField = new TextField();
         replaceValueField.setPromptText("New value to replace with");
 
@@ -69,11 +90,27 @@ public class FindReplacePopup {
 
         backToRangeButton = new Button("Back to range selection");
 
+        applyOnCurrentGridButton = new Button("Apply changes on current grid");
+        applyOnCurrentGridButton.setVisible(false); // Initially hidden
+
+        findButton.getStyleClass().add("button");
+        replaceButton.getStyleClass().add("button");
+        backToRangeButton.getStyleClass().add("button");
+        applyOnCurrentGridButton.getStyleClass().add("button");
+
         initializeLayout();
+
+        findValueField.getStyleClass().add("text-field");
+        rangeFromField.getStyleClass().add("text-field");
+        rangeToField.getStyleClass().add("text-field");
+        replaceValueField.getStyleClass().add("text-field");
+
+        originalGridContainer.setId("originalGridContainer");
+        replacedGridContainer.setId("replacedGridContainer");
+
     }
 
     private void initializeLayout() {
-        // Range selection panel
         GridPane rangePane = new GridPane();
         rangePane.setHgap(10);
         rangePane.setVgap(10);
@@ -95,30 +132,76 @@ public class FindReplacePopup {
                 new BorderWidths(1)
         )));
 
-        // Replace section
         replaceSection = new VBox(10,
-                new Label("New value to replace with:"), replaceValueField, replaceButton, backToRangeButton);
+                new Label("New value to replace with:"), replaceValueField, replaceButton, backToRangeButton, applyOnCurrentGridButton);
         replaceSection.setPadding(new Insets(10));
-        replaceSection.setVisible(false); // Initially hidden
+        replaceSection.setVisible(false);
 
-        // Button actions
         findButton.setOnAction(e -> handleFindButtonClick());
         replaceButton.setOnAction(e -> handleReplaceButtonClick());
         backToRangeButton.setOnAction(e -> handleBackToRangeSelection());
+        applyOnCurrentGridButton.setOnAction(e -> handleApplyOnCurrentGridButtonClick());
 
-        // Original grid container with a title label
         Label originalGridTitle = new Label("Original Grid");
         originalGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
         originalGridContainer = new VBox(8, originalGridTitle, createOriginalGrid());
 
-        // Main layout: left side for input, right side for grids
-        controlPanel = new VBox(10, rangePane, replaceSection);
-        HBox mainLayout = new HBox(10, controlPanel, originalGridContainer);
-        Scene scene = new Scene(mainLayout, 900, 600);
+        Label replacedGridTitle = new Label("Replaced Grid");
+        replacedGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        replacedGridContainer = new VBox(8, replacedGridTitle);
+        replacedGridContainer.setVisible(false);
+
+        // Adding color legend to control panel at the bottom left
+        VBox infoBox = createColorLegend();
+        controlPanel = new VBox(10, rangePane, replaceSection, infoBox); // Add infoBox to controlPanel
+        VBox.setVgrow(infoBox, Priority.ALWAYS); // Ensure infoBox stays at the bottom
+        infoBox.setPadding(new Insets(10, 0, 0, 0)); // Optional padding for bottom alignment
+
+        VBox gridsDisplay = new VBox(20, originalGridContainer, replacedGridContainer);
+
+        HBox mainLayout = new HBox(15, controlPanel, gridsDisplay);
+        mainLayout.setPadding(new Insets(15));
+
+        Scene scene = new Scene(mainLayout, 1510, 750);
+        scene.getStylesheets().add(getClass().getResource("find_replace_popup.css").toExternalForm());
         popupStage.setScene(scene);
 
-        // Listeners to manage state
         addListeners();
+    }
+
+    private void handleApplyOnCurrentGridButtonClick() {
+
+        if(model.getNewerVersionOfSheetProperty().getValue()){
+            System.out.println("Failed to replace values.\nYou first need to update into a newer version of sheet.");
+
+        }
+        else{
+            result = new FindAndReplacePopupResult(true, newValueLocations, replaceValueField.getText());
+            isApplyWasSuccessful = true;
+            popupStage.close();
+        }
+    }
+
+    private VBox createColorLegend() {
+        VBox infoBox = new VBox(5);
+        infoBox.setAlignment(Pos.BOTTOM_LEFT);
+
+        HBox lightGrayBox = createInfoLine(Color.LIGHTGRAY, "Range selected area");
+        HBox lightBlueBox = createInfoLine(Color.LIGHTBLUE, "Cells the selected cell affects");
+        HBox lightGreenBox = createInfoLine(Color.LIGHTGREEN, "Cells affected by the selected cell");
+        HBox lavenderBox = createInfoLine(Color.LAVENDER, "Cells with the requested value");
+
+        infoBox.getChildren().addAll(lightGrayBox, lightBlueBox, lightGreenBox, lavenderBox);
+        return infoBox;
+    }
+
+    private HBox createInfoLine(Color color, String description) {
+        Circle colorCircle = new Circle(5, color);
+        Label descriptionLabel = new Label(description);
+        descriptionLabel.getStyleClass().add("label"); // Style it if needed
+        HBox line = new HBox(10, colorCircle, descriptionLabel);
+        line.setAlignment(Pos.CENTER_LEFT);
+        return line;
     }
 
     private VBox createOriginalGrid() {
@@ -130,7 +213,7 @@ public class FindReplacePopup {
         ScrollPane gridScrollPane = new ScrollPane(originalGrid);
         gridScrollPane.setFitToWidth(true);
         gridScrollPane.setFitToHeight(true);
-        gridScrollPane.setPrefSize(600, 400);
+        gridScrollPane.setPrefSize(1120, 335);
 
         VBox gridContainer = new VBox(gridScrollPane);
         gridContainer.setPadding(new Insets(10));
@@ -145,13 +228,11 @@ public class FindReplacePopup {
         String rangeTo = rangeToField.getText();
         boolean isFullGrid = fullGridCheckBox.isSelected();
 
-        // Perform the find operation
         newValueLocations = extractLocationsOfTheFindingValue(findValue, dtoSheetCell);
         setBackgroundColorForRangeAndFindingValueCells(rangeFrom, rangeTo, newValueLocations, isFullGrid);
 
-        // Disable range selection fields and show replace section
-        controlPanel.getChildren().get(0).setDisable(true); // Disables the range selection panel
-        replaceSection.setVisible(true); // Shows the replace section
+        controlPanel.getChildren().get(0).setDisable(true);
+        replaceSection.setVisible(true);
     }
 
     private Set<CellLocation> extractLocationsOfTheFindingValue(String findValue, DtoSheetCell dtoSheetCell) {
@@ -209,7 +290,7 @@ public class FindReplacePopup {
             boolean isWithinRowRange = row >= rangeFromRow && row <= rangeToRow;
 
             if (isWithinColumnRange && isWithinRowRange) {
-                customCellLabel.setBackgroundColor(findingValueLocations.contains(cellLocation) ? Color.LIGHTBLUE : Color.LIGHTGRAY);
+                customCellLabel.setBackgroundColor(findingValueLocations.contains(cellLocation) ? Color.LAVENDER : Color.LIGHTGRAY);
             }
         });
     }
@@ -217,28 +298,52 @@ public class FindReplacePopup {
     private void handleReplaceButtonClick() {
         String newValue = replaceValueField.getText();
 
-        DtoSheetCell newValueDtoSheetCell = swapOldValuesToNew(dtoSheetCell, newValue);
+        GridPane newValuesGrid = new GridPane();
+        newValuesGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
 
-        // Reset for new search if needed
-        controlPanel.getChildren().get(0).setDisable(false);
-        replaceValueField.clear();
-        replaceButton.setDisable(true);
-        replaceSection.setVisible(false);
-    }
+        DtoSheetCell newChangedDtoSheetCell = getNewValuesDtoSheetFromServer(newValue, newValueLocations);
 
-    private DtoSheetCell swapOldValuesToNew(DtoSheetCell dtoSheetCell, String newValue) {
 
-        DtoSheetCell newDtoSheetCell = new DtoSheetCell(dtoSheetCell);
+        cellLocationCustomNewCellLabelMap = gridController.initializeGridWithChangedValues(
+                newValueLocations, newValuesGrid, newValue, newChangedDtoSheetCell);
 
-        Map<CellLocation, EffectiveValue> valueMap = newDtoSheetCell.getViewSheetCell();
-        newValueLocations.forEach(location -> {
-            DtoCell cell = newDtoSheetCell.getRequestedCell(location.getCellId());
-            cell.setOriginalValue(newValue);
-            cell.setEffectiveValue(new EffectiveValue(ReturnedValueType.STRING, newValue));
-            valueMap.put(location, new EffectiveValue(ReturnedValueType.STRING, newValue));
+        cellLocationCustomNewCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+            if (newValueLocations.contains(cellLocation)) {
+                customCellLabel.setBackgroundColor(Color.LAVENDER);
+            }
         });
 
-        return newDtoSheetCell;
+        Label replacedGridTitle = new Label("Replaced Grid");
+        replacedGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+
+        replacedGridContainer.getChildren().setAll(replacedGridTitle, new ScrollPane(newValuesGrid));
+        replacedGridContainer.setVisible(true);
+
+        replaceSection.setVisible(true); // Ensure replace section remains visible
+        applyOnCurrentGridButton.setVisible(true); // Show "Apply on my current grid" button
+        backToRangeButton.setVisible(true); // Ensure "Back" button remains visible
+        replaceButton.setVisible(true); // Ensure "Replace" button remains visible
+    }
+
+    private DtoSheetCell getNewValuesDtoSheetFromServer(String newValue, Set<CellLocation> newValueLocations) {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("newValue", newValue);
+        params.put("newValueLocations", Constants.GSON_INSTANCE.toJson(newValueLocations)); // Convert set to JSON
+
+        try(Response response = HttpRequestManager.sendPostSyncRequest(Constants.UPDATE_REPLACED_VALUES_URL, params)){
+
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                DtoSheetCell newValuesDtoSheet = Constants.GSON_INSTANCE.fromJson(responseBody, DtoSheetCell.class);
+
+                return newValuesDtoSheet;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }
 
     private void handleBackToRangeSelection() {
@@ -246,6 +351,8 @@ public class FindReplacePopup {
         replaceValueField.clear();
         replaceButton.setDisable(true);
         replaceSection.setVisible(false);
+        replacedGridContainer.setVisible(false);
+        applyOnCurrentGridButton.setVisible(false); // Hide "Apply on my current grid" button only
     }
 
     private void updateFindButtonState() {
@@ -270,7 +377,8 @@ public class FindReplacePopup {
                 replaceButton.setDisable(newValue.isEmpty()));
     }
 
-    public void show() {
+    public FindAndReplacePopupResult show() {
         popupStage.showAndWait();
+        return result;
     }
 }

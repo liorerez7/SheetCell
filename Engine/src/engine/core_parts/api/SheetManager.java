@@ -23,4 +23,6 @@ public interface SheetManager {
     void deleteRange(String name);
     Set<String> getAllRangeNames();
     SheetManagerImpl createSheetCellOnlyForRunTime(int versionNumber);
+
+    void updateReplacedCells(String newValue, Set<CellLocation> newValueLocations);
 }

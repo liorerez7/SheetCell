@@ -2,6 +2,7 @@ package controller.main;
 
 import controller.grid.GridController;
 import controller.popup.PopUpWindowsManager;
+import controller.popup.find_and_replace.FindAndReplacePopupResult;
 import dto.components.DtoSheetCell;
 import javafx.application.Platform;
 import okhttp3.Call;
@@ -22,13 +23,17 @@ public class OperationHandler {
     private  GridController gridController;
     private  DtoSheetCell dtoSheetCell;
     private  Model model;
+    private MainController mainController;
 
     public OperationHandler(PopUpWindowsManager popUpWindowsManager,
-                            GridController gridController, DtoSheetCell dtoSheetCell, Model model) {
+                            GridController gridController,
+                            DtoSheetCell dtoSheetCell, Model model, MainController mainController) {
+
         this.popUpWindowsManager = popUpWindowsManager;
         this.gridController = gridController;
         this.dtoSheetCell = dtoSheetCell;
         this.model = model;
+        this.mainController = mainController;
     }
 
     public void makeGraph(boolean isChartGraph) {
@@ -67,13 +72,41 @@ public class OperationHandler {
         popUpWindowsManager.openFilterPopup(dtoSheetCell, gridController);
     }
 
-    public void applyChangesInParameters(DtoSheetCell dtoSheetCellAsDataParameter, Model model, GridController gridScrollerController) {
+    public void applyChangesInParameters(DtoSheetCell dtoSheetCellAsDataParameter, Model model,
+                                         GridController gridScrollerController, MainController main) {
+
         this.dtoSheetCell = dtoSheetCellAsDataParameter;
         this.model = model;
         this.gridController = gridScrollerController;
+        this.mainController = main;
     }
 
     public void findAndReplace() {
-        popUpWindowsManager.openFindReplacePopup(dtoSheetCell, gridController);
+
+        Map<String,String> params = new HashMap<>();
+        params.put("versionNumber", String.valueOf(dtoSheetCell.getLatestVersion()));
+
+        HttpRequestManager.sendPostAsyncRequest(Constants.POST_TEMP_SHEET_IN_SERVLET, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try(response){
+                    if (!response.isSuccessful()) {
+
+                    }
+                    Platform.runLater(() -> {
+                        FindAndReplacePopupResult result = popUpWindowsManager.openFindReplacePopup(dtoSheetCell, gridController, model, mainController);
+                        if(result != null && result.isAppliedWasSuccessful()){
+                            mainController.updateSheetAccordingToChangedCells(result);
+                        }
+                    });
+                }
+            }
+        });
+
+
     }
 }

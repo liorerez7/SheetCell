@@ -127,6 +127,45 @@ public class SheetManagerImpl implements SheetManager {
         }
     }
 
+
+    private void updateCellForReplacedFunction(String newValue, char col, String row) throws
+            CycleDetectedException, IllegalArgumentException, RefToUnSetCellException {
+
+        byte[] savedSheetCellState = sheetCell.saveSheetCellState();
+
+        if (!sheetCell.isCellPresent(CellLocationFactory.fromCellId(col, row)) && newValue.isEmpty()) {
+            return;
+        }
+
+        Cell targetCell = getCell(CellLocationFactory.fromCellId(col, row));
+
+        try {
+            Expression expression = CellUtils.processExpressionRec(newValue, targetCell, getInnerSystemSheetCell(), false);
+            sheetCell.applyCellUpdates(targetCell, newValue, expression);
+            sheetCell.updateVersions(targetCell);
+            sheetCell.performGraphOperations();
+            sheetCell.versionControl();
+            saveSheetVersionUsingSerialize();
+        } catch (Exception e) {
+            restoreSheetCellState(savedSheetCellState);
+
+        }
+    }
+
+    public void updateReplacedCells(String newValue, Set<CellLocation> newValueLocations){
+
+        try{
+            for(CellLocation location : newValueLocations){
+                updateCellForReplacedFunction(newValue, location.getVisualColumn(), location.getVisualRow());
+                sheetCell.setVersion(sheetCell.getLatestVersion() - 1); // removing the version
+            }
+            sheetCell.setVersion(sheetCell.getLatestVersion() + 1); // removing the version
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+
     @Override
     public void saveCurrentSheetCellState() {
         savedSheetCellState = sheetCell.saveSheetCellState();

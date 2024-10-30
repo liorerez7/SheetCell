@@ -62,8 +62,8 @@
     -fx-spacing: 10;
 }
 
-/* Original and sorted grid containers */
-#originalGridContainer, #sortedGridContainer {
+/* Original and replaced grid containers */
+#originalGridContainer, #replacedGridContainer {
     -fx-border-color: lightgray;
     -fx-border-width: 1;
     -fx-background-color: #ffffff;
@@ -73,7 +73,7 @@
 
 /* Styling for the title labels of grid containers */
 #originalGridContainer > .label,
-#sortedGridContainer > .label {
+#replacedGridContainer > .label {
     -fx-font-size: 14px;
     -fx-text-fill: #333333;
     -fx-padding: 5;

@@ -62,6 +62,10 @@ public class Constants {
     public static final String CREATE_NEW_SHEET_ENDPOINT = FULL_SERVER_PATH + "/createNewSheet";
     public static final String POST_TEMP_SHEET_IN_SERVLET = FULL_SERVER_PATH + "/postTempSheet";
     public static final String GET_VERSION_TO_CELL_INFO_MAP = FULL_SERVER_PATH + "/versionToCellInfo";
+    public static final String UPDATE_REPLACED_VALUES_URL = FULL_SERVER_PATH + "/updateReplacedValues";
+    public static final String UPDATE_SHEET_VALUES_URL = FULL_SERVER_PATH + "/updateSheetValues";
+
+
 
 
 

@@ -1,7 +1,10 @@
 package controller.popup;
 
+import com.sun.webkit.Timer;
 import controller.grid.GridController;
+import controller.main.MainController;
 import controller.popup.filter.FilterPopup;
+import controller.popup.find_and_replace.FindAndReplacePopupResult;
 import controller.popup.find_and_replace.FindReplacePopup;
 import controller.popup.graph.ConsolidatedGraphPopup;
 import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
@@ -112,9 +115,10 @@ public class PopUpWindowsManager {
         filterData.show();
     }
 
-    public void openFindReplacePopup(DtoSheetCell dtoSheetCell, GridController gridController) {
-        FindReplacePopup findReplacePopup = new FindReplacePopup(dtoSheetCell, gridController);
-        findReplacePopup.show();
+    public FindAndReplacePopupResult openFindReplacePopup(DtoSheetCell dtoSheetCell, GridController gridController,
+                                                          Model model, MainController mainController) {
+        FindReplacePopup findReplacePopup = new FindReplacePopup(dtoSheetCell, gridController, model, mainController);
+        return findReplacePopup.show();
     }
 }
 

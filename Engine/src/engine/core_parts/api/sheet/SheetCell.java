@@ -26,4 +26,5 @@ public interface SheetCell extends
 
     Set<String> getAllRangeNames();
 
+    void setVersion(int i);
 }

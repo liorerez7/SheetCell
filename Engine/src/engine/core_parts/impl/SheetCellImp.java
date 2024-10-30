@@ -457,4 +457,9 @@ public class SheetCellImp implements SheetCell, Serializable, SheetCellViewOnly
         }
         return rangeNames;
     }
+
+    @Override
+    public void setVersion(int i) {
+        versionNumber = i;
+    }
 }

@@ -4,6 +4,7 @@ import controller.customize.CustomizeController;
 import controller.dashboard.DashboardController;
 import controller.grid.GridController;
 import controller.popup.PopUpWindowsManager;
+import controller.popup.find_and_replace.FindAndReplacePopupResult;
 import dto.permissions.PermissionStatus;
 import dto.small_parts.UpdateCellInfo;
 import utilities.Constants;
@@ -114,7 +115,9 @@ public class MainController {
     public MainController() {
         model = new Model(null);
         popUpWindowsManager = new PopUpWindowsManager();
-        operationHandler = new OperationHandler(popUpWindowsManager, gridScrollerController, dtoSheetCellAsDataParameter, model);
+        operationHandler = new OperationHandler(popUpWindowsManager, gridScrollerController,
+                dtoSheetCellAsDataParameter, model, this);
+
         themeManager = new ThemeManager(mainPane, leftCommands);
     }
 
@@ -479,8 +482,6 @@ public class MainController {
                 });
             }
         });
-
-       ;
     }
 
     public void adjustCellSize(int toIncreaseOrDecrease,  String rowOrCol) {
@@ -512,32 +513,32 @@ public class MainController {
     }
 
     public void runtimeAnalysisClicked() {
-        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController, this);
         operationHandler.runTimeAnalysis();
     }
 
     public void ChartGraphClicked() {
-        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController, this);
         operationHandler.makeGraph(true);
     }
 
     public void linearGraphClicked() {
-        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController, this);
         operationHandler.makeGraph(false);
     }
 
     public void sortRowsButtonClicked() {
-        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController, this);
         operationHandler.sortRows();
     }
 
     public void filterDataButtonClicked() {
-        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController, this);
         operationHandler.filterGrid();
     }
 
     public void findReplaceClicked() {
-        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController, this);
         operationHandler.findAndReplace();
     }
 
@@ -692,5 +693,186 @@ public class MainController {
         gridScrollerController.resetCustomizationInAllSheets();
     }
 
+
+//    public void updateSheetAccordingToChangedCells(FindAndReplacePopupResult result) {
+//
+//        Set<CellLocation> locations = result.getLocations();
+//        String newValue = result.getNewValue();
+//
+//        try{
+//            try (Response sheetCellResponse = HttpRequestManager.sendGetSyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
+//                if (!sheetCellResponse.isSuccessful()) {
+//                    Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
+//                    return;
+//                }
+//
+//                String sheetCellAsJson = sheetCellResponse.body().string();
+//                dtoSheetCellAsDataParameter = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+//
+//                int latestVersion = dtoSheetCellAsDataParameter.getLatestVersion();
+//
+//                List<DtoCell> dtoCells = new ArrayList<>();
+//                for(CellLocation cellLocation : locations){
+//                    DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(cellLocation.getCellId());
+//                    dtoCells.add(dtoCell);
+//                }
+//
+//                // Update the UI on the JavaFX Application Thread
+//                Platform.runLater(() -> {
+//                    model.setPropertiesByDtoSheetCell(dtoSheetCellAsDataParameter);
+//                    model.setTotalVersionsProperty(latestVersion);
+//
+//                    for(DtoCell dtoCell : dtoCells){
+//                        model.setLatestUpdatedVersionProperty(dtoCell);
+//                        model.setOriginalValueLabelProperty(dtoCell);
+//                    }
+//                });
+//            }
+//
+//            Map<String, String> params = new HashMap<>();
+//            params.put("sheetName",sheetName);
+//
+//            try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT, params)) {
+//
+//                String userNameThatLastUpdatedTheCellMapAsJson = response.body().string();
+//
+//                cellLocationToUserName = Constants.GSON_INSTANCE.fromJson(userNameThatLastUpdatedTheCellMapAsJson,
+//                        new TypeToken<Map<CellLocation, String>>() {}.getType());
+//
+//                Platform.runLater(() -> {
+//                    model.setUserNameProperty(cellLocationToUserName.get(new CellLocation(text.charAt(0), text.substring(1))));
+//                });
+//
+//            }
+//
+//            try(Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_VERSION_TO_CELL_INFO_MAP, params)) {
+//
+//                String versionToCellInfoAsJson = response.body().string();
+//                versionToCellInfo = Constants.GSON_INSTANCE.fromJson(versionToCellInfoAsJson,
+//                        new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType());
+//
+//            }
+//        }
+//
+//    } catch (IOException e) {
+//        Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+//    }
+//
+
+
+
+    public void updateSheetAccordingToChangedCells(FindAndReplacePopupResult result) {
+        Set<CellLocation> locations = result.getLocations();
+        String newValue = result.getNewValue();
+
+        try {
+
+
+            Map<String, String> paramsNew = new HashMap<>();
+            paramsNew.put("newValue", newValue);
+            paramsNew.put("newValueLocations", Constants.GSON_INSTANCE.toJson(locations)); // Convert set to JSON
+
+            try (Response postResponse = HttpRequestManager.sendPostSyncRequest(Constants.UPDATE_SHEET_VALUES_URL, paramsNew)) {
+                if (!postResponse.isSuccessful()) {
+                    String errorMessageAsJson = postResponse.body().string(); // Get the error message sent by the server
+                    String errorMessage = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                    return;
+                }
+            }
+
+            // Step 1: Load the sheet cell data from the server
+            dtoSheetCellAsDataParameter = loadSheetCellData();
+            if (dtoSheetCellAsDataParameter == null) return;
+
+            int latestVersion = dtoSheetCellAsDataParameter.getLatestVersion();
+
+            // Step 2: Retrieve DtoCell objects for specified locations
+            List<DtoCell> dtoCells = fetchDtoCellsForLocations(locations);
+
+            // Step 3: Update the UI with sheet and cell information
+            updateUIWithSheetData(latestVersion, dtoCells);
+
+            // Step 4: Get the username of the last cell updater from the server
+            cellLocationToUserName = fetchUserNameOfLastCellUpdater();
+            if (cellLocationToUserName != null) {
+                updateUIWithUserName(locations);
+            }
+
+            // Step 5: Get the version to cell info from the server
+            versionToCellInfo = fetchVersionToCellInfo();
+
+        } catch (IOException e) {
+            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+        }
+    }
+
+    private DtoSheetCell loadSheetCellData() throws IOException {
+        try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
+            if (!response.isSuccessful()) {
+                Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
+                return null;
+            }
+
+            String sheetCellAsJson = response.body().string();
+            return Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
+        }
+    }
+
+    private List<DtoCell> fetchDtoCellsForLocations(Set<CellLocation> locations) {
+        List<DtoCell> dtoCells = new ArrayList<>();
+        for (CellLocation cellLocation : locations) {
+            DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(cellLocation.getCellId());
+            if (dtoCell != null) {
+                dtoCells.add(dtoCell);
+            }
+        }
+        return dtoCells;
+    }
+
+    private void updateUIWithSheetData(int latestVersion, List<DtoCell> dtoCells) {
+        Platform.runLater(() -> {
+            model.setPropertiesByDtoSheetCell(dtoSheetCellAsDataParameter);
+            model.setTotalVersionsProperty(latestVersion);
+
+            for (DtoCell dtoCell : dtoCells) {
+                model.setLatestUpdatedVersionProperty(dtoCell);
+                model.setOriginalValueLabelProperty(dtoCell);
+            }
+        });
+    }
+
+    private Map<CellLocation, String> fetchUserNameOfLastCellUpdater() throws IOException {
+        Map<String, String> params = new HashMap<>();
+        params.put("sheetName", sheetName);
+
+        try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT, params)) {
+            if (!response.isSuccessful()) return null;
+
+            String userNameJson = response.body().string();
+            return Constants.GSON_INSTANCE.fromJson(userNameJson, new TypeToken<Map<CellLocation, String>>() {}.getType());
+        }
+    }
+
+    private void updateUIWithUserName(Set<CellLocation> locations) {
+        Platform.runLater(() -> {
+            CellLocation firstLocation = locations.iterator().next();
+            String userName = cellLocationToUserName.get(firstLocation);
+            if (userName != null) {
+                model.setUserNameProperty(userName);
+            }
+        });
+    }
+
+    private Map<Integer, UpdateCellInfo> fetchVersionToCellInfo() throws IOException {
+        Map<String, String> params = new HashMap<>();
+        params.put("sheetName", sheetName);
+
+        try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_VERSION_TO_CELL_INFO_MAP, params)) {
+            if (!response.isSuccessful()) return null;
+
+            String versionToCellInfoJson = response.body().string();
+            return Constants.GSON_INSTANCE.fromJson(versionToCellInfoJson, new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType());
+        }
+    }
 
 }

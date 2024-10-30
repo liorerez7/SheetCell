@@ -56,6 +56,14 @@
         <servlet-class>chat.servlets.sheet.cell.UpdateCellServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>UpdateValuesInSheetServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.cell.UpdateValuesInSheetServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateReplacedCellServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.cell.UpdateReplacedCellServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetVersionToCellInfoServlet</servlet-name>
         <servlet-class>chat.servlets.sheet.cell.GetVersionToCellInfoServlet</servlet-class>
     </servlet>
@@ -135,6 +143,14 @@
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>
         <url-pattern>/updateCell</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateReplacedCellServlet</servlet-name>
+        <url-pattern>/updateReplacedValues</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateValuesInSheetServlet</servlet-name>
+        <url-pattern>/updateSheetValues</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetVersionToCellInfoServlet</servlet-name>
