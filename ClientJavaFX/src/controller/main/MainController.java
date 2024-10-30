@@ -327,9 +327,10 @@ public class MainController {
 
                try(Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_VERSION_TO_CELL_INFO_MAP, params)) {
 
-                    String versionToCellInfoAsJson = response.body().string();
+                   String versionToCellInfoAsJson = response.body().string();
                    versionToCellInfo = Constants.GSON_INSTANCE.fromJson(versionToCellInfoAsJson,
-                           new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType());
+                           new TypeToken<Map<Integer, UpdateCellInfo>>() {
+                           }.getType());
 
                }
 
@@ -609,6 +610,17 @@ public class MainController {
                             new TypeToken<Map<CellLocation, String>>() {}.getType());
 
                 }
+
+                try(Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_VERSION_TO_CELL_INFO_MAP, params)) {
+
+                    String versionToCellInfoAsJson = response.body().string();
+                    versionToCellInfo = Constants.GSON_INSTANCE.fromJson(versionToCellInfoAsJson,
+                            new TypeToken<Map<Integer, UpdateCellInfo>>() {
+                            }.getType());
+
+                }
+
+
             }catch (IOException e){
                 Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
             }
@@ -871,7 +883,15 @@ public class MainController {
             if (!response.isSuccessful()) return null;
 
             String versionToCellInfoJson = response.body().string();
-            return Constants.GSON_INSTANCE.fromJson(versionToCellInfoJson, new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType());
+
+            Map<Integer, UpdateCellInfo> versionToUpdateInfo = Constants.
+                    GSON_INSTANCE.fromJson(versionToCellInfoJson,
+                            new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType());
+
+            int x = 5;
+
+            return versionToUpdateInfo;
+
         }
     }
 

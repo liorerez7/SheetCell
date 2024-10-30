@@ -63,7 +63,7 @@ public class UpdateValuesInSheetServlet extends HttpServlet {
 
 
                 engine.updateUsersInCells(beforeUpdateDtoSheetCell, afterUpdateDtoSheetCell, username);
-                updateVersionToCellInfo(beforeUpdateCells, afterUpdateCells, username, engine);
+                updateVersionToCellInfo(beforeUpdateCells, afterUpdateCells, newValueLocations, username, engine);
 
                 response.setStatus(HttpServletResponse.SC_OK);
 
@@ -83,48 +83,61 @@ public class UpdateValuesInSheetServlet extends HttpServlet {
 
     }
 
-    private void updateVersionToCellInfo(List<DtoCell> beforeUpdateCells, List<DtoCell> afterUpdateCells, String username, Engine engine) {
+    private void updateVersionToCellInfo(List<DtoCell> beforeUpdateCells, List<DtoCell> afterUpdateCells,
+                                         Set<CellLocation> newValueLocation, String username, Engine engine) {
 
-        List<UpdateCellInfo> updateCellInfosList = new ArrayList<>();
+        String newActualValue = afterUpdateCells.getFirst().getEffectiveValue().getValue().toString();
+        String newOriginalValue = afterUpdateCells.getFirst().getOriginalValue();
+        int versionNumber = afterUpdateCells.getFirst().getLatestVersion();
+        CellLocation location = afterUpdateCells.getFirst().getLocation();
 
-        for (int i = 0; i < afterUpdateCells.size(); i++) {
-            DtoCell afterUpdateCell = afterUpdateCells.get(i);
-            DtoCell beforeUpdateCell = (beforeUpdateCells != null && i < beforeUpdateCells.size()) ? beforeUpdateCells.get(i) : null;
+        String oldActualValue = "";
+        String oldOriginalValue = "";
 
-            String newActualValue = afterUpdateCell.getEffectiveValue().getValue().toString();
-            String newOriginalValue = afterUpdateCell.getOriginalValue();
-            int versionNumber = afterUpdateCell.getLatestVersion();
-            CellLocation location = afterUpdateCell.getLocation();
-
-            String oldActualValue = "";
-            String oldOriginalValue = "";
-
-            if (beforeUpdateCell != null) {
-                oldActualValue = beforeUpdateCell.getEffectiveValue().getValue().toString();
-                oldOriginalValue = beforeUpdateCell.getOriginalValue();
-            }
-
-            updateCellInfosList.add(new UpdateCellInfo(
-                    oldActualValue,
-                    newActualValue,
-                    oldOriginalValue,
-                    newOriginalValue,
-                    versionNumber,
-                    username,
-                    location
-            ));
+        if(beforeUpdateCells.getFirst() != null){
+            oldActualValue = beforeUpdateCells.getFirst().getEffectiveValue().getValue().toString();
+            oldOriginalValue = beforeUpdateCells.getFirst().getOriginalValue();
         }
 
-        engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo(
-                oldActualValue,
-                newActualValue,
-                oldOriginalValue,
-                newOriginalValue,
-                versionNumber,
-                username,
-                location
-        ));
-    }
+        engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo(oldActualValue,
+                newActualValue, oldOriginalValue,
+                newOriginalValue, versionNumber, username, newValueLocation, true));
+
+
+
+        //        List<UpdateCellInfo> updateCellInfosList = new ArrayList<>();
+//
+//        for (int i = 0; i < afterUpdateCells.size(); i++) {
+//            DtoCell afterUpdateCell = afterUpdateCells.get(i);
+//            DtoCell beforeUpdateCell = (beforeUpdateCells != null && i < beforeUpdateCells.size()) ? beforeUpdateCells.get(i) : null;
+//
+//            String newActualValue = afterUpdateCell.getEffectiveValue().getValue().toString();
+//            String newOriginalValue = afterUpdateCell.getOriginalValue();
+//            int versionNumber = afterUpdateCell.getLatestVersion();
+//            CellLocation location = afterUpdateCell.getLocation();
+//
+//            String oldActualValue = "";
+//            String oldOriginalValue = "";
+//
+//            if (beforeUpdateCell != null) {
+//                oldActualValue = beforeUpdateCell.getEffectiveValue().getValue().toString();
+//                oldOriginalValue = beforeUpdateCell.getOriginalValue();
+//            }
+//
+//            updateCellInfosList.add(new UpdateCellInfo(
+//                    oldActualValue,
+//                    newActualValue,
+//                    oldOriginalValue,
+//                    newOriginalValue,
+//                    versionNumber,
+//                    username,
+//                    location
+//            ));
+//
+//            engine.getVersionToCellInfo().put(version, updateCellInfosList);
+//
+//        }
 
     }
+
 }

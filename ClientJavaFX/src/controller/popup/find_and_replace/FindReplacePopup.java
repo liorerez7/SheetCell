@@ -298,6 +298,10 @@ public class FindReplacePopup {
     private void handleReplaceButtonClick() {
         String newValue = replaceValueField.getText();
 
+        if(newValue.charAt(0) == '{'){
+
+        }
+
         GridPane newValuesGrid = new GridPane();
         newValuesGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
 

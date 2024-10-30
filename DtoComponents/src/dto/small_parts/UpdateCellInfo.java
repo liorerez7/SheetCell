@@ -1,6 +1,6 @@
 package dto.small_parts;
 
-import dto.components.DtoCell;
+import java.util.Set;
 
 public class UpdateCellInfo {
 
@@ -10,11 +10,11 @@ public class UpdateCellInfo {
     String newOriginalValue;
     int versionNumberThatItWasChanged;
     String newUserName;
-    CellLocation location;
+    Set<CellLocation> locations;
     boolean changedInReplaceFunction = false;
 
     public UpdateCellInfo(String previousValue, String newValue, String previousOriginalValue, String newOriginalValue
-            , int versionNumberThatItWasChanged, String newUserName, CellLocation location) {
+            , int versionNumberThatItWasChanged, String newUserName, Set<CellLocation> locations) {
 
         this.previousValue = previousValue;
         this.newValue = newValue;
@@ -22,11 +22,11 @@ public class UpdateCellInfo {
         this.newOriginalValue = newOriginalValue;
         this.versionNumberThatItWasChanged = versionNumberThatItWasChanged;
         this.newUserName = newUserName;
-        this.location = location;
+        this.locations = locations;
     }
 
     public UpdateCellInfo(String previousValue, String newValue, String previousOriginalValue, String newOriginalValue
-            , int versionNumberThatItWasChanged, String newUserName, CellLocation location, boolean changedInReplaceFunction) {
+            , int versionNumberThatItWasChanged, String newUserName, Set<CellLocation> locations, boolean changedInReplaceFunction) {
 
         this.previousValue = previousValue;
         this.newValue = newValue;
@@ -34,7 +34,7 @@ public class UpdateCellInfo {
         this.newOriginalValue = newOriginalValue;
         this.versionNumberThatItWasChanged = versionNumberThatItWasChanged;
         this.newUserName = newUserName;
-        this.location = location;
+        this.locations = locations;
         this.changedInReplaceFunction = changedInReplaceFunction;
     }
 
@@ -71,7 +71,7 @@ public class UpdateCellInfo {
         return newUserName;
     }
 
-    public CellLocation getLocation() {
-        return location;
+    public Set<CellLocation> getLocations() {
+        return locations;
     }
 }

@@ -21,10 +21,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class VersionsPopupHandler {
 
@@ -102,7 +99,7 @@ public class VersionsPopupHandler {
         Label oldValueLabel = new Label("Old Value: ");
         Label newValueLabel = new Label("New Value: ");
         HBox cellLocationLabel = createInfoLineWithIcon(Color.LIGHTGRAY, "Cell Location:", new Label());
-        HBox affectsCellsLabel = createInfoLineWithIcon(Color.LIGHTGREEN, "Cells this cell affects:", new Label("N/A"));
+        HBox affectsCellsLabel = createInfoLineWithIcon(Color.LIGHTGREEN, "Cells impacted by this update:", new Label("N/A"));
 
         // Create grid and scroll pane
         GridPane popupGrid = createPopupGrid();
@@ -160,25 +157,25 @@ public class VersionsPopupHandler {
 
     // Initialize version with new labels
     private void initializeGridWithLatestVersion(GridPane popupGrid, Label usernameLabel, Label oldValueLabel, Label newValueLabel, HBox cellLocationLabel, HBox affectsCellsLabel) {
-        DtoSheetCell initialVersion = allDtoSheetVersions.get(FIRST_VERSION);
-        List<CellLocation> changedCellLocation = versionNumberToChangesCells.get(FIRST_VERSION);
+        DtoSheetCell initialVersion = allDtoSheetVersions.get(lastVersion);
+        List<CellLocation> changedCellLocation = versionNumberToChangesCells.get(lastVersion);
         Map<CellLocation, CustomCellLabel> cellLocationCustomCellLabelMap = gridScrollerController.initializeVersionPopupGrid(popupGrid, initialVersion);
 
         if (!changedCellLocation.isEmpty()) {
-            UpdateCellInfo updateInfo = versionToUpdateCellInfo.get(FIRST_VERSION);
+            UpdateCellInfo updateInfo = versionToUpdateCellInfo.get(lastVersion);
 
             String username = updateInfo.getNewUserName();
             usernameLabel.setText("Updated by username: " + username);
 
             oldValueLabel.setText("Old Value: " + updateInfo.getPreviousOriginalValue());
             newValueLabel.setText("New Value: " + updateInfo.getNewOriginalValue());
-            ((Label) cellLocationLabel.getChildren().get(2)).setText(updateInfo.getLocation().toString());
+            ((Label) cellLocationLabel.getChildren().get(2)).setText(updateInfo.getLocations().toString());
 
             // Set the cells affected by this cell
-            List<CellLocation> affectedCells = getAffectedCellsForVersion(FIRST_VERSION);
+            List<CellLocation> affectedCells = getAffectedCellsForVersion(lastVersion);
             ((Label) affectsCellsLabel.getChildren().get(2)).setText(formatCellLocations(affectedCells));
 
-            highlightChangedCellsInLightGreen(cellLocationCustomCellLabelMap, changedCellLocation, updateInfo.getLocation());
+            highlightChangedCellsInLightGreen(cellLocationCustomCellLabelMap, changedCellLocation, updateInfo);
 
         }
 
@@ -190,7 +187,7 @@ public class VersionsPopupHandler {
         List<CellLocation> changedCells = versionNumberToChangesCells.get(versionNumber);
 
         for (CellLocation cellLocation : changedCells) {
-            if (!cellLocation.equals(versionToUpdateCellInfo.get(versionNumber).getLocation())) {
+            if (!(versionToUpdateCellInfo.get(versionNumber).getLocations().contains(cellLocation))) {
                 affectedCells.add(cellLocation);
             }
         }
@@ -206,17 +203,37 @@ public class VersionsPopupHandler {
     }
 
     private void highlightChangedCellsInLightGreen(Map<CellLocation, CustomCellLabel> cellLocationCustomCellLabelMap,
-                                                   List<CellLocation> changedCellLocation, CellLocation location) {
+                                                   List<CellLocation> changedCellLocation, UpdateCellInfo updateCellInfo) {
 
-        cellLocationCustomCellLabelMap.forEach((cellLocation, customCellLabel) -> {
-            if (changedCellLocation.contains(cellLocation) && !(cellLocation.equals(location))) {
-                customCellLabel.setBackgroundColor(Color.LIGHTGREEN);
-            }
-            if(cellLocation.equals(location)){
-                customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
-            }
-        });
+        CellLocation location;
+        if(!updateCellInfo.isChangedInReplaceFunction()){
 
+            updateCellInfo.getLocations().forEach(locationOfUpdatedCell -> {
+
+                cellLocationCustomCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+                    if (changedCellLocation.contains(cellLocation) && !(cellLocation.equals(locationOfUpdatedCell))) {
+                        customCellLabel.setBackgroundColor(Color.LIGHTGREEN);
+                    }
+                    if (cellLocation.equals(locationOfUpdatedCell)) {
+                        customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+                    }
+                });
+
+                return;
+            });
+        }
+        else{
+            Set<CellLocation> locations = updateCellInfo.getLocations();
+
+            cellLocationCustomCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+                if (changedCellLocation.contains(cellLocation) && !(locations.contains(cellLocation))) {
+                    customCellLabel.setBackgroundColor(Color.LIGHTGREEN);
+                }
+                if (locations.contains(cellLocation)) {
+                    customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+                }
+            });
+        }
     }
 
     // Update createSlider method to pass all label references
@@ -265,12 +282,12 @@ public class VersionsPopupHandler {
 
                             oldValueLabel.setText("Old Value: " + updateInfo.getPreviousOriginalValue());
                             newValueLabel.setText("New Value: " + updateInfo.getNewOriginalValue());
-                            ((Label) cellLocationLabel.getChildren().get(2)).setText(updateInfo.getLocation().toString());
+                            ((Label) cellLocationLabel.getChildren().get(2)).setText(updateInfo.getLocations().toString());
 
                             List<CellLocation> affectedCells = getAffectedCellsForVersion(versionNumber);
                             ((Label) affectsCellsLabel.getChildren().get(2)).setText(formatCellLocations(affectedCells));
 
-                            highlightChangedCellsInLightGreen(cellLocationCustomCellLabelMap, changesCells, updateInfo.getLocation());
+                            highlightChangedCellsInLightGreen(cellLocationCustomCellLabelMap, changesCells, updateInfo);
                         }
                     });
                 } else {

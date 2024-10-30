@@ -79,8 +79,6 @@ public class Constants {
             .registerTypeAdapter(new TypeToken<Map<CellLocation, String>>() {}.getType(), new CellLocationToStringMapDeserializer())
             .registerTypeAdapter(DtoSheetCell.class, new DtoSheetCellDeserializer())
             .registerTypeAdapter(DtoContainerData.class, new DtoContainerDataDeserializer())
-//            .registerTypeAdapter(UpdateCellInfo.class, new UpdateCellInfoDeserializer())
-//            .registerTypeAdapter(new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType(), new VersionToCellInfoMapDeserializer()) // Map deserializer
             .serializeSpecialFloatingPointValues()  // This allows serialization of NaN and Infinity
             .setPrettyPrinting()
             .create();

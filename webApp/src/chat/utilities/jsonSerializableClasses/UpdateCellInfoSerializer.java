@@ -17,7 +17,7 @@ public class UpdateCellInfoSerializer implements JsonSerializer<UpdateCellInfo> 
         jsonObject.addProperty("newOriginalValue", src.getNewOriginalValue());
         jsonObject.addProperty("versionNumberThatItWasChanged", src.getVersionNumberThatItWasChanged());
         jsonObject.addProperty("newUserName", src.getNewUserName());
-        jsonObject.add("location", context.serialize(src.getLocation()));
+        jsonObject.add("location", context.serialize(src.getLocations()));
 
         return jsonObject;
     }

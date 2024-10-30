@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UpdateCellServlet extends HttpServlet {
 
@@ -74,6 +76,9 @@ public class UpdateCellServlet extends HttpServlet {
         int versionNumber = afterUpdateCell.getLatestVersion();
         CellLocation location = afterUpdateCell.getLocation();
 
+        Set<CellLocation> newValueLocation = new HashSet<>();
+        newValueLocation.add(location);
+
         String oldActualValue = "";
         String oldOriginalValue = "";
 
@@ -84,7 +89,7 @@ public class UpdateCellServlet extends HttpServlet {
 
         engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo(oldActualValue,
                 newActualValue, oldOriginalValue,
-                newOriginalValue, versionNumber, userName, location));
+                newOriginalValue, versionNumber, userName, newValueLocation));
 
     }
 }
