@@ -640,6 +640,10 @@ public class MainController {
 
     }
 
+    public PermissionStatus getPermissionStatus() {
+        return permissionStatus;
+    }
+
     public void NewVersionOfSheetIsAvailable(){
         model.setNewerVersionOfSheet(true);
     }

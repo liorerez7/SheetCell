@@ -7,6 +7,7 @@ import controller.main.MainController;
 import controller.popup.PopUpWindowsManager;
 import dto.components.DtoCell;
 import dto.components.DtoSheetCell;
+import dto.permissions.PermissionStatus;
 import dto.small_parts.CellLocation;
 import dto.small_parts.EffectiveValue;
 import javafx.application.Platform;
@@ -68,6 +69,9 @@ public class FindReplacePopup {
         this.mainController = mainController;
         this.popUpWindowsManager = popUpWindowsManager;
 
+        // Get the current permission status
+        PermissionStatus permissionStatus = mainController.getPermissionStatus();
+
         popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Find and Replace");
@@ -95,6 +99,11 @@ public class FindReplacePopup {
 
         applyOnCurrentGridButton = new Button("Apply changes on current grid");
         applyOnCurrentGridButton.setVisible(false); // Initially hidden
+
+        // Disable apply button if permission status is READER
+        if (permissionStatus == PermissionStatus.READER) {
+            applyOnCurrentGridButton.setDisable(true);
+        }
 
         findButton.getStyleClass().add("button");
         replaceButton.getStyleClass().add("button");
@@ -175,7 +184,9 @@ public class FindReplacePopup {
     private void handleApplyOnCurrentGridButtonClick() {
 
         if(model.getNewerVersionOfSheetProperty().getValue()){
-            System.out.println("Failed to replace values.\nYou first need to update into a newer version of sheet.");
+
+           popUpWindowsManager.createErrorPopup("You can't apply changes on the" +
+                   " current grid because there is a newer version of the sheet", "Error");
 
         }
         else{
@@ -259,14 +270,30 @@ public class FindReplacePopup {
         return cell.matches("^[A-Z][1-9][0-9]*$");
     }
 
-    // Helper to validate that 'rangeTo' is after or the same as 'rangeFrom'
+    // Helper to validate that 'rangeTo' is after or the same as 'rangeFrom' and within bounds of dtoSheetCell
     private boolean isValidRange(String rangeFrom, String rangeTo) {
         char fromCol = rangeFrom.charAt(0);
         char toCol = rangeTo.charAt(0);
         int fromRow = Integer.parseInt(rangeFrom.substring(1));
         int toRow = Integer.parseInt(rangeTo.substring(1));
 
-        return fromCol <= toCol && fromRow <= toRow;
+        // Check that rangeFrom is before or equal to rangeTo
+        if (fromCol > toCol || fromRow > toRow) {
+            return false;
+        }
+
+        int maxColumns = dtoSheetCell.getNumberOfColumns();
+        int maxRows = dtoSheetCell.getNumberOfRows();
+
+        // Check that rangeFrom and rangeTo are within the bounds of the sheet
+        return isWithinBounds(fromCol, toCol, fromRow, toRow, maxColumns, maxRows);
+    }
+
+    private boolean isWithinBounds(char fromCol, char toCol, int fromRow, int toRow, int numberOfCols, int numberOfRows) {
+        return fromCol >= 'A' && fromCol <= (char)('A' + numberOfCols - 1) &&
+                toCol >= 'A' && toCol <= (char)('A' + numberOfCols - 1) &&
+                fromRow >= 1 && fromRow <= numberOfRows &&
+                toRow >= 1 && toRow <= numberOfRows;
     }
 
     private Set<CellLocation> extractLocationsOfTheFindingValue(String findValue, DtoSheetCell dtoSheetCell) {
