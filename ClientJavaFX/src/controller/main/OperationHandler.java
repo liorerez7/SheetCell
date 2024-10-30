@@ -72,4 +72,8 @@ public class OperationHandler {
         this.model = model;
         this.gridController = gridScrollerController;
     }
+
+    public void findAndReplace() {
+        popUpWindowsManager.openFindReplacePopup(dtoSheetCell, gridController);
+    }
 }

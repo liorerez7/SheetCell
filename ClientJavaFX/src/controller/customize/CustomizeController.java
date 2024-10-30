@@ -24,6 +24,10 @@ public class CustomizeController {
     @FXML private Button filterDataButton;
     @FXML private Button sortRowsButton;
 
+    @FXML
+    private Button findReplaceButton;
+    @FXML
+    private Button autoCompleteButton;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -43,64 +47,18 @@ public class CustomizeController {
 
 
     @FXML
+    void findReplaceClicked(ActionEvent event) {
+        mainController.findReplaceClicked();
+    }
+
+    @FXML
+    void autoCompleteClicked(ActionEvent event) {
+//        mainController.autoCompleteClicked();
+    }
+
+    @FXML
     void runtimeAnalysisClicked(ActionEvent event) {
         mainController.runtimeAnalysisClicked();
-    }
-
-    private void setComboBoxCellFactory(ComboBox<Label> comboBox, String defaultText) {
-        comboBox.setCellFactory(cb -> new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getText());
-            }
-        });
-        comboBox.setButtonCell(new ListCell<Label>() {
-            @Override
-            protected void updateItem(Label item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? defaultText : item.getText());
-            }
-        });
-        comboBox.setPromptText(defaultText);
-    }
-
-    private String getSelectedComboBoxText(ComboBox<Label> comboBox) {
-        Label selectedLabel = comboBox.getSelectionModel().getSelectedItem();
-        return selectedLabel != null ? selectedLabel.getText() : null;
-    }
-
-    public void changeToDarkTheme() {
-
-        Utilities.switchStyleClass(customizeGridPane, "DarkUserInterfaceSection", "UserInterfaceSection", "SunUserInterfaceSection");
-        Utilities.switchStyleClass(runtimeButton, "DarkModernButton", "ModernButton", "SunModernButton");
-        Utilities.switchStyleClass(makeGraphButton, "DarkModernButton", "ModernButton", "SunModernButton");
-
-        adjustTextButtonColor(Color.WHITE);
-    }
-
-    public void changeToClassicTheme() {
-
-        Utilities.switchStyleClass(customizeGridPane, "UserInterfaceSection", "DarkUserInterfaceSection", "SunUserInterfaceSection");
-        Utilities.switchStyleClass(runtimeButton, "ModernButton", "DarkModernButton", "SunModernButton");
-        Utilities.switchStyleClass(makeGraphButton, "ModernButton", "DarkModernButton", "SunModernButton");
-
-
-        adjustTextButtonColor(Color.WHITE);
-    }
-
-    public void changeToSunBurstTheme() {
-
-        Utilities.switchStyleClass(customizeGridPane, "SunUserInterfaceSection", "DarkUserInterfaceSection", "UserInterfaceSection");
-        Utilities.switchStyleClass(runtimeButton, "SunModernButton", "DarkModernButton", "ModernButton");
-        Utilities.switchStyleClass(makeGraphButton, "SunModernButton", "DarkModernButton", "ModernButton");
-
-        adjustTextButtonColor(Color.BLACK);
-    }
-
-    public void adjustTextButtonColor(Color color) {
-        Utilities.setMenuButtonTextColor(makeGraphButton, color);
-        makeGraphButton.setTextFill(color);
     }
 
     @FXML
@@ -112,20 +70,13 @@ public class CustomizeController {
         mainController.linearGraphClicked();
     }
 
-    public void setGraphButtonColor() {
-        makeGraphButton.setTextFill(Color.WHITE);
-        Utilities.setMenuButtonTextColor(makeGraphButton, Color.WHITE);
-    }
-
     @FXML
     void filterDataClicked(ActionEvent event) {
         mainController.filterDataButtonClicked();
-
     }
 
     @FXML
     void sortRowsClicked(ActionEvent event) {
         mainController.sortRowsButtonClicked();
-
     }
 }

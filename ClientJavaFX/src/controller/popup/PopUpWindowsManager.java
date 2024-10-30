@@ -2,6 +2,7 @@ package controller.popup;
 
 import controller.grid.GridController;
 import controller.popup.filter.FilterPopup;
+import controller.popup.find_and_replace.FindReplacePopup;
 import controller.popup.graph.ConsolidatedGraphPopup;
 import controller.popup.runtime_analysis.RunTimeAnalysisPopupHandler;
 import controller.popup.sort.SortRowsPopup;
@@ -109,6 +110,11 @@ public class PopUpWindowsManager {
     public void openFilterPopup(DtoSheetCell dtoSheetCell, GridController gridScrollerController) {
         FilterPopup filterData = new FilterPopup(dtoSheetCell, gridScrollerController);
         filterData.show();
+    }
+
+    public void openFindReplacePopup(DtoSheetCell dtoSheetCell, GridController gridController) {
+        FindReplacePopup findReplacePopup = new FindReplacePopup(dtoSheetCell, gridController);
+        findReplacePopup.show();
     }
 }
 

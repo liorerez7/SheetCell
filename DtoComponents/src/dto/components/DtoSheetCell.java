@@ -1,6 +1,7 @@
 package dto.components;
 
 
+import dto.small_parts.CellLocationFactory;
 import engine.core_parts.api.Cell;
 import engine.core_parts.api.sheet.SheetCell;
 import engine.utilities.CellUtils;
@@ -79,6 +80,36 @@ public class DtoSheetCell implements Serializable {
 
     }
 
+    public DtoSheetCell(DtoSheetCell other) {
+        // Deep copy the map fields
+        this.cellLocationToEffectiveValue = new HashMap<>();
+        other.cellLocationToEffectiveValue.forEach((key, value) ->
+                this.cellLocationToEffectiveValue.put(
+                        CellLocationFactory.fromCellId(key.getCellId()),
+                        new EffectiveValue(value.getCellType(), value.getValue())
+                )
+        );
+
+        this.ranges = new HashMap<>();
+        other.ranges.forEach((key, value) ->
+                this.ranges.put(key, new ArrayList<>(value))
+        );
+
+        this.cellIdToDtoCell = new HashMap<>();
+        other.cellIdToDtoCell.forEach((key, value) ->
+                this.cellIdToDtoCell.put(key, new DtoCell(value))
+        );
+
+        // Copy simple fields
+        this.name = other.name;
+        this.versionNumber = other.versionNumber;
+        this.currentNumberOfRows = other.currentNumberOfRows;
+        this.currentNumberOfCols = other.currentNumberOfCols;
+        this.currentCellLength = other.currentCellLength;
+        this.currentCellWidth = other.currentCellWidth;
+        this.visualSheetSize = other.visualSheetSize;
+    }
+
     public DtoSheetCell(SheetCell cellLocationToEffectiveValue, int requestedVersion) {
 
         Set<CellLocation> markedLocations = new HashSet<>();
@@ -140,6 +171,8 @@ public class DtoSheetCell implements Serializable {
     public int getCellLength() {
         return currentCellLength;
     }
+
+
 
     public EffectiveValue getEffectiveValue(CellLocation cellLocation) {
         return cellLocationToEffectiveValue.get(cellLocation);

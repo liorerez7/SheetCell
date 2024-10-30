@@ -3,7 +3,7 @@ package engine.utilities;
 
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
-import engine.expression.ReturnedValueType;
+import dto.small_parts.ReturnedValueType;
 import dto.small_parts.CellLocation;
 import dto.small_parts.CellLocationFactory;
 import dto.small_parts.EffectiveValue;

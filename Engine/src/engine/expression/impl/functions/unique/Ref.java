@@ -3,7 +3,7 @@ package engine.expression.impl.functions.unique;
 import engine.core_parts.api.Cell;
 import engine.core_parts.api.sheet.SheetCellViewOnly;
 
-import engine.expression.ReturnedValueType;
+import dto.small_parts.ReturnedValueType;
 import engine.expression.api.Expression;
 import engine.expression.impl.functions.string.Str;
 import dto.small_parts.CellLocation;

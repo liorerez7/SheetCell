@@ -1,5 +1,6 @@
 package dto.components;
 
+import dto.small_parts.CellLocationFactory;
 import engine.core_parts.api.Cell;
 import dto.small_parts.CellLocation;
 import dto.small_parts.EffectiveValue;
@@ -44,6 +45,34 @@ public class DtoCell implements Serializable {
                 .stream()
                 .map(Cell::getLocation)
                 .collect(Collectors.toSet());
+    }
+
+    public DtoCell(DtoCell other) {
+        // Deep copy the fields
+        this.effectiveValue = other.effectiveValue != null ?
+                new EffectiveValue(other.getEffectiveValue().getCellType(), other.getEffectiveValue().getValue()) : null;
+
+        this.originalValue = other.originalValue;
+        this.location = other.location != null ?
+                CellLocationFactory.fromCellId(other.getLocation().getCellId()) : null;
+        this.version = other.version;
+
+        // Deep copy the sets
+        this.affectedBy = other.affectedBy.stream()
+                .map(location -> CellLocationFactory.fromCellId(location.getCellId()))
+                .collect(Collectors.toSet());
+
+        this.affectingOn = other.affectingOn.stream()
+                .map(location -> CellLocationFactory.fromCellId(location.getCellId()))
+                .collect(Collectors.toSet());
+    }
+
+    public void setOriginalValue(String originalValue) {
+        this.originalValue = originalValue;
+    }
+
+    public void setEffectiveValue(EffectiveValue effectiveValue) {
+        this.effectiveValue = effectiveValue;
     }
 
     public int getLatestVersion() {

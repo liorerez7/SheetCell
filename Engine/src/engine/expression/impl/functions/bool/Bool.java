@@ -1,7 +1,7 @@
 package engine.expression.impl.functions.bool;
 
 import engine.core_parts.api.sheet.SheetCellViewOnly;
-import engine.expression.ReturnedValueType;
+import dto.small_parts.ReturnedValueType;
 import engine.expression.api.Expression;
 import dto.small_parts.EffectiveValue;
 

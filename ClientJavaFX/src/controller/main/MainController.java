@@ -536,6 +536,11 @@ public class MainController {
         operationHandler.filterGrid();
     }
 
+    public void findReplaceClicked() {
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController);
+        operationHandler.findAndReplace();
+    }
+
     public void showLoginScreen() {
         if (app != null) {
             app.showLoginScreen();  // Switch to login screen using the app reference
@@ -686,4 +691,6 @@ public class MainController {
     public void resetCustomizationInGrid() {
         gridScrollerController.resetCustomizationInAllSheets();
     }
+
+
 }

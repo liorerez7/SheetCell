@@ -8,7 +8,7 @@ import engine.utilities.CellUtils;
 import engine.utilities.exception.*;
 import engine.utilities.RefDependencyGraph;
 import engine.utilities.RefGraphBuilder;
-import engine.expression.ReturnedValueType;
+import dto.small_parts.ReturnedValueType;
 import engine.expression.api.Expression;
 import engine.expression.impl.Range;
 import engine.expression.impl.functions.unique.Ref;

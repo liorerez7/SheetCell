@@ -1,6 +1,6 @@
 package engine.expression.impl.functions.numeric;
 
-import engine.expression.ReturnedValueType;
+import dto.small_parts.ReturnedValueType;
 import engine.expression.api.Expression;
 import engine.expression.impl.functions.type.UnaryExpression;
 

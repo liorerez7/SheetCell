@@ -1,7 +1,5 @@
 package dto.small_parts;
 
-import engine.expression.ReturnedValueType;
-
 import java.io.Serializable;
 
 public class EffectiveValue implements Serializable {
