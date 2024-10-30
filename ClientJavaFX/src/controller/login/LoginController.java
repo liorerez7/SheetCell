@@ -47,7 +47,7 @@ public class LoginController {
     @FXML
     public void initialize() {
 
-
+        userNameTextField.setPromptText("Enter your username");
         errorMessageLabel.textProperty().bind(errorMessageProperty);
 
         // Start fade-in animation for welcome label
