@@ -60,12 +60,13 @@ public class FindReplacePopup {
     private PopUpWindowsManager popUpWindowsManager;
 
     public FindReplacePopup(DtoSheetCell dtoSheetCell,
-                            GridController gridController, Model model, MainController mainController, PopUpWindowsManager) {
+                            GridController gridController, Model model, MainController mainController, PopUpWindowsManager popUpWindowsManager) {
 
         this.dtoSheetCell = dtoSheetCell;
         this.gridController = gridController;
         this.model = model;
         this.mainController = mainController;
+        this.popUpWindowsManager = popUpWindowsManager;
 
         popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -225,16 +226,47 @@ public class FindReplacePopup {
     }
 
     private void handleFindButtonClick() {
-        String findValue = findValueField.getText();
-        String rangeFrom = rangeFromField.getText();
-        String rangeTo = rangeToField.getText();
+        String findValue = findValueField.getText().trim();
+        String rangeFrom = rangeFromField.getText().trim().toUpperCase();
+        String rangeTo = rangeToField.getText().trim().toUpperCase();
         boolean isFullGrid = fullGridCheckBox.isSelected();
+
+        if (!isValidInput(findValue, rangeFrom, rangeTo, isFullGrid)) {
+            popUpWindowsManager.createErrorPopup("Please provide a valid value and range.", "Invalid Input");
+            return;
+        }
 
         newValueLocations = extractLocationsOfTheFindingValue(findValue, dtoSheetCell);
         setBackgroundColorForRangeAndFindingValueCells(rangeFrom, rangeTo, newValueLocations, isFullGrid);
 
+        // Disable range selection and show replace section
         controlPanel.getChildren().get(0).setDisable(true);
         replaceSection.setVisible(true);
+    }
+
+    // Helper to validate input values
+    private boolean isValidInput(String findValue, String rangeFrom, String rangeTo, boolean isFullGrid) {
+        if (findValue.isEmpty()) return false;
+
+        // Skip range checks if full grid is selected
+        if (isFullGrid) return true;
+
+        return isValidCellFormat(rangeFrom) && isValidCellFormat(rangeTo) && isValidRange(rangeFrom, rangeTo);
+    }
+
+    // Helper to validate cell format (e.g., A1, B2)
+    private boolean isValidCellFormat(String cell) {
+        return cell.matches("^[A-Z][1-9][0-9]*$");
+    }
+
+    // Helper to validate that 'rangeTo' is after or the same as 'rangeFrom'
+    private boolean isValidRange(String rangeFrom, String rangeTo) {
+        char fromCol = rangeFrom.charAt(0);
+        char toCol = rangeTo.charAt(0);
+        int fromRow = Integer.parseInt(rangeFrom.substring(1));
+        int toRow = Integer.parseInt(rangeTo.substring(1));
+
+        return fromCol <= toCol && fromRow <= toRow;
     }
 
     private Set<CellLocation> extractLocationsOfTheFindingValue(String findValue, DtoSheetCell dtoSheetCell) {
@@ -301,7 +333,7 @@ public class FindReplacePopup {
         String newValue = replaceValueField.getText();
 
         if(newValue.charAt(0) == '{'){
-            System.out.println("You can't replace with a formula.");
+            popUpWindowsManager.createErrorPopup("You can't replace with a formula", "Error");
             return;
         }
 

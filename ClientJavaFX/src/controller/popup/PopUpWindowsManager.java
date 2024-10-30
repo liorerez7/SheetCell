@@ -121,7 +121,7 @@ public class PopUpWindowsManager {
 
     public FindAndReplacePopupResult openFindReplacePopup(DtoSheetCell dtoSheetCell, GridController gridController,
                                                           Model model, MainController mainController) {
-        FindReplacePopup findReplacePopup = new FindReplacePopup(dtoSheetCell, gridController, model, mainController);
+        FindReplacePopup findReplacePopup = new FindReplacePopup(dtoSheetCell, gridController, model, mainController, this);
         return findReplacePopup.show();
     }
 }
