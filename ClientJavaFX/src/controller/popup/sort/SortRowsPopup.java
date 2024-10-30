@@ -2,6 +2,7 @@ package controller.popup.sort;
 
 import controller.grid.CustomCellLabel;
 import controller.grid.GridController;
+import controller.popup.PopUpWindowsManager;
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;
@@ -56,10 +57,14 @@ public class SortRowsPopup {
     private VBox originalGridContainer;
     private VBox sortedGridContainer;
     private Map<CellLocation, CustomCellLabel> cellLocationCustomCellLabelMap = new HashMap<>();
+    private final PopUpWindowsManager popUpWindowsManager;
 
-    public SortRowsPopup(DtoSheetCell dtoSheetCell, GridController gridController) {
+    public SortRowsPopup(DtoSheetCell dtoSheetCell, GridController gridController, PopUpWindowsManager popUpWindowsManager) {
+
         this.dtoSheetCell = dtoSheetCell;
         this.gridController = gridController;
+        this.popUpWindowsManager = popUpWindowsManager;
+
         popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Insert Sorting Parameters");
@@ -188,23 +193,34 @@ public class SortRowsPopup {
         String rangeFrom = rangeFromField.getText().trim().toUpperCase();
         String rangeTo = rangeToField.getText().trim().toUpperCase();
 
+        if (!isValidCellFormat(rangeFrom) || !isValidCellFormat(rangeTo)) {
+            popUpWindowsManager.createErrorPopup("Please enter valid range values in the format <Column><Row> (e.g., A2).", "Invalid Input");
+            return;
+        }
 
-        if (rangeFrom.isEmpty() || rangeTo.isEmpty() || rangeFrom.length() < 2 || rangeTo.length() < 2) {
-            showAlert("Invalid Input", "Please enter valid range values.");
+        char fromCol = rangeFrom.charAt(0);
+        char toCol = rangeTo.charAt(0);
+        int fromRow = Integer.parseInt(rangeFrom.substring(1));
+        int toRow = Integer.parseInt(rangeTo.substring(1));
+
+        if (fromCol > toCol || fromRow > toRow) {
+            popUpWindowsManager.createErrorPopup("Invalid range. Ensure 'To' cell is after 'From' cell.", "Invalid Input");
+            return;
+        }
+
+        int numberOfCols = dtoSheetCell.getNumberOfColumns();
+        int numberOfRows = dtoSheetCell.getNumberOfRows();
+
+        if (!isWithinBounds(fromCol, toCol, fromRow, toRow, numberOfCols, numberOfRows)) {
+            popUpWindowsManager.createErrorPopup("Invalid range values. Please ensure the range is within sheet bounds.", "Invalid Input");
             return;
         }
 
         setGrayBackgroundForCells(rangeFrom, rangeTo);
 
-        String startColumn = rangeFrom.substring(0, 1);
-        String endColumn = rangeTo.substring(0, 1);
+        populateColumnComboBox(fromCol, toCol);
 
-        columnsComboBox.getItems().clear();
-        for (char c = startColumn.charAt(0); c <= endColumn.charAt(0); c++) {
-            columnsComboBox.getItems().add(String.valueOf(c));
-        }
-
-        // Disable range selection section
+        // Disable range fields
         rangeFromField.setDisable(true);
         rangeToField.setDisable(true);
         nextButton.setDisable(true);
@@ -214,6 +230,27 @@ public class SortRowsPopup {
         addColumnButton.setDisable(true);
         removeColumnButton.setDisable(true);
         columnSelectionPane.setVisible(true);
+    }
+
+    // Helper to validate cell format (e.g., A1, B2)
+    private boolean isValidCellFormat(String cell) {
+        return cell.matches("^[A-Z][1-9][0-9]*$");
+    }
+
+    // Helper to check range bounds
+    private boolean isWithinBounds(char fromCol, char toCol, int fromRow, int toRow, int numberOfCols, int numberOfRows) {
+        return fromCol >= 'A' && fromCol <= (char)('A' + numberOfCols - 1) &&
+                toCol >= 'A' && toCol <= (char)('A' + numberOfCols - 1) &&
+                fromRow >= 1 && fromRow <= numberOfRows &&
+                toRow >= 1 && toRow <= numberOfRows;
+    }
+
+    // Helper to populate the columns combo box within a specified column range
+    private void populateColumnComboBox(char fromCol, char toCol) {
+        columnsComboBox.getItems().clear();
+        for (char c = fromCol; c <= toCol; c++) {
+            columnsComboBox.getItems().add(String.valueOf(c));
+        }
     }
 
 

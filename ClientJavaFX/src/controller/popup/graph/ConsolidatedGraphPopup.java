@@ -1,5 +1,6 @@
 package controller.popup.graph;
 
+import controller.popup.PopUpWindowsManager;
 import dto.components.DtoSheetCell;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -33,10 +34,12 @@ public class ConsolidatedGraphPopup {
     private TextField xTitleField, yTitleField, graphTitleField;
     private ListView<String> xListView, yListView, selectedPairsListView;
     private GridPane pairSelectionPane, graphDetailsPane;
+    private PopUpWindowsManager popUpWindowsManager;
 
-    public ConsolidatedGraphPopup(boolean isChartGraph, DtoSheetCell dtoSheetCell) {
+    public ConsolidatedGraphPopup(boolean isChartGraph, DtoSheetCell dtoSheetCell, PopUpWindowsManager popUpWindowsManager) {
         this.isChartGraph = isChartGraph;
         this.dtoSheetCell = dtoSheetCell;
+        this.popUpWindowsManager = popUpWindowsManager;
         this.selectedValues = new HashMap<>();
         this.currentAvailableColumns = new ArrayList<>();
         this.selectedXValues = new ArrayList<>();

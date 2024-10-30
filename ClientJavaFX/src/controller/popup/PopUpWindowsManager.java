@@ -87,7 +87,7 @@ public class PopUpWindowsManager {
     }
 
     public void openSortRowsPopup(DtoSheetCell dtoSheetCell, GridController gridController) {
-        SortRowsPopup sortRowsPopup = new SortRowsPopup(dtoSheetCell, gridController);
+        SortRowsPopup sortRowsPopup = new SortRowsPopup(dtoSheetCell, gridController, this);
         sortRowsPopup.show();
     }
 
@@ -96,22 +96,26 @@ public class PopUpWindowsManager {
             int lastVersion,
             GridController gridScrollerController, Map<Integer, UpdateCellInfo> versionToUpdateCellInfo) {
 
-        VersionsPopupHandler versionsPopupHandler = new VersionsPopupHandler(allDtoSheetVersions, lastVersion, gridScrollerController, versionToUpdateCellInfo);
+        VersionsPopupHandler versionsPopupHandler = new VersionsPopupHandler(allDtoSheetVersions,
+                lastVersion, gridScrollerController, versionToUpdateCellInfo);
+
         versionsPopupHandler.show();
     }
 
     public void showRuntimeAnalysisPopup(DtoSheetCell sheetCellRunTime, Model model, GridController gridScrollerController) {
-        RunTimeAnalysisPopupHandler runTimeAnalysisPopupHandler = new RunTimeAnalysisPopupHandler(sheetCellRunTime, model, gridScrollerController);
+        RunTimeAnalysisPopupHandler runTimeAnalysisPopupHandler = new RunTimeAnalysisPopupHandler(sheetCellRunTime,
+                model, gridScrollerController);
+
         runTimeAnalysisPopupHandler.show();
     }
 
     public void openConsolidatedGraphPopup(boolean isChartGraph, DtoSheetCell dtoSheetCell) {
-        ConsolidatedGraphPopup graphPopup = new ConsolidatedGraphPopup(isChartGraph, dtoSheetCell);
+        ConsolidatedGraphPopup graphPopup = new ConsolidatedGraphPopup(isChartGraph, dtoSheetCell, this);
         graphPopup.show();
     }
 
     public void openFilterPopup(DtoSheetCell dtoSheetCell, GridController gridScrollerController) {
-        FilterPopup filterData = new FilterPopup(dtoSheetCell, gridScrollerController);
+        FilterPopup filterData = new FilterPopup(dtoSheetCell, gridScrollerController, this);
         filterData.show();
     }
 

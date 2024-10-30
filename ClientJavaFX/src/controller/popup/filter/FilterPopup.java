@@ -2,6 +2,7 @@ package controller.popup.filter;
 
 import controller.grid.CustomCellLabel;
 import controller.grid.GridController;
+import controller.popup.PopUpWindowsManager;
 import dto.components.DtoContainerData;
 import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;
@@ -42,6 +43,7 @@ public class FilterPopup {
     private VBox originalGridContainer; // Holds the original grid
     private VBox filteredGridContainer; // Holds the filtered grid for later addition
     private Map<CellLocation, CustomCellLabel> cellLocationCustomCellLabelMap = new HashMap<>();
+    private PopUpWindowsManager popUpWindowsManager;
 
     private static final int SCENE_WIDTH = 1510;
     private static final int SCENE_HEIGHT = 750;
@@ -54,9 +56,10 @@ public class FilterPopup {
 
 
 
-    public FilterPopup(DtoSheetCell dtoSheetCell, GridController gridController) {
+    public FilterPopup(DtoSheetCell dtoSheetCell, GridController gridController, PopUpWindowsManager popUpWindowsManager) {
         this.dtoSheetCell = dtoSheetCell;
         this.gridController = gridController;
+        this.popUpWindowsManager = popUpWindowsManager;
         popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Filter Data");
@@ -187,24 +190,61 @@ public class FilterPopup {
 
 
     private void handleRangeSubmission() {
-        if (!rangeFromField.getText().isEmpty() && !rangeToField.getText().isEmpty()) {
-            rangeFromField.setText(rangeFromField.getText().toUpperCase());
-            rangeToField.setText(rangeToField.getText().toUpperCase());
+        String rangeFrom = rangeFromField.getText().toUpperCase();
+        String rangeTo = rangeToField.getText().toUpperCase();
 
-            setGrayBackgroundForCells(rangeFromField.getText(), rangeToField.getText());
-
-            // Disable range fields
-            rangeFromField.setDisable(true);
-            rangeToField.setDisable(true);
-            rangeSubmitButton.setDisable(true);
-
-            populateColumnComboBox();
-            columnComboBox.setDisable(false);
-
-            if (!mainLayout.getChildren().contains(columnComboBox)) {
-                mainLayout.getChildren().add(createColumnSelectionPanel());
-            }
+        if (!isValidCellFormat(rangeFrom) || !isValidCellFormat(rangeTo)) {
+            popUpWindowsManager.createErrorPopup("Please enter valid range values in the format <Column><Row> (e.g., A2).", "Invalid Input");
+            return;
         }
+
+        char fromCol = rangeFrom.charAt(0);
+        char toCol = rangeTo.charAt(0);
+        int fromRow = Integer.parseInt(rangeFrom.substring(1));
+        int toRow = Integer.parseInt(rangeTo.substring(1));
+
+        if (fromCol > toCol || fromRow > toRow) {
+            popUpWindowsManager.createErrorPopup("Invalid range. Ensure 'To' cell is after 'From' cell.", "Invalid Input");
+            return;
+        }
+
+        int numberOfCols = dtoSheetCell.getNumberOfColumns();
+        int numberOfRows = dtoSheetCell.getNumberOfRows();
+
+        if (!isWithinBounds(fromCol, toCol, fromRow, toRow, numberOfCols, numberOfRows)) {
+            popUpWindowsManager.createErrorPopup("Invalid range values. Please ensure the range is within sheet bounds.", "Invalid Input");
+            return;
+        }
+
+        rangeFromField.setText(rangeFrom);
+        rangeToField.setText(rangeTo);
+
+        setGrayBackgroundForCells(rangeFrom, rangeTo);
+
+        // Disable range fields
+        rangeFromField.setDisable(true);
+        rangeToField.setDisable(true);
+        rangeSubmitButton.setDisable(true);
+
+        populateColumnComboBox();
+        columnComboBox.setDisable(false);
+
+        if (!mainLayout.getChildren().contains(columnComboBox)) {
+            mainLayout.getChildren().add(createColumnSelectionPanel());
+        }
+    }
+
+    // Helper to validate the cell format (e.g., A1, B2)
+    private boolean isValidCellFormat(String cell) {
+        return cell.matches("^[A-Z][1-9][0-9]*$");
+    }
+
+    // Helper to check if range is within bounds
+    private boolean isWithinBounds(char fromCol, char toCol, int fromRow, int toRow, int numberOfCols, int numberOfRows) {
+        return fromCol >= 'A' && fromCol <= (char)('A' + numberOfCols - 1) &&
+                toCol >= 'A' && toCol <= (char)('A' + numberOfCols - 1) &&
+                fromRow >= 1 && fromRow <= numberOfRows &&
+                toRow >= 1 && toRow <= numberOfRows;
     }
 
     private void setGrayBackgroundForCells(String rangeFrom, String rangeTo) {

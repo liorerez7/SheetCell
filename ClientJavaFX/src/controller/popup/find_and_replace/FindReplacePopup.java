@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import controller.grid.CustomCellLabel;
 import controller.grid.GridController;
 import controller.main.MainController;
+import controller.popup.PopUpWindowsManager;
 import dto.components.DtoCell;
 import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;
@@ -56,9 +57,10 @@ public class FindReplacePopup {
     private final MainController mainController;
     private boolean isApplyWasSuccessful = false;
     private FindAndReplacePopupResult result;
+    private PopUpWindowsManager popUpWindowsManager;
 
     public FindReplacePopup(DtoSheetCell dtoSheetCell,
-                            GridController gridController, Model model, MainController mainController) {
+                            GridController gridController, Model model, MainController mainController, PopUpWindowsManager) {
 
         this.dtoSheetCell = dtoSheetCell;
         this.gridController = gridController;
@@ -299,7 +301,8 @@ public class FindReplacePopup {
         String newValue = replaceValueField.getText();
 
         if(newValue.charAt(0) == '{'){
-
+            System.out.println("You can't replace with a formula.");
+            return;
         }
 
         GridPane newValuesGrid = new GridPane();
