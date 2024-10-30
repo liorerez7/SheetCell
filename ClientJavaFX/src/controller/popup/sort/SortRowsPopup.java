@@ -22,6 +22,21 @@ import java.util.Map;
 
 public class SortRowsPopup {
 
+    private static final double BUTTON_WIDTH = 200;
+    private static final double LEFT_CONTROL_WIDTH = 220;
+    private static final double GRID_CONTAINER_HEIGHT = 335;
+    private static final double GRID_CONTAINER_WIDTH = 1120;
+    private static final double COLUMN_COMBOBOX_WIDTH = 180;
+    private static final double LIST_VIEW_HEIGHT = 100;
+    private static final double VBOX_SPACING = 10;
+    private static final double MAIN_LAYOUT_SPACING = 15;
+    private static final double ACTION_BUTTON_SPACING = 10;
+    private static final Insets MAIN_LAYOUT_PADDING = new Insets(15);
+    private static final Insets ACTION_BUTTON_PADDING = new Insets(10, 0, 0, 0);
+    private static final double SCENE_WIDTH = 1510;
+    private static final double SCENE_HEIGHT = 750;
+    private static final double PADDING = 10;
+
     private final Stage popupStage;
     private final VBox leftControlsLayout;
     private final GridPane rangeSelectionPane;
@@ -39,7 +54,7 @@ public class SortRowsPopup {
     private final GridController gridController;
     private final DtoSheetCell dtoSheetCell;
     private VBox originalGridContainer;
-    private VBox sortedGridContainer; // Holds the sorted grid when shown
+    private VBox sortedGridContainer;
     private Map<CellLocation, CustomCellLabel> cellLocationCustomCellLabelMap = new HashMap<>();
 
     public SortRowsPopup(DtoSheetCell dtoSheetCell, GridController gridController) {
@@ -49,20 +64,17 @@ public class SortRowsPopup {
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Insert Sorting Parameters");
 
-        leftControlsLayout = new VBox(15);
+        leftControlsLayout = new VBox(VBOX_SPACING);
         leftControlsLayout.setPadding(new Insets(10));
         leftControlsLayout.getStyleClass().add("pane");
 
         rangeSelectionPane = new GridPane();
         columnSelectionPane = new GridPane();
 
-        rangeSelectionPane.setHgap(10);
-        rangeSelectionPane.setVgap(10);
-        columnSelectionPane.setHgap(10);
-        columnSelectionPane.setVgap(10);
-
-        rangeSelectionPane.getStyleClass().add("pane");
-        columnSelectionPane.getStyleClass().add("pane");
+        rangeSelectionPane.setHgap(PADDING);
+        rangeSelectionPane.setVgap(PADDING);
+        columnSelectionPane.setHgap(PADDING);
+        columnSelectionPane.setVgap(PADDING);
 
         rangeFromField = new TextField();
         rangeFromField.getStyleClass().add("text-field");
@@ -74,7 +86,7 @@ public class SortRowsPopup {
         columnsComboBox.getStyleClass().add("combo-box");
 
         selectedColumnsListView = new ListView<>();
-        selectedColumnsListView.setPrefHeight(100);
+        selectedColumnsListView.setPrefHeight(LIST_VIEW_HEIGHT);
         selectedColumnsListView.getStyleClass().add("list-view");
 
         nextButton = new Button("Next");
@@ -86,19 +98,15 @@ public class SortRowsPopup {
         addColumnButton.getStyleClass().add("button");
 
         removeColumnButton = new Button("Remove Column");
-        addColumnButton.setDisable(true);
+        removeColumnButton.setDisable(true);
         removeColumnButton.getStyleClass().add("button");
 
         showSortedGridButton = new Button("Show Sorted Grid");
+        showSortedGridButton.setDisable(true);
         showSortedGridButton.getStyleClass().add("button");
 
         backToChooseRangesButton = new Button("Back to Ranges");
         backToChooseRangesButton.getStyleClass().add("button");
-
-        showSortedGridButton.setDisable(true);
-        addColumnButton.setDisable(true);
-        removeColumnButton.setDisable(true);
-        columnsComboBox.setDisable(true);
 
         sortRowsData = new SortRowsData();
 
@@ -111,79 +119,66 @@ public class SortRowsPopup {
     }
 
     private void setupLayout() {
-        // Section 1: Range Selection Panel
         rangeSelectionPane.add(new Label("Range-From (e.g, A2):"), 0, 0);
-        rangeSelectionPane.add(rangeFromField, 1, 0);
-        rangeSelectionPane.add(new Label("Range-To (e.g, C5):"), 0, 1);
-        rangeSelectionPane.add(rangeToField, 1, 1);
-        rangeSelectionPane.add(nextButton, 1, 2);
+        rangeSelectionPane.add(rangeFromField, 0, 1);
+        rangeSelectionPane.add(new Label("Range-To (e.g, C5):"), 0, 2);
+        rangeSelectionPane.add(rangeToField, 0, 3);
+        rangeSelectionPane.add(nextButton, 0, 4);
 
-        // Enable "Next" button only when both fields have text
         rangeFromField.textProperty().addListener((obs, oldVal, newVal) -> updateNextButtonState());
         rangeToField.textProperty().addListener((obs, oldVal, newVal) -> updateNextButtonState());
 
-        // Section 2: Column Selection Panel
         Label columnLabel = new Label("Select columns to sort by:");
         columnSelectionPane.add(columnLabel, 0, 0);
 
-        // Wider ComboBox and buttons for full display
-        columnsComboBox.setPrefWidth(250);
+        columnsComboBox.setPrefWidth(COLUMN_COMBOBOX_WIDTH);
         columnSelectionPane.add(columnsComboBox, 0, 1);
-        addColumnButton.setPrefWidth(130);
-        columnSelectionPane.add(addColumnButton, 1, 1);
+        addColumnButton.setPrefWidth(COLUMN_COMBOBOX_WIDTH);
+        columnSelectionPane.add(addColumnButton, 0, 2);
 
-        selectedColumnsListView.setPrefSize(250, 100);
-        columnSelectionPane.add(selectedColumnsListView, 0, 2, 2, 1);
+        selectedColumnsListView.setPrefSize(COLUMN_COMBOBOX_WIDTH, LIST_VIEW_HEIGHT);
+        columnSelectionPane.add(selectedColumnsListView, 0, 3);
 
-        // Align buttons in the specified order
-        HBox topActionButtons = new HBox(15, backToChooseRangesButton, removeColumnButton);
-        topActionButtons.setPadding(new Insets(10, 0, 0, 0));
-        backToChooseRangesButton.setPrefWidth(150);
-        removeColumnButton.setPrefWidth(150);
+        showSortedGridButton.setPrefWidth(BUTTON_WIDTH);
+        backToChooseRangesButton.setPrefWidth(BUTTON_WIDTH);
+        removeColumnButton.setPrefWidth(BUTTON_WIDTH);
 
-        // Position "Show Sorted Grid" button below
-        showSortedGridButton.setPrefWidth(200);
-        VBox actionButtonsLayout = new VBox(10, topActionButtons, showSortedGridButton);
-        actionButtonsLayout.setPadding(new Insets(15, 0, 0, 0));
-        columnSelectionPane.add(actionButtonsLayout, 0, 3, 2, 1);
+        VBox actionButtonsLayout = new VBox(ACTION_BUTTON_SPACING, backToChooseRangesButton, removeColumnButton, showSortedGridButton);
+        actionButtonsLayout.setPadding(ACTION_BUTTON_PADDING);
+        columnSelectionPane.add(actionButtonsLayout, 0, 4);
 
+        leftControlsLayout.setPrefWidth(LEFT_CONTROL_WIDTH);
         leftControlsLayout.getChildren().addAll(rangeSelectionPane, columnSelectionPane);
         columnSelectionPane.setVisible(false);
 
-        // Original and sorted grid containers
-        originalGridContainer = new VBox(10, new Label("Original Grid"), createOriginalGrid());
-        sortedGridContainer = new VBox(10, new Label("Sorted Grid"));
+        originalGridContainer = new VBox(VBOX_SPACING, new Label("Original Grid"), createOriginalGrid());
+        sortedGridContainer = new VBox(VBOX_SPACING, new Label("Sorted Grid"));
         sortedGridContainer.setVisible(false);
 
-        // Layout for the grids on the right
         VBox gridsDisplay = new VBox(20, originalGridContainer, sortedGridContainer);
 
-        // Main layout with side-by-side arrangement of controls and grids
-        HBox mainLayout = new HBox(30, leftControlsLayout, gridsDisplay);
-        mainLayout.setPadding(new Insets(15));
+        HBox mainLayout = new HBox(MAIN_LAYOUT_SPACING, leftControlsLayout, gridsDisplay);
+        mainLayout.setPadding(MAIN_LAYOUT_PADDING);
 
-        // Set event handlers
         nextButton.setOnAction(e -> finalizeRange());
         addColumnButton.setOnAction(e -> addColumnToList());
         removeColumnButton.setOnAction(e -> removeColumnFromList());
         showSortedGridButton.setOnAction(e -> showSortedGrid());
         backToChooseRangesButton.setOnAction(e -> resetToRangeSelection());
 
-        // Enable/Disable addColumnButton based on columnsComboBox selection
         columnsComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             addColumnButton.setDisable(newVal == null || newVal.isEmpty());
         });
 
-        // Enable/Disable removeColumnButton based on selectedColumnsListView selection
         selectedColumnsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             removeColumnButton.setDisable(newVal == null || newVal.isEmpty());
         });
 
-        // Scene setup
-        Scene scene = new Scene(mainLayout, 1530, 700);
+        Scene scene = new Scene(mainLayout, SCENE_WIDTH, SCENE_HEIGHT);
         scene.getStylesheets().add(getClass().getResource("sortpopup.css").toExternalForm());
         popupStage.setScene(scene);
     }
+
 
     private void updateNextButtonState() {
         nextButton.setDisable(rangeFromField.getText().isEmpty() || rangeToField.getText().isEmpty());
@@ -296,10 +291,10 @@ public class SortRowsPopup {
         ScrollPane gridScrollPane = new ScrollPane(sortedGrid);
         gridScrollPane.setFitToWidth(true);
         gridScrollPane.setFitToHeight(true);
-        gridScrollPane.setPrefSize(1100, 335);
+        gridScrollPane.setPrefSize(GRID_CONTAINER_WIDTH, GRID_CONTAINER_HEIGHT);
 
         VBox gridContainer = new VBox(gridScrollPane);
-        gridContainer.setPadding(new Insets(10));
+        gridContainer.setPadding(new Insets(PADDING));
         gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
         return gridContainer;
     }
@@ -313,10 +308,10 @@ public class SortRowsPopup {
         ScrollPane gridScrollPane = new ScrollPane(originalGrid);
         gridScrollPane.setFitToWidth(true);
         gridScrollPane.setFitToHeight(true);
-        gridScrollPane.setPrefSize(1100, 335);
+        gridScrollPane.setPrefSize(GRID_CONTAINER_WIDTH, GRID_CONTAINER_HEIGHT);
 
         VBox gridContainer = new VBox(gridScrollPane);
-        gridContainer.setPadding(new Insets(10));
+        gridContainer.setPadding(new Insets(PADDING));
         gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
         return gridContainer;
     }

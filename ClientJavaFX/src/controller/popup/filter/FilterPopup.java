@@ -43,6 +43,16 @@ public class FilterPopup {
     private VBox filteredGridContainer; // Holds the filtered grid for later addition
     private Map<CellLocation, CustomCellLabel> cellLocationCustomCellLabelMap = new HashMap<>();
 
+    private static final int SCENE_WIDTH = 1510;
+    private static final int SCENE_HEIGHT = 750;
+    private static final int GRID_PANE_WIDTH = 1120;
+    private static final int GRID_PANE_HEIGHT = 310;
+    private static final int PADDING = 10;
+    private static final int BORDER_WIDTH = 1;
+    private static final int SPACING = 15;
+
+
+
 
     public FilterPopup(DtoSheetCell dtoSheetCell, GridController gridController) {
         this.dtoSheetCell = dtoSheetCell;
@@ -51,8 +61,8 @@ public class FilterPopup {
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Filter Data");
 
-        mainLayout = new VBox(15);
-        mainLayout.setPadding(new Insets(10));
+        mainLayout = new VBox(SPACING);
+        mainLayout.setPadding(new Insets(PADDING));
 
         rangeFromField = new TextField();
         rangeToField = new TextField();
@@ -89,33 +99,34 @@ public class FilterPopup {
         // Create original grid container with a title label
         Label originalGridTitle = new Label("Original Grid");
         originalGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        originalGridContainer = new VBox(10, originalGridTitle, createOriginalGrid());
+        originalGridContainer = new VBox(8, originalGridTitle, createOriginalGrid()); // Reduced spacing
 
-        // Create filtered grid container with a title label, initially empty
+        // Create filtered grid container with a title label, initially hidden
         Label filteredGridTitle = new Label("Filtered Grid");
         filteredGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        filteredGridContainer = new VBox(10, filteredGridTitle);
-        filteredGridContainer.setPadding(new Insets(10));
-        filteredGridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
-        filteredGridContainer.setPrefSize(1000, 300);  // Adjusted height to give space for title
+        filteredGridContainer = new VBox(8, filteredGridTitle);
+
+        // Hide the filtered grid initially
+        filteredGridContainer.setVisible(false);
 
         // Layout structure to hold both grids on the right
-        VBox gridSection = new VBox(20, originalGridContainer, filteredGridContainer);
+        VBox gridSection = new VBox(SPACING, originalGridContainer, filteredGridContainer); // Reduced spacing
 
         // Filter section on the left
         mainLayout.getChildren().add(createRangeSelectionPanel());
 
         // Wrap everything in HBox
-        HBox contentLayout = new HBox(20, mainLayout, gridSection);
-        contentLayout.setPadding(new Insets(10));
+        HBox contentLayout = new HBox(SPACING, mainLayout, gridSection); // Reduced spacing
+        contentLayout.setPadding(new Insets(8)); // Reduced padding for overall layout
 
         // Set up the scene with the combined layout
-        Scene scene = new Scene(new ScrollPane(contentLayout), 1450, 700);
+        Scene scene = new Scene(new ScrollPane(contentLayout), SCENE_WIDTH, SCENE_HEIGHT);
         scene.getStylesheets().add(getClass().getResource("filterpopup.css").toExternalForm());
         popupStage.setScene(scene);
 
         filterCriteriaTable.setSelectionModel(null);
     }
+
 
     // Method to create the original grid as a VBox
     private VBox createOriginalGrid() {
@@ -127,10 +138,10 @@ public class FilterPopup {
         ScrollPane gridScrollPane = new ScrollPane(originalGrid);
         gridScrollPane.setFitToWidth(true);
         gridScrollPane.setFitToHeight(true);
-        gridScrollPane.setPrefSize(1000, 320);
+        gridScrollPane.setPrefSize(GRID_PANE_WIDTH, GRID_PANE_HEIGHT);
 
         VBox gridContainer = new VBox(gridScrollPane);
-        gridContainer.setPadding(new Insets(10));
+        gridContainer.setPadding(new Insets(PADDING));
         gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
 
         return gridContainer;
@@ -146,10 +157,10 @@ public class FilterPopup {
         ScrollPane gridScrollPane = new ScrollPane(filterGrid);
         gridScrollPane.setFitToWidth(true);
         gridScrollPane.setFitToHeight(true);
-        gridScrollPane.setPrefSize(1000, 320);
+        gridScrollPane.setPrefSize(GRID_PANE_WIDTH, GRID_PANE_HEIGHT);
 
         VBox gridContainer = new VBox(gridScrollPane);
-        gridContainer.setPadding(new Insets(10));
+        gridContainer.setPadding(new Insets(PADDING));
         gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
 
         return gridContainer;
@@ -158,9 +169,9 @@ public class FilterPopup {
 
     private GridPane createRangeSelectionPanel() {
         GridPane rangePane = new GridPane();
-        rangePane.setHgap(10);
-        rangePane.setVgap(10);
-        rangePane.setPadding(new Insets(10));
+        rangePane.setHgap(PADDING);
+        rangePane.setVgap(PADDING);
+        rangePane.setPadding(new Insets(PADDING));
         rangePane.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
 
         rangePane.add(new Label("From (e.g., A3):"), 0, 0);
@@ -243,8 +254,8 @@ public class FilterPopup {
     }
 
     private HBox createColumnSelectionPanel() {
-        HBox columnSelectionPane = new HBox(10);
-        columnSelectionPane.setPadding(new Insets(10));
+        HBox columnSelectionPane = new HBox(PADDING);
+        columnSelectionPane.setPadding(new Insets(PADDING));
         columnSelectionPane.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
 
         columnComboBox.setPromptText("Select Column");
@@ -280,7 +291,7 @@ public class FilterPopup {
 
     private VBox createUniqueDataDisplay() {
         VBox uniqueDataPane = new VBox(5);
-        uniqueDataPane.setPadding(new Insets(10));
+        uniqueDataPane.setPadding(new Insets(PADDING));
         uniqueDataPane.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
 
         uniqueDataListView.setDisable(false);
@@ -424,12 +435,17 @@ public class FilterPopup {
     }
 
     private VBox createFilterCriteriaPanel() {
-        VBox filterCriteriaPane = new VBox(5);
+        VBox filterCriteriaPane = new VBox(5); // Reduced spacing in the VBox
         filterCriteriaPane.setPadding(new Insets(10));
         filterCriteriaPane.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
 
+        filterCriteriaTable.setPrefHeight(180); // Slightly reduced height
         filterCriteriaTable.setPlaceholder(new Label("No filter criteria applied."));
-        filterCriteriaPane.getChildren().addAll(new Label("Filter Criteria:"), filterCriteriaTable);
+
+        // Create an HBox to hold the buttons with reduced spacing
+        HBox buttonBox = new HBox(8, removeButton, showFilteredGridButton); // Reduced spacing between buttons
+
+        filterCriteriaPane.getChildren().addAll(new Label("Filter Criteria:"), filterCriteriaTable, buttonBox);
         return filterCriteriaPane;
     }
 
@@ -474,14 +490,22 @@ public class FilterPopup {
         DtoContainerData filteredData = applyFilter();
         if (filteredData != null) {
             VBox filteredGrid = createFilterGrid(filteredData);
+            Label filteredGridTitle = new Label("Filtered Grid");
+            filteredGridTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
             // Clear old content and add the filtered grid
             filteredGridContainer.getChildren().clear();
             filteredGridContainer.getChildren().addAll(
-                    new Label("Filtered Grid"), filteredGrid
+                    filteredGridTitle, filteredGrid
             );
+
+
+
+            // Show the filtered grid container
+            filteredGridContainer.setVisible(true);
         }
     }
+
     private DtoContainerData applyFilter() {
         String range = rangeFromField.getText() + ".." + rangeToField.getText();
         Map<Character, Set<String>> filterCriteria = new HashMap<>();
