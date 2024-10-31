@@ -3,6 +3,8 @@ package controller.popup;
 import com.sun.webkit.Timer;
 import controller.grid.GridController;
 import controller.main.MainController;
+import controller.popup.auto_complete.AutoCompletePopup;
+import controller.popup.auto_complete.AutoCompleteResult;
 import controller.popup.filter.FilterPopup;
 import controller.popup.find_and_replace.FindAndReplacePopupResult;
 import controller.popup.find_and_replace.FindReplacePopup;
@@ -123,6 +125,11 @@ public class PopUpWindowsManager {
                                                           Model model, MainController mainController) {
         FindReplacePopup findReplacePopup = new FindReplacePopup(dtoSheetCell, gridController, model, mainController, this);
         return findReplacePopup.show();
+    }
+
+    public AutoCompleteResult openAutoCompletePopup(DtoSheetCell dtoSheetCell, GridController gridController, Model model, MainController mainController) {
+        AutoCompletePopup autoCompletePopup = new AutoCompletePopup(dtoSheetCell, gridController, model, mainController, this);
+        return autoCompletePopup.show();
     }
 }
 

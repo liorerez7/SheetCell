@@ -18,10 +18,7 @@ import dto.small_parts.CellLocation;
 import dto.small_parts.CellLocationFactory;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class SheetManagerImpl implements SheetManager {
@@ -164,6 +161,98 @@ public class SheetManagerImpl implements SheetManager {
             throw e;
         }
     }
+
+    @Override
+    public Map<String, String> getPredictionsForSheet(String startingRangeCellLocation,
+                                                      String endingRangeCellLocation,
+                                                      String extendedRangeCellLocation,
+                                                      Map<String, String> originalValuesByOrder) {
+
+        List<String> initialStringsByOrder = new ArrayList<>();
+        Map<String, String> result = new HashMap<>();
+
+        int count = 0;
+
+        // Determine if the range is column-based or row-based
+        char startColumn = startingRangeCellLocation.charAt(0);
+        char endColumn = endingRangeCellLocation.charAt(0);
+        int startRow = Integer.parseInt(startingRangeCellLocation.substring(1));
+        int endRow = Integer.parseInt(endingRangeCellLocation.substring(1));
+
+        List<String> targetCells = new ArrayList<>();
+
+        // Case 1: Row-based range (spanning columns, fixed row)
+        if (startRow == endRow) {
+            for (char col = startColumn; col <= endColumn; col++) {
+                String cell = col + String.valueOf(startRow);
+                if (originalValuesByOrder.containsKey(cell)) {
+                    initialStringsByOrder.add(originalValuesByOrder.get(cell));
+                }
+                targetCells.add(cell); // Add to target cells list
+            }
+
+            // Extend the range up to extendedRangeCellLocation if applicable
+            if (extendedRangeCellLocation != null) {
+                char extendedEndColumn = extendedRangeCellLocation.charAt(0);
+                count = extendedEndColumn - endColumn; // Number of extra columns to extend
+
+                for (char col = (char) (endColumn + 1); col <= extendedEndColumn; col++) {
+                    String cell = col + String.valueOf(startRow);
+                    targetCells.add(cell); // Add extended cells to target cells list
+                }
+            }
+
+        }
+        // Case 2: Column-based range (spanning rows, fixed column)
+        else if (startColumn == endColumn) {
+            for (int row = startRow; row <= endRow; row++) {
+                String cell = startColumn + String.valueOf(row);
+                if (originalValuesByOrder.containsKey(cell)) {
+                    initialStringsByOrder.add(originalValuesByOrder.get(cell));
+                }
+                targetCells.add(cell); // Add to target cells list
+            }
+
+            // Extend the range up to extendedRangeCellLocation if applicable
+            if (extendedRangeCellLocation != null) {
+                int extendedEndRow = Integer.parseInt(extendedRangeCellLocation.substring(1));
+                count = extendedEndRow - endRow; // Number of extra rows to extend
+
+                for (int row = endRow + 1; row <= extendedEndRow; row++) {
+                    String cell = startColumn + String.valueOf(row);
+                    targetCells.add(cell); // Add extended cells to target cells list
+                }
+            }
+        }
+
+        // Generate predictions
+        List<String> newList = SequencePredictor.predictNext(initialStringsByOrder, count);
+
+        // Populate result map with predictions
+        int newValueIndex = 0;
+        for (String cell : targetCells) {
+            if (newValueIndex < newList.size()) {
+                result.put(cell, newList.get(newValueIndex));
+                newValueIndex++;
+            }
+        }
+
+        return result;
+    }
+
+    public void updateMultipleCells(Map<String, String> resultStrings) {
+
+        for (Map.Entry<String, String> entry : resultStrings.entrySet()) {
+            char col = entry.getKey().charAt(0);
+            String row = entry.getKey().substring(1);
+            try {
+                updateCell(entry.getValue(), col, row);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
     @Override

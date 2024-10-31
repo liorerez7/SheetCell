@@ -545,6 +545,11 @@ public class MainController {
         operationHandler.findAndReplace();
     }
 
+    public void autoCompleteClicked() {
+        operationHandler.applyChangesInParameters(dtoSheetCellAsDataParameter, model, gridScrollerController, this);
+        operationHandler.autoComplete();
+    }
+
     public void showLoginScreen() {
         if (app != null) {
             app.showLoginScreen();  // Switch to login screen using the app reference
@@ -710,74 +715,6 @@ public class MainController {
     public void resetCustomizationInGrid() {
         gridScrollerController.resetCustomizationInAllSheets();
     }
-
-
-//    public void updateSheetAccordingToChangedCells(FindAndReplacePopupResult result) {
-//
-//        Set<CellLocation> locations = result.getLocations();
-//        String newValue = result.getNewValue();
-//
-//        try{
-//            try (Response sheetCellResponse = HttpRequestManager.sendGetSyncRequest(Constants.GET_SHEET_CELL_ENDPOINT, new HashMap<>())) {
-//                if (!sheetCellResponse.isSuccessful()) {
-//                    Platform.runLater(() -> createErrorPopup("Failed to load sheet", "Error"));
-//                    return;
-//                }
-//
-//                String sheetCellAsJson = sheetCellResponse.body().string();
-//                dtoSheetCellAsDataParameter = Constants.GSON_INSTANCE.fromJson(sheetCellAsJson, DtoSheetCell.class);
-//
-//                int latestVersion = dtoSheetCellAsDataParameter.getLatestVersion();
-//
-//                List<DtoCell> dtoCells = new ArrayList<>();
-//                for(CellLocation cellLocation : locations){
-//                    DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(cellLocation.getCellId());
-//                    dtoCells.add(dtoCell);
-//                }
-//
-//                // Update the UI on the JavaFX Application Thread
-//                Platform.runLater(() -> {
-//                    model.setPropertiesByDtoSheetCell(dtoSheetCellAsDataParameter);
-//                    model.setTotalVersionsProperty(latestVersion);
-//
-//                    for(DtoCell dtoCell : dtoCells){
-//                        model.setLatestUpdatedVersionProperty(dtoCell);
-//                        model.setOriginalValueLabelProperty(dtoCell);
-//                    }
-//                });
-//            }
-//
-//            Map<String, String> params = new HashMap<>();
-//            params.put("sheetName",sheetName);
-//
-//            try (Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_USER_NAME_THAT_LAST_UPDATED_CELL_ENDPOINT, params)) {
-//
-//                String userNameThatLastUpdatedTheCellMapAsJson = response.body().string();
-//
-//                cellLocationToUserName = Constants.GSON_INSTANCE.fromJson(userNameThatLastUpdatedTheCellMapAsJson,
-//                        new TypeToken<Map<CellLocation, String>>() {}.getType());
-//
-//                Platform.runLater(() -> {
-//                    model.setUserNameProperty(cellLocationToUserName.get(new CellLocation(text.charAt(0), text.substring(1))));
-//                });
-//
-//            }
-//
-//            try(Response response = HttpRequestManager.sendGetSyncRequest(Constants.GET_VERSION_TO_CELL_INFO_MAP, params)) {
-//
-//                String versionToCellInfoAsJson = response.body().string();
-//                versionToCellInfo = Constants.GSON_INSTANCE.fromJson(versionToCellInfoAsJson,
-//                        new TypeToken<Map<Integer, UpdateCellInfo>>() {}.getType());
-//
-//            }
-//        }
-//
-//    } catch (IOException e) {
-//        Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-//    }
-//
-
-
 
     public void updateSheetAccordingToChangedCells(FindAndReplacePopupResult result) {
         Set<CellLocation> locations = result.getLocations();

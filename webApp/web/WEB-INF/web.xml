@@ -80,6 +80,10 @@
         <servlet-class>chat.servlets.sheet.cell.GetUserNameLastUpdatedCellServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GetPredictionsForSheetServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.cell.GetPredictionsForSheetServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AddRangeServlet</servlet-name>
         <servlet-class>chat.servlets.sheet.range.AddRangeServlet</servlet-class>
     </servlet>
@@ -139,6 +143,10 @@
     <servlet-mapping>
         <servlet-name>IsSheetUpdatedServlet</servlet-name>
         <url-pattern>/isSheetUpdated</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetPredictionsForSheetServlet</servlet-name>
+        <url-pattern>/predictionValues</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>

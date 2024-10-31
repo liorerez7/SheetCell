@@ -2,6 +2,7 @@ package controller.main;
 
 import controller.grid.GridController;
 import controller.popup.PopUpWindowsManager;
+import controller.popup.auto_complete.AutoCompleteResult;
 import controller.popup.find_and_replace.FindAndReplacePopupResult;
 import dto.components.DtoSheetCell;
 import javafx.application.Platform;
@@ -108,5 +109,32 @@ public class OperationHandler {
         });
 
 
+    }
+
+    public void autoComplete() {
+
+        Map<String,String> params = new HashMap<>();
+        params.put("versionNumber", String.valueOf(dtoSheetCell.getLatestVersion()));
+
+        HttpRequestManager.sendPostAsyncRequest(Constants.POST_TEMP_SHEET_IN_SERVLET, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try(response){
+                    if (!response.isSuccessful()) {
+
+                    }
+                    Platform.runLater(() -> {
+                        AutoCompleteResult result = popUpWindowsManager.openAutoCompletePopup(dtoSheetCell, gridController, model, mainController);
+                        if(result != null && result.isAppliedWasSuccessful()){
+                            //mainController.updateSheetAccordingToChangedCells(result);
+                        }
+                    });
+                }
+            }
+        });
     }
 }

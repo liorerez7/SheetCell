@@ -9,6 +9,7 @@ import engine.core_parts.impl.SheetManagerImpl;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface SheetManager {
@@ -25,4 +26,9 @@ public interface SheetManager {
     SheetManagerImpl createSheetCellOnlyForRunTime(int versionNumber);
 
     void updateReplacedCells(String newValue, Set<CellLocation> newValueLocations);
+
+    Map<String,String> getPredictionsForSheet(String startingRangeCellLocation, String endingRangeCellLocation,
+                                        String extendedRangeCellLocation, Map<String, String> originalValuesByOrder);
+
+    void updateMultipleCells(Map<String, String> resultStrings);
 }

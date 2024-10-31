@@ -196,6 +196,24 @@ public class FindReplacePopup {
         }
     }
 
+    private VBox createOriginalGrid() {
+        GridPane originalGrid = new GridPane();
+        originalGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
+
+        cellLocationCustomOriginalCellLabelMap = gridController.initializeOriginalPopupGrid(originalGrid, dtoSheetCell);
+
+        ScrollPane gridScrollPane = new ScrollPane(originalGrid);
+        gridScrollPane.setFitToWidth(true);
+        gridScrollPane.setFitToHeight(true);
+        gridScrollPane.setPrefSize(1120, 335);
+
+        VBox gridContainer = new VBox(gridScrollPane);
+        gridContainer.setPadding(new Insets(10));
+        gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
+
+        return gridContainer;
+    }
+
     private VBox createColorLegend() {
         VBox infoBox = new VBox(5);
         infoBox.setAlignment(Pos.BOTTOM_LEFT);
@@ -218,23 +236,7 @@ public class FindReplacePopup {
         return line;
     }
 
-    private VBox createOriginalGrid() {
-        GridPane originalGrid = new GridPane();
-        originalGrid.getStylesheets().add("controller/grid/ExelBasicGrid.css");
 
-        cellLocationCustomOriginalCellLabelMap = gridController.initializeOriginalPopupGrid(originalGrid, dtoSheetCell);
-
-        ScrollPane gridScrollPane = new ScrollPane(originalGrid);
-        gridScrollPane.setFitToWidth(true);
-        gridScrollPane.setFitToHeight(true);
-        gridScrollPane.setPrefSize(1120, 335);
-
-        VBox gridContainer = new VBox(gridScrollPane);
-        gridContainer.setPadding(new Insets(10));
-        gridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
-
-        return gridContainer;
-    }
 
     private void handleFindButtonClick() {
         String findValue = findValueField.getText().trim();

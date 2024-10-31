@@ -53,7 +53,7 @@ public class CustomizeController {
 
     @FXML
     void autoCompleteClicked(ActionEvent event) {
-//        mainController.autoCompleteClicked();
+        mainController.autoCompleteClicked();
     }
 
     @FXML
