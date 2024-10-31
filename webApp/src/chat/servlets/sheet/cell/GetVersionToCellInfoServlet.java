@@ -22,7 +22,6 @@ public class GetVersionToCellInfoServlet extends HttpServlet {
             synchronized (engine){
                 Map<Integer, UpdateCellInfo> versionToCellInfo = engine.getVersionToCellInfo();
                 String versionToCellInfoAsJson = Constants.GSON_INSTANCE.toJson(versionToCellInfo);
-                System.out.println("versionToCellInfoAsJson = " + versionToCellInfoAsJson);
                 response.getWriter().write(versionToCellInfoAsJson);
                 response.getWriter().flush();
                 response.setStatus(HttpServletResponse.SC_OK);
