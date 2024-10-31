@@ -1,5 +1,6 @@
 package controller.main;
 
+import dto.small_parts.CellLocation;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import javafx.application.Platform;
@@ -49,6 +50,10 @@ public class SheetGridRefresher extends TimerTask {
                     String isSheetUpdatedAsJson = response.body().string();
                     String isSheetUpdated = Constants.GSON_INSTANCE.fromJson(isSheetUpdatedAsJson, String.class);
                     if(Objects.equals(isSheetUpdated, "true")) {
+
+
+
+//
                         Platform.runLater(() -> updateSheetCallback.accept(null));
                     }
                 } else {

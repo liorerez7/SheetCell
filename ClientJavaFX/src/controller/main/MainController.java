@@ -75,7 +75,7 @@ public class MainController {
     private Map<Integer, UpdateCellInfo> versionToCellInfo = new HashMap<>();
 
 
-    public static final int REFRESH_INTERVAL = 500;
+    public static final int REFRESH_INTERVAL = 1500;
     public static final int INITIAL_DELAY = 0;
 
     public void setStage(Stage stage) {
@@ -283,6 +283,8 @@ public class MainController {
                         String errorMessage = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
                         Platform.runLater(() -> createErrorPopup(errorMessage, "Error"));
                         return;
+                    }else{
+
                     }
                 }
 
