@@ -194,7 +194,7 @@ public class SheetManagerImpl implements SheetManager {
             // Extend the range up to extendedRangeCellLocation if applicable
             if (extendedRangeCellLocation != null) {
                 char extendedEndColumn = extendedRangeCellLocation.charAt(0);
-                count = extendedEndColumn - endColumn; // Number of extra columns to extend
+                count = extendedEndColumn - startColumn + 1; // Number of extra columns to extend
 
                 for (char col = (char) (endColumn + 1); col <= extendedEndColumn; col++) {
                     String cell = col + String.valueOf(startRow);
@@ -216,7 +216,7 @@ public class SheetManagerImpl implements SheetManager {
             // Extend the range up to extendedRangeCellLocation if applicable
             if (extendedRangeCellLocation != null) {
                 int extendedEndRow = Integer.parseInt(extendedRangeCellLocation.substring(1));
-                count = extendedEndRow - endRow; // Number of extra rows to extend
+                count = extendedEndRow - startRow + 1; // Number of extra rows to extend
 
                 for (int row = endRow + 1; row <= extendedEndRow; row++) {
                     String cell = startColumn + String.valueOf(row);

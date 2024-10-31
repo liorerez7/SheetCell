@@ -39,6 +39,7 @@ public class AutoCompletePopup {
     // UI components
     private TextField cellLocationInput;
     private Button submitButton;
+    private Button applyOnCurrentSheetButton;
     private ComboBox<String> rowOrColChoice;
     private ComboBox<String> dataOptions;
     private VBox mainContainer;
@@ -46,6 +47,7 @@ public class AutoCompletePopup {
     private VBox rowColSection;
     private VBox thirdSection;
     private VBox originalGridContainer;
+    private VBox predictedGridContainer;
     private Button backButton;
     private Button finalizeButton;
     private ComboBox<String> extendedRangeOptions;
@@ -53,7 +55,7 @@ public class AutoCompletePopup {
     private Button predictValuesButton;
     private final static char firstGridColumn = 'A';
     private final static String firstGridRow = "1";
-    private final static int AT_LEAST_TWO_CELLS_FOR_PREDICTION = 2;
+    private final static int AT_LEAST_TWO_CELLS_FOR_PREDICTION = 1;
     private final String lastRowGrid;
     private final char lastColumnGrid;
     private Map<CellLocation, CustomCellLabel> cellLocationCustomOriginalCellLabelMap = new HashMap<>();
@@ -86,18 +88,24 @@ public class AutoCompletePopup {
         // Main container
         mainContainer = new VBox(10);
         mainContainer.setPadding(new Insets(15));
+        mainContainer.getStyleClass().add("vbox-section");
 
         // Section 1 - Cell Location Input with Submit Button
         cellLocationSection = new VBox(5);
         cellLocationSection.setPadding(new Insets(10));
         cellLocationSection.setStyle("-fx-border-color: grey; -fx-border-width: 1; -fx-padding: 10;");
+        cellLocationSection.getStyleClass().add("vbox-section");
 
         Label cellLocationLabel = new Label("Enter Starting Cell Location (e.g., A3):");
+        cellLocationLabel.getStyleClass().add("label");
+
         cellLocationInput = new TextField();
         cellLocationInput.setPromptText("A3");
+        cellLocationInput.getStyleClass().add("text-field");
 
         submitButton = new Button("Submit");
         submitButton.setDisable(true); // Initially disabled
+        submitButton.getStyleClass().add("button");
 
         // Add TextField and Button to Section 1
         cellLocationSection.getChildren().addAll(cellLocationLabel, cellLocationInput, submitButton);
@@ -106,23 +114,30 @@ public class AutoCompletePopup {
         rowColSection = new VBox(5);
         rowColSection.setPadding(new Insets(10));
         rowColSection.setStyle("-fx-border-color: grey; -fx-border-width: 1; -fx-padding: 10;");
+        rowColSection.getStyleClass().add("vbox-section");
 
         Label choiceLabel = new Label("Choose Row or Column:");
+        choiceLabel.getStyleClass().add("label");
+
         rowOrColChoice = new ComboBox<>();
         rowOrColChoice.getItems().addAll("Row", "Column");
         rowOrColChoice.setDisable(true); // Initially disabled
+        rowOrColChoice.getStyleClass().add("combo-box");
 
         dataOptions = new ComboBox<>();
         dataOptions.setDisable(true); // Initially disabled
         dataOptions.setVisibleRowCount(10); // Allow scrolling
+        dataOptions.getStyleClass().add("combo-box");
 
         // Back button to return to the starting cell input section
         backButton = new Button("Back To Choosing Starting Cell");
         backButton.setOnAction(event -> resetToCellLocationSelection());
+        backButton.getStyleClass().add("button");
 
         // Finalize button to complete the initial range selection
         finalizeButton = new Button("Finalize Initial Range");
         finalizeButton.setOnAction(event -> finalizeInitialRange());
+        finalizeButton.getStyleClass().add("button");
 
         // Add to Section 2
         rowColSection.getChildren().addAll(choiceLabel, rowOrColChoice, dataOptions, backButton, finalizeButton);
@@ -132,31 +147,58 @@ public class AutoCompletePopup {
         thirdSection = new VBox(5);
         thirdSection.setPadding(new Insets(10));
         thirdSection.setStyle("-fx-border-color: grey; -fx-border-width: 1; -fx-padding: 10;");
+        thirdSection.getStyleClass().add("vbox-section");
 
         Label extendedRangeLabel = new Label("Select Cells within Extended Range:");
+        extendedRangeLabel.getStyleClass().add("label");
+
         extendedRangeOptions = new ComboBox<>();
         extendedRangeOptions.setDisable(true); // Initially disabled
         extendedRangeOptions.setVisibleRowCount(10); // Allow scrolling
+        extendedRangeOptions.getStyleClass().add("combo-box");
 
         // Back to Section 2 Button
         backToSecondSectionButton = new Button("Back to Range Selection");
         backToSecondSectionButton.setOnAction(event -> returnToSecondSection());
+        backToSecondSectionButton.getStyleClass().add("button");
 
         // Predict Values Button
         predictValuesButton = new Button("Predict Values");
         predictValuesButton.setOnAction(event -> predictValues());
+        predictValuesButton.setDisable(true); // Initially disabled
+        predictValuesButton.getStyleClass().add("button");
+
+        // Enable predictValuesButton only after extended cell location is selected
+        extendedRangeOptions.setOnAction(event -> {
+            if (extendedRangeOptions.getValue() != null) {
+                predictValuesButton.setDisable(false); // Enable once a selection is made
+            }
+        });
+
+
+        // Apply on Current Sheet Button
+        applyOnCurrentSheetButton = new Button("Apply on Current Sheet");
+        applyOnCurrentSheetButton.setDisable(true); // Initially disabled
+        applyOnCurrentSheetButton.setVisible(true); // Visible only in the third section
+        applyOnCurrentSheetButton.setOnAction(event -> applyOnCurrentSheet());
+        applyOnCurrentSheetButton.getStyleClass().add("button");
 
         // Add components to the third section
-        thirdSection.getChildren().addAll(extendedRangeLabel, extendedRangeOptions, backToSecondSectionButton, predictValuesButton);
+        thirdSection.getChildren().addAll(extendedRangeLabel, extendedRangeOptions, backToSecondSectionButton, predictValuesButton, applyOnCurrentSheetButton);
         thirdSection.setVisible(false); // Hidden initially
 
-        // Original Grid View
+        // Original and Predicted Grid Containers
         originalGridContainer = new VBox(8, new Label("Original Grid"), createOriginalGrid());
-        originalGridContainer.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
         originalGridContainer.setPadding(new Insets(10));
+        originalGridContainer.setId("originalGridContainer");
 
-        // Arrange sections and grid in main layout
-        HBox mainLayout = new HBox(15, mainContainer, originalGridContainer);
+        predictedGridContainer = new VBox(8, new Label("Predicted Grid"));
+        predictedGridContainer.setPadding(new Insets(10));
+        predictedGridContainer.setId("predictedGridContainer");
+        predictedGridContainer.setVisible(false); // Initially hidden
+
+        VBox gridsDisplay = new VBox(20, originalGridContainer, predictedGridContainer);
+        HBox mainLayout = new HBox(15, mainContainer, gridsDisplay);
         mainLayout.setPadding(new Insets(15));
 
         // Add sections to main container
@@ -172,7 +214,12 @@ public class AutoCompletePopup {
 
         // Display the popup with enlarged scene
         Scene scene = new Scene(mainLayout, 1510, 750);
+        scene.getStylesheets().add(getClass().getResource("AutoCompletePopup.css").toExternalForm());
         stage.setScene(scene);
+    }
+
+    private void applyOnCurrentSheet() {
+
     }
 
     public AutoCompleteResult show() {
@@ -252,6 +299,8 @@ public class AutoCompletePopup {
         cellLocationCustomOriginalCellLabelMap.forEach((cellLocation, customCellLabel) -> {
             if (isWithinBoundaries(cellLocation, startingRangeCellLocation, endingRangeCellLocation)) {
                 customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+            }else{
+                customCellLabel.setBackgroundColor(Color.WHITE);
             }
         });
 
@@ -260,13 +309,14 @@ public class AutoCompletePopup {
         dataOptions.setDisable(true);
         backButton.setDisable(true);
         finalizeButton.setDisable(true);
+        predictValuesButton.setDisable(true);
+
 
         // Show the third section
         populateExtendedRangeOptions();
         thirdSection.setVisible(true);
         extendedRangeOptions.setDisable(false); // Enable extended range options
     }
-
 
     public boolean isWithinBoundaries(CellLocation cellLocation, CellLocation startingRangeCellLocation, CellLocation endingRangeCellLocation) {
         char startColumn = startingRangeCellLocation.getVisualColumn();
@@ -316,8 +366,21 @@ public class AutoCompletePopup {
     }
 
     private void returnToSecondSection() {
-        // Hide third section, enable second section components
+        // Hide third section and the predicted grid, enable second section components
         thirdSection.setVisible(false);
+        predictedGridContainer.setVisible(false);  // Hide predicted grid
+        applyOnCurrentSheetButton.setDisable(true); // Disable apply button
+
+        if(cellLocationCustomNewCellLabelMap != null) {
+            cellLocationCustomNewCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+                customCellLabel.setBackgroundColor(Color.WHITE);
+            });
+        }
+
+
+        predictValuesButton.setDisable(true);
+
+
         rowColSection.setVisible(true);
         rowOrColChoice.setDisable(false);
         dataOptions.setDisable(false);
@@ -334,6 +397,11 @@ public class AutoCompletePopup {
         dataOptions.setDisable(true);
         extendedRangeOptions.getItems().clear();
         extendedRangeOptions.setDisable(true);
+        predictValuesButton.setDisable(true);
+
+        cellLocationCustomOriginalCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+            customCellLabel.setBackgroundColor(Color.WHITE);
+        });
 
         // Re-enable cell location input and submit button
         cellLocationInput.setDisable(false);
@@ -341,28 +409,22 @@ public class AutoCompletePopup {
     }
 
     private void predictValues() {
-
         String extendedVal = extendedRangeOptions.getValue();
         if (extendedVal != null) {
             extendedRangeCellLocation = CellLocationFactory.fromCellId(extendedVal);
         }
 
-        Map<String,String> originalValuesByOrder = getOriginalValuesFromCurrentDtoSheetCell();
+        Map<String, String> originalValuesByOrder = getOriginalValuesFromCurrentDtoSheetCell();
 
+        // Call server and handle UI update in the callback
         getNewDtoSheetCellFromServer(originalValuesByOrder);
 
-        if(newPredictedDtoSheetCell != null){
-
-            GridPane newGridContainer = new GridPane();
-            newGridContainer.getStylesheets().add("controller/grid/ExelBasicGrid.css");
-            cellLocationCustomNewCellLabelMap = gridController.initializeOriginalPopupGrid(newGridContainer, newPredictedDtoSheetCell);
-        }
-
+        // Enable apply button after prediction is processed
+        applyOnCurrentSheetButton.setDisable(false);
     }
 
-    private void getNewDtoSheetCellFromServer(Map<String,String> originalValuesByOrder) {
-
-        Map<String,String> params = new HashMap<>();
+    private void getNewDtoSheetCellFromServer(Map<String, String> originalValuesByOrder) {
+        Map<String, String> params = new HashMap<>();
         params.put("originalValues", Constants.GSON_INSTANCE.toJson(originalValuesByOrder));
         params.put("startingRangeCellLocation", startingRangeCellLocation.getCellId());
         params.put("endingRangeCellLocation", endingRangeCellLocation.getCellId());
@@ -370,36 +432,56 @@ public class AutoCompletePopup {
 
         HttpRequestManager.sendPostAsyncRequest(Constants.GET_PREDICTION_VALUES, params, new Callback() {
             @Override
-            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // Handle failure case
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseBodyString = null;
-
                 try (response) {
                     if (response.isSuccessful()) {
-                        responseBodyString = response.body().string();  // Read the response body once
-                    } else {
-                        // Handle unsuccessful response here, if needed
+                        responseBodyString = response.body().string(); // Read the response body once
                     }
                 }
 
-                // Run JavaFX UI update on the JavaFX Application Thread
+                // Update UI on JavaFX Application Thread
                 if (responseBodyString != null) {
-                    final String finalResponseBodyString = responseBodyString;  // Make it effectively final for use in Platform.runLater
+                    final String finalResponseBodyString = responseBodyString; // Make it effectively final for use in Platform.runLater
                     Platform.runLater(() -> {
                         // Parse JSON string and update UI
                         try {
                             newPredictedDtoSheetCell = Constants.GSON_INSTANCE.fromJson(finalResponseBodyString, DtoSheetCell.class);
-                            // Additional UI updates, if necessary
+                            updatePredictedGrid(); // Update predicted grid immediately
                         } catch (Exception e) {
-                            e.printStackTrace();  // Handle JSON parsing errors here
+                            e.printStackTrace(); // Handle JSON parsing errors here
                         }
                     });
                 }
             }
         });
+    }
+
+    private void updatePredictedGrid() {
+        if (newPredictedDtoSheetCell != null) {
+            GridPane newGridContainer = new GridPane();
+            newGridContainer.getStylesheets().add("controller/grid/ExelBasicGrid.css");
+
+            // Initialize and set the predicted grid
+            cellLocationCustomNewCellLabelMap = gridController.initializeOriginalPopupGrid(newGridContainer, newPredictedDtoSheetCell);
+
+            cellLocationCustomNewCellLabelMap.forEach((cellLocation, customCellLabel) -> {
+                if (isWithinBoundaries(cellLocation, startingRangeCellLocation, extendedRangeCellLocation)) {
+                    customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+                }
+                else {
+                    customCellLabel.setBackgroundColor(Color.WHITE);
+                }
+            });
+
+            predictedGridContainer.getChildren().setAll(new Label("Predicted Grid"), new ScrollPane(newGridContainer));
+            predictedGridContainer.setVisible(true); // Show predicted grid
+        }
     }
 
     private Map<String,String> getOriginalValuesFromCurrentDtoSheetCell() {

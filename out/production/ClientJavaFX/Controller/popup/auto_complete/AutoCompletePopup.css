@@ -1,0 +1,73 @@
+/* Root styling for popup */
+.root {
+    -fx-font-family: Arial, sans-serif;
+    -fx-background-color: #f4f6f9;
+}
+
+/* Button styling */
+.button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 5;
+    -fx-border-color: transparent;
+}
+
+.button:hover {
+    -fx-background-color: #357abd;
+}
+
+.button:disabled {
+    -fx-background-color: #d3d3d3;
+    -fx-text-fill: #a9a9a9;
+}
+
+/* Label styling */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* TextField styling */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 3;
+    -fx-padding: 4;
+    -fx-font-size: 14px;
+}
+
+/* ComboBox styling */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 3;
+    -fx-font-size: 14px;
+}
+
+/* VBox styling for sections */
+.vbox-section {
+    -fx-border-color: #cfd9e2;
+    -fx-border-radius: 4;
+    -fx-background-color: #ffffff;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+/* Grid container styling */
+#originalGridContainer, #predictedGridContainer {
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+    -fx-background-color: #ffffff;
+    -fx-padding: 10;
+    -fx-border-radius: 5;
+}
+
+/* Title label styling for grid containers */
+#originalGridContainer > .label,
+#predictedGridContainer > .label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-padding: 5;
+}

@@ -41,15 +41,19 @@ public class GetPredictionsForSheetServlet extends HttpServlet {
         synchronized (sheetManager) {
 
             String userName = (String) request.getSession(false).getAttribute(Constants.USERNAME);
+            SheetManager sheetManagerForPresentingTheInformation = engine.getTemporarySheetManager(userName);
 
 
             Map<String,String> resultStrings = sheetManager.getPredictionsForSheet(startingRangeCellLocation,
                     endingRangeCellLocation, extendedRangeCellLocation, originalValuesByOrder);
 
 
-            SheetManager sheetManagerForPresentingTheInformation = engine.getTemporarySheetManager(userName);
+            sheetManagerForPresentingTheInformation.saveCurrentSheetCellState();
+
             sheetManagerForPresentingTheInformation.updateMultipleCells(resultStrings);
             DtoSheetCell dtoSheetCellForPresentingDataOnly = sheetManagerForPresentingTheInformation.getSheetCell();
+
+            sheetManagerForPresentingTheInformation.restoreSheetCellState();
 
 
             response.getWriter().write(Constants.GSON_INSTANCE.toJson(dtoSheetCellForPresentingDataOnly));
