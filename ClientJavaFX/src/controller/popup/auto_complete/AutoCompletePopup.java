@@ -421,6 +421,8 @@ public class AutoCompletePopup {
 
         // Enable apply button after prediction is processed
         applyOnCurrentSheetButton.setDisable(false);
+
+        autoCompleteResult = new AutoCompleteResult(newPredictedDtoSheetCell.getPredictedValues(), newPredictedDtoSheetCell.isPredictedValuesWorked());
     }
 
     private void getNewDtoSheetCellFromServer(Map<String, String> originalValuesByOrder) {

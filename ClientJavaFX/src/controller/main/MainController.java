@@ -838,4 +838,15 @@ public class MainController {
         }
     }
 
+
+    //TODO!!
+    public void updateSheetInCells(Map<String, String> cellLocationToNewCellValues) {
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("newValues", Constants.GSON_INSTANCE.toJson(cellLocationToNewCellValues));
+
+        }catch (Exception e){
+            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+        }
+    }
 }

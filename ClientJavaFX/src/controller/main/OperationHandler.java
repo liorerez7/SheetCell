@@ -130,7 +130,7 @@ public class OperationHandler {
                     Platform.runLater(() -> {
                         AutoCompleteResult result = popUpWindowsManager.openAutoCompletePopup(dtoSheetCell, gridController, model, mainController);
                         if(result != null && result.isAppliedWasSuccessful()){
-                            //mainController.updateSheetAccordingToChangedCells(result);
+                            mainController.updateSheetInCells(result.getCellLocationToNewCellValues());
                         }
                     });
                 }

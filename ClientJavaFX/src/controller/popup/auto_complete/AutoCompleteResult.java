@@ -68,4 +68,9 @@ public class AutoCompleteResult {
         this.cellLocationToNewCellValues = cellLocationToNewCellValues;
         this.isAppliedWasSuccessful = isAppliedWasSuccessful;
     }
+
+    public AutoCompleteResult(Map<String, String> cellLocationToNewCellValues, boolean isAppliedWasSuccessful) {
+        this.cellLocationToNewCellValues = cellLocationToNewCellValues;
+        this.isAppliedWasSuccessful = isAppliedWasSuccessful;
+    }
 }
