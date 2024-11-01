@@ -240,17 +240,38 @@ public class SheetManagerImpl implements SheetManager {
         return result;
     }
 
-    public void updateMultipleCells(Map<String, String> resultStrings) {
+    public Map<String,String> updateMultipleCells(Map<String, String> resultStrings, Map<String, String> originalValuesByOrder) {
+
+        Map<String,String> theCellsThatActuallyUpdated = new HashMap<>();
 
         for (Map.Entry<String, String> entry : resultStrings.entrySet()) {
             char col = entry.getKey().charAt(0);
             String row = entry.getKey().substring(1);
             try {
-                updateCell(entry.getValue(), col, row);
+                String isStringInOriginalValues = originalValuesByOrder.get(entry.getKey());
+                if(isStringInOriginalValues == null){
+
+                    Cell cell = sheetCell.getSheetCell().get(CellLocationFactory.fromCellId(entry.getKey()));
+                    if((cell == null) || (cell).getOriginalValue().isEmpty() || cell.getOriginalValue().equals(entry.getValue())) {
+
+                        updateCell(entry.getValue(), col, row);
+                        theCellsThatActuallyUpdated.put(entry.getKey(), entry.getValue());
+                    }
+                    else{
+                        break;
+                    }
+                }else{
+                    updateCell(entry.getValue(), col, row);
+                    theCellsThatActuallyUpdated.put(entry.getKey(), entry.getValue());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+                theCellsThatActuallyUpdated = null;
+                break;
             }
         }
+
+        return theCellsThatActuallyUpdated;
     }
 
 

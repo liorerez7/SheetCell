@@ -50,8 +50,17 @@ public class GetPredictionsForSheetServlet extends HttpServlet {
 
             sheetManagerForPresentingTheInformation.saveCurrentSheetCellState();
 
-            sheetManagerForPresentingTheInformation.updateMultipleCells(resultStrings);
+            Map<String,String> realUpdatedCells = sheetManagerForPresentingTheInformation.updateMultipleCells(resultStrings, originalValuesByOrder);
             DtoSheetCell dtoSheetCellForPresentingDataOnly = sheetManagerForPresentingTheInformation.getSheetCell();
+
+            dtoSheetCellForPresentingDataOnly.setPredictedValuesWorked(true);
+            dtoSheetCellForPresentingDataOnly.setPredictedValues(realUpdatedCells);
+
+            if(realUpdatedCells.keySet().size() <= originalValuesByOrder.keySet().size()){
+                dtoSheetCellForPresentingDataOnly.setPredictedValuesWorked(false);
+            }
+
+
 
             sheetManagerForPresentingTheInformation.restoreSheetCellState();
 

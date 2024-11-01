@@ -246,6 +246,7 @@ public class AutoCompletePopup {
 
     private void handleCellLocationSubmission() {
         String cellLocation = cellLocationInput.getText().toUpperCase(); // Convert to uppercase
+        try{
         if (isValidCellLocation(cellLocation)) {
             cellLocationInput.setText(cellLocation); // Update TextField with uppercase
             startingRangeCellLocation = CellLocationFactory.fromCellId(cellLocation); // Set starting range
@@ -253,10 +254,9 @@ public class AutoCompletePopup {
             submitButton.setDisable(true);
             rowColSection.setVisible(true); // Show row/column section
             rowOrColChoice.setDisable(false); // Enable choice ComboBox
-        } else {
-            // Display validation error
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid cell location. Please enter a valid location like A3.");
-            alert.show();
+        }
+        } catch (Exception e) {
+            popUpWindowsManager.createErrorPopup(e.getMessage(), "Please enter a valid cell location.");
         }
     }
 
@@ -463,6 +463,12 @@ public class AutoCompletePopup {
     }
 
     private void updatePredictedGrid() {
+        if(newPredictedDtoSheetCell == null || (!newPredictedDtoSheetCell.isPredictedValuesWorked())) {
+            popUpWindowsManager.createErrorPopup("Could not get predicted values..\nAre you sure " +
+                    "its a common sequence", "Error.");
+
+            return;
+        }
         if (newPredictedDtoSheetCell != null) {
             GridPane newGridContainer = new GridPane();
             newGridContainer.getStylesheets().add("controller/grid/ExelBasicGrid.css");
@@ -471,8 +477,18 @@ public class AutoCompletePopup {
             cellLocationCustomNewCellLabelMap = gridController.initializeOriginalPopupGrid(newGridContainer, newPredictedDtoSheetCell);
 
             cellLocationCustomNewCellLabelMap.forEach((cellLocation, customCellLabel) -> {
-                if (isWithinBoundaries(cellLocation, startingRangeCellLocation, extendedRangeCellLocation)) {
-                    customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+                if (newPredictedDtoSheetCell.getPredictedValues().containsKey(cellLocation.getCellId())) {
+                    if(cellLocation.getVisualColumn() >= startingRangeCellLocation.getVisualColumn() &&
+                            cellLocation.getVisualColumn() <= endingRangeCellLocation.getVisualColumn() &&
+                            cellLocation.getRealRow() >= startingRangeCellLocation.getRealRow() &&
+                            cellLocation.getRealRow() <= endingRangeCellLocation.getRealRow()){
+
+                        customCellLabel.setBackgroundColor(Color.LIGHTGRAY);
+                    }
+                    else {
+                        Color veryLightGray = Color.web("#F0F0F0");
+                        customCellLabel.setBackgroundColor(veryLightGray);
+                    }
                 }
                 else {
                     customCellLabel.setBackgroundColor(Color.WHITE);
@@ -498,6 +514,29 @@ public class AutoCompletePopup {
     }
 
     private boolean isValidCellLocation(String cellLocation) {
-        return cellLocation.matches("[A-J][1-9][0-9]*");
+        boolean isValid = false;
+
+        DtoCell dtoCell = dtoSheetCell.getRequestedCell(cellLocation);
+
+        if (!cellLocation.matches("[A-J][1-9][0-9]*")){
+            throw new IllegalArgumentException("Invalid cell location. Please enter a valid cell location.\n" +
+                    "Example: A3, B5, C10; within sheet boundaries.");
+        }
+        if(dtoCell == null){
+            throw new IllegalArgumentException("Invalid cell location. choose an existing cell location.");
+        }
+        if(dtoCell.getOriginalValue().charAt(0) == '{'){
+            throw new IllegalArgumentException("Invalid cell location. cell location cannot be a function.");
+        }
+        if(dtoCell.getOriginalValue().isEmpty()){
+            throw new IllegalArgumentException("Invalid cell location. choose an existing cell location.");
+        }
+        if (cellLocation.charAt(0) >= firstGridColumn && cellLocation.charAt(0) <= lastColumnGrid) {
+            int row = Integer.parseInt(cellLocation.substring(1));
+            if (row >= Integer.parseInt(firstGridRow) && row <= Integer.parseInt(lastRowGrid)) {
+                isValid = true;
+            }
+        }
+        return isValid;
     }
 }

@@ -4,7 +4,6 @@ package engine.core_parts.api;
 import dto.components.DtoSheetCell;
 
 import dto.small_parts.CellLocation;
-import engine.core_parts.impl.SheetCellImp;
 import engine.core_parts.impl.SheetManagerImpl;
 
 import java.io.InputStream;
@@ -30,5 +29,5 @@ public interface SheetManager {
     Map<String,String> getPredictionsForSheet(String startingRangeCellLocation, String endingRangeCellLocation,
                                         String extendedRangeCellLocation, Map<String, String> originalValuesByOrder);
 
-    void updateMultipleCells(Map<String, String> resultStrings);
+    Map<String,String> updateMultipleCells(Map<String, String> resultStrings, Map<String, String> originalValuesByOrder);
 }

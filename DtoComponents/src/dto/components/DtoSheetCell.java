@@ -19,6 +19,8 @@ public class DtoSheetCell implements Serializable {
     private Map<CellLocation, EffectiveValue> cellLocationToEffectiveValue = new HashMap<>();
     private Map<String,List<CellLocation>> ranges = new HashMap<>();
     private Map<String,DtoCell> cellIdToDtoCell = new HashMap<>();
+    private Map<String,String> predictedValues;
+    private boolean isPredictedValuesWorked;
 
     private String name;
     private int versionNumber;
@@ -142,7 +144,21 @@ public class DtoSheetCell implements Serializable {
         return currentCellLength;
     }
 
+    public Map<String, String> getPredictedValues() {
+        return predictedValues;
+    }
 
+    public void setPredictedValues(Map<String, String> predictedValues) {
+        this.predictedValues = predictedValues;
+    }
+
+    public boolean isPredictedValuesWorked() {
+        return isPredictedValuesWorked;
+    }
+
+    public void setPredictedValuesWorked(boolean predictedValuesWorked) {
+        isPredictedValuesWorked = predictedValuesWorked;
+    }
 
     public EffectiveValue getEffectiveValue(CellLocation cellLocation) {
         return cellLocationToEffectiveValue.get(cellLocation);
