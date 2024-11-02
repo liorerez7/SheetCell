@@ -30,6 +30,7 @@ public class FilterPopup {
     private final TableView<Map<Character, String>> filterCriteriaTable;
     private final Button applyFilterButton;
     private final Button removeButton;
+    private final CheckBox fullGridCheckBox;
     private final Button rangeSubmitButton;
     private final Button showFilteredGridButton;
     private final DtoSheetCell dtoSheetCell;
@@ -69,6 +70,7 @@ public class FilterPopup {
 
         rangeFromField = new TextField();
         rangeToField = new TextField();
+        fullGridCheckBox = new CheckBox("Full grid");
         columnComboBox = new ComboBox<>();
         uniqueDataListView = new ListView<>();
         filterCriteriaTable = new TableView<>();
@@ -81,6 +83,9 @@ public class FilterPopup {
         // Add listeners to enable rangeSubmitButton only when both text fields are populated
         rangeFromField.textProperty().addListener((observable, oldValue, newValue) -> updateRangeSubmitButtonState());
         rangeToField.textProperty().addListener((observable, oldValue, newValue) -> updateRangeSubmitButtonState());
+
+        // Add listener to handle the "Full grid" checkbox behavior
+        fullGridCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> handleFullGridSelection(newValue));
 
         removeButton.setOnAction(e -> handleRemoveButton());
         showFilteredGridButton.setOnAction(e -> showFilteredGrid());
@@ -182,10 +187,39 @@ public class FilterPopup {
         rangePane.add(new Label("To (e.g., E8):"), 0, 1);
         rangePane.add(rangeToField, 1, 1);
 
+        rangePane.add(fullGridCheckBox, 0, 2);  // Add the checkbox to the panel
+
         rangeSubmitButton.setOnAction(e -> handleRangeSubmission());
         rangePane.add(rangeSubmitButton, 1, 2);
 
         return rangePane;
+    }
+
+    // This method will be triggered when the "Full grid" checkbox is clicked
+    private void handleFullGridSelection(boolean isSelected) {
+        rangeFromField.setDisable(isSelected);
+        rangeToField.setDisable(isSelected);
+        rangeSubmitButton.setDisable(!isSelected);
+
+        if (isSelected) {
+            onFullGridSelected(); // Call a custom method when the checkbox is selected
+        }
+    }
+
+    // Custom method to define any additional logic when the "Full grid" checkbox is clicked
+    private void onFullGridSelected() {
+        // Implement additional logic when "Full grid" is selected
+        System.out.println("Full grid selected. Custom logic can be implemented here.");
+
+        String rangeFrom = "A1";
+
+        String rowNumber = dtoSheetCell.getNumberOfRows() + "";
+        String colNumber = (char)(dtoSheetCell.getNumberOfColumns() + 'A' - 1 ) + "";
+
+        String rangeTo = colNumber + rowNumber;
+
+        rangeFromField.setText(rangeFrom);
+        rangeToField.setText(rangeTo);
     }
 
 
@@ -225,6 +259,7 @@ public class FilterPopup {
         rangeFromField.setDisable(true);
         rangeToField.setDisable(true);
         rangeSubmitButton.setDisable(true);
+        fullGridCheckBox.setDisable(true);
 
         populateColumnComboBox();
         columnComboBox.setDisable(false);
@@ -307,7 +342,6 @@ public class FilterPopup {
         return columnSelectionPane;
     }
 
-
     private void handleColumnSelection() {
         Character selectedColumn = columnComboBox.getValue();
         if (selectedColumn != null) {
@@ -318,7 +352,6 @@ public class FilterPopup {
             }
         }
     }
-
 
     private void populateColumnComboBox() {
         columnComboBox.getItems().clear();
@@ -359,6 +392,9 @@ public class FilterPopup {
         rangeFromField.setDisable(false);
         rangeToField.setDisable(false);
         rangeSubmitButton.setDisable(false);
+        fullGridCheckBox.setDisable(false);
+
+
 
         // Clear the filter criteria table and reset the criteria section
         filterCriteriaTable.getItems().clear();
@@ -375,8 +411,10 @@ public class FilterPopup {
         isCriteriaSectionAdded = false;
         removeButton.setDisable(true);
         showFilteredGridButton.setDisable(true);
+        rangeToField.setText("");
+        rangeFromField.setText("");
+        fullGridCheckBox.setSelected(false);
     }
-
 
     private void populateUniqueDataList(char column) {
         uniqueDataListView.getItems().clear();
@@ -489,7 +527,6 @@ public class FilterPopup {
         return filterCriteriaPane;
     }
 
-    // Modify handleRemoveButton to shift values up after removal
     private void handleRemoveButton() {
         if (lastClickedColumn != null && lastClickedRowIndex >= 0) {
             // Get the column and remove the item from the specified row index
