@@ -41,7 +41,9 @@ public class SheetManagerImpl implements SheetManager {
     @Override
     public SheetManagerImpl createSheetCellOnlyForRunTime(int versionNumber) {
         SheetCellImp sheetCellOnVersion =  sheetCellVersions.get(versionNumber);
-        return new SheetManagerImpl(sheetCellOnVersion);
+        byte[] saved = sheetCellOnVersion.saveSheetCellState();
+        SheetCellImp sheetCellInVersion = restoreSheetCellState(saved, true);
+        return new SheetManagerImpl(sheetCellInVersion);
     }
 
     public DtoSheetCell getSheetCell() {

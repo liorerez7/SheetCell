@@ -1,13 +1,10 @@
 package engine;
 
-import dto.components.DtoCell;
 import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;
-import dto.small_parts.CellLocationFactory;
 import dto.small_parts.EffectiveValue;
 import dto.small_parts.UpdateCellInfo;
 import engine.core_parts.api.SheetManager;
-import engine.core_parts.impl.SheetCellImp;
 import engine.core_parts.impl.SheetManagerImpl;
 import engine.dashboard.chat.ChatManager;
 import engine.login.users.PermissionManager;
@@ -24,7 +21,11 @@ public class Engine {
     private final UserManager userManager = new UserManager();
     private final ChatManager chatManager = new ChatManager();
     private final PermissionManager permissionManager = new PermissionManager();
-    private Map<String, SheetManagerImpl> usernameToTemporarySheetManager = new HashMap<>();
+    private Map<String, SheetManagerImpl> usernameToTemporarySheetManagerRunTime = new HashMap<>();
+    private Map<String, SheetManagerImpl> usernameToTemporarySheetManagerPredict = new HashMap<>();
+    private Map<String, SheetManagerImpl> usernameToTemporarySheetManagerFindAndReplace = new HashMap<>();
+
+
     private Map<String,Map<Integer, UpdateCellInfo>> versionToCellInfo = new HashMap<>();
 
     private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager, userManager);
@@ -42,7 +43,7 @@ public class Engine {
             sheetManager.readSheetCellFromXML(sheetInputStream);
             String currentSheetName = sheetManager.getSheetCell().getSheetName();
             if (sheetNames.contains(currentSheetName)) {
-                return sheetCells.get(currentSheetName);
+                return null;
             } else {
                 sheetNames.add(currentSheetName);
                 String sheetSize = sheetManager.getSheetCell().getSheetSize();
@@ -155,14 +156,27 @@ public class Engine {
         versionToCellInfo.computeIfAbsent(sheetName, k -> new HashMap<>());
     }
 
-    public void addTemporarySheet(String username, int versionNumber, String sheetName) {
-//        usernameToTemporarySheetManager.clear();
-        usernameToTemporarySheetManager.put(username, sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber));
+    public void addTemporarySheetToRunTime(String username, int versionNumber, String sheetName) {
+        usernameToTemporarySheetManagerRunTime.put(username, sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber));
     }
 
-    public SheetManager getTemporarySheetManager(String username) {
-        return usernameToTemporarySheetManager.get(username);
+    public SheetManager getTemporarySheetManagerRunTime(String username) {
+        return usernameToTemporarySheetManagerRunTime.get(username);
     }
 
+    public void removeTemporarySheetRunTime(String userName) {
+        usernameToTemporarySheetManagerRunTime.remove(userName);
+    }
 
+//    public void addTemporarySheetManagerPredict(String username, int versionNumber, String sheetName) {
+//        usernameToTemporarySheetManagerRunTime.put(username, sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber));
+//    }
+//
+//    public SheetManager getTemporarySheetManagerPredict(String username) {
+//        return usernameToTemporarySheetManagerRunTime.get(username);
+//    }
+//
+//    public void removeTemporarySheetManagerPredict(String userName) {
+//        usernameToTemporarySheetManagerRunTime.remove(userName);
+//    }
 }

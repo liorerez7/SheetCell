@@ -2,11 +2,9 @@ package chat.servlets.sheet.cell;
 
 import chat.utilities.Constants;
 import chat.utilities.ServletUtils;
-import chat.utilities.SessionUtils;
 import dto.components.DtoSheetCell;
 import engine.Engine;
 import engine.core_parts.api.SheetManager;
-import engine.core_parts.impl.SheetCellImp;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,9 +33,9 @@ public class RunTimeAnalysisServlet extends HttpServlet {
 //                                SheetManager runTimeSheetCell = engine.createSheetCellOnlyForRunTime(sheetName, versionNumber);
                                 String username = (String) request.getSession(false).getAttribute(Constants.USERNAME);
 
-                                SheetManager runTimeSheetCell = engine.getTemporarySheetManager(username);
+                                SheetManager runTimeSheetCell = engine.getTemporarySheetManagerRunTime(username);
 
-                                //runTimeSheetCell.saveCurrentSheetCellState();
+//                                runTimeSheetCell.saveCurrentSheetCellState();
 
                                 runTimeSheetCell.updateCell(cellValue, columnOfCell, row);
 
@@ -51,7 +49,7 @@ public class RunTimeAnalysisServlet extends HttpServlet {
 
                                 out.flush();
 
-                                runTimeSheetCell.restoreSheetCellState();
+//                                runTimeSheetCell.restoreSheetCellState();
 
                                 //response.setStatus(HttpServletResponse.SC_OK);
 

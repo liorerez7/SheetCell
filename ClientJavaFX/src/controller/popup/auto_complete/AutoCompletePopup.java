@@ -439,6 +439,7 @@ public class AutoCompletePopup {
         params.put("startingRangeCellLocation", startingRangeCellLocation.getCellId());
         params.put("endingRangeCellLocation", endingRangeCellLocation.getCellId());
         params.put("extendedRangeCellLocation", extendedRangeCellLocation.getCellId());
+        params.put("versionNumber", dtoSheetCell.getLatestVersion() + "");
 
         HttpRequestManager.sendPostAsyncRequest(Constants.GET_PREDICTION_VALUES, params, new Callback() {
             @Override

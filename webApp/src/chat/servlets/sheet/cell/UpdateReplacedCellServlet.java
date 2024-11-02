@@ -2,13 +2,11 @@ package chat.servlets.sheet.cell;
 
 import chat.utilities.Constants;
 import chat.utilities.ServletUtils;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dto.components.DtoSheetCell;
 import dto.small_parts.CellLocation;
 import engine.Engine;
 import engine.core_parts.api.SheetManager;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,7 +37,7 @@ public class UpdateReplacedCellServlet extends HttpServlet {
                 String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
                 String username = (String) request.getSession(false).getAttribute(Constants.USERNAME);
 
-                SheetManager sheetCell = engine.getTemporarySheetManager(username);
+                SheetManager sheetCell = engine.getTemporarySheetManagerRunTime(username);
 
                 sheetCell.saveCurrentSheetCellState();
 

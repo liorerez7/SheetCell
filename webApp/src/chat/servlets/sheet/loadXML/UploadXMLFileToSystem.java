@@ -47,6 +47,16 @@ public class UploadXMLFileToSystem extends HttpServlet {
             synchronized (engine) {
 
                 SheetManager sheetManager = engine.getSheetCell(fileContent, userName);
+
+                if(sheetManager == null){
+                    response.setStatus(HttpServletResponse.SC_CONFLICT);
+                    String errorMessage = "Sheet already exists";
+                    String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
+                    response.getWriter().write(errorMessageAsJson);
+                    response.getWriter().flush();
+                    return;
+                }
+
                 String sheetName = sheetManager.getSheetCell().getSheetName();
 
                 PermissionManager permissionManager = engine.getPermissionManager();

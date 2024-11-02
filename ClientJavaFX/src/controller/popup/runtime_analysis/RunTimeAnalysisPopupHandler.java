@@ -17,7 +17,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
 import utilities.javafx.Model;
@@ -53,6 +56,8 @@ public class RunTimeAnalysisPopupHandler {
         Stage popupStage = setupPopupStage("Run Time Analysis");
         List<CellLocation> cellLocationsOfRunTimeAnalysisCells = extractCellLocations();
 
+        popupStage.setOnCloseRequest(event -> handlePopupClose());
+        
         GridPane popupGrid = setupPopupGrid();
         ScrollPane gridScrollPane = wrapGridInScrollPane(popupGrid);
 
@@ -82,6 +87,28 @@ public class RunTimeAnalysisPopupHandler {
             popupStage.showAndWait();
         });
     }
+
+    private void handlePopupClose() {
+        Map<String,String> params = new HashMap<>();
+        params.put("versionNumber", String.valueOf(sheetCellRunTime.getLatestVersion()));
+        params.put("delete", "true");
+
+        HttpRequestManager.sendPostAsyncRequest(Constants.POST_TEMP_SHEET_IN_SERVLET, params, new Callback() {
+            @Override
+            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try(response){
+                    if (!response.isSuccessful()) {
+
+                    }
+                }
+            }
+        });
+    }
+
 
     private VBox createInfoBox(List<CellLocation> cellLocationsOfRunTimeAnalysisCells) {
 

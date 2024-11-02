@@ -4,7 +4,6 @@ import chat.utilities.Constants;
 import chat.utilities.ServletUtils;
 import com.google.gson.reflect.TypeToken;
 import dto.components.DtoSheetCell;
-import dto.small_parts.CellLocation;
 import engine.Engine;
 import engine.core_parts.api.SheetManager;
 import jakarta.servlet.http.HttpServlet;
@@ -12,9 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class GetPredictionsForSheetServlet extends HttpServlet {
 
@@ -28,6 +25,9 @@ public class GetPredictionsForSheetServlet extends HttpServlet {
         String endingRangeCellLocation = request.getParameter("endingRangeCellLocation");
         String extendedRangeCellLocation = request.getParameter("extendedRangeCellLocation");
         String originalValuesByOrderAsJson = request.getParameter("originalValues");
+        String versionNumber = request.getParameter("versionNumber");
+        int versionNumberInt = Integer.parseInt(versionNumber);
+
         Map<String,String> originalValuesByOrder = Constants.GSON_INSTANCE.fromJson(originalValuesByOrderAsJson,
                 new TypeToken<Map<String, String>>(){}.getType());
 
@@ -41,7 +41,7 @@ public class GetPredictionsForSheetServlet extends HttpServlet {
         synchronized (sheetManager) {
 
             String userName = (String) request.getSession(false).getAttribute(Constants.USERNAME);
-            SheetManager sheetManagerForPresentingTheInformation = engine.getTemporarySheetManager(userName);
+            SheetManager sheetManagerForPresentingTheInformation = engine.getTemporarySheetManagerRunTime(userName);
 
 
             Map<String,String> resultStrings = sheetManager.getPredictionsForSheet(startingRangeCellLocation,
@@ -59,7 +59,6 @@ public class GetPredictionsForSheetServlet extends HttpServlet {
             if(realUpdatedCells.keySet().size() <= originalValuesByOrder.keySet().size()){
                 dtoSheetCellForPresentingDataOnly.setPredictedValuesWorked(false);
             }
-
 
 
             sheetManagerForPresentingTheInformation.restoreSheetCellState();

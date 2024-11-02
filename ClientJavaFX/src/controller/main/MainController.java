@@ -126,10 +126,7 @@ public class MainController {
 
         try {
             try (Response uploadFileResponse = HttpRequestManager.sendFileSync(Constants.INIT_SHEET_CELL_ENDPOINT, xmlFile)) {
-                if (uploadFileResponse.isSuccessful()) {
-
-                } else {
-                    // Handle error response from the server
+                if (!uploadFileResponse.isSuccessful()) {
                     String errorMessageAsJson = uploadFileResponse.body().string(); // Get the error message sent by the server
                     String errorMessage = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
                     Platform.runLater(() -> createErrorPopup(errorMessage, "Error"));

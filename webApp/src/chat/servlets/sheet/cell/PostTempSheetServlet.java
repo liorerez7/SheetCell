@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class PostTempSheetServlet extends HttpServlet {
     @Override
@@ -17,7 +16,7 @@ public class PostTempSheetServlet extends HttpServlet {
 
 
         int versionNumber = Integer.parseInt(request.getParameter("versionNumber"));
-//        String createOrDelete = request.getParameter("createOrDelete");
+        String toDelete = request.getParameter("delete");
         Engine engine = ServletUtils.getEngineManager(getServletContext());
         String sheetName = (String) request.getSession(false).getAttribute(Constants.SHEET_NAME);
         String userName = (String) request.getSession(false).getAttribute(Constants.USERNAME);
@@ -25,10 +24,10 @@ public class PostTempSheetServlet extends HttpServlet {
 
             synchronized (engine) {
 
-//                if(createOrDelete.equals("create")){
+                if(toDelete.equals("false")) {
                     try {
-                        engine.addTemporarySheet(userName,versionNumber, sheetName);
-                    }catch (Exception e){
+                        engine.addTemporarySheetToRunTime(userName, versionNumber, sheetName);
+                    } catch (Exception e) {
                         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         String errorMessage = ServletUtils.extractErrorMessage(e);
                         String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
@@ -48,6 +47,18 @@ public class PostTempSheetServlet extends HttpServlet {
 //                        response.setCharacterEncoding("UTF-8");
 //                        response.getWriter().write(errorMessageAsJson);
 //                    }
+                }else{
+                    try {
+                        engine.removeTemporarySheetRunTime(userName);
+                    }catch (Exception e){
+                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        String errorMessage = ServletUtils.extractErrorMessage(e);
+                        String errorMessageAsJson = Constants.GSON_INSTANCE.toJson(errorMessage);
+                        response.setContentType("application/json");
+                        response.setCharacterEncoding("UTF-8");
+                        response.getWriter().write(errorMessageAsJson);
+                    }
+                }
             }
 
 
