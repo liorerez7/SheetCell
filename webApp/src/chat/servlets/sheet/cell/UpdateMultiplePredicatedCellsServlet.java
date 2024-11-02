@@ -15,21 +15,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class UpdateValuesInSheetServlet extends HttpServlet {
+public class UpdateMultiplePredicatedCellsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String newValue = request.getParameter("newValue");
-        String newValueLocationsJson = request.getParameter("newValueLocations");
+        String newCellsToBeUpdateAsJson = request.getParameter("newValues");
 
-        Set<CellLocation> newValueLocations = Constants.GSON_INSTANCE.fromJson(newValueLocationsJson,
-                new TypeToken<Set<CellLocation>>(){}.getType());
+        Map<String,String> newCellsToBeUpdate = Constants.GSON_INSTANCE.fromJson(newCellsToBeUpdateAsJson,
+                new TypeToken<Map<String,String>>(){}.getType());
 
 
         Engine engine = ServletUtils.getEngineManager(getServletContext());
@@ -47,20 +47,31 @@ public class UpdateValuesInSheetServlet extends HttpServlet {
 
                 DtoSheetCell beforeUpdateDtoSheetCell = sheetManager.getSheetCell();
                 List<DtoCell> beforeUpdateCells = new ArrayList<>();
-                for(CellLocation cellLocation : newValueLocations){
-                    DtoCell dtoCell = beforeUpdateDtoSheetCell.getRequestedCell(cellLocation.getCellId());
-                    beforeUpdateCells.add(dtoCell);
-                }
 
-                sheetManager.updateReplacedCells(newValue, newValueLocations);
+                Set<String> set = newCellsToBeUpdate.keySet();
+                set.forEach(string -> {
+                    DtoCell dtoCell = beforeUpdateDtoSheetCell.getRequestedCell(string);
+                    if(dtoCell != null){
+                        beforeUpdateCells.add(dtoCell);
+                    }
+                });
+
+                sheetManager.updateReplacedCells(newCellsToBeUpdate);
 
                 DtoSheetCell afterUpdateDtoSheetCell = sheetManager.getSheetCell();
                 List<DtoCell> afterUpdateCells = new ArrayList<>();
-                for(CellLocation cellLocation : newValueLocations){
-                    DtoCell dtoCell = afterUpdateDtoSheetCell.getRequestedCell(cellLocation.getCellId());
-                    afterUpdateCells.add(dtoCell);
-                }
 
+                Set<String> newSet = newCellsToBeUpdate.keySet();
+                set.forEach(string -> {
+                    DtoCell dtoCell = afterUpdateDtoSheetCell.getRequestedCell(string);
+                    if(dtoCell != null){
+                        afterUpdateCells.add(dtoCell);
+                    }
+                });
+
+
+                Set<CellLocation> newValueLocations = afterUpdateCells.stream()
+                        .map(DtoCell::getLocation).collect(Collectors.toSet());
 
                 engine.updateUsersInCells(beforeUpdateDtoSheetCell, afterUpdateDtoSheetCell, username);
                 updateVersionToCellInfo(beforeUpdateCells, afterUpdateCells, newValueLocations, username, engine);
@@ -99,9 +110,11 @@ public class UpdateValuesInSheetServlet extends HttpServlet {
             oldOriginalValue = beforeUpdateCells.getFirst().getOriginalValue();
         }
 
-        engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo(oldActualValue,
-                newActualValue, oldOriginalValue,
-                newOriginalValue, versionNumber, username, newValueLocation, true));
+        engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo("old sequence",
+                "new sequence", "old sequence",
+                "new sequence", versionNumber, username, newValueLocation, true));
+
     }
 
 }
+

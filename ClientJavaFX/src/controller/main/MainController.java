@@ -6,6 +6,7 @@ import controller.grid.GridController;
 import controller.popup.PopUpWindowsManager;
 import controller.popup.find_and_replace.FindAndReplacePopupResult;
 import dto.permissions.PermissionStatus;
+import dto.small_parts.CellLocationFactory;
 import dto.small_parts.UpdateCellInfo;
 import utilities.Constants;
 import utilities.http.manager.HttpRequestManager;
@@ -722,7 +723,6 @@ public class MainController {
 
         try {
 
-
             Map<String, String> paramsNew = new HashMap<>();
             paramsNew.put("newValue", newValue);
             paramsNew.put("newValueLocations", Constants.GSON_INSTANCE.toJson(locations)); // Convert set to JSON
@@ -839,14 +839,63 @@ public class MainController {
     }
 
 
-    //TODO!!
+
     public void updateSheetInCells(Map<String, String> cellLocationToNewCellValues) {
-        try {
             Map<String, String> params = new HashMap<>();
             params.put("newValues", Constants.GSON_INSTANCE.toJson(cellLocationToNewCellValues));
 
-        }catch (Exception e){
-            Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
-        }
+            try {
+
+                try (Response postResponse = HttpRequestManager.sendPostSyncRequest(Constants.UPDATE_MULTIPLE_CELLS_URL, params)) {
+                    if (!postResponse.isSuccessful()) {
+                        String errorMessageAsJson = postResponse.body().string(); // Get the error message sent by the server
+                        String errorMessage = Constants.GSON_INSTANCE.fromJson(errorMessageAsJson, String.class);
+                        return;
+                    }
+                }
+
+                // Step 1: Load the sheet cell data from the server
+                dtoSheetCellAsDataParameter = loadSheetCellData();
+                if (dtoSheetCellAsDataParameter == null) return;
+
+                int latestVersion = dtoSheetCellAsDataParameter.getLatestVersion();
+
+//                List<DtoCell> dtoCells = new ArrayList<>();
+                Set<CellLocation> locations = new HashSet<>();
+
+                cellLocationToNewCellValues.keySet().forEach(string -> {
+                    CellLocation cellLocation = CellLocationFactory.fromCellId(string);
+                    if(cellLocation != null){
+                        locations.add(cellLocation);
+                    }
+                });
+
+//                Set<String> set = cellLocationToNewCellValues.keySet();
+//                set.forEach(string -> {
+//                    DtoCell dtoCell = dtoSheetCellAsDataParameter.getRequestedCell(string);
+//                    if(dtoCell != null){
+//                        dtoCells.add(dtoCell);
+//                    }
+//                });
+
+                // Step 2: Retrieve DtoCell objects for specified locations
+                List<DtoCell> dtoCells = fetchDtoCellsForLocations(locations);
+
+
+                // Step 3: Update the UI with sheet and cell information
+                updateUIWithSheetData(latestVersion, dtoCells);
+
+                // Step 4: Get the username of the last cell updater from the server
+                cellLocationToUserName = fetchUserNameOfLastCellUpdater();
+                if (cellLocationToUserName != null) {
+                    updateUIWithUserName(locations);
+                }
+
+                // Step 5: Get the version to cell info from the server
+                versionToCellInfo = fetchVersionToCellInfo();
+
+            } catch (IOException e) {
+                Platform.runLater(() -> createErrorPopup(e.getMessage(), "Error"));
+            }
     }
 }

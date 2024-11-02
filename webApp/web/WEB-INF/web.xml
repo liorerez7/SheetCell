@@ -64,6 +64,10 @@
         <servlet-class>chat.servlets.sheet.cell.UpdateReplacedCellServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>UpdateMultiplePredicatedCellsServlet</servlet-name>
+        <servlet-class>chat.servlets.sheet.cell.UpdateMultiplePredicatedCellsServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GetVersionToCellInfoServlet</servlet-name>
         <servlet-class>chat.servlets.sheet.cell.GetVersionToCellInfoServlet</servlet-class>
     </servlet>
@@ -147,6 +151,10 @@
     <servlet-mapping>
         <servlet-name>GetPredictionsForSheetServlet</servlet-name>
         <url-pattern>/predictionValues</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateMultiplePredicatedCellsServlet</servlet-name>
+        <url-pattern>/updateMultipleCellsPrediction</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetAndUpdateCellServlet</servlet-name>

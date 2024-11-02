@@ -65,6 +65,7 @@ public class Constants {
     public static final String UPDATE_REPLACED_VALUES_URL = FULL_SERVER_PATH + "/updateReplacedValues";
     public static final String UPDATE_SHEET_VALUES_URL = FULL_SERVER_PATH + "/updateSheetValues";
     public static final String GET_PREDICTION_VALUES = FULL_SERVER_PATH + "/predictionValues";
+    public static final String UPDATE_MULTIPLE_CELLS_URL = FULL_SERVER_PATH + "/updateMultipleCellsPrediction";
 
 
 

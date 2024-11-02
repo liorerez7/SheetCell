@@ -30,4 +30,6 @@ public interface SheetManager {
                                         String extendedRangeCellLocation, Map<String, String> originalValuesByOrder);
 
     Map<String,String> updateMultipleCells(Map<String, String> resultStrings, Map<String, String> originalValuesByOrder);
+
+    void updateReplacedCells(Map<String, String> newCellsToBeUpdate);
 }

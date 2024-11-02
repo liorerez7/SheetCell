@@ -151,6 +151,7 @@ public class Engine {
     }
 
     public void addTemporarySheet(String username, int versionNumber, String sheetName) {
+//        usernameToTemporarySheetManager.clear();
         usernameToTemporarySheetManager.put(username, sheetCells.get(sheetName).createSheetCellOnlyForRunTime(versionNumber));
     }
 

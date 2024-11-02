@@ -219,7 +219,15 @@ public class AutoCompletePopup {
     }
 
     private void applyOnCurrentSheet() {
+        if(model.getNewerVersionOfSheetProperty().getValue()){
 
+            popUpWindowsManager.createErrorPopup("You can't apply changes on the" +
+                    " current grid because there is a newer version of the sheet", "Error");
+
+            autoCompleteResult = null;
+        }else{
+            stage.close();
+        }
     }
 
     public AutoCompleteResult show() {
@@ -422,7 +430,6 @@ public class AutoCompletePopup {
         // Enable apply button after prediction is processed
         applyOnCurrentSheetButton.setDisable(false);
 
-        autoCompleteResult = new AutoCompleteResult(newPredictedDtoSheetCell.getPredictedValues(), newPredictedDtoSheetCell.isPredictedValuesWorked());
     }
 
     private void getNewDtoSheetCellFromServer(Map<String, String> originalValuesByOrder) {
@@ -455,6 +462,8 @@ public class AutoCompletePopup {
                         try {
                             newPredictedDtoSheetCell = Constants.GSON_INSTANCE.fromJson(finalResponseBodyString, DtoSheetCell.class);
                             updatePredictedGrid(); // Update predicted grid immediately
+                            autoCompleteResult = new AutoCompleteResult(newPredictedDtoSheetCell.getPredictedValues(), newPredictedDtoSheetCell.isPredictedValuesWorked());
+
                         } catch (Exception e) {
                             e.printStackTrace(); // Handle JSON parsing errors here
                         }

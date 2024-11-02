@@ -163,6 +163,23 @@ public class SheetManagerImpl implements SheetManager {
     }
 
     @Override
+    public void updateReplacedCells(Map<String, String> newCellsToBeUpdate) {
+
+        newCellsToBeUpdate.forEach((key, value) -> {
+            char col = key.charAt(0);
+            String row = key.substring(1);
+            try {
+                updateCellForReplacedFunction(value, col, row);
+                sheetCell.setVersion(sheetCell.getLatestVersion() - 1); // removing the version
+            } catch (Exception e) {
+                throw e;
+            }
+        });
+
+        sheetCell.setVersion(sheetCell.getLatestVersion() + 1); // removing the version
+    }
+
+    @Override
     public Map<String, String> getPredictionsForSheet(String startingRangeCellLocation,
                                                       String endingRangeCellLocation,
                                                       String extendedRangeCellLocation,
@@ -273,8 +290,6 @@ public class SheetManagerImpl implements SheetManager {
 
         return theCellsThatActuallyUpdated;
     }
-
-
 
     @Override
     public void saveCurrentSheetCellState() {
