@@ -268,6 +268,10 @@ public class ConsolidatedGraphPopup {
     }
 
     private void showGraphView() {
+        // Update xTitle and yTitle with the input from text fields
+        xTitle = xTitleField.getText();
+        yTitle = yTitleField.getText();
+
         xAxisListAsString = selectedXValues;
         yAxisList = selectedYValues.stream().map(Double::parseDouble).collect(Collectors.toList());
 
@@ -384,9 +388,9 @@ public class ConsolidatedGraphPopup {
 
     private BarChart<String, Number> createBarChart() {
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel(xTitle);
+        xAxis.setLabel(xTitle);  // Set the x-axis title
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel(yTitle);
+        yAxis.setLabel(yTitle);  // Set the y-axis title
 
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
         barChart.setTitle(graphTitleField.getText());
@@ -411,9 +415,9 @@ public class ConsolidatedGraphPopup {
 
     private LineChart<Number, Number> createLineChart() {
         NumberAxis xAxis = new NumberAxis();
-        xAxis.setLabel(xTitle);
+        xAxis.setLabel(xTitle);  // Set the x-axis title
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel(yTitle);
+        yAxis.setLabel(yTitle);  // Set the y-axis title
 
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle(graphTitleField.getText());

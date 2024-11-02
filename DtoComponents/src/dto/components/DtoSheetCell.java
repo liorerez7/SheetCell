@@ -220,48 +220,104 @@ public class DtoSheetCell implements Serializable {
         return columnToUniqueStrings;
     }
 
+//    public Map<Character, Set<String>> getUniqueStringsInColumn(List<Character> columns, boolean isChartGraph) {
+//
+//        // in this method i am depending on the fact that the first column is the x-axis and the second is the y-axis
+//
+//        Map<Character, Set<String>> columnToUniqueStrings = new HashMap<>();
+//
+//        boolean isXAxis = true;
+//
+//        for (Character col : columns) {
+//
+//            // Convert column to uppercase for consistent matching
+//            char upperCol = Character.toUpperCase(col);
+//
+//            // Retrieve values from the view sheet and collect unique values
+//            Set<String> uniqueStrings = new HashSet<>();
+//            boolean finalIsXAxis = isXAxis;
+//            getViewSheetCell().forEach((location, effectiveValue) -> {
+//                if (location.getVisualColumn() == upperCol) {
+//                    if (effectiveValue != null) {
+//                        String value = effectiveValue.getValue().toString();
+//
+//                        if (isChartGraph || !finalIsXAxis) {
+//                            try {
+//                                double doubleValue = Double.parseDouble(value);
+//                                value = CellUtils.formatNumber(doubleValue);
+//                            } catch (NumberFormatException e) {
+//                                // Ignore and keep the value as a string
+//                            }
+//                            uniqueStrings.add(value);
+//                        } else {
+//                            try {
+//                                double doubleValue = Double.parseDouble(value);
+//                                value = CellUtils.formatNumber(doubleValue);
+//                                uniqueStrings.add(value);
+//                            } catch (NumberFormatException e) {
+//                                // Ignore and keep the value as a string
+//                            }
+//                        }
+//                    }
+//                }
+//            });
+//
+//            Set<String> copy = Set.copyOf(uniqueStrings);
+//            columnToUniqueStrings.put(upperCol, copy);
+//            uniqueStrings.clear();
+//            isXAxis = false;
+//        }
+//
+//        return columnToUniqueStrings;
+//    }
+
     public Map<Character, Set<String>> getUniqueStringsInColumn(List<Character> columns, boolean isChartGraph) {
+
+        // Assume the first column is the x-axis and the second is the y-axis
         Map<Character, Set<String>> columnToUniqueStrings = new HashMap<>();
+        boolean isXAxis = true;
 
         for (Character col : columns) {
+
             // Convert column to uppercase for consistent matching
             char upperCol = Character.toUpperCase(col);
 
             // Retrieve values from the view sheet and collect unique values
             Set<String> uniqueStrings = new HashSet<>();
-            getViewSheetCell().forEach((location, effectiveValue) -> {
-                if (location.getVisualColumn() == upperCol) {
-                    if (effectiveValue != null) {
-                        String value = effectiveValue.getValue().toString();
+            boolean finalIsXAxis = isXAxis;
 
-                        if (isChartGraph) {
-                            try {
-                                double doubleValue = Double.parseDouble(value);
-                                value = CellUtils.formatNumber(doubleValue);
-                            } catch (NumberFormatException e) {
-                                // Ignore and keep the value as a string
-                            }
+            getViewSheetCell().forEach((location, effectiveValue) -> {
+                if (location.getVisualColumn() == upperCol && effectiveValue != null) {
+                    String value = effectiveValue.getValue().toString();
+
+                    try {
+                        // Parse value to double for numeric filtering based on isChartGraph and axis type
+                        double doubleValue = Double.parseDouble(value);
+                        value = CellUtils.formatNumber(doubleValue);
+
+                        // Add value only if it's a chart graph or y-axis for non-chart graphs
+                        if (!isChartGraph || !finalIsXAxis) {
                             uniqueStrings.add(value);
-                        } else {
-                            try {
-                                double doubleValue = Double.parseDouble(value);
-                                value = CellUtils.formatNumber(doubleValue);
-                                uniqueStrings.add(value);
-                            } catch (NumberFormatException e) {
-                                // Ignore and keep the value as a string
-                            }
+                        } else if (finalIsXAxis) {
+                            uniqueStrings.add(value);  // Add non-numeric values to the x-axis only if not a chart graph
+                        }
+                    } catch (NumberFormatException e) {
+                        if (isChartGraph && finalIsXAxis) {
+                            // Add non-numeric values for x-axis if not a chart graph
+                            uniqueStrings.add(value);
                         }
                     }
                 }
             });
 
-            Set<String> copy = Set.copyOf(uniqueStrings);
-            columnToUniqueStrings.put(upperCol, copy);
+            columnToUniqueStrings.put(upperCol, Set.copyOf(uniqueStrings));
             uniqueStrings.clear();
+            isXAxis = false;  // Mark subsequent columns as y-axis
         }
 
         return columnToUniqueStrings;
     }
+
 
 
     public DtoCell getRequestedCell(String cellId) {
