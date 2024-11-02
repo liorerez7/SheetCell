@@ -6,6 +6,7 @@ import controller.main.MainController;
 import controller.popup.PopUpWindowsManager;
 import dto.components.DtoCell;
 import dto.components.DtoSheetCell;
+import dto.permissions.PermissionStatus;
 import dto.small_parts.CellLocation;
 import dto.small_parts.CellLocationFactory;
 import javafx.application.Platform;
@@ -64,6 +65,7 @@ public class AutoCompletePopup {
     private CellLocation endingRangeCellLocation;
     private CellLocation extendedRangeCellLocation;
     private DtoSheetCell newPredictedDtoSheetCell;
+    private PermissionStatus permissionStatus;
 
 
     public AutoCompletePopup(DtoSheetCell dtoSheetCell,
@@ -77,6 +79,9 @@ public class AutoCompletePopup {
 
         lastColumnGrid = (char)(dtoSheetCell.getNumberOfColumns() - 1 + 'A');
         lastRowGrid = String.valueOf(dtoSheetCell.getNumberOfRows());
+
+        permissionStatus = mainController.getPermissionStatus();
+
 
         initializeUI();
     }
@@ -178,10 +183,17 @@ public class AutoCompletePopup {
 
         // Apply on Current Sheet Button
         applyOnCurrentSheetButton = new Button("Apply on Current Sheet");
-        applyOnCurrentSheetButton.setDisable(true); // Initially disabled
-        applyOnCurrentSheetButton.setVisible(true); // Visible only in the third section
-        applyOnCurrentSheetButton.setOnAction(event -> applyOnCurrentSheet());
-        applyOnCurrentSheetButton.getStyleClass().add("button");
+
+        // Disable apply button if permission status is READER
+        if (permissionStatus == PermissionStatus.READER) {
+            applyOnCurrentSheetButton.setDisable(true);
+        }else{
+            applyOnCurrentSheetButton.setDisable(true); // Initially disabled
+            applyOnCurrentSheetButton.setOnAction(event -> applyOnCurrentSheet());
+            applyOnCurrentSheetButton.getStyleClass().add("button");
+        }
+
+
 
         // Add components to the third section
         thirdSection.getChildren().addAll(extendedRangeLabel, extendedRangeOptions, backToSecondSectionButton, predictValuesButton, applyOnCurrentSheetButton);
@@ -211,6 +223,8 @@ public class AutoCompletePopup {
 
         submitButton.setOnAction(event -> handleCellLocationSubmission());
         rowOrColChoice.setOnAction(event -> handleRowOrColChoice());
+
+
 
         // Display the popup with enlarged scene
         Scene scene = new Scene(mainLayout, 1510, 750);
@@ -430,6 +444,10 @@ public class AutoCompletePopup {
 
         // Enable apply button after prediction is processed
         applyOnCurrentSheetButton.setDisable(false);
+
+        if (permissionStatus == PermissionStatus.READER) {
+            applyOnCurrentSheetButton.setDisable(true);
+        }
 
     }
 
