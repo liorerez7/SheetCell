@@ -226,6 +226,7 @@ public class AutoCompletePopup {
 
             autoCompleteResult = null;
         }else{
+            autoCompleteResult = new AutoCompleteResult(newPredictedDtoSheetCell.getPredictedValues(), newPredictedDtoSheetCell.isPredictedValuesWorked());
             stage.close();
         }
     }
@@ -462,7 +463,6 @@ public class AutoCompletePopup {
                         try {
                             newPredictedDtoSheetCell = Constants.GSON_INSTANCE.fromJson(finalResponseBodyString, DtoSheetCell.class);
                             updatePredictedGrid(); // Update predicted grid immediately
-                            autoCompleteResult = new AutoCompleteResult(newPredictedDtoSheetCell.getPredictedValues(), newPredictedDtoSheetCell.isPredictedValuesWorked());
 
                         } catch (Exception e) {
                             e.printStackTrace(); // Handle JSON parsing errors here

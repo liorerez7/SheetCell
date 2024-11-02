@@ -175,10 +175,18 @@ public class DtoSheetCell implements Serializable {
     }
 
     public Map<Character, Set<String>> getUniqueStringsInColumn(String filterColumn, String range) {
+
         Map<Character, Set<String>> columnToUniqueStrings = new HashMap<>();
         List<Character> columns = CellUtils.processCharString(filterColumn);
-        int startingRowInRange = range.charAt(1) - '0';
-        int endingRowInRange = range.charAt(5) - '0'; // Assumes format like "A3..A5"
+
+        // Split the range and parse the starting and ending row numbers
+        String[] rangeParts = range.split("\\.\\.");
+        String startCell = rangeParts[0];
+        String endCell = rangeParts[1];
+
+        // Extract the starting and ending row numbers
+        int startingRowInRange = Integer.parseInt(startCell.substring(1));
+        int endingRowInRange = Integer.parseInt(endCell.substring(1));
 
         for (Character col : columns) {
             // Convert column to uppercase for consistent matching
