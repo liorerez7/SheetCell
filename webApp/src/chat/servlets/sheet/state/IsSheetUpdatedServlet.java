@@ -37,7 +37,7 @@ public class IsSheetUpdatedServlet extends HttpServlet {
                     int x = 5;
                 }
 
-                CellLocation locationOfLastUpdatedCell = engine.getVersionToCellInfo().get(latestVersionInSystem).getLocations().iterator().next();
+                CellLocation locationOfLastUpdatedCell = engine.getVersionToCellInfo(sheetName).get(latestVersionInSystem).getLocations().iterator().next();
                 String lastUpdatedUserName = engine.getCellLocationToUserName(sheetName).get(locationOfLastUpdatedCell);
 
                 if (sheetManager.getSheetCell().getLatestVersion() > versionNumber) {

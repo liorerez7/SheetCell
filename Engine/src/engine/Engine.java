@@ -25,14 +25,14 @@ public class Engine {
     private final ChatManager chatManager = new ChatManager();
     private final PermissionManager permissionManager = new PermissionManager();
     private Map<String, SheetManagerImpl> usernameToTemporarySheetManager = new HashMap<>();
-    private Map<Integer, UpdateCellInfo> versionToCellInfo = new HashMap<>();
+    private Map<String,Map<Integer, UpdateCellInfo>> versionToCellInfo = new HashMap<>();
 
     private final SheetInfosManager sheetInfosManager = new SheetInfosManager(permissionManager, userManager);
 
     private Map<String, Map<CellLocation, String>> sheetNameToCellLocationToUserName = new HashMap<>();
 
-    public Map<Integer, UpdateCellInfo> getVersionToCellInfo() {
-        return versionToCellInfo;
+    public Map<Integer, UpdateCellInfo> getVersionToCellInfo(String sheetName) {
+        return versionToCellInfo.get(sheetName);
     }
 
     public synchronized SheetManager getSheetCell(InputStream sheetInputStream, String userName) {
@@ -50,6 +50,7 @@ public class Engine {
                 initializeCellLocationToUserName(dtoSheetCell, userName);
                 sheetInfosManager.AddSheet(currentSheetName, sheetSize);
                 sheetCells.put(currentSheetName, sheetManager);
+                versionToCellInfo.computeIfAbsent(currentSheetName, k -> new HashMap<>());
                 return sheetManager;
             }
         } catch (Exception e) {
@@ -66,6 +67,9 @@ public class Engine {
             } else {
                 sheetNames.add(SheetName);
                 sheetCells.put(SheetName, sheetManager);
+
+                versionToCellInfo.computeIfAbsent(SheetName, k -> new HashMap<>());
+
                 return sheetManager;
             }
         } catch (Exception e) {
@@ -148,6 +152,7 @@ public class Engine {
         sheetNames.add(sheetName);
         sheetCells.put(sheetName, sheetManager);
         sheetInfosManager.AddSheet(sheetName, dtoSheetCell.getSheetSize());
+        versionToCellInfo.computeIfAbsent(sheetName, k -> new HashMap<>());
     }
 
     public void addTemporarySheet(String username, int versionNumber, String sheetName) {

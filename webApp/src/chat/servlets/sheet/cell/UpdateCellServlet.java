@@ -50,7 +50,7 @@ public class UpdateCellServlet extends HttpServlet {
 
                 engine.updateUsersInCells(beforeUpdateDtoSheetCell, afterUpdateDtoSheetCell, userName);
 
-                updateVersionToCellInfo(beforeUpdateCell, afterUpdateCell, userName, engine);
+                updateVersionToCellInfo(beforeUpdateCell, afterUpdateCell, sheetName,userName, engine);
 
 
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -69,7 +69,7 @@ public class UpdateCellServlet extends HttpServlet {
         }
     }
 
-    private void updateVersionToCellInfo(DtoCell beforeUpdateCell, DtoCell afterUpdateCell, String userName, Engine engine) {
+    private void updateVersionToCellInfo(DtoCell beforeUpdateCell, DtoCell afterUpdateCell,String sheetName, String userName, Engine engine) {
 
         String newActualValue = afterUpdateCell.getEffectiveValue().getValue().toString();
         String newOriginalValue = afterUpdateCell.getOriginalValue();
@@ -87,7 +87,7 @@ public class UpdateCellServlet extends HttpServlet {
             oldOriginalValue = beforeUpdateCell.getOriginalValue();
         }
 
-        engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo(oldActualValue,
+        engine.getVersionToCellInfo(sheetName).put(versionNumber, new UpdateCellInfo(oldActualValue,
                 newActualValue, oldOriginalValue,
                 newOriginalValue, versionNumber, userName, newValueLocation));
 

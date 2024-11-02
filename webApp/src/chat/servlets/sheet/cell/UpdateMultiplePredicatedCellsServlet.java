@@ -74,7 +74,7 @@ public class UpdateMultiplePredicatedCellsServlet extends HttpServlet {
                         .map(DtoCell::getLocation).collect(Collectors.toSet());
 
                 engine.updateUsersInCells(beforeUpdateDtoSheetCell, afterUpdateDtoSheetCell, username);
-                updateVersionToCellInfo(beforeUpdateCells, afterUpdateCells, newValueLocations, username, engine);
+                updateVersionToCellInfo(beforeUpdateCells, afterUpdateCells, newValueLocations,sheetName, username, engine);
 
                 response.setStatus(HttpServletResponse.SC_OK);
 
@@ -95,7 +95,7 @@ public class UpdateMultiplePredicatedCellsServlet extends HttpServlet {
     }
 
     private void updateVersionToCellInfo(List<DtoCell> beforeUpdateCells, List<DtoCell> afterUpdateCells,
-                                         Set<CellLocation> newValueLocation, String username, Engine engine) {
+                                         Set<CellLocation> newValueLocation, String sheetName, String username, Engine engine) {
 
         String newActualValue = afterUpdateCells.getFirst().getEffectiveValue().getValue().toString();
         String newOriginalValue = afterUpdateCells.getFirst().getOriginalValue();
@@ -110,7 +110,7 @@ public class UpdateMultiplePredicatedCellsServlet extends HttpServlet {
             oldOriginalValue = beforeUpdateCells.getFirst().getOriginalValue();
         }
 
-        engine.getVersionToCellInfo().put(versionNumber, new UpdateCellInfo("old sequence",
+        engine.getVersionToCellInfo(sheetName).put(versionNumber, new UpdateCellInfo("old sequence",
                 "new sequence", "old sequence",
                 "new sequence", versionNumber, username, newValueLocation, true));
 
