@@ -1,5 +1,3 @@
-# JavaFX Spreadsheet Application
-
 **![Sheet_Cell_Banner](https://github.com/user-attachments/assets/9a983ab6-cd39-48dc-b16e-730f83224f74)**  
 
 ---
