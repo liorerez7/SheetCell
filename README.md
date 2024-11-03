@@ -97,6 +97,8 @@ getting into the sheet gif explaination
 ![getting-into-sheet](https://github.com/user-attachments/assets/039bc885-b929-4641-bc94-1fc0b1bfc379)
 
 
+updating a cell and reviewing previous versions
+
 ### Prerequisites
 
 - Java Development Kit (JDK) 11 or higher
