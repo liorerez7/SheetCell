@@ -96,8 +96,12 @@ This project follows an MVC (Model-View-Controller) architecture and uses a clie
 getting into the sheet gif explaination
 ![getting-into-sheet](https://github.com/user-attachments/assets/039bc885-b929-4641-bc94-1fc0b1bfc379)
 
+---
 
 updating a cell and reviewing previous versions
+
+![updating-value-and-review-previous-versions](https://github.com/user-attachments/assets/f66626ca-d44e-4d3f-bd59-804b2d43ffab)
+
 
 ### Prerequisites
 
