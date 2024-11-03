@@ -155,9 +155,17 @@ public class RangesController {
 
         addRangeButton.setDisable(true);
         deleteRangeButton.setDisable(true);
+        topLeftRangeTextFeild.setDisable(true);
+        rightButtonRangeTextFeild.setDisable(true);
+        rangeNameTextFeild.setDisable(true);
     }
 
     public void enableWriterButtons() {
+
+        topLeftRangeTextFeild.setDisable(false);
+        rightButtonRangeTextFeild.setDisable(false);
+        rangeNameTextFeild.setDisable(false);
+
         // Reapply the original binding that disables the buttons based on the sheet property
         addRangeButton.disableProperty().bind(
                 mainController.getNewerVersionOfSheetProperty()

@@ -88,17 +88,24 @@ public class FindReplacePopup {
         fullGridCheckBox = new CheckBox("Full Grid");
         findButton = new Button("Find");
         findButton.setDisable(true);
+        findButton.setTooltip(new Tooltip("Find all instances of the value in the selected range."));
+
 
         replaceValueField = new TextField();
         replaceValueField.setPromptText("New value to replace with");
 
         replaceButton = new Button("Replace");
         replaceButton.setDisable(true);
+        replaceButton.setTooltip(new Tooltip("Replace all found values with the new value."));
+
 
         backToRangeButton = new Button("Back to range selection");
+        backToRangeButton.setTooltip(new Tooltip("Return to adjust the selection range."));
+
 
         applyOnCurrentGridButton = new Button("Apply changes on current grid");
         applyOnCurrentGridButton.setVisible(false); // Initially hidden
+        applyOnCurrentGridButton.setTooltip(new Tooltip("Apply all changes to the active grid."));
 
         // Disable apply button if permission status is READER
         if (permissionStatus == PermissionStatus.READER) {

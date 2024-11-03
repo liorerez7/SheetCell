@@ -154,7 +154,7 @@ public class AutoCompletePopup {
         thirdSection.setStyle("-fx-border-color: grey; -fx-border-width: 1; -fx-padding: 10;");
         thirdSection.getStyleClass().add("vbox-section");
 
-        Label extendedRangeLabel = new Label("Select Cells within Extended Range:");
+        Label extendedRangeLabel = new Label("Select Extended Range:");
         extendedRangeLabel.getStyleClass().add("label");
 
         extendedRangeOptions = new ComboBox<>();
@@ -166,12 +166,15 @@ public class AutoCompletePopup {
         backToSecondSectionButton = new Button("Back to Range Selection");
         backToSecondSectionButton.setOnAction(event -> returnToSecondSection());
         backToSecondSectionButton.getStyleClass().add("button");
+        backToSecondSectionButton.setTooltip(new Tooltip("Go back to adjust the row or column range."));
+
 
         // Predict Values Button
         predictValuesButton = new Button("Predict Values");
         predictValuesButton.setOnAction(event -> predictValues());
         predictValuesButton.setDisable(true); // Initially disabled
         predictValuesButton.getStyleClass().add("button");
+        predictValuesButton.setTooltip(new Tooltip("Generate predictions based on the selected range."));
 
         // Enable predictValuesButton only after extended cell location is selected
         extendedRangeOptions.setOnAction(event -> {
@@ -182,7 +185,7 @@ public class AutoCompletePopup {
 
 
         // Apply on Current Sheet Button
-        applyOnCurrentSheetButton = new Button("Apply on Current Sheet");
+        applyOnCurrentSheetButton = new Button("Apply to current Sheet");
 
         // Disable apply button if permission status is READER
         if (permissionStatus == PermissionStatus.READER) {
@@ -191,6 +194,7 @@ public class AutoCompletePopup {
             applyOnCurrentSheetButton.setDisable(true); // Initially disabled
             applyOnCurrentSheetButton.setOnAction(event -> applyOnCurrentSheet());
             applyOnCurrentSheetButton.getStyleClass().add("button");
+            applyOnCurrentSheetButton.setTooltip(new Tooltip("Apply the predicted values to the active sheet."));
         }
 
 
