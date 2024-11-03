@@ -82,14 +82,12 @@ This project follows an MVC (Model-View-Controller) architecture and uses a clie
 
 ## Technologies Used
 
-- Java 11+ (confirm if this version is accurate or update if needed)
+- Java 11+
 - JavaFX for the user interface
 - FXML for UI layout design
 - MVC architecture
 - Tomcat server (or specify server used)
 - Gson for JSON parsing and data transfer objects (DTOs)
-
-*Feel free to add or adjust any other technologies specific to your setup.*
 
 ---
 
@@ -98,8 +96,8 @@ This project follows an MVC (Model-View-Controller) architecture and uses a clie
 ### Prerequisites
 
 - Java Development Kit (JDK) 11 or higher
-- JavaFX SDK (ensure it’s configured correctly in your IDE)
-- Apache Tomcat server (if different, specify your server here)
+- JavaFX SDK 
+- Apache Tomcat server 
   
 ### Installation
 
