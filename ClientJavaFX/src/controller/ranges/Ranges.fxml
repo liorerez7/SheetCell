@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane fx:id="ranges" alignment="TOP_RIGHT" styleClass="RangesSection" stylesheets="@Ranges.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ranges.RangesController">
+   <children>
+      <BorderPane prefHeight="200.0" prefWidth="200.0">
+         <right>
+            <GridPane BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="125.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="65.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <TextField fx:id="rangeNameTextFeild" prefHeight="31.0" prefWidth="120.0" promptText="Range name">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="topLeftRangeTextFeild" prefHeight="31.0" prefWidth="120.0" promptText="A3" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets right="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="rightButtonRangeTextFeild" prefHeight="31.0" prefWidth="120.0" promptText="C5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets right="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Button fx:id="deleteRangeButton" mnemonicParsing="false" onAction="#deleteRangeClicked" prefHeight="31.0" prefWidth="130.0" styleClass="RangeButton" text="Delete range" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                     <padding>
+                        <Insets left="9.0" />
+                     </padding>
+                     <GridPane.margin>
+                        <Insets left="32.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addRangeClicked" prefHeight="28.0" prefWidth="130.0" styleClass="RangeButton" text="Add range" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </Button>
+               </children>
+            </GridPane>
+         </right>
+         <left>
+            <TableView fx:id="rangesTable" prefHeight="200.0" prefWidth="140.0" BorderPane.alignment="CENTER">
+               <columns>
+                  <TableColumn fx:id="rangeNameColumn" text="Ranges">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="name" />
+                     </cellValueFactory>
+                  </TableColumn>
+               </columns>
+            </TableView>
+         </left>
+      </BorderPane>
+   </children>
+</StackPane>

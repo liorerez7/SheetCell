@@ -1,0 +1,343 @@
+/* Background for the entire dashboard screen */
+.dashboard-background {
+    -fx-background-color: #e0e7ff; /* Soft lavender blue to complement the gradient */
+}
+
+/* Left pane with curved background */
+.left-pane {
+    -fx-background-color: linear-gradient(to bottom, #4e54c8, #8f94fb); /* Modern gradient */
+    -fx-background-radius: 0 50px 50px 0; /* Rounded corners on the right side */
+    -fx-pref-width: 200px;
+    -fx-padding: 20px;
+}
+
+/* Common button styles */
+.dashboard-button {
+    -fx-background-color: #2196F3; /* Blue background for buttons */
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 16px;
+    -fx-pref-width: 180px; /* Set preferred width for consistency */
+}
+
+/* Darker button on hover */
+.dashboard-button:hover {
+    -fx-background-color: #1e88e5; /* Darker blue on hover */
+}
+
+/* Even darker button when pressed */
+.dashboard-button:pressed {
+    -fx-background-color: #1565c0; /* Darker blue on press */
+}
+
+/* Styles for smaller Logout and Exit buttons */
+.small-button, .small-button-exit {
+    -fx-background-color: #2196F3; /* Blue background */
+    -fx-text-fill: white;
+    -fx-font-size: 10px; /* Smaller font size */
+    -fx-pref-width: 80px; /* Smaller button width */
+    -fx-background-radius: 5px;
+}
+
+/* Darker on hover */
+.small-button:hover, .small-button-exit:hover {
+    -fx-background-color: #1e88e5; /* Darker blue on hover */
+}
+
+/* Even darker on press */
+.small-button:pressed, .small-button-exit:pressed {
+    -fx-background-color: #1565c0; /* Darker blue on press */
+}
+
+/* Table styles */
+.dashboard-table {
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-pref-height: 100%; /* Table to fill available height */
+    -fx-column-halignment: CENTER; /* Center align the text in the columns */
+}
+
+/* Label styles */
+.dashboard-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff; /* White text to contrast with blue background */
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4, 0.0 , 0 , 1 );
+}
+
+.dashboard-commands-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.dashboard-load-button {
+    -fx-background-color: #4CAF50; /* Green background for Load button */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-pref-width: 180px; /* Set preferred width for consistency */
+}
+
+/* Darker green when pressed */
+.dashboard-load-button:hover {
+    -fx-background-color: #43a047; /* Darker green on hover */
+}
+
+.dashboard-load-button:pressed {
+    -fx-background-color: #2e7d32; /* Even darker green on press */
+}
+
+
+.popup-button {
+    -fx-background-color: #2196F3; /* Blue background */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+}
+
+.popup-button:hover {
+    -fx-background-color: #1e88e5; /* Darker blue on hover */
+}
+
+.popup-button:pressed {
+    -fx-background-color: #1565c0; /* Darker blue on press */
+}
+
+.popup-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333; /* Darker text */
+    -fx-padding: 10px 0;
+}
+
+.list-view, .choice-box {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+}
+
+/* Popup Background Styling */
+.popup-background {
+    -fx-background-color: #e0e7ff; /* Match dashboard color */
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+
+.popup-small-background {
+    -fx-background-color: #e0e7ff; /* Match dashboard color */
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+
+
+/* Popup Header Styling */
+.popup-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding-bottom: 10px;
+    -fx-alignment: center;
+}
+
+/* ListView and ChoiceBox Styling */
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 10px;
+    -fx-padding: 8px;
+    -fx-max-width: 280px; /* Improved width for consistency */
+    -fx-effect: innershadow(two-pass-box, rgba(0, 0, 0, 0.1), 6, 0, 0, 2);
+}
+
+/* Button Styling */
+.popup-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+    -fx-max-width: 150px;
+}
+
+/* Button Styling */
+.popup-small-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-background-radius: 3px;
+    -fx-padding: 6px 14px;
+    -fx-max-width: 150px;
+}
+
+.popup-small-button:hover {
+    -fx-background-color: #1e88e5;
+}
+
+.popup-small-button:pressed {
+    -fx-background-color: #1565c0;
+}
+
+.popup-button:hover {
+    -fx-background-color: #1e88e5;
+}
+
+.popup-button:pressed {
+    -fx-background-color: #1565c0;
+}
+
+.chat-box {
+    -fx-background-color: #f4f4f9; /* Light background */
+    -fx-padding: 10px;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+}
+
+.chat-send-button {
+    -fx-background-color: #2196F3; /* Blue for send button */
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 15px;
+}
+
+.chat-send-button:hover {
+    -fx-background-color: #1e88e5;
+}
+
+.chat-send-button:pressed {
+    -fx-background-color: #1565c0;
+}
+
+.chat-input-field {
+    -fx-padding: 5px;
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+}
+
+.chat-messages-area {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-effect: innershadow(two-pass-box, rgba(0, 0, 0, 0.1), 6, 0, 0, 2);
+}
+
+/* Popup background styling to match dashboard screen */
+.popup-container {
+    -fx-background-color: #e0e7ff; /* Matching dashboard background */
+    -fx-background-radius: 15px;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 15px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 12, 0, 0, 6);
+}
+
+/* Enhanced header styling for popup */
+.popup-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4e54c8; /* Complementary dark blue */
+    -fx-padding-bottom: 15px;
+    -fx-alignment: center;
+}
+
+/* Styling for TextField in popup */
+.popup-textfield {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #b0b0b0; /* Subtle prompt text color */
+}
+
+/* Styling for Spinners in popup */
+.popup-spinner {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5px;
+    -fx-padding: 4px;
+}
+
+.popup-spinner .increment-arrow,
+.popup-spinner .decrement-arrow {
+    -fx-background-color: #4e54c8; /* Matching blue for arrows */
+    -fx-text-fill: white;
+}
+
+/* Styling for the submit button */
+.popup-submit-button {
+    -fx-background-color: #4CAF50; /* Green for positive action */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 20px;
+    -fx-max-width: 160px;
+    -fx-cursor: hand;
+}
+
+.popup-submit-button:hover {
+    -fx-background-color: #43a047; /* Slightly darker green on hover */
+}
+
+.popup-submit-button:pressed {
+    -fx-background-color: #388e3c; /* Darker green on press */
+}
+
+/* Label styling for popup input fields */
+.popup-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333; /* Dark text for readability */
+}
+
+/* ComboBox styling for popup with modern look */
+.popup-combobox {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-color: #c5c5d6; /* Subtle grey border for a refined look */
+    -fx-border-radius: 8px; /* Slightly rounded corners */
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 10px; /* Padding for a comfortable touch area */
+    -fx-font-size: 14px;
+    -fx-max-width: 280px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.15), 3, 0, 0, 2); /* Soft shadow */
+}
+
+.popup-combobox:hover {
+    -fx-border-color: #8a8ab6; /* Subtle blue-grey on hover */
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 3); /* Slightly stronger shadow */
+}
+
+.popup-combobox .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #4a4a4a; /* Slightly darker text color for readability */
+    -fx-font-size: 13px;
+    -fx-padding: 6px 8px;
+}
+
+.popup-combobox .list-cell:hover {
+    -fx-background-color: #e6ebf5; /* Soft blue on hover */
+    -fx-text-fill: #333; /* Darker text on hover */
+}
+
+
+
+/* Arrow button styling inside the ComboBox */
+.popup-combobox .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2px;
+}
+
+.popup-combobox .arrow-button .arrow {
+    -fx-background-color: #8a8ab6; /* Matching arrow color */
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Modern arrow shape */
+}

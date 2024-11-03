@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DownloadToRun/DownloadToRun.iml" filepath="$PROJECT_DIR$/DownloadToRun/DownloadToRun.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ClientJavaFX/ClientJavaFX.iml" filepath="$PROJECT_DIR$/ClientJavaFX/ClientJavaFX.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DtoComponents/DtoComponents.iml" filepath="$PROJECT_DIR$/DtoComponents/DtoComponents.iml" />
       <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/GeneratedClasses/GeneratedClasses.iml" filepath="$PROJECT_DIR$/GeneratedClasses/GeneratedClasses.iml" />
-      <module fileurl="file://$PROJECT_DIR$/JavaFX-UI/JavaFX-UI.iml" filepath="$PROJECT_DIR$/JavaFX-UI/JavaFX-UI.iml" />
       <module fileurl="file://$PROJECT_DIR$/matala2.iml" filepath="$PROJECT_DIR$/matala2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webApp/webApp.iml" filepath="$PROJECT_DIR$/webApp/webApp.iml" />
     </modules>
   </component>
 </project>
