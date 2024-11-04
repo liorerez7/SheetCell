@@ -46,40 +46,33 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 - **Real-Time Chat**  
   Built-in chat feature for seamless communication between users.
 
-### Advanced Features
-
 - **Sorting and Filtering**  
-  - Multi-column sorting and flexible filtering for customized data views.
-    
+  Multi-column sorting and flexible filtering options allow users to organize and display data in customized views. This feature is particularly useful for managing large datasets by focusing on specific values or sorting data hierarchically.  
   ![filter data](https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5)
 
 - **Graphing and Visualization**  
-  - Create line, bar, and other charts from selected data ranges with real-time statistics for maximum, minimum, and average values.
-    
+  Users can create visualizations like line and bar charts from selected data ranges. Graphs dynamically display statistics, such as maximum, minimum, and average values, which assist in data analysis and interpretation.  
   ![makingGraph](https://github.com/user-attachments/assets/57323d5f-e87b-4f4f-83f1-560d64712034)
 
 - **Dynamic Analysis**  
-  - Run-time analysis to experiment with data changes and observe dependencies without permanently modifying the sheet.
-    
+  This feature allows users to conduct run-time analysis, enabling them to experiment with data changes and observe dependencies without committing the changes to the sheet. It’s ideal for testing scenarios or exploring potential data trends.  
   ![RunTimeAnalysis](https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f)
 
 - **Auto-Complete**  
-  - Auto-complete based on detected patterns and sequence predictions.
-    
+  Auto-complete predicts and suggests cell values based on detected patterns, helping users input repetitive data efficiently.  
   ![AutoComplete](https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c)
 
 - **Find & Replace**  
-  - Find and replace values with a preview option.
-    
+  Users can locate specific values and replace them across the sheet with a preview option, improving data management and accuracy.  
   ![FindAndReplace](https://github.com/user-attachments/assets/6df11887-9088-417d-bb4f-55a20c391d88)
 
 - **Permissions and User Management**  
-  - Access levels (Owner, Reader, Writer) for each user, managed directly through the dashboard.
-  - ![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
+  Provides access control by allowing different levels of permissions (Owner, Reader, Writer) for each user, managed directly through the dashboard.  
+  ![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
 
 - **Version History**  
-  - Built-in chat for seamless communication between users.
-  - ![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
+  Users can view previous versions of sheets, enabling them to track changes and revert if needed.  
+  ![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
 
 ---
 
