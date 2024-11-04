@@ -101,6 +101,25 @@ This project follows an MVC (Model-View-Controller) architecture and uses a clie
 #### Updating a cell and reviewing previous versions
 ![updating-value-and-review-previous-versions](https://github.com/user-attachments/assets/f66626ca-d44e-4d3f-bd59-804b2d43ffab)
 
+#### runtime analysis
+https://github.com/user-attachments/assets/43413f68-0851-4020-bedf-673dd539de4c
+
+#### making graph from data 
+https://github.com/user-attachments/assets/f8ddf700-5fe8-4f6a-b18f-badcfdb835fc
+
+#### sorting rows from data 
+https://github.com/user-attachments/assets/5382c277-117a-49c7-adb5-5a9996f768d1
+
+#### filter data with multiple columns from data 
+https://github.com/user-attachments/assets/21c10f4d-6d95-4ea6-9292-9c1989ef7faf
+
+#### find and replace
+https://github.com/user-attachments/assets/ca651226-f223-4ba8-a205-e943050dc01c
+
+#### auto complete
+https://github.com/user-attachments/assets/8346acc4-e1c7-425d-87ab-71ce80c9fb45
+
+
 ### Prerequisites
 
 - Java Development Kit (JDK) 11 or higher
