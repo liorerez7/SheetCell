@@ -20,7 +20,7 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
    - [Advanced Features](#advanced-features)
 3. [Architecture](#architecture)
 4. [Technologies Used](#technologies-used)
-5. [[Prerequisites](#prerequisites)
+5. [Prerequisites](#prerequisites)
 6. [Running the Application](#running-the-application)
    - [Server Setup](#server-setup)
    - [Client Setup](#client-setup)
