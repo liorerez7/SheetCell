@@ -1,10 +1,12 @@
+# Sheet Cell Collaborative Application
+
 **![Sheet_Cell_Banner](https://github.com/user-attachments/assets/9a983ab6-cd39-48dc-b16e-730f83224f74)**  
 
 ---
 
 ## Overview
 
-This is a collaborative client-server desktop application built in Java using JavaFX. It provides an Excel-like spreadsheet environment where multiple users can interact with shared sheets in real-time. Users can manipulate data, analyze values, and visualize results with various tools, including graphing and filtering options. The application is designed to support concurrent users, enabling seamless collaboration with features like real-time chat and version control.
+Sheet Cell is a collaborative client-server desktop application built in Java using JavaFX, providing an Excel-like spreadsheet environment for real-time data manipulation, analysis, and visualization. Designed to support concurrent users, it includes real-time chat and version control, making it ideal for teams working on shared sheets.
 
 ## Table of Contents
 
@@ -27,67 +29,63 @@ This is a collaborative client-server desktop application built in Java using Ja
 ### Basic Features
 
 - **Spreadsheet Interface**  
-  An intuitive grid layout for data entry and manipulation, emulating familiar spreadsheet functionalities.
+  Familiar grid layout for data entry and manipulation, similar to conventional spreadsheet applications.
 
 - **Real-Time Collaboration**  
-  Multiple users can work on the same sheet simultaneously, with updates synchronized across all clients.
+  Multiple users can edit the same sheet simultaneously, with updates reflected in real-time for all connected users.
 
 - **Cell Operations**  
-  - Update cell values and see dependent cells highlighted.
-  - View and manage neighboring cells and dependent relationships within the sheet.
-  - Add, edit, and delete ranges for grouped operations.
+  - Update cell values and view dependencies.
+  - Manage ranges for grouped operations.
 
 ### Advanced Features
 
 - **Sorting and Filtering**  
-  - Sort data within specified ranges with multi-column support.
-  - Filter data based on multiple criteria across different columns for customized views.
+  - Multi-column sorting and flexible filtering for customized data views.
 
 - **Graphing and Visualization**  
-  - Generate line charts, bar charts, and other graphs from selected data ranges.
-  - View real-time statistics (e.g., max, min, average) for selected data sets.
+  - Create line, bar, and other charts from selected data ranges with real-time statistics for maximum, minimum, and average values.
 
 - **Dynamic Analysis**  
-  - **RunTime Analysis**: Experiment with hypothetical data changes to see their impact on dependent cells without permanently modifying the sheet.
+  - Run-time analysis to experiment with data changes and observe dependencies without permanently modifying the sheet.
 
 - **Auto-Complete and Find & Replace**  
-  - Auto-complete patterns based on identified sequences within the data.
-  - Find specific values within the grid and replace them with new ones, with an option to preview changes.
+  - Auto-complete based on detected patterns and sequence predictions.
+  - Find and replace values with a preview option.
 
 - **Permissions and User Management**  
-  - Define access levels (e.g., owner, reader, writer) for each user.
-  - Manage permissions directly through the dashboard.
+  - Access levels (Owner, Reader, Writer) for each user, managed directly through the dashboard.
 
 - **Real-Time Chat**  
-  - Communicate with other users directly within the application to facilitate collaborative work.
+  - Built-in chat for seamless communication between users.
 
 ---
 
 ## Architecture
 
-This project follows an MVC (Model-View-Controller) architecture and uses a client-server model to manage data synchronization and interactions across users.
+This project follows an MVC architecture and a client-server model to synchronize data across multiple users.
 
 ### Server-Side
 
-- **Java Servlets**: Handle client requests, manage business logic, and ensure data consistency.
-- **Data Persistence**: Implemented for session management and version tracking of the sheets.
+- **Java Servlets**: Handle requests and manage session data.
+- **Data Persistence**: Supports session and version tracking.
 
 ### Client-Side
 
-- **JavaFX**: For a responsive and interactive UI.
-- **FXML**: Used to design the UI components for different screens.
-- **HttpRequestManager**: Manages HTTP requests sent to the server for CRUD operations, sheet updates, and user management.
+- **JavaFX**: For a responsive, interactive UI.
+- **FXML**: For UI component design across screens.
+- **HttpRequestManager**: Manages HTTP requests to handle CRUD operations and sheet updates.
 
 ---
 
 ## Technologies Used
 
 - Java 11+
-- JavaFX for the user interface
-- FXML for UI layout design
+- JavaFX for UI
+- FXML for layout design
 - MVC architecture
-- Tomcat server (or specify server used)
-- Gson for JSON parsing and data transfer objects (DTOs)
+- Tomcat server
+- Gson for JSON serialization
 
 ---
 
@@ -95,30 +93,29 @@ This project follows an MVC (Model-View-Controller) architecture and uses a clie
 
 ### Screenshots and Usage
 
-#### Getting into the sheet
-![צילום מסך 2024-11-04 174353](https://github.com/user-attachments/assets/41199ee9-7b8b-4858-95eb-e97522cb0c2b)
+#### Sheet Access
+![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
 
-#### Updating a cell and reviewing previous versions
-![updating-value-and-review-previous-versions](https://github.com/user-attachments/assets/f66626ca-d44e-4d3f-bd59-804b2d43ffab)
+#### Version History
+![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
 
-#### runtime analysis
-https://github.com/user-attachments/assets/43413f68-0851-4020-bedf-673dd539de4c
+#### Runtime Analysis
+![RunTimeAnalysis](https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f)
 
-#### making graph from data 
-https://github.com/user-attachments/assets/f8ddf700-5fe8-4f6a-b18f-badcfdb835fc
+#### Graph Creation
+![makingGraph](https://github.com/user-attachments/assets/57323d5f-e87b-4f4f-83f1-560d64712034)
 
-#### sorting rows from data 
-https://github.com/user-attachments/assets/5382c277-117a-49c7-adb5-5a9996f768d1
+#### Sorting Rows
+![SortingRows](https://github.com/user-attachments/assets/1281f15c-303e-4ed5-90ad-e9aee40c31b5)
 
-#### filter data with multiple columns from data 
-https://github.com/user-attachments/assets/21c10f4d-6d95-4ea6-9292-9c1989ef7faf
+#### Filtering Data
+![filter data](https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5)
 
-#### find and replace
-https://github.com/user-attachments/assets/ca651226-f223-4ba8-a205-e943050dc01c
+#### Find and Replace
+![FindAndReplace](https://github.com/user-attachments/assets/6df11887-9088-417d-bb4f-55a20c391d88)
 
-#### auto complete
-https://github.com/user-attachments/assets/8346acc4-e1c7-425d-87ab-71ce80c9fb45
-
+#### Auto Complete
+![AutoComplete](https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c)
 
 ### Prerequisites
 
@@ -131,4 +128,3 @@ https://github.com/user-attachments/assets/8346acc4-e1c7-425d-87ab-71ce80c9fb45
 1. **Clone the Repository**  
    ```bash
    git clone https://github.com/yourusername/yourprojectname.git
-   ```
