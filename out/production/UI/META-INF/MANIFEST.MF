@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-sheetCellApp-Class: Main.sheetCellApp
-Class-Path: ../Generated/Generated.jar ../Engine/Engine.jar ../Jaxb/jaxb-xjc.jar ../Jaxb/jaxb-impl.jar ../Jaxb/jaxb-core.jar ../Jaxb/jakarta.activation-api.jar ../Jaxb/angus-activation.jar
