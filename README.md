@@ -34,17 +34,17 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 
 ### Basic Features
 
-- **Spreadsheet Interface**: Familiar grid layout for data entry and manipulation, similar to conventional spreadsheet applications.
-  
+- **Spreadsheet Interface**  
+  Provides a familiar grid layout that allows users to enter and manipulate data, similar to traditional spreadsheet applications.
+
 - **Real-Time Collaboration**  
-  Multiple users can edit the same sheet simultaneously, with updates reflected in real-time for all connected users.
+  Enables multiple users to edit the same sheet simultaneously. Updates are visible in real-time to all connected users, ensuring data consistency.
 
 - **Cell Operations**  
-  - Update cell values and view dependencies.
-  - Manage ranges for grouped operations.
+  Supports updating cell values, viewing dependencies, and managing cell ranges for grouped operations, facilitating organized data handling.
 
-- **Real-Time Chat**
-- Built-in chat for seamless communication between users. 
+- **Real-Time Chat**  
+  Built-in chat feature for seamless communication between users.
 
 ### Advanced Features
 
