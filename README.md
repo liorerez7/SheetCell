@@ -96,7 +96,7 @@ This project follows an MVC (Model-View-Controller) architecture and uses a clie
 ### Screenshots and Usage
 
 #### Getting into the sheet
-![getting-into-sheet](https://github.com/user-attachments/assets/039bc885-b929-4641-bc94-1fc0b1bfc379)
+![צילום מסך 2024-11-04 174353](https://github.com/user-attachments/assets/41199ee9-7b8b-4858-95eb-e97522cb0c2b)
 
 #### Updating a cell and reviewing previous versions
 ![updating-value-and-review-previous-versions](https://github.com/user-attachments/assets/f66626ca-d44e-4d3f-bd59-804b2d43ffab)
