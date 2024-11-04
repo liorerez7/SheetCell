@@ -126,3 +126,7 @@ After cloning the repository, navigate to the zipped folder structure containing
 - **To stop the server**, run:
   ```bash
   docker stop my-java-app-server
+
+- **To restart the server**, run:
+  ```bash
+  docker start my-java-app-server
