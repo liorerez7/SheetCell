@@ -43,37 +43,44 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 - **Cell Operations**  
   Supports updating cell values, viewing dependencies, and managing cell ranges for grouped operations, facilitating organized data handling.
 
-### Basic Features
+### Advanced Features
 
 - **Real-Time Chat**  
   Built-in chat feature for seamless communication between users.
 
 - **Sorting and Filtering**  
-  Multi-column sorting and flexible filtering options allow users to organize and display data in customized views. This feature is particularly useful for managing large datasets by focusing on specific values or sorting data hierarchically.  
+  Multi-column sorting and flexible filtering options allow users to organize and display data in customized views. This feature is particularly useful for managing large datasets by focusing on specific values or sorting data hierarchically.
+  
   ![filter data](https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5)
 
 - **Graphing and Visualization**  
-  Users can create visualizations like line and bar charts from selected data ranges. Graphs dynamically display statistics, such as maximum, minimum, and average values, which assist in data analysis and interpretation.  
+  Users can create visualizations like line and bar charts from selected data ranges. Graphs dynamically display statistics, such as maximum, minimum, and average values, which assist in data analysis and interpretation.
+   
   ![makingGraph](https://github.com/user-attachments/assets/57323d5f-e87b-4f4f-83f1-560d64712034)
 
 - **Dynamic Analysis**  
-  This feature allows users to conduct run-time analysis, enabling them to experiment with data changes and observe dependencies without committing the changes to the sheet. It’s ideal for testing scenarios or exploring potential data trends.  
+  This feature allows users to conduct run-time analysis, enabling them to experiment with data changes and observe dependencies without committing the changes to the sheet. It’s ideal for testing scenarios or exploring potential data trends.
+  
   ![RunTimeAnalysis](https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f)
 
 - **Auto-Complete**  
-  Auto-complete predicts and suggests cell values based on detected patterns, helping users input repetitive data efficiently.  
+  Auto-complete predicts and suggests cell values based on detected patterns, helping users input repetitive data efficiently.
+  
   ![AutoComplete](https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c)
 
 - **Find & Replace**  
-  Users can locate specific values and replace them across the sheet with a preview option, improving data management and accuracy.  
+  Users can locate specific values and replace them across the sheet with a preview option, improving data management and accuracy.
+  
   ![FindAndReplace](https://github.com/user-attachments/assets/6df11887-9088-417d-bb4f-55a20c391d88)
 
 - **Permissions and User Management**  
-  Provides access control by allowing different levels of permissions (Owner, Reader, Writer) for each user, managed directly through the dashboard.  
+  Provides access control by allowing different levels of permissions (Owner, Reader, Writer) for each user, managed directly through the dashboard.
+   
   ![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
 
 - **Version History**  
-  Users can view previous versions of sheets, enabling them to track changes and revert if needed.  
+  Users can view previous versions of sheets, enabling them to track changes and revert if needed.
+  
   ![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
 
 ---
