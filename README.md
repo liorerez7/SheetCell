@@ -143,8 +143,31 @@ This project follows an MVC architecture and a client-server model to synchroniz
 - JavaFX SDK 
 - Apache Tomcat server 
   
-### Installation
+## Running the Application
 
-1. **Clone the Repository**  
-   ```bash
-   git clone https://github.com/yourusername/yourprojectname.git
+After cloning the repository, navigate to the zipped folder structure containing the `client_setup` and `server_setup` folders. Follow these instructions to get the server and client running.
+
+### Server Setup
+
+1. **Requirements**:
+   - Ensure that **Docker Desktop** is installed and running.
+
+2. **Steps to Start the Server**:
+   - Open the `server_setup` folder.
+   - Double-click `run.bat` to start the server.
+     - This script will build the Docker image, start the Docker container, and deploy the application on `http://localhost:8080`.
+   - Verify that the server is running by opening `http://localhost:8080` in a web browser.
+
+### Client Setup
+
+1. **Steps to Start the Client**:
+   - Open the `client_setup` folder.
+   - Double-click `run.bat` to start the client application.
+   - To open multiple clients, run `run.bat` again in a new window.
+   - The client application will connect to the server running on `http://localhost:8080`.
+
+### Additional Commands (Optional)
+
+- **To stop the server**, run:
+  ```bash
+  docker stop my-java-app-server
