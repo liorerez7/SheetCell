@@ -10,6 +10,8 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 
 ![mainScreen](https://github.com/user-attachments/assets/2bd4c726-c7f4-4c94-ad15-869af1c06dea)
 
+---
+
 ## Table of Contents
 
 1. [Features](#features)
@@ -98,26 +100,42 @@ This project follows an MVC architecture and a client-server model to synchroniz
 #### Sheet Access
 ![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
 
+---
+
 #### Version History
 ![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
+
+---
 
 #### Runtime Analysis
 ![RunTimeAnalysis](https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f)
 
+---
+
 #### Graph Creation
 ![makingGraph](https://github.com/user-attachments/assets/57323d5f-e87b-4f4f-83f1-560d64712034)
+
+---
 
 #### Sorting Rows
 ![SortingRows](https://github.com/user-attachments/assets/1281f15c-303e-4ed5-90ad-e9aee40c31b5)
 
+---
+
 #### Filtering Data
 ![filter data](https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5)
+
+---
 
 #### Find and Replace
 ![FindAndReplace](https://github.com/user-attachments/assets/6df11887-9088-417d-bb4f-55a20c391d88)
 
+---
+
 #### Auto Complete
 ![AutoComplete](https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c)
+
+---
 
 ### Prerequisites
 
