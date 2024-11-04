@@ -20,8 +20,7 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
    - [Advanced Features](#advanced-features)
 3. [Architecture](#architecture)
 4. [Technologies Used](#technologies-used)
-5. [Prerequisites](#prerequisites)
-6. [Running the Application](#running-the-application)
+5. [Running the Application](#running-the-application)
    - [Server Setup](#server-setup)
    - [Client Setup](#client-setup)
    - [Additional Commands (Optional)](#additional-commands-optional)
@@ -97,12 +96,6 @@ This project follows an MVC architecture and a client-server model to synchroniz
 - Gson for JSON serialization
 
 ---
-
-## Prerequisites
-
-- Java Development Kit (JDK) 11 or higher
-- JavaFX SDK 
-- Apache Tomcat server 
   
 ## Running the Application
 
