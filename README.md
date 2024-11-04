@@ -51,27 +51,27 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 
 - **Sorting and Filtering**  
   - Multi-column sorting and flexible filtering for customized data views.
-  - 
+    
   ![filter data](https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5)
 
 - **Graphing and Visualization**  
   - Create line, bar, and other charts from selected data ranges with real-time statistics for maximum, minimum, and average values.
-  - 
+    
   ![makingGraph](https://github.com/user-attachments/assets/57323d5f-e87b-4f4f-83f1-560d64712034)
 
 - **Dynamic Analysis**  
   - Run-time analysis to experiment with data changes and observe dependencies without permanently modifying the sheet.
-  - 
+    
   ![RunTimeAnalysis](https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f)
 
 - **Auto-Complete**  
   - Auto-complete based on detected patterns and sequence predictions.
-  - 
+    
   ![AutoComplete](https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c)
 
 - **Find & Replace**  
   - Find and replace values with a preview option.
-  - 
+    
   ![FindAndReplace](https://github.com/user-attachments/assets/6df11887-9088-417d-bb4f-55a20c391d88)
 
 - **Permissions and User Management**  
