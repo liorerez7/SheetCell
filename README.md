@@ -19,6 +19,8 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
    - [Basic Features](#basic-features)
    - [Advanced Features](#advanced-features)
 3. [Architecture](#architecture)
+   - [Server-Side](#server-side)
+   - [Client-Side](#client-side)
 4. [Technologies Used](#technologies-used)
 5. [Getting Started](#getting-started)
    - [Screenshots and Usage](#screenshots-and-usage)
@@ -35,52 +37,40 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 ### Basic Features
 
 - **Spreadsheet Interface**  
-  Familiar grid layout for data entry and manipulation, similar to conventional spreadsheet applications.
+  Provides a familiar grid layout that allows users to enter and manipulate data, similar to traditional spreadsheet applications.
 
 - **Real-Time Collaboration**  
-  Multiple users can edit the same sheet simultaneously, with updates reflected in real-time for all connected users.
+  Enables multiple users to edit the same sheet simultaneously. Updates are visible in real-time to all connected users, ensuring data consistency.
 
 - **Cell Operations**  
-  - Update cell values and view dependencies.
-  - Manage ranges for grouped operations.
-
-- **Real-Time Chat**
-- Built-in chat for seamless communication between users. 
+  - Supports updating cell values, viewing dependencies, and managing cell ranges for grouped operations, facilitating organized data handling.
 
 ### Advanced Features
 
 - **Sorting and Filtering**  
-  - Multi-column sorting and flexible filtering for customized data views.
-    
+  Provides multi-column sorting and flexible filtering options, enabling users to organize and display data in customized views. This feature is particularly useful for managing large datasets by focusing on specific values or sorting data hierarchically.
+  ![SortingRows](https://github.com/user-attachments/assets/1281f15c-303e-4ed5-90ad-e9aee40c31b5)
   ![filter data](https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5)
 
 - **Graphing and Visualization**  
-  - Create line, bar, and other charts from selected data ranges with real-time statistics for maximum, minimum, and average values.
-    
+  Allows users to create visualizations like line and bar charts from selected data ranges. Graphs dynamically display statistics, such as maximum, minimum, and average values, which assist in data analysis and interpretation.
   ![makingGraph](https://github.com/user-attachments/assets/57323d5f-e87b-4f4f-83f1-560d64712034)
 
 - **Dynamic Analysis**  
-  - Run-time analysis to experiment with data changes and observe dependencies without permanently modifying the sheet.
-    
+  This feature lets users conduct run-time analysis, allowing them to experiment with data changes and observe dependencies without committing the changes to the sheet. It's ideal for testing scenarios or exploring potential data trends.
   ![RunTimeAnalysis](https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f)
 
-- **Auto-Complete**  
-  - Auto-complete based on detected patterns and sequence predictions.
-    
+- **Auto-Complete and Find & Replace**  
+  - **Auto-Complete**: Predicts and suggests cell values based on detected patterns, helping users input repetitive data efficiently.
+  - **Find & Replace**: Enables users to locate specific values and replace them across the sheet with a preview option, improving data management and accuracy.
   ![AutoComplete](https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c)
-
-- **Find & Replace**  
-  - Find and replace values with a preview option.
-    
   ![FindAndReplace](https://github.com/user-attachments/assets/6df11887-9088-417d-bb4f-55a20c391d88)
 
 - **Permissions and User Management**  
-  - Access levels (Owner, Reader, Writer) for each user, managed directly through the dashboard.
-  - ![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
+  Provides access control by allowing different levels of permissions (Owner, Reader, Writer) for each user. The dashboard manages these access levels, supporting collaboration while protecting data integrity.
 
-- **Version History**  
-  - Built-in chat for seamless communication between users.
-  - ![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
+- **Real-Time Chat**  
+  Includes a built-in chat feature to facilitate seamless communication between users, enabling real-time discussions directly within the app.
 
 ---
 
@@ -112,12 +102,24 @@ This project follows an MVC architecture and a client-server model to synchroniz
 
 ---
 
+## Getting Started
+
+### Screenshots and Usage
+
+#### Sheet Access
+![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
+
+#### Version History
+![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
+
 ### Prerequisites
 
 - Java Development Kit (JDK) 11 or higher
 - JavaFX SDK 
 - Apache Tomcat server 
-  
+
+---
+
 ## Running the Application
 
 After cloning the repository, navigate to the zipped folder structure containing the `client_setup` and `server_setup` folders. Follow these instructions to get the server and client running.
