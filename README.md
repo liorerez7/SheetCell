@@ -20,9 +20,7 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
    - [Advanced Features](#advanced-features)
 3. [Architecture](#architecture)
 4. [Technologies Used](#technologies-used)
-5. [Getting Started](#getting-started)
-   - [Screenshots and Usage](#screenshots-and-usage)
-   - [Prerequisites](#prerequisites)
+5. [[Prerequisites](#prerequisites)
 6. [Running the Application](#running-the-application)
    - [Server Setup](#server-setup)
    - [Client Setup](#client-setup)
@@ -31,57 +29,44 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 ---
 
 ## Features
+This application provides comprehensive spreadsheet functionality with real-time collaboration capabilities.
 
 ### Basic Features
-
-- **Spreadsheet Interface**  
-  Provides a familiar grid layout that allows users to enter and manipulate data, similar to traditional spreadsheet applications.
-
-- **Real-Time Collaboration**  
-  Enables multiple users to edit the same sheet simultaneously. Updates are visible in real-time to all connected users, ensuring data consistency.
-
-- **Cell Operations**  
-  Supports updating cell values, viewing dependencies, and managing cell ranges for grouped operations, facilitating organized data handling.
-
-- **Real-Time Chat**  
-  Built-in chat feature for seamless communication between users.
+- **Interactive Spreadsheet Interface**: Excel-like grid layout for intuitive data entry and manipulation, with real-time updates and formula processing.
+- **Real-Time Collaboration**: Enables multiple users to edit sheets simultaneously with built-in chat system and instant change visibility.
 
 ### Advanced Features
+- **Advanced Sorting & Filtering**: The application offers powerful data organization capabilities through its sorting and filtering system. Users can sort data across multiple columns simultaneously, apply complex filters based on various criteria, and create hierarchical views of their data. This makes it easy to analyze large datasets and find specific information quickly.
 
-- **Sorting and Filtering**  
-  Multi-column sorting and flexible filtering options allow users to organize and display data in customized views. This feature is particularly useful for managing large datasets by focusing on specific values or sorting data hierarchically.
-  
-  ![filter data](https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5)
+<img src="https://github.com/user-attachments/assets/6d4668ac-feb2-452d-9c33-45a4ca225ce5" width="600">
 
-- **Graphing and Visualization**  
-  Users can create visualizations like line and bar charts from selected data ranges. Graphs dynamically display statistics, such as maximum, minimum, and average values, which assist in data analysis and interpretation.
-   
-  ![makingGraph](https://github.com/user-attachments/assets/57323d5f-e87b-4f4f-83f1-560d64712034)
+<br><br>
 
-- **Dynamic Analysis**  
-  This feature allows users to conduct run-time analysis, enabling them to experiment with data changes and observe dependencies without committing the changes to the sheet. It’s ideal for testing scenarios or exploring potential data trends.
-  
-  ![RunTimeAnalysis](https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f)
+- **Graphing Visualization & Analysis**: Transform your data into meaningful insights with our comprehensive visualization tools. Create dynamic line and bar charts from selected data ranges, view real-time statistical information (maximum, minimum, average values), and perform runtime analysis to test scenarios without affecting the original data. The analysis feature allows users to observe dependencies and potential impacts before committing changes.
 
-- **Auto-Complete**  
-  Auto-complete predicts and suggests cell values based on detected patterns, helping users input repetitive data efficiently.
-  
-  ![AutoComplete](https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c)
+<img src="https://github.com/user-attachments/assets/140363a5-7b1b-4d2f-81ba-0c7b1af50f7f" width="600">
 
-- **Find & Replace**  
-  Users can locate specific values and replace them across the sheet with a preview option, improving data management and accuracy.
-  
-  ![FindAndReplace](https://github.com/user-attachments/assets/6df11887-9088-417d-bb4f-55a20c391d88)
+<br><br>
 
-- **Permissions and User Management**  
-  Provides access control by allowing different levels of permissions (Owner, Reader, Writer) for each user, managed directly through the dashboard.
-   
-  ![gettingIntoTheSystem](https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf)
+- **Smart Features**: Enhance your productivity with intelligent auto-complete and find-replace capabilities. The auto-complete function analyzes patterns in your data to predict and suggest cell values, while the advanced find-replace tool allows you to locate and modify specific values across the entire sheet with a convenient preview option to review changes before applying them.
 
-- **Version History**  
-  Users can view previous versions of sheets, enabling them to track changes and revert if needed.
-  
-  ![PreviousVersions](https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85)
+
+<img src="https://github.com/user-attachments/assets/eedcd836-dcdf-4591-923a-984d4c51597c" width="600">
+
+<br><br>
+
+- **Version Management**: Our powerful version control system maintains complete transparency and data integrity throughout your project's lifecycle. The system automatically tracks and stores all sheet modifications, allowing users to view detailed change histories, compare different versions. With features like user identification, timestamping, and comprehensive audit trails, teams can confidently track changes, recover from unintended modifications, and maintain accountability across all collaborative activities.
+
+<img src="https://github.com/user-attachments/assets/bb69beed-9482-46be-8486-62b1ef3e6e85" width="600">
+
+<br><br>
+
+- **Access Control**: The application provides robust security through a comprehensive permission system that ensures data protection and controlled access. The system implements three distinct user roles: Owner, Writer, Reader.
+
+
+<img src="https://github.com/user-attachments/assets/ced82721-544b-4ef6-873b-70f060951bdf" width="600">
+
+
 
 ---
 
@@ -113,7 +98,7 @@ This project follows an MVC architecture and a client-server model to synchroniz
 
 ---
 
-### Prerequisites
+## Prerequisites
 
 - Java Development Kit (JDK) 11 or higher
 - JavaFX SDK 
@@ -127,6 +112,7 @@ After cloning the repository, navigate to the zipped folder structure containing
 
 1. **Requirements**:
    - Ensure that **Docker Desktop** is installed and running.
+   - Microsoft operating system
 
 2. **Steps to Start the Server**:
    - Open the `server_setup` folder.
