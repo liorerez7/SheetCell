@@ -3,8 +3,11 @@
 **![Sheet_Cell_Banner](https://github.com/user-attachments/assets/9a983ab6-cd39-48dc-b16e-730f83224f74)**  
 
 ---
+![mainScreen](https://github.com/user-attachments/assets/2bd4c726-c7f4-4c94-ad15-869af1c06dea)
 
 ## Overview
+
+![mainScreen](https://github.com/user-attachments/assets/2bd4c726-c7f4-4c94-ad15-869af1c06dea)
 
 Sheet Cell is a collaborative client-server desktop application built in Java using JavaFX, providing an Excel-like spreadsheet environment for real-time data manipulation, analysis, and visualization. Designed to support concurrent users, it includes real-time chat and version control, making it ideal for teams working on shared sheets.
 
