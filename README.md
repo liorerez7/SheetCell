@@ -14,17 +14,19 @@ Sheet Cell is a collaborative client-server desktop application built in Java us
 
 ## Table of Contents
 
-1. [Features](#features)
+1. [Overview](#overview)
+2. [Features](#features)
    - [Basic Features](#basic-features)
    - [Advanced Features](#advanced-features)
-2. [Architecture](#architecture)
-3. [Technologies Used](#technologies-used)
-4. [Getting Started](#getting-started)
+3. [Architecture](#architecture)
+4. [Technologies Used](#technologies-used)
+5. [Getting Started](#getting-started)
+   - [Screenshots and Usage](#screenshots-and-usage)
    - [Prerequisites](#prerequisites)
-   - [Installation](#installation)
-5. [Screenshots and Usage](#screenshots-and-usage)
-6. [Customization and Permissions](#customization-and-permissions)
-7. [Known Issues and Limitations](#known-issues-and-limitations)
+6. [Running the Application](#running-the-application)
+   - [Server Setup](#server-setup)
+   - [Client Setup](#client-setup)
+   - [Additional Commands (Optional)](#additional-commands-optional)
 
 ---
 
@@ -171,3 +173,7 @@ After cloning the repository, navigate to the zipped folder structure containing
 - **To stop the server**, run:
   ```bash
   docker stop my-java-app-server
+
+- **To restart the server**, run:
+  ```bash
+  docker start my-java-app-server
