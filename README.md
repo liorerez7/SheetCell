@@ -94,12 +94,13 @@ This project follows an MVC architecture and a client-server model to synchroniz
 - MVC architecture
 - Tomcat server
 - Gson for JSON serialization
+- Docker
 
 ---
   
 ## Running the Application
 
-After cloning the repository, navigate to the zipped folder structure containing the `client_setup` and `server_setup` folders. Follow these instructions to get the server and client running.
+Download the "Download-To-Run" zip file, navigate to the zipped folder structure containing the `client_setup` and `server_setup` folders. Follow these instructions to get the server and client running.
 
 ### Server Setup
 
