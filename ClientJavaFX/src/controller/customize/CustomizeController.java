@@ -51,6 +51,8 @@ public class CustomizeController {
         mainController.findReplaceClicked();
     }
 
+    //hello
+
     @FXML
     void autoCompleteClicked(ActionEvent event) {
         mainController.autoCompleteClicked();
